@@ -1,32 +1,47 @@
 # ElleeDog 67
 
-One Minecraft Bedrock add-on (a behavior pack and a resource pack) that bundles six ElleeDog 67
-features and lets you switch each one on or off per world.
+One Minecraft Bedrock add-on: nine packs in one `.mcaddon`. The two core packs carry the
+ElleeDog 67 Book (the in-game manual), Stair Sitting, Creeper Mod and every script. The other four
+features each ship in their own packs and are turned on by activating those packs in the world
+settings.
 
-| Feature | What it does |
-|---|---|
-| Pets | become Carter, Mochi or Casper with the Pet Morpher book, with fitted armor and mouth-carried tools |
-| Stair Sitting | sit on any stair with the Sit button, a crouch gesture or `/sit:down` |
-| Creeper Mod | creeper blasts hurt players only; blocks and other mobs are safe |
-| Ender Mod | Endermen cannot move blocks in protected builds (`/elleedog:ender_protect`) |
-| Redstone Guide | craft a book (1 redstone + 1 leather) that explains redstone components, recipes and builds |
-| Rbow Ore | rainbow ore, ingots, tools, armor and a spear |
+| Pack | What it turns on | Type | Needed |
+|---|---|---|---|
+| ElleeDog 67 (Behavior) | the ElleeDog 67 Book manual, Stair Sitting, Creeper Mod, and the scripts every other pack uses | behavior | required |
+| ElleeDog 67 (Resources) | the book and Stair Sitting visuals | resource | required; added with the Behavior pack |
+| ElleeDog 67 Pets | Pets: become Carter, Mochi or Casper with the Pet Morpher book, with fitted armor and mouth-carried tools | behavior | optional |
+| ElleeDog 67 Pets Resources | pet models, animations and fitted armor | resource | optional; added with Pets |
+| ElleeDog 67 Rbow Ore | Rbow Ore: rainbow ore, ingots, tools, armor and a spear | behavior | optional |
+| ElleeDog 67 Rbow Ore Resources | Rbow ore, item and armor art | resource | optional; added with Rbow Ore |
+| ElleeDog 67 Ender Mod | Ender Mod: Endermen cannot move blocks in protected builds (`/elleedog:ender_protect`) | behavior | optional |
+| ElleeDog 67 Redstone Guide | Redstone Guide: craft a book (1 redstone + 1 leather) that explains redstone components, recipes and builds | behavior | optional |
+| ElleeDog 67 Redstone Guide Resources | the guide book art | resource | optional; added with Redstone Guide |
 
-**Status: 0.1.0 has not been run in Minecraft yet.** Everything is checked by tests against an
+**Status: 0.2.0 has not been run in Minecraft yet.** Everything is checked by tests against an
 engine mock and by pack validation, which is not the same thing. The manual checklist is in
 [docs/TESTING.md](docs/TESTING.md).
 
 ## Play it
 
-1. Download `ElleeDog67_<version>.mcaddon` from the latest GitHub Release (or the CI artifact).
-2. Open it with Minecraft. Activate "ElleeDog 67 (Behavior)" on a copy of your world and
-   deactivate the old separate ElleeDog packs. Details: [docs/RELEASING.md](docs/RELEASING.md).
-3. In game: `/elleedog67:features` shows what is on. Operators use `/elleedog67:enable <feature>`
-   and `/elleedog67:disable <feature>`. Players named ElleeDog get the **ElleeDog 67 Book**, whose
-   menu toggles features without typing. Feature ids: `pets`, `stair-sit`, `creeper-mod`,
-   `ender-mod`, `redstone-guide`, `rbow-ore`.
+1. Download `ElleeDog67_<version>.mcaddon` from the latest GitHub Release (or the CI artifact) and
+   open it with Minecraft. One import brings in all nine packs.
+2. Edit a copy of your world. Under Behavior Packs, activate "ElleeDog 67 (Behavior)". That gives
+   you the ElleeDog 67 Book, Stair Sitting and Creeper Mod; "ElleeDog 67 (Resources)" comes along
+   on its own.
+3. Activate the optional packs you want: "ElleeDog 67 Pets", "ElleeDog 67 Rbow Ore",
+   "ElleeDog 67 Ender Mod", "ElleeDog 67 Redstone Guide". Each one pulls in its resource pack and
+   the core.
+4. Two ordering rules: keep "ElleeDog 67 Pets Resources" above "ElleeDog 67 Rbow Ore Resources",
+   and put any other pack that replaces the player or Endermen below the ElleeDog packs, or remove
+   it. Everything else can be in any order.
+5. In game, the **ElleeDog 67 Book** is the manual. It lists every feature, whether it is on, and
+   which packs turn it on or off. Anyone holding a book can read it. Players named ElleeDog (who
+   receive one on join) and operators can flip the two switches, Stair Sitting and Creeper Mod,
+   from its pages. `/elleedog67:features` prints the same states in chat. None of this needs cheats.
 
-What each feature does, its commands, and what "disabled" means: [docs/FEATURES.md](docs/FEATURES.md).
+Import, activation and how to move a world from the old standalone packs or from 0.1.0:
+[docs/RELEASING.md](docs/RELEASING.md). What each feature does, its commands and what "off"
+means: [docs/FEATURES.md](docs/FEATURES.md).
 
 ## Develop it
 
@@ -36,35 +51,36 @@ for every pack file).
 
 ```bash
 npm install
-npm run build       # dist/behavior_pack + dist/resource_pack, bundled scripts, validation
-npm run package     # dist/ElleeDog67_<version>.mcaddon and the two .mcpack files
+npm run build       # dist/<pack>/ for all nine packs, scripts bundled into the core, validation
+npm run package     # dist/ElleeDog67_<version>.mcaddon and SHA256SUMS.txt
 npm test            # unit tests plus a real build of the packs
 npm run check       # types and lint
+npm run manifests   # rewrite every manifest.json from packs.json
 ```
 
 Where things are:
 
 ```
-behavior_packs/elleedog67/   the behavior pack (entities, items, recipes, ...), one subfolder per feature
-resource_packs/elleedog67/   the resource pack (client entities, attachables, models, textures, texts)
-src/core/                    feature toggles, commands, the ElleeDog 67 Book
-src/features/<id>/           each feature's scripts; index.ts is its entry point
-test/                        vitest suites and the engine mock
-tools/                       build, validate, package, version bump, codegen
-docs/                        architecture, feature pages, testing, releasing, codegen
+packs.json                    the nine packs: ids, titles, uuids, dependencies (manifests are generated from it)
+behavior_packs/elleedog67/    core behavior pack: the book item and the Stair Sitting entities
+behavior_packs/elleedog67_*/  one behavior pack per optional feature (pets, rbow_ore, ender_mod, redstone_guide)
+resource_packs/elleedog67/    core resource pack: the book and Stair Sitting visuals
+resource_packs/elleedog67_*/  one resource pack per optional feature that needs one
+src/core/                     feature registry, pack probes, commands, the book and the manual
+src/features/<id>/            each feature's scripts; index.ts is its entry point
+test/                         vitest suites and the engine mock
+tools/                        build, validate, package, manifests, version bump, codegen
+docs/                         architecture, feature pages, testing, releasing, codegen
 ```
 
 Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) first, then
-[docs/ADDING_A_FEATURE.md](docs/ADDING_A_FEATURE.md) when you want to add something. Some pack
-folders are generated (Pets, Rbow Ore and the Enderman override); they are committed and
-regenerated with `npm run codegen`, which needs [uv](https://docs.astral.sh/uv/). See
+[docs/ADDING_A_FEATURE.md](docs/ADDING_A_FEATURE.md) when you want to add something. The Pets and
+Rbow Ore packs and the Enderman override are generated; they are committed and regenerated with
+`npm run codegen`, which needs [uv](https://docs.astral.sh/uv/). See
 [docs/CODEGEN.md](docs/CODEGEN.md).
 
 ## Not in this version
 
-- Turning a feature off does not remove its data from the world: Rbow ore keeps generating and
-  its recipes keep working, the Redstone Guide can still be crafted, and the player and enderman
-  definitions stay replaced. A build-time way to leave a feature out entirely is a follow-up.
 - The migrated feature scripts are still JavaScript; the core is TypeScript.
 - No local "deploy to my PC's Minecraft folder" script; the `.mcaddon` is the delivery path.
 

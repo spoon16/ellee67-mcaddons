@@ -1,12 +1,19 @@
 # Rbow Ore
 
 The 67 Rbow Ore Mod 1.2.0 by Ellee Schoonover, carried into ElleeDog 67 as the `rbow-ore` feature
-(title "Rbow Ore", enabled by default). It adds a rainbow ore to the Overworld and a complete
-netherite-tier material set on top of it: three blocks, three materials, six tools, four armour
-pieces, recipes, smelting and world generation. Everything except the ore drop, the tool
-behaviours and legacy-drop recovery is plain pack data.
+(title "Rbow Ore"). It adds a rainbow ore to the Overworld and a complete netherite-tier material
+set on top of it: three blocks, three materials, six tools, four armour pieces, recipes, smelting
+and world generation. Everything except the ore drop, the tool behaviours and legacy-drop recovery
+is plain pack data.
 
-## Pack data (present whether or not the feature is enabled)
+Kind and packs: pack feature. It is active when "ElleeDog 67 Rbow Ore" (Behavior Packs) and
+"ElleeDog 67 Rbow Ore Resources" (Resource Packs) are active in Edit World; activating the behavior
+pack adds the resource pack and the core. There is no runtime switch. The scripts probe
+`EntityTypes.get("elleedog:rbow_drop")` after world load to know whether the packs are there.
+
+## Pack data
+
+All of it lives in `behavior_packs/elleedog67_rbow_ore/` and `resource_packs/elleedog67_rbow_ore/`.
 
 - **Blocks**: Rbow Ore `elleedog:rbow_ore`, Deepslate Rbow Ore `elleedog:deepslate_rbow_ore` and the
   storage block `elleedog:rbow_block`. Placed blocks cannot be blown up. Their loot table
@@ -24,9 +31,15 @@ behaviours and legacy-drop recovery is plain pack data.
 - **Armour**: `elleedog:rbow_helmet` (407 durability, 3 protection), `rbow_chestplate` (592, 8),
   `rbow_leggings` (555, 6), `rbow_boots` (481, 3). Netherite tier and `minecraft:trimmable_armors`,
   so vanilla trim templates and materials apply in a smithing table. Rbow ingots are not a trim
-  material and there is no trim workshop. The `minecraft:player` override (shared with Pets under
-  `entities/overrides/`) counts worn Rbow pieces through the `elleedog:rbow_armor_0` to
-  `elleedog:rbow_armor_4` component groups and grants 0.1 knockback resistance per piece.
+  material and there is no trim workshop. The `minecraft:player` override in
+  `entities/overrides/player.json` (byte-identical to the one in the Pets behavior pack, so either
+  pack alone or both together give the same player) counts worn Rbow pieces through the
+  `elleedog:rbow_armor_0` to `elleedog:rbow_armor_4` component groups and grants 0.1 knockback
+  resistance per piece.
+- **Player armour and spear art**: the resource pack carries the standalone Rbow 1.2.0
+  `elleedog:rbow_*.player` armor attachables and `rbow_spear_native.json`, so Rbow Ore alone renders
+  exactly as Rbow 1.2.0 did. The Pets resource pack defines the same identifiers with pet-aware
+  versions, which win when "ElleeDog 67 Pets Resources" sits above "ElleeDog 67 Rbow Ore Resources".
 - **Recipes**: the vanilla tool and armour shapes from ingots and ordinary sticks; nine ingots to a
   block and back; nine nugs to an ingot and back; furnace or blast furnace smelting of both ores and
   raw ore into an ingot; and `elleedog:recycle_rbow_<gear>` smelts any tool or armour piece into a
@@ -39,7 +52,7 @@ behaviours and legacy-drop recovery is plain pack data.
   sulfur cube treats them like an oak block. Raw ore, ingots, nugs, tools and armour are not cube food.
 - **Legacy carrier**: `elleedog:rbow_drop` (property `elleedog:drop_art`) is the invisible,
   persistent entity Rbow 1.1.3 and 1.1.4 used to protect dropped items. It stays defined so old chunks
-  can still be read; nothing spawns it any more.
+  can still be read; nothing spawns it any more. It doubles as the pack probe.
 
 ## What the scripts do
 
@@ -48,13 +61,13 @@ byte for byte (`test/features/rbow-ore/pinned_sources.test.ts` checks them again
 `main.js` and `legacy_drops.js` are the original handlers exported as functions; `index.ts` wires
 them into the feature lifecycle.
 
-| Handler | While disabled | Behaviour |
+| Handler | Registered | Behaviour |
 | --- | --- | --- |
-| `world.afterEvents.playerBreakBlock` | keeps running (`alwaysOn`) | Spawns the drop for the three Rbow blocks using the tool held before the break: raw ore (1 to 4 with Fortune, one stack of at most 64 per spawn), the ore block itself with Silk Touch, the storage block for `rbow_block`. Nothing in Creative or Spectator, with a wrong tool, or while `doTileDrops` is false. |
-| `elleedog:rbow_tool` item component | registered at startup, callbacks do nothing | Mining wear for the five diggers: two points for the sword, one for the others, each point skipped with the usual Unbreaking chance; the tool breaks with `random.break` at max durability. Combat wear: one point for sword and hoe, two for pickaxe, axe and shovel. |
-| `world.beforeEvents.playerInteractWithBlock` | off | Hoe tills dirt, grass block, grass and path into farmland, coarse dirt into dirt, rooted dirt into dirt plus hanging roots. Shovel turns dirt, grass block, grass, coarse dirt, podzol, mycelium and rooted dirt into a path and extinguishes campfires. Axe strips vanilla logs, woods, stems, hyphae and bamboo blocks, keeping their states. Soil actions need air above and not an underside click. The before-event only cancels; the edit runs on the next tick and is skipped if the player, hotbar slot, held tool, game mode, block or the space above changed. |
-| `system.afterEvents.scriptEventReceive` | off | `/scriptevent elleedog:rbow_check` (below). |
-| `world.afterEvents.entityLoad` and a scan on start | off | Legacy drop recovery: each `elleedog:rbow_drop` that loads gets its stored stack cloned into a native item drop, then the empty carrier is removed. A failed write rolls the spawned copy back and retries twice; a double failure marks the carrier `elleedog:legacy_release_blocked` and stops. |
+| `world.afterEvents.playerBreakBlock` | at world load through `alwaysOn`, whether or not the packs are active (without them the Rbow blocks do not exist and it never fires) | Spawns the drop for the three Rbow blocks using the tool held before the break: raw ore (1 to 4 with Fortune, one stack of at most 64 per spawn), the ore block itself with Silk Touch, the storage block for `rbow_block`. Nothing in Creative or Spectator, with a wrong tool, or while `doTileDrops` is false. |
+| `elleedog:rbow_tool` item component | at startup; its callbacks do nothing while the packs are absent | Mining wear for the five diggers: two points for the sword, one for the others, each point skipped with the usual Unbreaking chance; the tool breaks with `random.break` at max durability. Combat wear: one point for sword and hoe, two for pickaxe, axe and shovel. |
+| `world.beforeEvents.playerInteractWithBlock` | while active | Hoe tills dirt, grass block, grass and path into farmland, coarse dirt into dirt, rooted dirt into dirt plus hanging roots. Shovel turns dirt, grass block, grass, coarse dirt, podzol, mycelium and rooted dirt into a path and extinguishes campfires. Axe strips vanilla logs, woods, stems, hyphae and bamboo blocks, keeping their states. Soil actions need air above and not an underside click. The before-event only cancels; the edit runs on the next tick and is skipped if the player, hotbar slot, held tool, game mode, block or the space above changed. |
+| `system.afterEvents.scriptEventReceive` | while active | `/scriptevent elleedog:rbow_check` (below). |
+| `world.afterEvents.entityLoad` and a scan on start | while active | Legacy drop recovery: each `elleedog:rbow_drop` that loads gets its stored stack cloned into a native item drop, then the empty carrier is removed. A failed write rolls the spawned copy back and retries twice; a double failure marks the carrier `elleedog:legacy_release_blocked` and stops. |
 
 ### Diagnostics and helpers
 
@@ -66,15 +79,16 @@ them into the feature lifecycle.
 - `/function elleedog/rbow_test_kit` gives the running player 64 of every Rbow block and material and
   one of each tool and armour piece. Cheats must be on; use a disposable world.
 
-## What "disabled" means
+## What off means
 
-Rbow ore, items, recipes and world generation stay in the world and ore still drops; only Rbow
-tool behaviours and legacy-drop recovery are off.
+Rbow Ore is active exactly when its two packs are active; `/elleedog67:disable rbow-ore` replies
+with the packs to deactivate and changes nothing.
 
-In practice: Rbow tools take no mining wear (custom diggers get none from the engine) and vanilla
-combat wear; the Rbow hoe, shovel and axe do nothing special on right click; the diagnostic script
-event is ignored; old `elleedog:rbow_drop` carriers keep their items until the feature is enabled
-again.
+When "ElleeDog 67 Rbow Ore" and "ElleeDog 67 Rbow Ore Resources" are deactivated: no new ore
+generates and the Rbow tools and armor lose their behaviours. Ore already placed, items in chests and
+the recipes need the packs active to keep working, so activate Rbow Ore before opening a world that
+ever used it. Legacy `elleedog:rbow_drop` carriers are in the same position: they are entities the
+pack defines, so they are only safe to load with the pack active.
 
 ## Known limits
 
@@ -86,12 +100,15 @@ Carried over from the original mod's `release_status.json` and README:
 - "Redstone-like ore rarity is configured but has not been empirically calibrated." Touching veins
   can look larger than one template, and existing terrain is not regenerated.
 - "The existing behavior-pack player override for armor knockback can conflict with other player
-  overrides." In this add-on that override is the shared Pets and Rbow player file.
+  overrides." In this add-on the same file ships in the Pets and Rbow Ore behavior packs, which is
+  why any other pack that replaces the player must sit below them or be removed.
 - "Legacy custom-drop recovery from earlier versions is retained but not engine-validated."
 
 ## Manual in-game checks
 
-Use a copy of a world with cheats on and `/function elleedog/rbow_test_kit`.
+Use a copy of a world with "ElleeDog 67 Rbow Ore" active, cheats on and
+`/function elleedog/rbow_test_kit`. Do the first pass without the Pets packs, so the standalone
+attachables are what renders.
 
 1. **Mining by tier.** Mine Rbow Ore and Deepslate Rbow Ore with a wooden, stone, golden and copper
    pickaxe: nothing drops. With iron, diamond, netherite and Rbow pickaxes: one Raw Rbow Ore each.
@@ -122,10 +139,16 @@ Use a copy of a world with cheats on and `/function elleedog/rbow_test_kit`.
     each time: knockback shrinks with every piece and returns to normal when the set is removed.
     Trim a piece in a smithing table with a vanilla template and material: the trim renders and the
     piece keeps its stats. Crouch-clicking the table with an Rbow ingot does nothing special.
-12. **Legacy drop recovery.** Load a world saved by Rbow 1.1.3 or 1.1.4 with items on the ground:
+12. **Armour on a vanilla player.** With the Pets packs off, wear the full set and hold the spear:
+    the armour fits the vanilla player model and the spear shows the Rbow model. Then activate Pets
+    (Pets Resources above Rbow Ore Resources) and repeat as a pet: fitted shapes, `/pet:rbowcheck`
+    READY.
+13. **Legacy drop recovery.** Load a world saved by Rbow 1.1.3 or 1.1.4 with items on the ground:
     when their chunk loads each carrier turns into an ordinary dropped item and disappears; the
     content log stays quiet unless recovery failed.
-13. **Diagnostic.** `/scriptevent elleedog:rbow_check` as a player: every gear line and block line
+14. **Diagnostic.** `/scriptevent elleedog:rbow_check` as a player: every gear line and block line
     says OK.
-14. **Disable and re-enable.** `/elleedog67:disable rbow-ore`: ore still drops, the hoe no longer
-    tills, the diagnostic prints nothing. `/elleedog67:enable rbow-ore`: the tool behaviours are back.
+15. **Packs off.** Deactivate "ElleeDog 67 Rbow Ore" and its resource pack on a disposable copy that
+    has placed ore and Rbow items in a chest, reopen it, and record what the game did with them;
+    then reactivate the packs. `/elleedog67:features` reads `rbow-ore: packs off` while they are
+    off and `/elleedog67:disable rbow-ore` only replies with the pack hint.

@@ -1,7 +1,12 @@
 # Redstone Guide
 
-Feature id `redstone-guide`, enabled by default. Ported from Redstone Guide 1.0.3; the item, recipe, texture,
-reader and guide text are the 1.0.3 files.
+Feature id `redstone-guide`. Ported from Redstone Guide 1.0.3; the item, recipe, texture, reader and guide
+text are the 1.0.3 files.
+
+Kind and packs: pack feature. It is active when "ElleeDog 67 Redstone Guide" (Behavior Packs) and
+"ElleeDog 67 Redstone Guide Resources" (Resource Packs) are active in Edit World; activating the behavior
+pack adds the resource pack and the core. There is no runtime switch. The scripts probe
+`ItemTypes.get("elleedog_redstone:guide_book")` after world load to know whether the packs are there.
 
 ## What it does
 
@@ -25,13 +30,15 @@ None.
 
 | What | Identifier | Where |
 | --- | --- | --- |
-| Item | `elleedog_redstone:guide_book` | `behavior_packs/elleedog67/items/redstone-guide/guide_book.json` |
-| Recipe | `elleedog_redstone:guide_book` (shapeless, `crafting_table`) | `behavior_packs/elleedog67/recipes/redstone-guide/guide_book.json` |
+| Item | `elleedog_redstone:guide_book` | `behavior_packs/elleedog67_redstone_guide/items/guide_book.json` |
+| Recipe | `elleedog_redstone:guide_book` (shapeless, `crafting_table`) | `behavior_packs/elleedog67_redstone_guide/recipes/guide_book.json` |
 | Item component | `elleedog_redstone:open_guide` | registered by `register()`, gated by the core |
-| Item texture | atlas key `elleedog_redstone_guide_book` | `resource_packs/elleedog67/textures/items/elleedog_redstone_guide_book.png` |
-| Display name | `item.elleedog_redstone:guide_book.name` | `resource_packs/elleedog67/texts/en_US.lang`, `en_GB.lang` |
+| Item texture | atlas key `elleedog_redstone_guide_book` | `resource_packs/elleedog67_redstone_guide/textures/items/elleedog_redstone_guide_book.png`, listed in that pack's `textures/item_texture.json` |
+| Display name | `item.elleedog_redstone:guide_book.name` | `resource_packs/elleedog67_redstone_guide/texts/en_US.lang`, `en_GB.lang` |
 | Item cooldown | category `elleedog_redstone_guide`, 0.25 s | item JSON |
 | Bookmark | player dynamic property `elleedog_redstone:bookmark_v1` | JSON `{ "id": "<entry>", "page": <n> }` |
+
+The item is also the pack probe.
 
 ## Scripts
 
@@ -39,7 +46,8 @@ None.
 
 - `index.ts`: the feature definition. `register()` adds the item component; `onUse` and `onUseOn` both open the
   book. `start()` subscribes the plain `itemUse` after-event as a fallback for the same book and `playerLeave` to
-  drop that player's session and cooldown. `stop()` clears every session and cooldown.
+  drop that player's session and cooldown. `stop()` clears every session and cooldown and is never called at
+  runtime.
 - `reader.js`: the pure screen and route model, verbatim from 1.0.3. `reader.d.ts` describes it for TypeScript.
 - `content.js`: exposes `ENTRIES` from `guide_content.json`; esbuild inlines the JSON into the bundle.
 - `guide_content.json`: the editable guide, verbatim from 1.0.3. Every entry needs a unique id and one or two
@@ -57,12 +65,14 @@ Behaviour details:
 - A corrupt bookmark or failed persistence never blocks reading; a thrown form is logged, the player is told, and
   the next use works.
 
-## What "disabled" means
+## What off means
 
-The item and its recipe stay in the world: Bedrock cannot unregister them after startup. Using the book does
-nothing. The component callbacks are gated by the core and the fallback subscription is gone. A reader that is
-open when the feature is disabled closes at its next screen and sends no message. Bookmarks are kept and work
-again after `/elleedog67:enable redstone-guide`.
+Redstone Guide is active exactly when its two packs are active; `/elleedog67:disable redstone-guide` replies with
+the packs to deactivate and changes nothing.
+
+When "ElleeDog 67 Redstone Guide" and "ElleeDog 67 Redstone Guide Resources" are deactivated: the guide cannot be
+crafted and existing guides turn into unknown items until the packs are active again. Bookmarks are player
+dynamic properties, so they are kept and work again once the packs are active.
 
 ## Known limits
 
@@ -79,6 +89,8 @@ From the 1.0.3 README and validation report:
 
 ## Manual in-game checks
 
+Use a copy of the world with "ElleeDog 67 Redstone Guide" active.
+
 1. Craft the book from 1 redstone dust and 1 leather in both ingredient orders, in the inventory grid and at a
    crafting table. Confirm it also appears in the Creative inventory with the closed-book icon and the name
    "Redstone Guide".
@@ -89,9 +101,11 @@ From the 1.0.3 README and validation report:
 4. From a component page use "Show crafting recipe", then "Back to component".
 5. Read to the second page of a build and close the book. Use it again: "Resume reading" is the first button and
    opens that page. Leave and rejoin the world and check Resume reading again.
-6. Use the book with the ElleeDog 67 Book's menu still open. The guide should open once that menu is closed; if
+6. Use the book with the ElleeDog 67 Book's manual still open. The guide should open once that menu is closed; if
    it reports "Close the other screen, then use Read Guide again.", close every menu and use it again.
 7. Two players read at the same time. Each sees their own pages and their own bookmark.
 8. Close the book deliberately. It must not reopen by itself.
-9. Run `/elleedog67:disable redstone-guide`. The book does nothing when used; the recipe still crafts. Run
-   `/elleedog67:enable redstone-guide`. Reading and the earlier bookmark work again.
+9. Deactivate "ElleeDog 67 Redstone Guide" and its resource pack in Edit World and reopen the world: the recipe
+   is gone, a guide already in the inventory shows as an unknown item and `/elleedog67:features` reads
+   `redstone-guide: packs off`. Reactivate both packs and reopen: crafting, reading and the earlier bookmark
+   work again.

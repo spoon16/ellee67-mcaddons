@@ -1,6 +1,11 @@
 # Stair Sitting
 
-Feature id: `stair-sit`. Enabled by default. Ported from ElleeDog 67 Stair Sitting v0.2.1.
+Feature id: `stair-sit`. Ported from ElleeDog 67 Stair Sitting v0.2.1.
+
+Kind and packs: switch feature, on by default. It ships in the core packs ("ElleeDog 67 (Behavior)"
+carries the `sit:seat` and `sit:target` entities, "ElleeDog 67 (Resources)" their client files) and
+is turned on or off per world from the manual or with `/elleedog67:enable stair-sit` and
+`/elleedog67:disable stair-sit`.
 
 ## What it does
 
@@ -44,12 +49,14 @@ Every command is registered with `cheatsRequired: false` and must be run by a pl
 
 ## Entities and identifiers
 
+All files below live in the core packs, `behavior_packs/elleedog67/` and `resource_packs/elleedog67/`.
+
 | Identifier | Where | Notes |
 | --- | --- | --- |
 | `sit:seat` | `entities/stair-sit/seat.json`, `entity/stair-sit/seat.entity.json` | The carrier. Player-only single seat at `[0, -0.35, 0]`, family `sit_seat`, 0.01 collision box, no gravity or collision, transient, unthrottled spatial updates. |
 | `sit:target` | `entities/stair-sit/target.json`, `entity/stair-sit/target.entity.json` | The Sit prompt. Not rideable; a 0.9 x 0.6 non-colliding hit area whose `minecraft:interact` entry shows `action.interact.sit67` to non-crouching, empty-handed players who are on foot or already riding a `sit_seat`. |
 | `geometry.sit_seat`, `controller.render.sit_seat` | `models/entity/stair-sit/seat.geo.json`, `render_controllers/stair-sit/seat.render_controllers.json` | Shared invisible model and renderer for both entities. |
-| `textures/entity/sit_seat.png` | resource pack | 16 x 16 fully transparent texture referenced by both client entities. |
+| `textures/entity/sit_seat.png` | core resource pack | 16 x 16 fully transparent texture referenced by both client entities. |
 
 Entity events: `sit:heartbeat` renews the `sit:lease` timer group, `sit:expire` adds `sit:remove`
 (instant despawn).
@@ -58,17 +65,18 @@ Per-player dynamic properties: `sit:gesture` (boolean, `false` turns the crouch 
 (number, clamped to -0.5 to 0.5) and `sit:button` (boolean, `false` turns Sit targets off). The tag
 `ed67_sit_no_button` mirrors `sit:button false` so the target's `has_tag` filter can hide the prompt.
 
-Lang keys, under `## stair-sit` in both `texts/en_US.lang` and `texts/en_GB.lang`:
+Lang keys, under `## stair-sit` in the core resource pack's `texts/en_US.lang` and `texts/en_GB.lang`:
 `action.interact.sit67`, `entity.sit:seat.name`, `entity.sit:target.name`.
 
-## Disabled
+## What off means
 
-`/elleedog67:disable stair-sit` stands every rider up (moved to a safe spot next to the stair when one is
-free), removes every loaded `sit:seat` and `sit:target`, and stops the gesture, target discovery and sweep
-loops. Block and target clicks are no longer intercepted, and every `sit:*` command answers
-"Stair Sitting is disabled. An operator can run /elleedog67:enable stair-sit." Nothing from the feature stays
-in the world. Per-player settings persist and apply again after enabling; the usual remount cooldown applies
-to anyone who was stood up.
+Turn off from the Stair Sitting page of the ElleeDog 67 Book (ElleeDog or an operator) or with
+`/elleedog67:disable stair-sit`. Every rider is stood up (moved to a safe spot next to the stair when one
+is free), every loaded `sit:seat` and `sit:target` is removed, and the gesture, target discovery and sweep
+loops stop. Block and target clicks are no longer intercepted, and every `sit:*` command answers
+"Stair Sitting is disabled. An operator can run /elleedog67:enable stair-sit." Seats and Sit prompts are
+removed and nothing stays behind in the world. Per-player settings persist and apply again after turning
+it on; the usual remount cooldown applies to anyone who was stood up.
 
 ## Known limits
 
@@ -89,8 +97,8 @@ Quoted from the upstream README, "Compatibility and deliberate limits":
 
 ## Manual in-game checks
 
-Use a copy of the world with both packs active, the Content Log enabled and experiments off. Confirm the
-add-on version with `/elleedog67:features`.
+Use a copy of the world with the two core packs active, the Content Log enabled and experiments off.
+Confirm the add-on version with `/elleedog67:features`.
 
 1. `/sit:status` reports version 0.2.1, Native Sit enabled, "Switch cooldown: 0 ticks; input dispatch:
    ASAP".
@@ -128,9 +136,10 @@ add-on version with `/elleedog67:features`.
     it. Ordinary boats keep their normal boarding prompt.
 14. `/elleedog67:disable stair-sit` while seated: you stand up, helpers vanish, and `/sit:down` refuses with
     the disabled message. `/elleedog67:enable stair-sit` brings prompts and sitting back without a reload.
-15. Reload the world: no helper entities persist. With Pets enabled, transformed players keep their model,
-    hands, armor and camera; note any ride-pose artefact separately. No script errors, missing assets or
-    raw translation keys in the Content Log.
+    Repeat both from the Stair Sitting page of the book with cheats off (Turn off, Turn on).
+15. Reload the world: no helper entities persist. With the Pets packs active, transformed players keep their
+    model, hands, armor and camera; note any ride-pose artefact separately. No script errors, missing
+    assets or raw translation keys in the Content Log.
 
 Record the Bedrock version, device and touch scheme, `/sit:status` before and after, a short third-person
 clip, and Content Log lines beginning `[ElleeDog 67 Sit]`. When reporting slowness, say whether it happens

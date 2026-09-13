@@ -1,6 +1,11 @@
 # Pets
 
-Feature id `pets`, enabled by default. Ported from ElleeDog 67 Pets 0.5.2 (Rbow companion build).
+Feature id `pets`. Ported from ElleeDog 67 Pets 0.5.2 (Rbow companion build).
+
+Kind and packs: pack feature. It is active when "ElleeDog 67 Pets" (Behavior Packs) and
+"ElleeDog 67 Pets Resources" (Resource Packs) are active in Edit World; activating the behavior pack
+adds the resource pack and the core. There is no runtime switch. The scripts probe
+`EntityTypes.get("pet:diag_model")` after world load to know whether the packs are there.
 
 ## What it does
 
@@ -35,8 +40,9 @@ and read only the equipped items and the riding component.
 
 All 24 commands are `pet:*`, permission level Any, `cheatsRequired: false`, and run only for the
 player who typed them ("Run directly as a player." otherwise). They reply in chat with the
-`[ElleeDog 67 Pets 0.5.2-native-armor-isolation]` prefix. While the feature is disabled every one of
-them answers "Pets is disabled. An operator can run /elleedog67:enable pets."
+`[ElleeDog 67 Pets 0.5.2-native-armor-isolation]` prefix. While the Pets packs are not active every
+one of them answers "Pets is not active. Pets is turned on by activating "ElleeDog 67 Pets"
+(Behavior Packs) in Edit World. Its resource pack is added automatically."
 
 | Command | Parameters | Effect |
 |---|---|---|
@@ -54,7 +60,10 @@ them answers "Pets is disabled. An operator can run /elleedog67:enable pets."
 | `/pet:seatinfo` | | Print the mount and seat-height measurement as JSON. |
 | `/pet:seatheight <pixels>` | Integer -16..32 | Trim the seat height for the current mount kind (boat, pig, stairs, other). |
 | `/pet:seatreset` | | Drop the trim for the current mount kind. |
-| `/pet:check` | | Read-only property health summary (READY 17/17 when the override is loaded). |
+| `/pet:armorlift <pixels>` | Float -16..16 | Raise (positive) or lower the fitted armor on the selected pet, in model pixels, on top of the baked position. Saved per pet. |
+| `/pet:armorscale <percent>` | Integer 50..150 | Grow or shrink the fitted armor on the selected pet. 100 is the baked size. Saved per pet. |
+| `/pet:armorfitreset` | | Drop the armor lift and scale saved for the selected pet. |
+| `/pet:check` | | Read-only property health summary (READY 19/19 when the override is loaded). |
 | `/pet:rbowcheck` | | Rbow/Pets compatibility: `elleedog:rbow_armor_count`, Rbow item registrations, gear routing. |
 | `/pet:diagnose` | | Full JSON report to chat and content log, then the client resource check. |
 | `/pet:clientcheck` | | Asks the client to translate `pet.diag.rp_052`; proves the resource pack language file loaded. |
@@ -70,12 +79,14 @@ reports `ERROR: ...` and the failure is kept for `/pet:check` until the player l
 
 ## Items and entities
 
+All in `behavior_packs/elleedog67_pets/` and `resource_packs/elleedog67_pets/`.
+
 | Identifier | Component | Notes |
 |---|---|---|
 | `pet:morpher_book` | `pet:open_morpher` | "ElleeDog 67 Pet Morpher". Unstackable, has a use cooldown. Given by `/pet:book` only; never consumed. Registered for side carry so holding it does not trigger the unmapped-item fallback. |
-| `pet:paw_token` | `pet:open_form_menu` | "ElleeDog 67 Pets - Paw Menu". Craftable (`recipes/pets/paw_token.json`); opens the same Morpher menu. |
+| `pet:paw_token` | `pet:open_form_menu` | "ElleeDog 67 Pets - Paw Menu". Craftable (`recipes/paw_token.json`); opens the same Morpher menu. |
 | `cav:paw_token` | `pet:open_form_menu` | Legacy 0.1.x token kept so old stacks still open the menu. |
-| `pet:diag_cube`, `pet:diag_model` | | Summonable test props owned by the player who ran `/pet:probe` (dynamic property `pet:probe_owner`). `pet:diag_model` carries `pet:model_id`. |
+| `pet:diag_cube`, `pet:diag_model` | | Summonable test props owned by the player who ran `/pet:probe` (dynamic property `pet:probe_owner`). `pet:diag_model` carries `pet:model_id` and is the pack probe. |
 | `cav:diag_cube`, `cav:diag_model` | | Legacy props; only `/pet:cleanup` touches them. |
 
 The Morpher menu is one `ActionFormData` per step: Player, Carter, Mochi, Casper, then a biography
@@ -84,8 +95,8 @@ dimension, respawning or choosing by command is discarded. A busy client is retr
 
 ## Player override and property budget
 
-`behavior_packs/elleedog67/entities/overrides/player.json` replaces `minecraft:player`. It declares
-18 entity properties, all `client_sync: true` except the last:
+`behavior_packs/elleedog67_pets/entities/overrides/player.json` replaces `minecraft:player`. It
+declares 20 entity properties, all `client_sync: true` except the last:
 
 - `pet:model_id` (int 0..4095), `pet:view` (enum paws/native), `pet:motion`, `pet:armor_fit`,
   `pet:gear_fit`, `pet:debug` (bool), `pet:hand_height` (int -8..12)
@@ -93,32 +104,29 @@ dimension, respawning or choosing by command is discarded. A busy client is retr
   `pet:carry_main_enchanted_for`, `pet:main_shield_enchanted`, `pet:carry_off_enchanted`,
   `pet:carry_off_enchanted_for`, `pet:off_shield_enchanted`
 - `pet:seat_lift` (float -64..64), `pet:seat_kind` (int 0..4)
+- `pet:armor_lift` (float -16..16), `pet:armor_scale` (float 0.5..1.5): live fitted-armor calibration
 - `elleedog:rbow_armor_count` (int 0..4, server only) for the Rbow Ore companion
 
-Bedrock allows one `minecraft:player` override per world and a fixed number of properties per
-entity, so every feature that needs a player property must add it to this file and to
+The Rbow Ore behavior pack ships the byte-identical file (the build asserts it), so Pets alone,
+Rbow Ore alone or both together give the same player in any stack order. Bedrock allows one
+`minecraft:player` override per world and a fixed number of properties per entity, so every feature
+that needs a player property must add it to the compiler's output for both packs and to
 `src/features/pets/property_schema.generated.js` (the diagnostic contract behind `/pet:check`, which
 expects exactly the 17 `pet:*` keys). Removing or renaming a property changes what old worlds
 report as MISSING or INVALID.
 
-## What "disabled" means
+## What off means
 
-`/elleedog67:disable pets` (or the book menu) does the following on the next tick:
+Pets is active exactly when its two packs are active; `/elleedog67:disable pets` replies with the
+packs to deactivate and changes nothing.
 
-- Every online player currently in a pet form is returned to native form with
-  `transitionForm(player, "human", { persist: false, defaults: false })`: model 0, native view,
-  motion, armor and gear off, hand height 0, glint and seat flags cleared. Saved preferences are not
-  touched, so `/elleedog67:enable pets` restores the chosen form about one second later.
-- Open Morpher sessions, settings menus and pending confirmations are dropped.
-- The spawn, leave and dimension-change listeners and both sync loops are removed.
-- A single idle listener stays subscribed to `playerSpawn`: a player who joins in a saved pet form
-  is forced native the same way, silently.
-- All `pet:*` commands refuse with the disabled message; the book and token do nothing.
-
-What stays in the world regardless: the player override and its properties, both items, the recipe,
-the test prop entities and the resource pack. A world that loads with Pets already disabled has no
-listeners at all until the feature is enabled once; players who saved a pet form in such a world keep
-it until then.
+When "ElleeDog 67 Pets" and "ElleeDog 67 Pets Resources" are deactivated in Edit World and the world
+is reopened: players render as themselves and the pet commands refuse with the pack hint. Pet items
+already in inventories turn into unknown items until the packs are active again; saved pet choices
+come back when they are. The player override, the items, the recipe, the test prop entities and the
+resource pack leave the world with the packs. Saved preferences (`pet:preferred_form` and the display
+settings) are player dynamic properties and stay put, so a player who was Carter is Carter again on
+the first join after the packs are active.
 
 ## Known limits
 
@@ -127,14 +135,16 @@ From the 0.5.2 release notes:
 - Seated pose: the generated ride clip is emitted in Bedrock's rotation sign (negative X raises the
   chest, as in vanilla `animation.cat.sit`). Pets sit on their rear with the body raised, front legs
   vertical with paws on the seat plane, hind legs folded forward and paws flat, tail resting behind.
-  Earlier builds emitted right-handed signs and drew the pose nose-down.
-- Fitted armor meshes are pre-scaled by the player's render scale (0.9375) because the armor
-  attachables rebuild their bone matrices without it; the client showed pet-shaped armor that
-  followed the pet but floated evenly a little high. The shield attachable was left as it was
-  (its placement is locked as user-confirmed); if the armor now lands correctly, the shield should
-  get the same treatment.
-- Previously unsupported held items still use the unmodified native fallback and can appear at
-  normal human-hand height in pet form.
+- Fitted armor meshes are pre-scaled per pet (`equipment.armor_attachable.scale` in the catalog:
+  Mochi and Casper 0.9375, the player's render scale, and Carter 1.0) because the armor attachables
+  rebuild their bone matrices without the entity scale. At 0.9375 the cat armor rests on the cats,
+  while Carter's armor drew inside his body, so his meshes are left unscaled. `/pet:armorlift` and
+  `/pet:armorscale` move and resize the armor live through `pet:armor_lift` and `pet:armor_scale`,
+  which drive the `animation.pet.armor_fit` clip on every armor adapter; once the right numbers are
+  found in game, bake them into the catalog and set the live values back to zero and 100. The
+  shield attachable is not pre-scaled (its placement is locked as user-confirmed).
+- Held items without a pet mapping use the unmodified native fallback and can appear at normal
+  human-hand height in pet form.
 - Fitted dye, trims, glint, Persona and Character Creator outfits, simultaneous viewers and armor
   binding still require Minecraft tests. Each armor adapter adds one render pass per registered pet;
   the iPad performance cost has not been measured.
@@ -145,15 +155,17 @@ From the 0.5.2 release notes:
 
 Port-specific:
 
-- A settings menu that is already open when Pets is disabled still applies the button the player
-  presses next; Bedrock cannot close a form from script.
-- The `/pet:check` count of 17 is the `pet:*` schema; `elleedog:rbow_armor_count` is reported by
+- The `/pet:check` count of 19 is the `pet:*` schema; `elleedog:rbow_armor_count` is reported by
   `/pet:rbowcheck` instead.
+- The Pets renderer has texture slots for Rbow items that point at files only the Rbow Ore resource
+  pack has. They are sampled only when an Rbow item exists, so Pets without Rbow Ore is expected to
+  stay silent in the content log; the manual pass checks this.
 
 ## Manual in-game checks
 
-Use a copy of the world with the add-on imported. The book is the intended interface; use commands
-only where the step says so. Record NOT RUN, PASS, FAIL or BLOCKED per line with a screenshot.
+Use a copy of the world with the add-on imported and "ElleeDog 67 Pets" active. The book is the
+intended interface; use commands only where the step says so. Record NOT RUN, PASS, FAIL or BLOCKED
+per line with a screenshot.
 
 1. Join as a fresh player. No chat line, no menu and no content-log entry appears. `/pet:check`
    prints `READY | 17/17 valid properties` and `pet:model_id=0`.
@@ -166,8 +178,9 @@ only where the step says so. Record NOT RUN, PASS, FAIL or BLOCKED per line with
    Carter, then Player. The native armor lines up with the body without re-equipping or relogging.
    Repeat with Mochi and Casper; walk, turn, crouch and swing after returning to Player. Do this
    unmounted first, then mounted.
-5. Repeat step 4 with Rbow armor and a mixed native/Rbow set. Pets keep their fitted shapes and paw
-   height 2. `/pet:rbowcheck` reports READY.
+5. With "ElleeDog 67 Rbow Ore" also active and "ElleeDog 67 Pets Resources" above "ElleeDog 67 Rbow
+   Ore Resources", repeat step 4 with Rbow armor and a mixed native/Rbow set. Pets keep their fitted
+   shapes and paw height 2. `/pet:rbowcheck` reports READY.
 6. Hold a pickaxe, sword, shield, boat and a filled map as a pet. Tools sit in the mouth, mapped
    items on the side, the shield beside the torso and in front while sneaking or blocking. Enchanted
    items glint; the map uses the native fallback.
@@ -184,10 +197,12 @@ only where the step says so. Record NOT RUN, PASS, FAIL or BLOCKED per line with
     with no chat line. A second player with a different pet sees both forms correctly.
 12. `/pet:probe` spawns a cube and a static model of your pet 3.5 blocks ahead; `/pet:cleanup`
     removes only yours.
-13. `/elleedog67:disable pets` while transformed: you return to Player at once, `/pet:form carter`
-    is refused, the book does nothing, and a player who joins now is Player. `/elleedog67:enable
-    pets`: your pet returns within a second without a chat line.
-14. Watch the content log for the whole session: only explicit command errors may appear.
+13. While transformed, deactivate "ElleeDog 67 Pets" and "ElleeDog 67 Pets Resources" in Edit World
+    and reopen the world: you are a normal player, `/pet:form carter` replies with the pack hint,
+    the Pet Morpher shows as an unknown item, and the ElleeDog 67 Book reads `[PACKS OFF] Pets`.
+    Reactivate both packs and reopen: your pet returns on join without a chat line.
+14. Watch the content log for the whole session: only explicit command errors may appear. With Pets
+    active and Rbow Ore not, note any missing-texture message from the Rbow slots.
 
 If a step fails, send one screenshot taken after choosing Player, the `/pet:diagnose` output and the
 active pack list. Do not count re-equipping a piece or relogging as a passing transition.

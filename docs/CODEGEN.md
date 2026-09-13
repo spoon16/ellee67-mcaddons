@@ -1,56 +1,83 @@
 # Generated files
 
-Some of the pack is produced by generators rather than written by hand. The generated files are
-committed, so `npm run build` never needs Python and a fresh clone builds in seconds. CI runs
+Part of the pack tree is produced by generators rather than written by hand. The generated files
+are committed, so `npm run build` never needs Python and a fresh clone builds in seconds. CI runs
 `npm run codegen` and fails if the result differs from what is committed, so a stale or hand-edited
 generated file is caught on the next pull request.
 
 ```bash
 npm run codegen        # regenerate everything and sync into the pack tree
 npm run codegen:test   # only run the Pets compiler's own Python tests
+npm run manifests      # only rewrite every manifest.json from packs.json (Node only)
 ```
 
-Requirements: [uv](https://docs.astral.sh/uv/) (it installs the pinned Python 3.12, Pillow and numpy
-from `tools/codegen/pets/uv.lock` on first use).
+Requirements for `npm run codegen`: [uv](https://docs.astral.sh/uv/) (it installs the pinned
+Python 3.12, Pillow and numpy from `tools/codegen/pets/uv.lock` on first use).
 
 ## What is generated, and from what
 
 | Generated | Generator | Inputs you edit |
 |---|---|---|
-| `behavior_packs/elleedog67/entities/overrides/enderman.json` | `tools/codegen/enderman/inject.ts` | `tools/codegen/enderman/upstream/enderman.json` (pinned vanilla file) |
-| Pets: `entities/overrides/player.json`, `entities/pets/`, `items/pets/`, `recipes/pets/`, `functions/pet/`, and in the resource pack `entity/overrides/player.entity.json`, `entity/pets/`, `attachables/overrides/`, `attachables/pets/`, `render_controllers/overrides/`, `render_controllers/pets/`, `animations/pets/`, `animation_controllers/pets/`, `models/entity/pets/`, `textures/entity/pets/`, `textures/ui/`, the pet item textures; plus `src/features/pets/*.generated.js` | `tools/codegen/pets/tools/build.py` (the Pets compiler) | `tools/codegen/pets/catalog/`, `assets/`, `project.json`, `baseline/`, `upstream/`, and the hand-written scripts in `src/features/pets/` |
-| Rbow Ore: `blocks/rbow-ore/`, `items/rbow-ore/`, `recipes/rbow-ore/`, `features/rbow-ore/`, `feature_rules/rbow-ore/`, `structures/elleedog/`, `loot_tables/blocks/`, `functions/elleedog/`, `entities/rbow-ore/`, and in the resource pack `entity/rbow-ore/`, `attachables/rbow-ore/`, `render_controllers/rbow-ore/`, `models/entity/rbow-ore/`, the Rbow textures | the Pets compiler, which copies and adapts the hash-locked Rbow 1.2.0 packs under `tools/codegen/pets/integration/rbow_1.2.0/` | `tools/codegen/pets/integration/rbow_1.2.0/tools/build_data.py` and its tables (see "Regenerating Rbow") |
+| `behavior_packs/*/manifest.json`, `resource_packs/*/manifest.json` (all nine) | `tools/manifests.ts` | `packs.json` and the `version` in `package.json` |
+| `behavior_packs/elleedog67_ender_mod/entities/overrides/enderman.json` | `tools/codegen/enderman/inject.ts` | `tools/codegen/enderman/upstream/enderman.json` (pinned vanilla file) |
+| `behavior_packs/elleedog67_pets/` and `resource_packs/elleedog67_pets/` (everything except the manifest and icon), plus `src/features/pets/*.generated.js` | `tools/codegen/pets/tools/build.py` (the Pets compiler) and the sync | `tools/codegen/pets/catalog/`, `assets/`, `project.json`, `baseline/`, `upstream/`, and the hand-written scripts in `src/features/pets/` |
+| `behavior_packs/elleedog67_rbow_ore/` and `resource_packs/elleedog67_rbow_ore/` (everything except the manifest and icon) | the Pets compiler, which copies and adapts the hash-locked Rbow 1.2.0 packs under `tools/codegen/pets/integration/rbow_1.2.0/`; the sync adds the standalone player armor and spear attachables from that tree directly | `tools/codegen/pets/integration/rbow_1.2.0/tools/build_data.py` and its tables (see "Regenerating Rbow") |
+
+Hand-written and never touched by the sync: the two core packs, the Ender Mod marker entity
+`behavior_packs/elleedog67_ender_mod/entities/ender_mod_marker.json`, the two Redstone Guide packs,
+and every `pack_icon.png`.
 
 The complete list of files the sync owns is `tools/codegen/synced-files.json`; `.gitattributes`
-marks them `linguist-generated` so GitHub folds them in diffs.
+marks them and the manifests `linguist-generated` so GitHub folds them in diffs.
 
 ## How `npm run codegen` works
 
 1. **Enderman.** `inject.ts` reads the pinned vanilla definition (with its `//` comments), adds the
    `elleedog:may_move_blocks` property and a `bool_property` filter on the take-block and
-   place-block goals (wrapping any existing filter in `all_of`), and writes the override.
-   `test/features/ender-mod/codegen.test.ts` fails if the committed file drifts.
-2. **Pets compiler.** `tools/codegen/pets/` is the Pets 0.5.2 compiler tree, vendored with two changes:
-   `tools/seating.py` emits Bedrock-sign rotations, and `tools/attachable_space.py` pre-scales armor
-   attachable meshes by the player render scale (both documented in the modules). The
-   runner copies it to `.codegen-work/pets/`, adds the hand-written modules from `src/features/pets/`
-   as its `src/`, runs `tools/build.py` in place, then runs the compiler's own 243 Python tests. The
-   compiler verifies its baseline and Rbow input hashes itself and produces four packs.
-3. **Sync.** `tools/codegen/sync.ts` reads every output file, decides its home by identifier
-   (`minecraft:` goes to `overrides/`, `pet:`/`cav:` to `pets/`, `elleedog:` to `rbow-ore/`;
-   textures, functions, structures and loot tables keep their paths), deletes what it wrote last time,
-   copies the new files, and records the list. PNGs are compared by pixels so an encoder change
-   cannot churn the repo. The rbow copy of `player.json` is skipped (identical to the pets one).
-4. **Verify shared files.** `texts/en_US.lang`, `texts/en_GB.lang`, `textures/item_texture.json`,
-   `textures/terrain_texture.json` and `blocks.json` are hand-maintained unions. The sync checks
-   that every key the compiler emits is present with the same value and prints the missing lines
-   for you to add. It never writes those files.
+   place-block goals (wrapping any existing filter in `all_of`), and writes the override into the
+   Ender Mod pack. `test/features/ender-mod/codegen.test.ts` fails if the committed file drifts.
+2. **Pets compiler.** `tools/codegen/pets/` is the Pets 0.5.2 compiler tree, vendored with two
+   changes: `tools/seating.py` emits Bedrock-sign rotations, and `tools/attachable_space.py`
+   pre-scales armor attachable meshes by the player render scale (both documented in the modules).
+   The runner copies it to `.codegen-work/pets/`, adds the hand-written modules from
+   `src/features/pets/` as its `src/`, runs `tools/build.py` in place, then runs the compiler's own
+   243 Python tests. The compiler verifies its baseline and Rbow input hashes itself and produces
+   four packs: `behavior_pack`, `resource_pack`, `rbow_behavior_pack`, `rbow_resource_pack`.
+3. **Sync.** `tools/codegen/sync.ts` writes each compiler pack into its own repo pack:
+
+   | Compiler output | Repo pack |
+   |---|---|
+   | `behavior_pack` | `behavior_packs/elleedog67_pets` (`pets`) |
+   | `resource_pack` | `resource_packs/elleedog67_pets` (`pets-resources`) |
+   | `rbow_behavior_pack` | `behavior_packs/elleedog67_rbow_ore` (`rbow-ore`) |
+   | `rbow_resource_pack` | `resource_packs/elleedog67_rbow_ore` (`rbow-ore-resources`) |
+
+   It skips each output's `manifest.json`, `pack_icon.png`, `LICENSE*`, `THIRD_PARTY_NOTICES*` and
+   `scripts/`. Files under `entities/`, `entity/` and `attachables/` whose identifier starts with
+   `minecraft:`, and render controller files that define a vanilla player, persona or cape
+   controller, land under `<type>/overrides/` inside that pack; everything else keeps its relative
+   path. Lang files are copied with their `pack.name` and `pack.description` lines stripped and
+   duplicate keys removed keep-first (the manifests carry literal names). The standalone Rbow 1.2.0
+   `elleedog:rbow_*.player` armor attachables and `rbow_spear_native.json` are copied from
+   `tools/codegen/pets/integration/rbow_1.2.0/resource_pack/attachables/` into the Rbow Ore
+   resource pack, so Rbow alone renders as Rbow 1.2.0 did; the Pets resource pack keeps the
+   pet-aware versions of the same identifiers. `*.generated.js` from the compiler's `src/` goes to
+   `src/features/pets/`. Two sources mapping to one destination with different bytes is an error.
+   The sync then removes whatever it wrote last time that is no longer produced, writes the new
+   files, and records the list in `synced-files.json`. PNGs are compared by pixels so an encoder
+   change cannot churn the repo.
+4. **Manifests.** `tools/manifests.ts` rewrites all nine manifests from `packs.json`.
+
+There is no union or verification step for shared files: each pack ships its own `texts/`,
+`textures/item_texture.json`, `textures/terrain_texture.json` and `blocks.json`, and the game
+merges them across active packs. The core resource pack's `texts/` and `item_texture.json` are
+hand-maintained and hold only the book and Stair Sitting keys and the book atlas entry.
 
 ## Adding a pet
 
 Follow `tools/codegen/pets/docs/ADDING_A_PET.md` inside the vendored tree (`tools/new_pet.py`
-creates the catalog entry and reserves a wire id). Then `npm run codegen`, add the lang lines it
-asks for under `## pets` in both `.lang` files, run `npm test` and `npm run build`.
+creates the catalog entry and reserves a wire id). Then `npm run codegen`, `npm test` and
+`npm run build`. The compiler's lang lines land in the Pets resource pack; nothing is added by hand.
 
 ## Regenerating Rbow
 
@@ -65,10 +92,13 @@ distribution value, a new item):
    `integration/rbow_1.2.0/behavior_pack` and `resource_pack` (same format as the existing file).
 4. `npm run codegen`, then `npm test`.
 
+The standalone player armor and spear attachables in that tree are copied into the Rbow Ore
+resource pack as they are, so an edit to them flows through the same steps.
+
 Rbow's runtime scripts are the exception: `src/features/rbow-ore/` is their source of truth. The
 two pure modules (`rules.js`, `legacy_drop_logic.js`) must stay identical to the vendored copies
 (`test/features/rbow-ore` checks this); `main.js` and `legacy_drops.js` intentionally differ
-because the toggle lifecycle owns their subscriptions.
+because the feature lifecycle owns their subscriptions.
 
 ## Re-pinning the Enderman
 

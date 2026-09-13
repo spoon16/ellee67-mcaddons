@@ -51,6 +51,8 @@ describe("built packs", () => {
     const first = packageArchives().map((file) => fs.readFileSync(file));
     const second = packageArchives().map((file) => fs.readFileSync(file));
     expect(first.map((buffer) => buffer.length)).toEqual(second.map((buffer) => buffer.length));
-    first.forEach((buffer, index) => expect(buffer.equals(second[index] as Buffer)).toBe(true));
+    for (const [index, buffer] of first.entries()) {
+      expect(buffer.equals(second[index] as Buffer)).toBe(true);
+    }
   });
 });

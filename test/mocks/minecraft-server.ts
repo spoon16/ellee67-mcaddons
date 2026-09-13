@@ -266,6 +266,12 @@ export class Container {
 
 let nextEntityId = 1;
 
+/**
+ * Entity properties seeded onto entities spawned by `Dimension.spawnEntity`, keyed by type id, mirroring the
+ * `properties` block of the entity's behavior JSON. Feature tests register what their entities declare.
+ */
+export const entityProperties: Record<string, Record<string, unknown>> = {};
+
 export class Entity {
   id: string;
   typeId: string;
@@ -547,6 +553,7 @@ export class Dimension {
     this.spawnCount++;
     if (this.spawnFailAt === this.spawnCount) throw new Error("mock spawn failure");
     const entity = new Entity(typeId, location, this);
+    entity.props = { ...(entityProperties[typeId] ?? {}) };
     this.entities.push(entity);
     return entity;
   }
@@ -801,4 +808,5 @@ export function reset(): void {
   registry.commands.clear();
   registry.components.clear();
   registry.rejectEnumValues = undefined;
+  for (const key of Object.keys(entityProperties)) delete entityProperties[key];
 }

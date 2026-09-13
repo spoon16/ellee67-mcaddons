@@ -56,10 +56,12 @@ All of it lives in `behavior_packs/elleedog67_rbow_ore/` and `resource_packs/ell
 
 ## What the scripts do
 
-`src/features/rbow-ore/rules.js` and `legacy_drop_logic.js` are the original pack's pure logic,
-byte for byte (`test/features/rbow-ore/pinned_sources.test.ts` checks them against the codegen pin).
-`main.js` and `legacy_drops.js` are the original handlers exported as functions; `index.ts` wires
-them into the feature lifecycle.
+`src/features/rbow-ore/rules.ts` and `legacy_drop_logic.ts` are TypeScript ports of the original
+pack's pure logic; each cites the upstream file's sha256 in its header comment, and
+`test/features/rbow-ore/pinned_sources.test.ts` fails when the vendored Rbow 1.2.0 copy no longer
+matches that hash, so an upstream change forces a re-review of the port. `main.ts` and
+`legacy_drops.ts` are the original handlers exported as functions; `index.ts` wires them into the
+feature lifecycle.
 
 | Handler | Registered | Behaviour |
 | --- | --- | --- |

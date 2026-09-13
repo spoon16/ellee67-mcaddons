@@ -36,12 +36,18 @@ marks them and the manifests `linguist-generated` so GitHub folds them in diffs.
    `elleedog:may_move_blocks` property and a `bool_property` filter on the take-block and
    place-block goals (wrapping any existing filter in `all_of`), and writes the override into the
    Ender Mod pack. `test/features/ender-mod/codegen.test.ts` fails if the committed file drifts.
-2. **Pets compiler.** `tools/codegen/pets/` is the Pets 0.5.2 compiler tree, vendored with two
-   changes: `tools/seating.py` emits Bedrock-sign rotations, and `tools/attachable_space.py`
-   pre-scales armor attachable meshes by the player render scale (both documented in the modules).
-   The runner copies it to `.codegen-work/pets/`, adds the hand-written modules from
-   `src/features/pets/` as its `src/`, runs `tools/build.py` in place, then runs the compiler's own
-   243 Python tests. The compiler verifies its baseline and Rbow input hashes itself and produces
+2. **Pets compiler.** `tools/codegen/pets/` is the Pets 0.5.2 compiler tree, vendored with three
+   changes: `tools/seating.py` emits Bedrock-sign rotations; `tools/attachable_space.py` and
+   `tools/equipment.py` pre-scale each pet's armor attachable meshes by the catalog's
+   `equipment.armor_attachable.scale`; `tools/build.py` adds the `pet:armor_lift` and
+   `pet:armor_scale` player properties and the `animation.pet.armor_fit` clip that lets the fit be
+   adjusted live (all documented in the modules). The runner copies the tree to
+   `.codegen-work/pets/` and transpiles the hand-written TypeScript modules from
+   `src/features/pets/` (everything except `index.ts` and the generated files) into plain ES2020
+   JavaScript in its `src/` with TypeScript's `transpileModule`, rewriting `./x.ts` imports to
+   `./x.js`; the compiler packages and unit-tests that JavaScript, so a few of its tests grep the
+   emitted text (see the constraints listed in `tools/codegen/run.ts`). It then runs
+   `tools/build.py` in place and the compiler's own 244 Python tests. The compiler verifies its baseline and Rbow input hashes itself and produces
    four packs: `behavior_pack`, `resource_pack`, `rbow_behavior_pack`, `rbow_resource_pack`.
 3. **Sync.** `tools/codegen/sync.ts` writes each compiler pack into its own repo pack:
 
@@ -62,7 +68,8 @@ marks them and the manifests `linguist-generated` so GitHub folds them in diffs.
    `tools/codegen/pets/integration/rbow_1.2.0/resource_pack/attachables/` into the Rbow Ore
    resource pack, so Rbow alone renders as Rbow 1.2.0 did; the Pets resource pack keeps the
    pet-aware versions of the same identifiers. `*.generated.js` from the compiler's `src/` goes to
-   `src/features/pets/`. Two sources mapping to one destination with different bytes is an error.
+   `src/features/pets/*.generated.ts` (the content is plain object literals, valid as TypeScript).
+   Two sources mapping to one destination with different bytes is an error.
    The sync then removes whatever it wrote last time that is no longer produced, writes the new
    files, and records the list in `synced-files.json`. PNGs are compared by pixels so an encoder
    change cannot churn the repo.
@@ -96,9 +103,11 @@ The standalone player armor and spear attachables in that tree are copied into t
 resource pack as they are, so an edit to them flows through the same steps.
 
 Rbow's runtime scripts are the exception: `src/features/rbow-ore/` is their source of truth. The
-two pure modules (`rules.js`, `legacy_drop_logic.js`) must stay identical to the vendored copies
-(`test/features/rbow-ore` checks this); `main.js` and `legacy_drops.js` intentionally differ
-because the feature lifecycle owns their subscriptions.
+two pure modules (`rules.ts`, `legacy_drop_logic.ts`) are TypeScript ports of the vendored
+`rules.js` and `legacy_drop_logic.js`; each cites the upstream sha256 in its header comment and
+`test/features/rbow-ore/pinned_sources.test.ts` fails when the vendored copy no longer matches
+that hash, so an upstream change forces a re-review of the port. `main.ts` and `legacy_drops.ts`
+intentionally differ because the feature lifecycle owns their subscriptions.
 
 ## Re-pinning the Enderman
 

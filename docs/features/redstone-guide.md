@@ -48,8 +48,8 @@ The item is also the pack probe.
   book. `start()` subscribes the plain `itemUse` after-event as a fallback for the same book and `playerLeave` to
   drop that player's session and cooldown. `stop()` clears every session and cooldown and is never called at
   runtime.
-- `reader.js`: the pure screen and route model, verbatim from 1.0.3. `reader.d.ts` describes it for TypeScript.
-- `content.js`: exposes `ENTRIES` from `guide_content.json`; esbuild inlines the JSON into the bundle.
+- `reader.ts`: the pure screen and route model, ported from 1.0.3 with the same behaviour.
+- `content.ts`: exposes `ENTRIES` from `guide_content.json`; esbuild inlines the JSON into the bundle.
 - `guide_content.json`: the editable guide, verbatim from 1.0.3. Every entry needs a unique id and one or two
   pages; a `recipe` field must name another entry. `test/features/redstone-guide/content.test.ts` checks this.
 

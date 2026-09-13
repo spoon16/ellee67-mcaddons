@@ -81,7 +81,6 @@ Rbow Ore packs and the Enderman override are generated; they are committed and r
 
 ## Not in this version
 
-- The migrated feature scripts are still JavaScript; the core is TypeScript.
 - No local "deploy to my PC's Minecraft folder" script; the `.mcaddon` is the delivery path.
 
 ## License

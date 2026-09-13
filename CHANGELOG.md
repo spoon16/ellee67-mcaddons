@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1
+
+No gameplay changes. Every script is TypeScript now: the feature modules that 0.1.0 carried over as
+JavaScript from the original packs are ported with the same behaviour and exports, checked by the
+same tests. The Pets compiler still receives plain JavaScript, transpiled from the TypeScript modules
+by `npm run codegen`. The Rbow rule modules are ports rather than byte copies; their header comments
+cite the upstream sha256 and a test fails if the vendored Rbow 1.2.0 copy drifts from it.
+
 ## 0.2.0
 
 Not yet run in Minecraft; see [docs/TESTING.md](docs/TESTING.md).

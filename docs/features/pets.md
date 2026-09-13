@@ -111,8 +111,8 @@ The Rbow Ore behavior pack ships the byte-identical file (the build asserts it),
 Rbow Ore alone or both together give the same player in any stack order. Bedrock allows one
 `minecraft:player` override per world and a fixed number of properties per entity, so every feature
 that needs a player property must add it to the compiler's output for both packs and to
-`src/features/pets/property_schema.generated.js` (the diagnostic contract behind `/pet:check`, which
-expects exactly the 17 `pet:*` keys). Removing or renaming a property changes what old worlds
+`src/features/pets/property_schema.generated.ts` (the diagnostic contract behind `/pet:check`, which
+expects exactly the 19 `pet:*` keys). Removing or renaming a property changes what old worlds
 report as MISSING or INVALID.
 
 ## What off means

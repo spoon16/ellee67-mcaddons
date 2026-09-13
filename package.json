@@ -18,7 +18,8 @@
     "codegen": "tsx tools/codegen/run.ts",
     "codegen:test": "tsx tools/codegen/run.ts --python-tests-only",
     "bump": "tsx tools/set-version.ts",
-    "version": "tsx tools/set-version.ts --from-package && git add behavior_packs resource_packs"
+    "version": "tsx tools/set-version.ts --from-package && git add behavior_packs resource_packs",
+    "manifests": "tsx tools/manifests.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.13",

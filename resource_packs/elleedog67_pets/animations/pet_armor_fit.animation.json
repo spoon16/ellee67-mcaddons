@@ -1,0 +1,22 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.pet.armor_fit": {
+      "loop": true,
+      "bones": {
+        "pet_root": {
+          "position": [
+            0,
+            "context.owning_entity->query.has_property('pet:armor_lift') ? context.owning_entity->query.property('pet:armor_lift') : 0.0",
+            0
+          ],
+          "scale": [
+            "context.owning_entity->query.has_property('pet:armor_scale') ? context.owning_entity->query.property('pet:armor_scale') : 1.0",
+            "context.owning_entity->query.has_property('pet:armor_scale') ? context.owning_entity->query.property('pet:armor_scale') : 1.0",
+            "context.owning_entity->query.has_property('pet:armor_scale') ? context.owning_entity->query.property('pet:armor_scale') : 1.0"
+          ]
+        }
+      }
+    }
+  }
+}

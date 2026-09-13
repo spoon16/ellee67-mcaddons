@@ -1,21 +1,36 @@
 {
   "format_version": 2,
   "header": {
-    "name": "pack.name",
-    "description": "pack.description",
+    "name": "ElleeDog 67 (Resources)",
+    "description": "ElleeDog 67 core resources: the ElleeDog 67 Book and Stair Sitting visuals. Activated automatically with ElleeDog 67 (Behavior).",
     "uuid": "02bb936b-de02-44d2-9b38-0d855335c006",
-    "version": [0, 1, 0],
-    "min_engine_version": [1, 26, 40]
+    "version": [
+      0,
+      1,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
   },
   "modules": [
     {
       "type": "resources",
       "uuid": "b5d5da17-5c4d-47f6-ab41-d458ebb4a597",
-      "version": [0, 1, 0]
+      "version": [
+        0,
+        1,
+        0
+      ]
     }
   ],
+  "dependencies": [],
   "metadata": {
-    "authors": ["ElleeDog 67"],
+    "authors": [
+      "ElleeDog 67"
+    ],
     "license": "MIT for original code; see LICENSE and THIRD_PARTY_NOTICES.md",
     "product_type": "addon"
   }

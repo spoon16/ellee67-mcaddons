@@ -34,10 +34,18 @@ async function answer(form: unknown, player: unknown): Promise<QueuedResponse> {
   return typeof next === "function" ? await next(form, player) : next;
 }
 
+export interface FormElement {
+  kind: "header" | "label" | "divider" | "button";
+  text?: string;
+  icon?: string;
+}
+
 export class ActionFormData {
   titleText = "";
   bodyText = "";
   buttons: Array<{ label: unknown; icon?: string }> = [];
+  /** Every element in the order it was added, including headers, labels and dividers. */
+  elements: FormElement[] = [];
   title(text: unknown): this {
     this.titleText = String(text);
     return this;
@@ -48,16 +56,24 @@ export class ActionFormData {
   }
   button(label: unknown, icon?: string): this {
     this.buttons.push({ label, icon });
+    this.elements.push({ kind: "button", text: String(label), icon });
     return this;
   }
   divider(): this {
+    this.elements.push({ kind: "divider" });
     return this;
   }
-  header(): this {
+  header(text: unknown): this {
+    this.elements.push({ kind: "header", text: String(text) });
     return this;
   }
-  label(): this {
+  label(text: unknown): this {
+    this.elements.push({ kind: "label", text: String(text) });
     return this;
+  }
+  /** All text a player would read on the form: title, body, headers, labels and button labels. */
+  get text(): string {
+    return [this.titleText, this.bodyText, ...this.elements.map((element) => element.text ?? "")].join("\n");
   }
   show(player: unknown): Promise<QueuedResponse> {
     return answer(this, player);

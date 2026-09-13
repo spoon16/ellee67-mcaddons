@@ -1,7 +1,7 @@
 // GENERATED from catalog/pets; edit the catalog, not this module.
 export const BUILD = "0.5.2-native-armor-isolation";
 export const RELEASE_VERSION = "0.5.2";
-export const CATALOG_HASH = "d734fc7adfe8fd1414bbd25ff165cb955dcb9299206088d5e17742e71afb9448";
+export const CATALOG_HASH = "2b3fc3d316754061353295aede681dd6c785834d334b5e678235e5a7e4e65f5e";
 export const MAX_WIRE_ID = 4095;
 export const DEFAULT_HAND_HEIGHT = 2;
 export const PETS = Object.freeze([
@@ -101,6 +101,10 @@ export const PETS = Object.freeze([
         "sprite_thickness": 0.3,
         "mainhand_side": "right",
         "offhand_side": "left"
+      },
+      "armor_attachable": {
+        "scale": 1.0,
+        "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
       }
     },
     "validation": {
@@ -212,6 +216,10 @@ export const PETS = Object.freeze([
         "sprite_thickness": 0.3,
         "mainhand_side": "right",
         "offhand_side": "left"
+      },
+      "armor_attachable": {
+        "scale": 0.9375,
+        "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
       }
     },
     "validation": {
@@ -323,6 +331,10 @@ export const PETS = Object.freeze([
         "sprite_thickness": 0.3,
         "mainhand_side": "right",
         "offhand_side": "left"
+      },
+      "armor_attachable": {
+        "scale": 0.9375,
+        "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
       }
     },
     "validation": {

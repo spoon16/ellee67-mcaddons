@@ -1,30 +1,50 @@
 {
   "format_version": 2,
   "header": {
-    "name": "pack.name",
-    "description": "pack.description",
+    "name": "ElleeDog 67 (Behavior)",
+    "description": "ElleeDog 67 core: the ElleeDog 67 Book manual, Stair Sitting, Creeper Mod and the scripts for every other ElleeDog 67 pack. Required by all ElleeDog 67 packs.",
     "uuid": "c73542a6-b84a-4a5c-a0b7-53f5ac8d18ee",
-    "version": [0, 1, 0],
-    "min_engine_version": [1, 26, 40]
+    "version": [
+      0,
+      1,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
   },
   "modules": [
     {
       "type": "data",
       "uuid": "d99effd8-54d2-4347-ba10-a10afd87ee29",
-      "version": [0, 1, 0]
+      "version": [
+        0,
+        1,
+        0
+      ]
     },
     {
       "type": "script",
       "language": "javascript",
       "uuid": "f15aa60e-8464-4964-99af-d173fa0e32e2",
-      "version": [0, 1, 0],
+      "version": [
+        0,
+        1,
+        0
+      ],
       "entry": "scripts/main.js"
     }
   ],
   "dependencies": [
     {
       "uuid": "02bb936b-de02-44d2-9b38-0d855335c006",
-      "version": [0, 1, 0]
+      "version": [
+        0,
+        1,
+        0
+      ]
     },
     {
       "module_name": "@minecraft/server",
@@ -36,7 +56,9 @@
     }
   ],
   "metadata": {
-    "authors": ["ElleeDog 67"],
+    "authors": [
+      "ElleeDog 67"
+    ],
     "license": "MIT for original code; see LICENSE and THIRD_PARTY_NOTICES.md",
     "product_type": "addon"
   }

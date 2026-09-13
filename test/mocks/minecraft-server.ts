@@ -176,6 +176,47 @@ export async function ticks(n = 1): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------------------------------------------
+// Type registries: which entity and item definitions the active packs provide. Feature tests register what their
+// packs declare so the pack probes (EntityTypes.get / ItemTypes.get) see them; reset() clears everything.
+
+const entityTypes = new Set<string>();
+const itemTypes = new Set<string>();
+
+export function registerEntityType(id: string): void {
+  entityTypes.add(id);
+}
+
+export function registerItemType(id: string): void {
+  itemTypes.add(id);
+}
+
+export class EntityType {
+  constructor(readonly id: string) {}
+}
+
+export class ItemType {
+  constructor(readonly id: string) {}
+}
+
+export const EntityTypes = {
+  get(identifier: string): EntityType | undefined {
+    return entityTypes.has(identifier) ? new EntityType(identifier) : undefined;
+  },
+  getAll(): EntityType[] {
+    return [...entityTypes].map((id) => new EntityType(id));
+  },
+};
+
+export const ItemTypes = {
+  get(itemId: string): ItemType | undefined {
+    return itemTypes.has(itemId) ? new ItemType(itemId) : undefined;
+  },
+  getAll(): ItemType[] {
+    return [...itemTypes].map((id) => new ItemType(id));
+  },
+};
+
+// ---------------------------------------------------------------------------------------------------------------
 // Items, containers, entities, players, dimensions
 
 export interface Vector3 {
@@ -606,7 +647,7 @@ export const dimensions: Record<DimensionKey, Dimension> = {
 };
 
 /**
- * Casts a mock object to the engine type a `src/` function expects, for example `openFeatureMenu(engine(player))`.
+ * Casts a mock object to the engine type a `src/` function expects, for example `openManual(engine(player))`.
  * The runtime object is the mock; only the static type changes.
  */
 export function engine(value: unknown): any {
@@ -809,4 +850,6 @@ export function reset(): void {
   registry.components.clear();
   registry.rejectEnumValues = undefined;
   for (const key of Object.keys(entityProperties)) delete entityProperties[key];
+  entityTypes.clear();
+  itemTypes.clear();
 }

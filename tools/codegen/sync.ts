@@ -1,49 +1,53 @@
-// Copies the Pets compiler's output into the pack tree and src/, deciding each file's home by its identifier.
-// Every destination it writes is recorded in synced-files.json so the next run can remove files the compiler
-// no longer produces. Shared hand-maintained files (lang, atlases, blocks.json) are verified, never written.
+// Copies the Pets compiler's four output packs into their own repo packs, deciding each vanilla replacement's home by
+// its identifier. Every destination it writes is recorded in synced-files.json so the next run can remove files the
+// compiler no longer produces.
 import fs from "node:fs";
 import path from "node:path";
 import { PNG } from "pngjs";
 import { listFiles } from "../lib/files.ts";
 import { readStrictJson } from "../lib/json.ts";
-import { BP_SOURCE, REPO_ROOT, RP_SOURCE } from "../lib/paths.ts";
+import { packDir } from "../lib/packs.ts";
+import { REPO_ROOT } from "../lib/paths.ts";
 
 type Json = Record<string, any>;
 
 export const SYNC_MANIFEST = path.join(REPO_ROOT, "tools", "codegen", "synced-files.json");
 const PETS_SCRIPTS = path.join(REPO_ROOT, "src", "features", "pets");
+const STANDALONE_RBOW_ATTACHABLES = path.join(
+  REPO_ROOT,
+  "tools",
+  "codegen",
+  "pets",
+  "integration",
+  "rbow_1.2.0",
+  "resource_pack",
+  "attachables",
+);
+
+/** Compiler output folder to repo pack id. */
+const PACK_MAPPING: Array<{ source: string; target: string }> = [
+  { source: "behavior_pack", target: "pets" },
+  { source: "resource_pack", target: "pets-resources" },
+  { source: "rbow_behavior_pack", target: "rbow-ore" },
+  { source: "rbow_resource_pack", target: "rbow-ore-resources" },
+];
 
 interface Planned {
   source: string;
   destination: string;
+  /** Content to write instead of the source bytes (lang files are normalised). */
+  content?: Buffer;
 }
 
 export interface SyncReport {
   written: string[];
   unchanged: string[];
   removed: string[];
-  problems: string[];
 }
 
 const SKIP = /^(manifest\.json|pack_icon\.png|LICENSE.*|THIRD_PARTY_NOTICES.*|scripts\/.*)$/;
-const VERIFIED_RP = new Set([
-  "blocks.json",
-  "textures/item_texture.json",
-  "textures/terrain_texture.json",
-  "texts/languages.json",
-]);
-
-function namespaceOf(identifier: string): string {
-  return identifier.split(":")[0] ?? "";
-}
-
-function featureFor(identifier: string, file: string): string {
-  const namespace = namespaceOf(identifier);
-  if (namespace === "minecraft") return "overrides";
-  if (namespace === "pet" || namespace === "cav") return "pets";
-  if (namespace === "elleedog") return "rbow-ore";
-  throw new Error(`${file}: cannot place identifier ${identifier}`);
-}
+// The compiler emits 27 identical English locale files; two are enough.
+const LANGUAGES = ["en_US", "en_GB"];
 
 function firstIdentifier(document: Json, file: string): string {
   for (const [key, value] of Object.entries(document)) {
@@ -54,63 +58,52 @@ function firstIdentifier(document: Json, file: string): string {
   throw new Error(`${file}: no identifier found`);
 }
 
-function renderControllerFeature(document: Json, file: string): string {
-  const ids = Object.keys(document.render_controllers ?? {});
-  if (ids.some((id) => /^controller\.render\.(player|persona|cape)(\.|_|$)/.test(id))) return "overrides";
-  if (ids.every((id) => id.startsWith("controller.render.pet."))) return "pets";
-  if (ids.every((id) => id.startsWith("controller.render.elleedog."))) return "rbow-ore";
-  throw new Error(`${file}: mixed or unknown render controller ids ${ids.join(", ")}`);
+function isVanillaRenderController(document: Json): boolean {
+  return Object.keys(document.render_controllers ?? {}).some((id) =>
+    /^controller\.render\.(player|persona|cape)(\.|_|$)/.test(id),
+  );
 }
 
-/** Decides where one compiler output file belongs in the pack tree, or undefined to skip it. */
-export function planDestination(pack: string, relative: string, sourceFile: string): string | undefined {
+/** Where one compiler output file belongs inside its target pack, or undefined to skip it. */
+export function planDestination(target: string, relative: string, sourceFile: string): string | undefined {
   if (SKIP.test(relative)) return undefined;
-  const isBehavior = pack.endsWith("behavior_pack");
-  const root = isBehavior ? BP_SOURCE : RP_SOURCE;
+  if (/^texts\/.*\.lang$/.test(relative) && !LANGUAGES.includes(path.basename(relative, ".lang"))) return undefined;
+  const root = packDir(target);
   const [top = "", ...rest] = relative.split("/");
   const name = rest.join("/");
   const readDocument = () => readStrictJson(sourceFile) as Json;
-  if (isBehavior) {
-    switch (top) {
-      case "entities":
-      case "items":
-      case "recipes":
-      case "blocks":
-        return path.join(root, top, featureFor(firstIdentifier(readDocument(), relative), relative), name);
-      case "features":
-      case "feature_rules":
-        return path.join(root, top, "rbow-ore", name);
-      case "loot_tables":
-      case "structures":
-      case "functions":
-        return path.join(root, relative);
-      default:
-        throw new Error(`${pack}/${relative}: unexpected behavior pack file`);
-    }
-  }
-  if (VERIFIED_RP.has(relative) || top === "texts") return undefined;
   switch (top) {
+    case "entities":
     case "entity":
     case "attachables": {
       const identifier = firstIdentifier(readDocument(), relative);
-      const feature =
-        namespaceOf(identifier) === "elleedog" && pack === "resource_pack" ? "pets" : featureFor(identifier, relative);
-      return path.join(root, top, feature, name);
+      return identifier.startsWith("minecraft:") ? path.join(root, top, "overrides", name) : path.join(root, relative);
     }
     case "render_controllers":
-      return path.join(root, top, renderControllerFeature(readDocument(), relative), name);
-    case "animations":
-    case "animation_controllers":
-      return path.join(root, top, "pets", name.startsWith("pets/") ? name.slice("pets/".length) : name);
-    case "models":
-      if (name.startsWith("entity/pets/")) return path.join(root, relative);
-      if (pack === "resource_pack") return path.join(root, "models", "entity", "pets", name.replace(/^entity\//, ""));
-      return path.join(root, "models", "entity", "rbow-ore", name.replace(/^entity\//, ""));
-    case "textures":
-      return path.join(root, relative);
+      return isVanillaRenderController(readDocument())
+        ? path.join(root, top, "overrides", name)
+        : path.join(root, relative);
     default:
-      throw new Error(`${pack}/${relative}: unexpected resource pack file`);
+      return path.join(root, relative);
   }
+}
+
+/** Lang files come through with the compiler's own pack.name/pack.description dropped and duplicate keys removed. */
+export function normaliseLang(text: string): string {
+  const seen = new Set<string>();
+  const lines: string[] = [];
+  for (const line of text.split(/\r?\n/)) {
+    if (!line.trim() || line.startsWith("##")) {
+      lines.push(line);
+      continue;
+    }
+    const equals = line.indexOf("=");
+    const key = equals > 0 ? line.slice(0, equals) : line;
+    if (key === "pack.name" || key === "pack.description" || seen.has(key)) continue;
+    seen.add(key);
+    lines.push(line);
+  }
+  return `${lines.join("\n").replace(/\n+$/, "")}\n`;
 }
 
 function samePixels(a: Buffer, b: Buffer): boolean {
@@ -123,88 +116,39 @@ function samePixels(a: Buffer, b: Buffer): boolean {
   }
 }
 
-function readLang(text: string): Map<string, string> {
-  const entries = new Map<string, string>();
-  for (const line of text.split(/\r?\n/)) {
-    if (!line.trim() || line.startsWith("##")) continue;
-    const equals = line.indexOf("=");
-    if (equals > 0)
-      entries.set(
-        line.slice(0, equals),
-        line
-          .slice(equals + 1)
-          .replace(/\t##.*$/, "")
-          .trim(),
-      );
-  }
-  return entries;
-}
-
-/** Every key the compiler emits into a shared file must already be present in the hand-maintained union. */
-export function verifySharedFiles(workspace: string): string[] {
-  const problems: string[] = [];
-  const ourLang = new Map<string, Map<string, string>>();
-  for (const code of ["en_US", "en_GB"]) {
-    ourLang.set(code, readLang(fs.readFileSync(path.join(RP_SOURCE, "texts", `${code}.lang`), "utf8")));
-  }
-  for (const pack of ["resource_pack", "rbow_resource_pack"]) {
-    for (const code of ["en_US", "en_GB"]) {
-      const file = path.join(workspace, pack, "texts", `${code}.lang`);
-      if (!fs.existsSync(file)) continue;
-      const theirs = readLang(fs.readFileSync(file, "utf8"));
-      const ours = ourLang.get(code);
-      for (const [key, value] of theirs) {
-        if (key === "pack.name" || key === "pack.description") continue;
-        if (!ours?.has(key)) problems.push(`resource_packs/elleedog67/texts/${code}.lang is missing: ${key}=${value}`);
-        else if (ours.get(key) !== value)
-          problems.push(`resource_packs/elleedog67/texts/${code}.lang: ${key} should be "${value}"`);
-      }
-    }
-    for (const atlas of ["textures/item_texture.json", "textures/terrain_texture.json"]) {
-      const file = path.join(workspace, pack, atlas);
-      if (!fs.existsSync(file)) continue;
-      const theirs = (readStrictJson(file) as Json).texture_data ?? {};
-      const ourAtlas = path.join(RP_SOURCE, atlas);
-      const ours = fs.existsSync(ourAtlas) ? ((readStrictJson(ourAtlas) as Json).texture_data ?? {}) : {};
-      for (const [key, value] of Object.entries(theirs)) {
-        if (JSON.stringify(ours[key]) !== JSON.stringify(value)) {
-          problems.push(`resource_packs/elleedog67/${atlas} needs "${key}": ${JSON.stringify(value)}`);
-        }
-      }
-    }
-    const blocks = path.join(workspace, pack, "blocks.json");
-    if (fs.existsSync(blocks)) {
-      const theirs = readStrictJson(blocks) as Json;
-      const ourBlocks = path.join(RP_SOURCE, "blocks.json");
-      const ours = fs.existsSync(ourBlocks) ? (readStrictJson(ourBlocks) as Json) : {};
-      for (const [key, value] of Object.entries(theirs)) {
-        if (key === "format_version") continue;
-        if (JSON.stringify(ours[key]) !== JSON.stringify(value)) {
-          problems.push(`resource_packs/elleedog67/blocks.json needs "${key}": ${JSON.stringify(value)}`);
-        }
-      }
-    }
-  }
-  return problems;
-}
-
 export function syncWorkspace(workspace: string): SyncReport {
-  const report: SyncReport = { written: [], unchanged: [], removed: [], problems: [] };
+  const report: SyncReport = { written: [], unchanged: [], removed: [] };
   const planned = new Map<string, Planned>();
-  const add = (source: string, destination: string) => {
+  const add = (source: string, destination: string, content?: Buffer) => {
     const existing = planned.get(destination);
-    if (existing && !fs.readFileSync(existing.source).equals(fs.readFileSync(source))) {
-      throw new Error(`${existing.source} and ${source} both map to ${destination} with different content`);
+    if (existing) {
+      const previous = existing.content ?? fs.readFileSync(existing.source);
+      const next = content ?? fs.readFileSync(source);
+      if (!previous.equals(next))
+        throw new Error(`${existing.source} and ${source} both map to ${destination} with different content`);
+      return;
     }
-    if (!existing) planned.set(destination, { source, destination });
+    planned.set(destination, { source, destination, content });
   };
-  for (const pack of ["behavior_pack", "rbow_behavior_pack", "resource_pack", "rbow_resource_pack"]) {
-    const root = path.join(workspace, pack);
-    if (!fs.existsSync(root)) throw new Error(`compiler output ${pack} is missing`);
+  for (const { source, target } of PACK_MAPPING) {
+    const root = path.join(workspace, source);
+    if (!fs.existsSync(root)) throw new Error(`compiler output ${source} is missing`);
     for (const relative of listFiles(root)) {
-      const source = path.join(root, relative);
-      const destination = planDestination(pack, relative, source);
-      if (destination) add(source, destination);
+      const sourceFile = path.join(root, relative);
+      const destination = planDestination(target, relative, sourceFile);
+      if (!destination) continue;
+      if (relative.endsWith(".lang"))
+        add(sourceFile, destination, Buffer.from(normaliseLang(fs.readFileSync(sourceFile, "utf8"))));
+      else if (relative === "texts/languages.json")
+        add(sourceFile, destination, Buffer.from(`${JSON.stringify(LANGUAGES)}\n`));
+      else add(sourceFile, destination);
+    }
+  }
+  // Rbow alone must render as Rbow 1.2.0 did: its standalone player armor and spear attachables go back into its
+  // resource pack. When Pets Resources sits above it, the pet-aware versions of the same identifiers win.
+  for (const name of fs.readdirSync(STANDALONE_RBOW_ATTACHABLES)) {
+    if (/\.player\.json$/.test(name) || name === "rbow_spear_native.json") {
+      add(path.join(STANDALONE_RBOW_ATTACHABLES, name), path.join(packDir("rbow-ore-resources"), "attachables", name));
     }
   }
   for (const name of fs.readdirSync(path.join(workspace, "src"))) {
@@ -219,9 +163,9 @@ export function syncWorkspace(workspace: string): SyncReport {
   }
 
   const kept = new Set<string>();
-  for (const { source, destination } of planned.values()) {
+  for (const { source, destination, content } of planned.values()) {
     kept.add(destination);
-    const next = fs.readFileSync(source);
+    const next = content ?? fs.readFileSync(source);
     const before =
       oldContents.get(destination) ?? (fs.existsSync(destination) ? fs.readFileSync(destination) : undefined);
     const relative = path.relative(REPO_ROOT, destination);
@@ -246,6 +190,5 @@ export function syncWorkspace(workspace: string): SyncReport {
   }
   const manifest = [...kept].map((file) => path.relative(REPO_ROOT, file)).sort();
   fs.writeFileSync(SYNC_MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`);
-  report.problems = verifySharedFiles(workspace);
   return report;
 }

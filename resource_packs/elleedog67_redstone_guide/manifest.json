@@ -1,0 +1,37 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ElleeDog 67 Redstone Guide Resources",
+    "description": "Optional: Redstone Guide book art. Activated automatically with ElleeDog 67 Redstone Guide.",
+    "uuid": "723fa9f1-518b-4665-8916-6f02b57f414f",
+    "version": [
+      0,
+      1,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "e1812754-f72c-4a0b-ba40-67cab85a3002",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "dependencies": [],
+  "metadata": {
+    "authors": [
+      "ElleeDog 67"
+    ],
+    "license": "MIT for original code; see LICENSE and THIRD_PARTY_NOTICES.md",
+    "product_type": "addon"
+  }
+}

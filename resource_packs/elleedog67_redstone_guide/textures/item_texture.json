@@ -1,0 +1,7 @@
+{
+  "resource_pack_name": "elleedog67_redstone_guide",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "elleedog_redstone_guide_book": { "textures": "textures/items/elleedog_redstone_guide_book" }
+  }
+}

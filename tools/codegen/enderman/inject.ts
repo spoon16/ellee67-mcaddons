@@ -2,10 +2,11 @@
 // one entity property and a filter on each of the two block-movement goals; everything else passes through.
 import path from "node:path";
 import { readJsonWithComments, writeJson } from "../../lib/json.ts";
-import { BP_SOURCE, REPO_ROOT } from "../../lib/paths.ts";
+import { packDir } from "../../lib/packs.ts";
+import { REPO_ROOT } from "../../lib/paths.ts";
 
 export const UPSTREAM_FILE = path.join(REPO_ROOT, "tools", "codegen", "enderman", "upstream", "enderman.json");
-export const OUTPUT_FILE = path.join(BP_SOURCE, "entities", "overrides", "enderman.json");
+export const OUTPUT_FILE = path.join(packDir("ender-mod"), "entities", "overrides", "enderman.json");
 export const GATE_PROPERTY = "elleedog:may_move_blocks";
 export const GATED_GOALS = [
   ["minecraft:behavior.take_block", "can_take"],

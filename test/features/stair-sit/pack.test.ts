@@ -6,7 +6,11 @@ import { PNG } from "pngjs";
 import { beforeEach, describe, expect, it } from "vitest";
 import { pngSize } from "../../../tools/lib/files.ts";
 import { readStrictJson } from "../../../tools/lib/json.ts";
-import { BP_SOURCE, RP_SOURCE } from "../../../tools/lib/paths.ts";
+import { packDir } from "../../../tools/lib/packs.ts";
+
+const BP_SOURCE = packDir("elleedog67");
+const RP_SOURCE = packDir("elleedog67-resources");
+
 import { reset } from "../../mocks/minecraft-server.ts";
 
 type Json = Record<string, any>;

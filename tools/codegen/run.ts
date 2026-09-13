@@ -8,6 +8,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { REPO_ROOT } from "../lib/paths.ts";
+import { writeManifests } from "../manifests.ts";
 import { syncWorkspace } from "./sync.ts";
 
 const COMPILER = path.join(REPO_ROOT, "tools", "codegen", "pets");
@@ -56,11 +57,7 @@ async function main(): Promise<void> {
   );
   for (const file of report.written) console.log(`  wrote ${file}`);
   for (const file of report.removed) console.log(`  removed ${file}`);
-  if (report.problems.length) {
-    console.error("shared files need these entries (add them by hand):");
-    for (const problem of report.problems) console.error(`  ${problem}`);
-    process.exit(1);
-  }
+  for (const file of writeManifests()) console.log(`  manifest ${file}`);
 }
 
 main().catch((error) => {

@@ -1,0 +1,122 @@
+{
+  "$comment": "Single source of truth for the add-on's packs. tools/manifests.ts writes each pack's manifest.json from this file; the scripts read it for pack names in the manual. Never change a uuid: Bedrock identifies imported packs by it.",
+  "packs": [
+    {
+      "id": "elleedog67",
+      "kind": "behavior",
+      "dir": "behavior_packs/elleedog67",
+      "archiveDir": "ElleeDog67_Behavior",
+      "title": "ElleeDog 67 (Behavior)",
+      "description": "ElleeDog 67 core: the ElleeDog 67 Book manual, Stair Sitting, Creeper Mod and the scripts for every other ElleeDog 67 pack. Required by all ElleeDog 67 packs.",
+      "uuid": "c73542a6-b84a-4a5c-a0b7-53f5ac8d18ee",
+      "modules": { "data": "d99effd8-54d2-4347-ba10-a10afd87ee29", "script": "f15aa60e-8464-4964-99af-d173fa0e32e2" },
+      "feature": null,
+      "dependsOn": ["elleedog67-resources"],
+      "overrides": false
+    },
+    {
+      "id": "elleedog67-resources",
+      "kind": "resources",
+      "dir": "resource_packs/elleedog67",
+      "archiveDir": "ElleeDog67_Resources",
+      "title": "ElleeDog 67 (Resources)",
+      "description": "ElleeDog 67 core resources: the ElleeDog 67 Book and Stair Sitting visuals. Activated automatically with ElleeDog 67 (Behavior).",
+      "uuid": "02bb936b-de02-44d2-9b38-0d855335c006",
+      "modules": { "resources": "b5d5da17-5c4d-47f6-ab41-d458ebb4a597" },
+      "feature": null,
+      "dependsOn": [],
+      "overrides": false
+    },
+    {
+      "id": "pets",
+      "kind": "behavior",
+      "dir": "behavior_packs/elleedog67_pets",
+      "archiveDir": "ElleeDog67_Pets_Behavior",
+      "title": "ElleeDog 67 Pets",
+      "description": "Optional: become Carter, Mochi or Casper with the Pet Morpher. Replaces the player definition. Needs ElleeDog 67 (Behavior).",
+      "uuid": "23c993af-8c46-4b3a-8d09-cfb07caa0bed",
+      "modules": { "data": "5d70d0fc-d9ff-448b-b388-afc1877e429a" },
+      "feature": "pets",
+      "dependsOn": ["pets-resources", "elleedog67"],
+      "overrides": true
+    },
+    {
+      "id": "pets-resources",
+      "kind": "resources",
+      "dir": "resource_packs/elleedog67_pets",
+      "archiveDir": "ElleeDog67_Pets_Resources",
+      "title": "ElleeDog 67 Pets Resources",
+      "description": "Optional: pet models, animations and fitted armor. Replaces the player renderer. Keep above ElleeDog 67 Rbow Ore Resources.",
+      "uuid": "93bb9bdd-55e4-42e7-8a2c-a3b0430a699a",
+      "modules": { "resources": "e1838c5e-b3b0-46c9-b702-968b13f796a1" },
+      "feature": "pets",
+      "dependsOn": [],
+      "overrides": true
+    },
+    {
+      "id": "rbow-ore",
+      "kind": "behavior",
+      "dir": "behavior_packs/elleedog67_rbow_ore",
+      "archiveDir": "ElleeDog67_RbowOre_Behavior",
+      "title": "ElleeDog 67 Rbow Ore",
+      "description": "Optional: Rbow ore, ingots, tools, armor and a spear. Adds ore generation to new chunks. Needs ElleeDog 67 (Behavior).",
+      "uuid": "86151a41-68ea-4be5-abbc-d5a8c2476add",
+      "modules": { "data": "abb3eb6f-ef71-4470-8afb-eb55c11b7077" },
+      "feature": "rbow-ore",
+      "dependsOn": ["rbow-ore-resources", "elleedog67"],
+      "overrides": true
+    },
+    {
+      "id": "rbow-ore-resources",
+      "kind": "resources",
+      "dir": "resource_packs/elleedog67_rbow_ore",
+      "archiveDir": "ElleeDog67_RbowOre_Resources",
+      "title": "ElleeDog 67 Rbow Ore Resources",
+      "description": "Optional: Rbow ore, item and armor art. Activated automatically with ElleeDog 67 Rbow Ore.",
+      "uuid": "7cd7b0db-abe3-45a3-b1ae-083d70403a7b",
+      "modules": { "resources": "1c86bbdd-da70-4ec0-8f7d-e4b29ef08385" },
+      "feature": "rbow-ore",
+      "dependsOn": [],
+      "overrides": false
+    },
+    {
+      "id": "ender-mod",
+      "kind": "behavior",
+      "dir": "behavior_packs/elleedog67_ender_mod",
+      "archiveDir": "ElleeDog67_EnderMod_Behavior",
+      "title": "ElleeDog 67 Ender Mod",
+      "description": "Optional: Endermen cannot take blocks from protected builds (/elleedog:ender_protect). Replaces the Enderman definition. Needs ElleeDog 67 (Behavior).",
+      "uuid": "0eb16393-b3a6-4b73-9919-f46199178662",
+      "modules": { "data": "f757b442-997a-49ca-a21e-6dc0e91cc63f" },
+      "feature": "ender-mod",
+      "dependsOn": ["elleedog67"],
+      "overrides": true
+    },
+    {
+      "id": "redstone-guide",
+      "kind": "behavior",
+      "dir": "behavior_packs/elleedog67_redstone_guide",
+      "archiveDir": "ElleeDog67_RedstoneGuide_Behavior",
+      "title": "ElleeDog 67 Redstone Guide",
+      "description": "Optional: craft a Redstone Guide book (1 redstone + 1 leather). Needs ElleeDog 67 (Behavior).",
+      "uuid": "953b3626-1d7e-449e-9de9-c2fc8ebfb60a",
+      "modules": { "data": "505a91a2-86b1-4d2c-8541-c6891b595156" },
+      "feature": "redstone-guide",
+      "dependsOn": ["redstone-guide-resources", "elleedog67"],
+      "overrides": false
+    },
+    {
+      "id": "redstone-guide-resources",
+      "kind": "resources",
+      "dir": "resource_packs/elleedog67_redstone_guide",
+      "archiveDir": "ElleeDog67_RedstoneGuide_Resources",
+      "title": "ElleeDog 67 Redstone Guide Resources",
+      "description": "Optional: Redstone Guide book art. Activated automatically with ElleeDog 67 Redstone Guide.",
+      "uuid": "723fa9f1-518b-4665-8916-6f02b57f414f",
+      "modules": { "resources": "e1812754-f72c-4a0b-ba40-67cab85a3002" },
+      "feature": "redstone-guide",
+      "dependsOn": [],
+      "overrides": false
+    }
+  ]
+}

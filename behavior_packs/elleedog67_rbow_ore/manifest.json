@@ -1,0 +1,54 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ElleeDog 67 Rbow Ore",
+    "description": "Optional: Rbow ore, ingots, tools, armor and a spear. Adds ore generation to new chunks. Needs ElleeDog 67 (Behavior).",
+    "uuid": "86151a41-68ea-4be5-abbc-d5a8c2476add",
+    "version": [
+      0,
+      1,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "abb3eb6f-ef71-4470-8afb-eb55c11b7077",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "7cd7b0db-abe3-45a3-b1ae-083d70403a7b",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "uuid": "c73542a6-b84a-4a5c-a0b7-53f5ac8d18ee",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "ElleeDog 67"
+    ],
+    "license": "MIT for original code; see LICENSE and THIRD_PARTY_NOTICES.md",
+    "product_type": "addon"
+  }
+}

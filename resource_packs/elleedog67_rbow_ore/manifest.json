@@ -1,0 +1,37 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ElleeDog 67 Rbow Ore Resources",
+    "description": "Optional: Rbow ore, item and armor art. Activated automatically with ElleeDog 67 Rbow Ore.",
+    "uuid": "7cd7b0db-abe3-45a3-b1ae-083d70403a7b",
+    "version": [
+      0,
+      1,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "1c86bbdd-da70-4ec0-8f7d-e4b29ef08385",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "dependencies": [],
+  "metadata": {
+    "authors": [
+      "ElleeDog 67"
+    ],
+    "license": "MIT for original code; see LICENSE and THIRD_PARTY_NOTICES.md",
+    "product_type": "addon"
+  }
+}

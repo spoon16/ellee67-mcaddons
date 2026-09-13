@@ -30,6 +30,5 @@ jobs:
         with:
           files: |
             dist/*.mcaddon
-            dist/*.mcpack
             dist/SHA256SUMS.txt
           generate_release_notes: true

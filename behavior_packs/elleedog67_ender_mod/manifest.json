@@ -1,0 +1,46 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ElleeDog 67 Ender Mod",
+    "description": "Optional: Endermen cannot take blocks from protected builds (/elleedog:ender_protect). Replaces the Enderman definition. Needs ElleeDog 67 (Behavior).",
+    "uuid": "0eb16393-b3a6-4b73-9919-f46199178662",
+    "version": [
+      0,
+      1,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "f757b442-997a-49ca-a21e-6dc0e91cc63f",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "c73542a6-b84a-4a5c-a0b7-53f5ac8d18ee",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "ElleeDog 67"
+    ],
+    "license": "MIT for original code; see LICENSE and THIRD_PARTY_NOTICES.md",
+    "product_type": "addon"
+  }
+}

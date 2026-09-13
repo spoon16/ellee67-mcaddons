@@ -1,6 +1,6 @@
 {
   "name": "ellee67-mcaddons",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "ElleeDog 67: one Minecraft Bedrock add-on (behavior pack + resource pack) with six toggleable features.",
   "type": "module",

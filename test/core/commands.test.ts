@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { bootstrap } from "../../src/core/bootstrap.ts";
 import { disabledMessage, FEATURE_ENUM, gatedRegistries } from "../../src/core/commands.ts";
-import { defineFeatures, isEnabled, isRunning } from "../../src/core/features.ts";
+import { defineFeatures, isEnabled, isRunning, startEnabledFeatures } from "../../src/core/features.ts";
 import {
   addPlayer,
   CommandPermissionLevel,
@@ -94,13 +94,44 @@ describe("core commands", () => {
     expect(result.message).toContain("pets, stair-sit");
   });
 
-  it("lists every feature with its state", async () => {
-    boot([fakeFeature("pets"), fakeFeature("creeper-mod", { defaultEnabled: false })]);
+  it("lists every feature with its state and the pack hint for absent packs", async () => {
+    let present = true;
+    boot([
+      fakeFeature("pets", { kind: "pack", packs: ["pets", "pets-resources"], installed: () => present }),
+      fakeFeature("creeper-mod", { defaultEnabled: false }),
+      fakeFeature("stair-sit"),
+    ]);
     startup();
+    loadWorld();
+    expect(runCommand("elleedog67:features", {}).message).toBe("pets: active\ncreeper-mod: off\nstair-sit: on");
+    present = false;
     loadWorld();
     const result = runCommand("elleedog67:features", {});
     expect(result.status).toBe(CustomCommandStatus.Success);
-    expect(result.message).toBe("pets: enabled\ncreeper-mod: disabled");
+    expect(result.message).toBe(
+      'pets: packs off (Pets is turned on by activating "ElleeDog 67 Pets" (Behavior Packs) in Edit World. Its resource pack is added automatically.)\ncreeper-mod: off\nstair-sit: on',
+    );
+  });
+
+  it("refuses to switch a pack feature and points at its packs instead", async () => {
+    const pets = fakeFeature("pets", { kind: "pack", packs: ["pets", "pets-resources"], installed: () => false });
+    boot([pets]);
+    startup();
+    loadWorld();
+    const player = addPlayer("Op");
+    const enable = runCommand("elleedog67:enable", { sourceEntity: player }, "pets");
+    expect(enable.status).toBe(CustomCommandStatus.Failure);
+    expect(enable.message).toBe(
+      'Pets is turned on by activating "ElleeDog 67 Pets" (Behavior Packs) in Edit World. Its resource pack is added automatically.',
+    );
+    const disable = runCommand("elleedog67:disable", { sourceEntity: player }, "pets");
+    expect(disable.status).toBe(CustomCommandStatus.Failure);
+    expect(disable.message).toBe(
+      'Pets is turned off by deactivating "ElleeDog 67 Pets" (Behavior Packs) and "ElleeDog 67 Pets Resources" (Resource Packs) in Edit World.',
+    );
+    step(1);
+    expect(pets.log.starts).toBe(0);
+    expect(player.chat).toEqual([]);
   });
 
   it("keeps registering the other features when one feature's register() throws", async () => {
@@ -154,6 +185,35 @@ describe("gated registries", () => {
     expect(refused.message).toBe("Pets is disabled. An operator can run /elleedog67:enable pets.");
     expect(calls).toBe(0);
     pets.definition.defaultEnabled = true;
+    expect(runCommand("pet:form", {}).message).toBe("ok");
+    expect(calls).toBe(1);
+  });
+
+  it("refuses a pack feature's command with the pack hint until the probe finds its packs", () => {
+    let present = false;
+    const pets = fakeFeature("pets", { kind: "pack", packs: ["pets", "pets-resources"], installed: () => present });
+    defineFeatures([pets.definition]);
+    let calls = 0;
+    const gated = gatedRegistries(pets.definition, {
+      customCommandRegistry: registry,
+      itemComponentRegistry: registry,
+    });
+    gated.commands.registerCommand(
+      { name: "pet:form", description: "x", permissionLevel: CommandPermissionLevel.Any },
+      () => {
+        calls++;
+        return { status: CustomCommandStatus.Success, message: "ok" };
+      },
+    );
+    startEnabledFeatures();
+    const refused = runCommand("pet:form", {});
+    expect(refused.status).toBe(CustomCommandStatus.Failure);
+    expect(refused.message).toBe(
+      'Pets is not active. Pets is turned on by activating "ElleeDog 67 Pets" (Behavior Packs) in Edit World. Its resource pack is added automatically.',
+    );
+    expect(calls).toBe(0);
+    present = true;
+    startEnabledFeatures();
     expect(runCommand("pet:form", {}).message).toBe("ok");
     expect(calls).toBe(1);
   });

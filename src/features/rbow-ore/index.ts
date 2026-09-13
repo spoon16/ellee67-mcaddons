@@ -1,4 +1,4 @@
-import { system, world } from "@minecraft/server";
+import { EntityTypes, system, world } from "@minecraft/server";
 import type { FeatureDefinition } from "../../core/features.ts";
 import { scanLoadedDrops, scheduleRecovery } from "./legacy_drops.js";
 import {
@@ -17,9 +17,16 @@ export const rbowOre: FeatureDefinition = {
   id: "rbow-ore",
   title: "Rbow Ore",
   summary: "tools only; ore stays",
-  defaultEnabled: true,
-  disabledNote:
-    "Rbow ore, items, recipes and world generation stay in the world and ore still drops; only Rbow tool behaviours and legacy-drop recovery are off.",
+  kind: "pack",
+  packs: ["rbow-ore", "rbow-ore-resources"],
+  installed: () => EntityTypes.get("elleedog:rbow_drop") !== undefined,
+  manual: {
+    about:
+      "Rbow ore generates underground in new chunks (deepslate too), smelts into Rbow ingots, and crafts a full tool set, a spear and armor whose pieces add knockback resistance.",
+    commands: ["/scriptevent elleedog:rbow_check (diagnostics)", "/function elleedog/rbow_test_kit (test items)"],
+    whileOff:
+      "No new ore generates and the Rbow tools and armor lose their behaviours. Ore already placed, items in chests and the recipes need the packs active to keep working, so activate Rbow Ore before opening a world that ever used it.",
+  },
   register({ items }) {
     registerToolComponent(items);
   },

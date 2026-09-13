@@ -12,6 +12,7 @@ import {
   ItemStack,
   loadWorld,
   type Player,
+  registerEntityType,
   registry,
   startup,
   step,
@@ -24,10 +25,14 @@ export interface Durability {
   unbreakable: boolean;
 }
 
-/** Boots the add-on with only rbow-ore and runs the tick on which start() scans for legacy drops. */
+/** The entity the Rbow Ore behavior pack declares and the feature probes for after world load. */
+export const PROBE_ENTITY = "elleedog:rbow_drop";
+
+/** Boots the add-on with only rbow-ore, its packs active, and runs the tick on which start() scans for legacy drops. */
 export function boot(): void {
   bootstrap([rbowOre]);
   startup();
+  registerEntityType(PROBE_ENTITY);
   loadWorld();
   step(1);
 }

@@ -20,8 +20,10 @@ import {
   type FeatureId,
   featureStatusLines,
   getFeature,
-  isEnabled,
+  isActive,
+  isInstalled,
   normalizeFeatureId,
+  packHint,
   setEnabled,
   type ToggleResult,
 } from "./features.ts";
@@ -46,6 +48,8 @@ export interface FeatureRegistries {
 export const FEATURE_ENUM = `${NAMESPACE}:feature`;
 
 export function disabledMessage(feature: FeatureDefinition): string {
+  if (feature.kind === "pack" && !isInstalled(feature.id))
+    return `${feature.title} is not active. ${packHint(feature.id, true)}`;
   return `${feature.title} is disabled. An operator can run /${NAMESPACE}:enable ${feature.id}.`;
 }
 
@@ -62,7 +66,7 @@ export function gatedRegistries(
       registerEnum: (name, values) => engine.customCommandRegistry.registerEnum(name, values),
       registerCommand: (command, callback) =>
         engine.customCommandRegistry.registerCommand(command, (origin, ...args) => {
-          if (!isEnabled(feature.id)) return { status: CustomCommandStatus.Failure, message: disabledMessage(feature) };
+          if (!isActive(feature.id)) return { status: CustomCommandStatus.Failure, message: disabledMessage(feature) };
           return callback(origin, ...args);
         }),
     },
@@ -75,7 +79,7 @@ export function gatedRegistries(
             continue;
           }
           gated[key] = (...args: unknown[]) => {
-            if (!isEnabled(feature.id)) return undefined;
+            if (!isActive(feature.id)) return undefined;
             return (value as (...inner: unknown[]) => unknown).apply(component, args);
           };
         }
@@ -161,6 +165,8 @@ function toggleCommand(origin: CustomCommandOrigin, rawFeature: unknown, enabled
       message: `Unknown feature "${String(rawFeature)}". Features: ${FEATURE_IDS.join(", ")}.`,
     };
   }
+  const feature = getFeature(id);
+  if (feature?.kind === "pack") return { status: CustomCommandStatus.Failure, message: packHint(id, enabled) };
   const player = playerFrom(origin);
   // Command callbacks are read-only; the toggle runs on the next tick.
   system.run(() => {
@@ -179,6 +185,5 @@ export function describeToggle(id: FeatureId, enabled: boolean, result: ToggleRe
     return `${title} could not be ${enabled ? "started" : "stopped"}: ${log.describe(result.error)}. See the content log.`;
   }
   if (!result.changed) return `${title} was already ${verb}.`;
-  const note = !enabled && feature?.disabledNote ? ` ${feature.disabledNote}` : "";
-  return `${title} ${verb}.${note}`;
+  return `${title} ${verb}.`;
 }

@@ -1,7 +1,6 @@
 import * as server from '@minecraft/server';
 import {rbowReport} from './rbow_compat.js';
 import {ActionFormData, FormCancelationReason} from '@minecraft/server-ui';
-import {FeatureContext} from '../../core/subscriptions.ts';
 import {
   BUILD, FORM_PROPERTY, DEBUG_PROPERTY, SNAPSHOT, LEGACY_SNAPSHOT, FORMS,
   preferredForm, needsPreferenceMigration, isPlayer, safeMessage,
@@ -16,8 +15,10 @@ import {transitionForm, restoreAppearance} from './appearance.js';
 import {createMorpherMenu, giveMorpher, BOOK_TITLE, MORPHER_COMPONENT} from './morpher.js';
 import {
   VIEW_PROPERTY, MOTION_PROPERTY, ARMOR_PROPERTY, GEAR_PROPERTY, HAND_HEIGHT_PROPERTY,
+  ARMOR_LIFT_PROPERTY, ARMOR_SCALE_PROPERTY, ARMOR_FIT_TRIMS,
   preferredView, preferredMotion, preferredArmor, preferredGear, preferredHandHeight, defaultHandHeight,
-  applyView, applyMotion, applyArmor, applyHandHeight, resetHandHeight, applyGear, resetArmor, resetGear
+  applyView, applyMotion, applyArmor, applyHandHeight, resetHandHeight, applyGear, resetArmor, resetGear,
+  setArmorLift, setArmorScale, resetArmorFit
 } from './settings.js';
 const {world,system,EquipmentSlot,CustomCommandParamType,CustomCommandStatus}=server;
 const Permission=server.CommandPermissionLevel ?? server.CustomCommandPermissionLevel;
@@ -39,7 +40,7 @@ function select(player,form){
     try{
       const actual=player.getProperty(FORM_PROPERTY);
       if(actual!==wireId(form))throw new Error(`Requested ${form}; pet:model_id=${actual} instead of ${wireId(form)}.`);
-      for(const key of [VIEW_PROPERTY,MOTION_PROPERTY,ARMOR_PROPERTY,GEAR_PROPERTY,HAND_HEIGHT_PROPERTY]) {
+      for(const key of [VIEW_PROPERTY,MOTION_PROPERTY,ARMOR_PROPERTY,GEAR_PROPERTY,HAND_HEIGHT_PROPERTY,ARMOR_LIFT_PROPERTY,ARMOR_SCALE_PROPERTY]) {
         if(player.getProperty(key)!==result.properties[key])throw new Error(`Form switched but ${key} did not apply. Check matching packs.`);
       }
       safeMessage(player,form==='human' ? 'Selected Player.' : `Selected ${formLabel(form)}.`);
@@ -57,6 +58,10 @@ function motion(player,value){const on=value==='on';applyMotion(player,on);playe
 function armor(player,value){const fitted=value!=='native';if(value==='auto')resetArmor(player);else applyArmor(player,fitted);playerDefaults(player);verify(player,ARMOR_PROPERTY,preferredForm(player)!=='human'&&fitted,
   fitted?'Fitted pet armor enabled. Updated crowns and back plates require a visual check.':'Native armor presentation selected. Your form is unchanged; choose Player in the book to return to your character.');}
 function gear(player,value){const fitted=value!=='native';if(value==='auto')resetGear(player);else applyGear(player,fitted);playerDefaults(player);verify(player,GEAR_PROPERTY,preferredForm(player)!=='human'&&fitted,fitted?'Single mouth tools, side carry and side/front shields enabled. Unmapped special items use a native fallback.':'Native third-person gear presentation restored. First-person item rendering is unchanged.');}
+const fitSummary=fit=>`lift ${fit.lift} pixels, scale ${Math.round(fit.scale*100)}%`;
+function armorlift(player,pixels){const fit=setArmorLift(player,pixels);verify(player,ARMOR_LIFT_PROPERTY,fit.lift,`${formLabel(preferredForm(player))} fitted armor: ${fitSummary(fit)}. Saved for this pet; /pet:armorfitreset clears it.`);}
+function armorscale(player,percent){const fit=setArmorScale(player,percent);verify(player,ARMOR_SCALE_PROPERTY,fit.scale,`${formLabel(preferredForm(player))} fitted armor: ${fitSummary(fit)}. Saved for this pet; /pet:armorfitreset clears it.`);}
+function armorfitreset(player){const form=preferredForm(player);resetArmorFit(player);verify(player,ARMOR_LIFT_PROPERTY,0,`${formLabel(form)} fitted armor back to the baked position and size.`);}
 function handheight(player,value){applyHandHeight(player,value);playerDefaults(player);verify(player,HAND_HEIGHT_PROPERTY,preferredForm(player)==='human'?0:value,`Empty-hand height ${value}. Profile default is ${defaultHandHeight(player)}; 0 is neutral. Your explicit setting is preserved across pet changes.`);}
 function listForms(player){safeMessage(player,'Available forms: player; '+PETS.map(p=>`${p.id} (${p.display_name}, rig ${p.rig})`).join('; '));}
 function checkedSection(read){try{return {status:'ok',value:read()};}catch(error){return {status:'read_error',value:null,error:String(error)};}}
@@ -141,6 +146,9 @@ export function registerPetCommands(r){
     reg('motion','Enable or pause pet locomotion',motion,[en('debug_choice')]);
     reg('armor','Choose fitted armor, native presentation or automatic default',armor,[en('armor_choice')]);
     reg('gear','Choose mouth tools, side carry, shields or native gear',gear,[en('armor_choice')]);
+    reg('armorlift','Raise or lower fitted armor on your pet in model pixels (-16..16)',armorlift,[{name:'pixels',type:CustomCommandParamType.Float}]);
+    reg('armorscale','Grow or shrink fitted armor on your pet in percent (50..150)',armorscale,[{name:'percent',type:CustomCommandParamType.Integer}]);
+    reg('armorfitreset','Clear the armor lift and scale saved for your pet',armorfitreset);
     reg('seatinfo','Show mount and seat-height diagnostics',p=>safeMessage(p,JSON.stringify(seatInfo(p))));
     reg('seatheight','Adjust current seat category height in model pixels',setSeatTrim,[{name:'pixels',type:CustomCommandParamType.Integer}]);
     reg('seatreset','Reset current seat category calibration',resetSeatTrim);
@@ -153,7 +161,7 @@ export function registerPetCommands(r){
       safeMessage(p,`Spawned ${result.length} test props for ${formLabel(form)}. Not player substitutes. /pet:cleanup removes your loaded props.`);
     });
     reg('cleanup','Remove your own temporary test props',cleanup);reg('snapshot','Capture read-only inventory comparison',snapshot);reg('compare','Compare captured inventory/equipment fields',compare);
-    reg('reset','Restore Player and default pet settings',p=>{resetHandHeight(p);select(p,'human');p.setProperty(DEBUG_PROPERTY,false);p.setDynamicProperty(SNAPSHOT,undefined);p.setDynamicProperty(LEGACY_SNAPSHOT,undefined);cleanup(p);});
+    reg('reset','Restore Player and default pet settings',p=>{resetHandHeight(p);p.setDynamicProperty(ARMOR_FIT_TRIMS,undefined);select(p,'human');p.setProperty(DEBUG_PROPERTY,false);p.setDynamicProperty(SNAPSHOT,undefined);p.setDynamicProperty(LEGACY_SNAPSHOT,undefined);cleanup(p);});
   }catch(error){fail(undefined,error);}
 }
 /** Runs during `system.beforeEvents.startup`; the add-on core hands in its gated item component registry. */
@@ -182,30 +190,11 @@ function glintLoop(){
 const seatWarnings=new Set();
 function seatLoop(){for(const p of world.getAllPlayers()){try{refreshSeat(p);seatWarnings.delete(p.id);}catch(e){if(!seatWarnings.has(p.id)){seatWarnings.add(p.id);log('Seat alignment: '+String(e));}}}}
 
-/** Kept alive only while the feature is disabled, so players who join in a saved pet form are forced native. */
-let idle;
-function forceNative(player){
-  if(!isPlayer(player))return;
-  const model=player.getProperty(FORM_PROPERTY);
-  // Saved preferences are untouched so re-enabling Pets restores the chosen form.
-  if(Number.isInteger(model)&&model!==0)transitionForm(player,'human',{persist:false,defaults:false});
-}
 export function startPets(ctx){
-  idle?.dispose();idle=undefined;
   ctx.on(world.afterEvents.playerSpawn,e=>system.run(()=>{morpher.close(e.player.id);restore(e.player);}));
   ctx.on(world.afterEvents.playerLeave,e=>{forgetFailure(e.playerId);closeSessions(e.playerId);glintWarnings.delete(e.playerId);seatWarnings.delete(e.playerId);});
   ctx.on(world.afterEvents.playerDimensionChange,e=>system.run(()=>{morpher.close(e.player.id);restore(e.player);}));
   ctx.after(20,restoreAll);
   ctx.every(4,glintLoop);
   ctx.every(2,seatLoop);
-}
-export function stopPets(){
-  for(const player of world.getAllPlayers()){
-    try{closeSessions(player.id);forceNative(player);}
-    catch(error){log(`Native form restore for ${player.name}: ${String(error)}`);}
-  }
-  idle=new FeatureContext('pets:idle');
-  idle.on(world.afterEvents.playerSpawn,e=>system.run(()=>{
-    try{forceNative(e.player);}catch(error){log(`Native form restore for ${e.player.name}: ${String(error)}`);}
-  }));
 }

@@ -7,6 +7,8 @@ export const MOTION_PROPERTY='pet:motion', MOTION_PREFERENCE='pet:motion_enabled
 export const HAND_HEIGHT_PROPERTY='pet:hand_height', HAND_HEIGHT_PREFERENCE='pet:hand_height_preference';
 export const GEAR_PROPERTY='pet:gear_fit', GEAR_PREFERENCE='pet:fitted_gear_preference';
 export const ARMOR_PROPERTY='pet:armor_fit', ARMOR_PREFERENCE='pet:fitted_armor_preference';
+export const ARMOR_LIFT_PROPERTY='pet:armor_lift', ARMOR_SCALE_PROPERTY='pet:armor_scale', ARMOR_FIT_TRIMS='pet:armor_fit_trims';
+const NEUTRAL_ARMOR_FIT=Object.freeze({lift:0,scale:1});
 export function defaultHandHeight(player) {
   return MODEL_BY_ID[preferredForm(player)]?.first_person.default_hand_height ?? DEFAULT_HAND_HEIGHT;
 }
@@ -58,7 +60,52 @@ export function restoreSettings(player) {
   applyHandHeight(player,preferredHandHeight(player),false);
   applyArmor(player,preferredArmor(player),false);
   applyGear(player,preferredGear(player),false);
+  applyArmorFit(player);
 }
+function armorTrims(player) {
+  try {const t=JSON.parse(player.getDynamicProperty(ARMOR_FIT_TRIMS)??'{}');return t&&typeof t==='object'?t:{};}
+  catch {return {};}
+}
+/** Live fitted-armor calibration for one pet: lift in model pixels and a scale factor, applied on top of the
+ * pre-scale baked into that pet's armor meshes. Saved per pet so switching forms keeps each pet's numbers. */
+export function armorFitFor(player,form) {
+  if (form==='human') return NEUTRAL_ARMOR_FIT;
+  const t=armorTrims(player)[form];
+  const lift=typeof t?.lift==='number'&&t.lift>=-16&&t.lift<=16 ? t.lift : 0;
+  const scale=typeof t?.scale==='number'&&t.scale>=0.5&&t.scale<=1.5 ? t.scale : 1;
+  return {lift,scale};
+}
+export function applyArmorFit(player,form=preferredForm(player)) {
+  if (!isPlayer(player)) throw new Error('The player is no longer connected.');
+  const fit=armorFitFor(player,form);
+  requireProperties(player,[ARMOR_LIFT_PROPERTY,ARMOR_SCALE_PROPERTY]);
+  player.setProperty(ARMOR_LIFT_PROPERTY,fit.lift);
+  player.setProperty(ARMOR_SCALE_PROPERTY,fit.scale);
+  return fit;
+}
+function writeArmorFit(player,change) {
+  const form=preferredForm(player);
+  if (form==='human') throw new Error('Choose a pet first; armor calibration is saved per pet.');
+  const trims=armorTrims(player),previous=trims[form];
+  trims[form]=change(armorFitFor(player,form));
+  if (trims[form]===undefined) delete trims[form];
+  player.setDynamicProperty(ARMOR_FIT_TRIMS,Object.keys(trims).length?JSON.stringify(trims):undefined);
+  try {return applyArmorFit(player,form);}
+  catch(error) {
+    if (previous===undefined) delete trims[form]; else trims[form]=previous;
+    try {player.setDynamicProperty(ARMOR_FIT_TRIMS,Object.keys(trims).length?JSON.stringify(trims):undefined);} catch {}
+    throw error;
+  }
+}
+export function setArmorLift(player,pixels) {
+  if (typeof pixels!=='number'||!Number.isFinite(pixels)||pixels< -16||pixels>16) throw new Error('Armor lift must be a number from -16 to 16 model pixels; positive raises the armor. 0 is the baked position.');
+  return writeArmorFit(player,fit=>({...fit,lift:Math.round(pixels*100)/100}));
+}
+export function setArmorScale(player,percent) {
+  if (!Number.isInteger(percent)||percent<50||percent>150) throw new Error('Armor scale must be a whole percentage from 50 to 150. 100 is the baked size.');
+  return writeArmorFit(player,fit=>({...fit,scale:percent/100}));
+}
+export function resetArmorFit(player) {return writeArmorFit(player,()=>undefined);}
 
 /** Clear only the user's armor override. An absent preference means fitted. */
 export function resetArmor(player) {

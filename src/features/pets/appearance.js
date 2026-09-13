@@ -10,8 +10,8 @@ import {MODEL_BY_ID, DEFAULT_HAND_HEIGHT} from './catalog.generated.js';
 import {
   VIEW_PROPERTY, VIEW_PREFERENCE, MOTION_PROPERTY, MOTION_PREFERENCE,
   ARMOR_PROPERTY, ARMOR_PREFERENCE, GEAR_PROPERTY, GEAR_PREFERENCE,
-  HAND_HEIGHT_PROPERTY, HAND_HEIGHT_PREFERENCE,
-  preferredView, preferredMotion, preferredArmor, preferredGear
+  HAND_HEIGHT_PROPERTY, HAND_HEIGHT_PREFERENCE, ARMOR_LIFT_PROPERTY, ARMOR_SCALE_PROPERTY,
+  preferredView, preferredMotion, preferredArmor, preferredGear, armorFitFor
 } from './settings.js';
 
 const RESETTABLE=[VIEW_PREFERENCE,MOTION_PREFERENCE,ARMOR_PREFERENCE,GEAR_PREFERENCE];
@@ -25,6 +25,7 @@ export function appearanceFor(player, form, defaults=false) {
   const calibrated=player.getDynamicProperty(HAND_HEIGHT_PREFERENCE);
   const height=Number.isInteger(calibrated)&&calibrated>=-8&&calibrated<=12
     ? calibrated : MODEL_BY_ID[form]?.first_person.default_hand_height ?? DEFAULT_HAND_HEIGHT;
+  const fit=armorFitFor(player,form);
   const target={
     [FORM_PROPERTY]:wireId(form),
     [VIEW_PROPERTY]:pet ? (defaults?'paws':preferredView(player)) : 'native',
@@ -32,6 +33,7 @@ export function appearanceFor(player, form, defaults=false) {
     [ARMOR_PROPERTY]:pet && (defaults || preferredArmor(player)),
     [GEAR_PROPERTY]:pet && (defaults || preferredGear(player)),
     [HAND_HEIGHT_PROPERTY]:pet ? height : 0,
+    [ARMOR_LIFT_PROPERTY]:fit.lift, [ARMOR_SCALE_PROPERTY]:fit.scale,
     'pet:tool_enchanted':false, 'pet:tool_enchanted_for':0,
     'pet:seat_lift':0, 'pet:seat_kind':0
   };
@@ -45,7 +47,7 @@ export function appearanceFor(player, form, defaults=false) {
 }
 
 /** Explicit selection resets diagnostic overrides; lifecycle restore preserves them.
- * Hand calibration and unrelated add-on settings are never cleared.
+ * Hand and armor calibration and unrelated add-on settings are never cleared.
  * Rollback is best effort on engine errors; not a claim of a network transaction.
  */
 export function transitionForm(player, form, {persist=true, defaults=true}={}) {

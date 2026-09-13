@@ -28,14 +28,14 @@ describe("command registration", () => {
   it("All command choices are generated from catalog and use pet namespace", () => {
     expect(registry.enums.get("pet:form_choice")).toEqual(["player", ...PETS.map((p) => p.id), "human"]);
     const names = [...registry.commands.keys()];
-    expect(names.filter((name) => name.startsWith("pet:"))).toHaveLength(24);
+    expect(names.filter((name) => name.startsWith("pet:"))).toHaveLength(27);
     expect(names.filter((name) => !name.startsWith("pet:"))).toEqual([
       "elleedog67:enable",
       "elleedog67:disable",
       "elleedog67:features",
       "elleedog67:book",
     ]);
-    expect(registry.commands.size).toBe(28);
+    expect(registry.commands.size).toBe(31);
   });
 
   it("Commands are self-only and do not require cheats", () => {

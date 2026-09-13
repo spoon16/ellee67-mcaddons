@@ -3,6 +3,7 @@ import {
   CustomCommandParamType,
   CustomCommandStatus,
   type Entity,
+  EntityTypes,
   type PlayerBreakBlockAfterEvent,
   type PlayerLeaveAfterEvent,
   type PlayerPlaceBlockAfterEvent,
@@ -10,7 +11,6 @@ import {
   world,
 } from "@minecraft/server";
 import type { FeatureDefinition } from "../../core/features.ts";
-import { FeatureContext } from "../../core/subscriptions.ts";
 import { registerProtectionCommands } from "./commands.js";
 import { GATE_PROPERTY, shouldAllowMovement } from "./gate.js";
 import { ProtectionStore } from "./store.js";
@@ -30,8 +30,6 @@ let store: ProtectionStore | undefined;
 const selections = new Map<string, any>();
 const previous = new Map<string, Sighting>();
 let lastWarning = -10000;
-/** Keeps newly loaded Endermen on vanilla behaviour while the feature is disabled. */
-let idle: FeatureContext | undefined;
 
 function warn(error: unknown): void {
   if (system.currentTick - lastWarning >= 200) {
@@ -120,15 +118,6 @@ function onLoaded(event: { entity: Entity }): void {
   }
 }
 
-function onLoadedWhileDisabled(event: { entity: Entity }): void {
-  if (event.entity.typeId !== ENDERMAN) return;
-  try {
-    event.entity.setProperty(GATE_PROPERTY, true);
-  } catch (error) {
-    warn(error);
-  }
-}
-
 function onLeave(event: PlayerLeaveAfterEvent): void {
   selections.delete(event.playerId);
 }
@@ -137,7 +126,17 @@ export const enderMod: FeatureDefinition = {
   id: "ender-mod",
   title: "Ender Mod",
   summary: "Endermen cannot move blocks in protected builds",
-  defaultEnabled: true,
+  kind: "pack",
+  packs: ["ender-mod"],
+  installed: () => EntityTypes.get("elleedog:ender_mod_marker") !== undefined,
+  manual: {
+    about:
+      'Protect a build from Endermen. Run /elleedog:ender_protect pos1 and pos2 at two corners, then /elleedog:ender_protect name "my house". Endermen cannot take blocks from named regions or carry blocks placed by players.',
+    commands: [
+      '/elleedog:ender_protect pos1|pos2 (mark corners), name "..." (save a region), list, remove "..." (operators)',
+    ],
+    whileOff: "Endermen behave like vanilla. Saved regions are remembered and apply again when the pack is active.",
+  },
   register({ commands }) {
     registerProtectionCommands(
       commands,
@@ -148,8 +147,6 @@ export const enderMod: FeatureDefinition = {
     );
   },
   start(ctx) {
-    idle?.dispose();
-    idle = undefined;
     try {
       store = new ProtectionStore(world);
     } catch (error) {
@@ -165,12 +162,6 @@ export const enderMod: FeatureDefinition = {
     ctx.every(1, updateAll);
   },
   stop() {
-    selections.clear();
-    previous.clear();
-    store = undefined;
-    setEveryEnderman(true);
-    idle = new FeatureContext("ender-mod:idle");
-    idle.on(world.afterEvents.entitySpawn, onLoadedWhileDisabled);
-    idle.on(world.afterEvents.entityLoad, onLoadedWhileDisabled);
+    // pack feature: never stopped at runtime
   },
 };

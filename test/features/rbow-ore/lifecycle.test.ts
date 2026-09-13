@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { bootstrap } from "../../../src/core/bootstrap.ts";
-import { isRunning, setEnabled } from "../../../src/core/features.ts";
+import { isRunning } from "../../../src/core/features.ts";
 import { rbowOre } from "../../../src/features/rbow-ore/index.ts";
 import { resetState } from "../../../src/features/rbow-ore/main.js";
 import {
@@ -10,14 +10,18 @@ import {
   ItemStack,
   loadWorld,
   type Player,
+  registerEntityType,
   reset,
+  runCommand,
   ScriptEventSource,
   startup,
   step,
   system,
   world,
 } from "../../mocks/minecraft-server.ts";
-import { blockAt, boot, legacyDrop, tillingFixture, toolComponent } from "./helpers.ts";
+import { blockAt, legacyDrop, PROBE_ENTITY, tillingFixture, toolComponent } from "./helpers.ts";
+
+const PACK_TITLE = "ElleeDog 67 Rbow Ore";
 
 beforeEach(() => {
   reset();
@@ -52,70 +56,42 @@ function runCheck(player: Player): void {
   });
 }
 
+function sizes() {
+  return {
+    interact: world.beforeEvents.playerInteractWithBlock.size,
+    script: system.afterEvents.scriptEventReceive.size,
+    load: world.afterEvents.entityLoad.size,
+    intervals: system.intervalCount,
+  };
+}
+
+function featuresReport(): string {
+  return String(runCommand("elleedog67:features", {}).message);
+}
+
 describe("rbow-ore lifecycle", () => {
-  it("subscribes the tool handlers on start and leaves only the always-on drop handler behind on stop", () => {
+  it("subscribes the tool handlers on start next to the always-on drop handler", () => {
     bootstrap([rbowOre]);
     startup();
-    const interactBefore = world.beforeEvents.playerInteractWithBlock.size;
-    const scriptBefore = system.afterEvents.scriptEventReceive.size;
-    const loadBefore = world.afterEvents.entityLoad.size;
-    const intervalsBefore = system.intervalCount;
+    registerEntityType(PROBE_ENTITY);
+    const before = sizes();
     loadWorld();
     step(1);
     expect(isRunning("rbow-ore")).toBe(true);
-    expect(world.beforeEvents.playerInteractWithBlock.size).toBe(interactBefore + 1);
-    expect(system.afterEvents.scriptEventReceive.size).toBe(scriptBefore + 1);
-    expect(world.afterEvents.entityLoad.size).toBe(loadBefore + 1);
+    expect(sizes()).toEqual({
+      interact: before.interact + 1,
+      script: before.script + 1,
+      load: before.load + 1,
+      intervals: before.intervals,
+    });
     expect(world.afterEvents.playerBreakBlock.size).toBe(1);
-    expect(setEnabled("rbow-ore", false)).toEqual({ changed: true });
-    expect(isRunning("rbow-ore")).toBe(false);
-    expect(world.beforeEvents.playerInteractWithBlock.size).toBe(interactBefore);
-    expect(system.afterEvents.scriptEventReceive.size).toBe(scriptBefore);
-    expect(world.afterEvents.entityLoad.size).toBe(loadBefore);
-    expect(system.intervalCount).toBe(intervalsBefore);
-    expect(world.afterEvents.playerBreakBlock.size).toBe(1);
+    expect(featuresReport()).toContain("rbow-ore: active");
   });
 
-  it("still drops ore while disabled but stops tool actions, the diagnostic and the tool component", () => {
-    boot();
-    const player = addPlayer("Ellee");
-    expect(setEnabled("rbow-ore", false)).toEqual({ changed: true });
-
-    expect(mineOre(player)).toEqual(["elleedog:raw_rbow_ore x1"]);
-
-    const tilling = tillingFixture("Farmer");
-    world.beforeEvents.playerInteractWithBlock.emit(tilling.event);
-    step(1);
-    expect(tilling.event.cancel).toBe(false);
-    expect(tilling.blockType()).toBe("minecraft:dirt");
-    expect(tilling.durability.damage).toBe(0);
-
-    runCheck(player);
-    expect(player.chat).toEqual([]);
-
-    const combat = { itemStack: new ItemStack("elleedog:rbow_axe"), durabilityDamage: 0 };
-    toolComponent().onBeforeDurabilityDamage(combat);
-    expect(combat.durabilityDamage).toBe(0);
-
-    expect(setEnabled("rbow-ore", true)).toEqual({ changed: true });
-    expect(mineOre(player)).toEqual(["elleedog:raw_rbow_ore x1"]);
-    const restored = tillingFixture("Farmer again");
-    world.beforeEvents.playerInteractWithBlock.emit(restored.event);
-    expect(restored.event.cancel).toBe(true);
-    step(1);
-    expect(restored.blockType()).toBe("minecraft:farmland");
-    expect(restored.durability.damage).toBe(1);
-    runCheck(player);
-    expect(player.chat).toHaveLength(1);
-    expect(player.chat[0]).toMatch(/^67 Rbow Ore Mod 1\.2\.0 \| diagnostic check\n/);
-    expect(player.chat[0]).toContain("OK block registration: elleedog:rbow_ore");
-    toolComponent().onBeforeDurabilityDamage(combat);
-    expect(combat.durabilityDamage).toBe(2);
-  });
-
-  it("releases stored stacks from legacy carriers found at start and on later entity loads, but not while disabled", () => {
+  it("releases stored stacks from legacy carriers found at start and on later entity loads", () => {
     bootstrap([rbowOre]);
     startup();
+    registerEntityType(PROBE_ENTITY);
     const dimension = dimensions.overworld;
     const early = legacyDrop(dimension, new ItemStack("elleedog:rbow_ingot", 43), { x: 2, y: 64, z: 3 });
     loadWorld();
@@ -134,12 +110,47 @@ describe("rbow-ore lifecycle", () => {
     expect(dimension.spawnedItems).toHaveLength(2);
     expect(dimension.spawnedItems[1]?.item.typeId).toBe("elleedog:rbow_helmet");
     expect(later.isValid).toBe(false);
+  });
 
-    setEnabled("rbow-ore", false);
-    const ignored = legacyDrop(dimension, new ItemStack("elleedog:rbow_sword"), { x: 8, y: 64, z: 8 });
-    world.afterEvents.entityLoad.emit({ entity: ignored });
+  it("without the packs it still drops ore but never starts: no tool actions, diagnostic, component or recovery", () => {
+    bootstrap([rbowOre]);
+    startup();
+    const before = sizes();
+    const dimension = dimensions.overworld;
+    const carrier = legacyDrop(dimension, new ItemStack("elleedog:rbow_ingot", 43), { x: 2, y: 64, z: 3 });
+    loadWorld();
+    step(2);
+    expect(isRunning("rbow-ore")).toBe(false);
+    expect(sizes()).toEqual(before);
+    expect(world.afterEvents.playerBreakBlock.size).toBe(1);
+    expect(carrier.isValid).toBe(true);
+    expect(dimension.spawnedItems).toEqual([]);
+
+    const player = addPlayer("Ellee");
+    expect(mineOre(player)).toEqual(["elleedog:raw_rbow_ore x1"]);
+
+    const tilling = tillingFixture("Farmer");
+    world.beforeEvents.playerInteractWithBlock.emit(tilling.event);
     step(1);
-    expect(dimension.spawnedItems).toHaveLength(2);
-    expect(ignored.isValid).toBe(true);
+    expect(tilling.event.cancel).toBe(false);
+    expect(tilling.blockType()).toBe("minecraft:dirt");
+    expect(tilling.durability.damage).toBe(0);
+
+    runCheck(player);
+    expect(player.chat).toEqual([]);
+
+    const combat = { itemStack: new ItemStack("elleedog:rbow_axe"), durabilityDamage: 0 };
+    toolComponent().onBeforeDurabilityDamage(combat);
+    expect(combat.durabilityDamage).toBe(0);
+
+    const later = legacyDrop(dimension, new ItemStack("elleedog:rbow_sword"), { x: 8, y: 64, z: 8 });
+    world.afterEvents.entityLoad.emit({ entity: later });
+    step(1);
+    expect(later.isValid).toBe(true);
+    expect(dimension.spawnedItems.map((drop) => drop.item.typeId)).toEqual(["elleedog:raw_rbow_ore"]);
+
+    const report = featuresReport();
+    expect(report).toContain("rbow-ore: packs off");
+    expect(report).toContain(PACK_TITLE);
   });
 });

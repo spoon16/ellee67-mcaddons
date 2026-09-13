@@ -3,13 +3,22 @@ import { bootstrap } from "../../../src/core/bootstrap.ts";
 import { BOOK_ID, COMPONENT_ID, redstoneGuide } from "../../../src/features/redstone-guide/index.ts";
 import type { GuideEntry } from "../../../src/features/redstone-guide/reader.js";
 import { readStrictJson } from "../../../tools/lib/json.ts";
+import { packDir } from "../../../tools/lib/packs.ts";
 import { REPO_ROOT } from "../../../tools/lib/paths.ts";
-import { type Entity, ItemStack, loadWorld, registry, startup, world } from "../../mocks/minecraft-server.ts";
+import {
+  type Entity,
+  ItemStack,
+  loadWorld,
+  registerItemType,
+  registry,
+  startup,
+  world,
+} from "../../mocks/minecraft-server.ts";
 import { FormCancelationReason, type QueuedResponse, ui } from "../../mocks/minecraft-server-ui.ts";
 
 export const FEATURE_DIR = path.join(REPO_ROOT, "src", "features", "redstone-guide");
-export const BP = path.join(REPO_ROOT, "behavior_packs", "elleedog67");
-export const RP = path.join(REPO_ROOT, "resource_packs", "elleedog67");
+export const BP = packDir("redstone-guide");
+export const RP = packDir("redstone-guide-resources");
 
 export interface GuideDocument {
   version: string;
@@ -35,10 +44,11 @@ export function shownForms(): ShownForm[] {
   return ui.forms as ShownForm[];
 }
 
-/** Boots the add-on with only this feature, through startup and world load. */
+/** Boots the add-on with only this feature and its packs active, through startup and world load. */
 export function boot(): void {
   bootstrap([redstoneGuide]);
   startup();
+  registerItemType(BOOK_ID);
   loadWorld();
 }
 

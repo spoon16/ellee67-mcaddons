@@ -26,7 +26,7 @@ describe("feature registry", () => {
     expect(off.log.starts).toBe(0);
     expect(isRunning("pets")).toBe(true);
     expect(isRunning("creeper-mod")).toBe(false);
-    expect(featureStatusLines()).toEqual(["pets: enabled", "creeper-mod: disabled"]);
+    expect(featureStatusLines()).toEqual(["pets: on", "creeper-mod: off"]);
   });
 
   it("settles a feature that loads disabled by calling stop() once without start()", () => {
@@ -124,11 +124,32 @@ describe("feature registry", () => {
     expect(normalizeFeatureId("pets")).toBeUndefined();
   });
 
-  it("shows the disabled note only while disabled", () => {
-    defineFeatures([fakeFeature("rbow-ore", { disabledNote: "Ore stays in the world." }).definition]);
+  it("reports pack features by their packs, never by a world switch", () => {
+    let present = false;
+    const ore = fakeFeature("rbow-ore", {
+      kind: "pack",
+      packs: ["rbow-ore", "rbow-ore-resources"],
+      installed: () => present,
+    });
+    defineFeatures([ore.definition]);
+    world.setDynamicProperty(featurePropertyKey("rbow-ore"), false);
     startEnabledFeatures();
-    expect(featureStatusLines()).toEqual(["rbow-ore: enabled"]);
-    setEnabled("rbow-ore", false);
-    expect(featureStatusLines()).toEqual(["rbow-ore: disabled (Ore stays in the world.)"]);
+    expect(ore.log.starts).toBe(0);
+    expect(ore.log.stops).toBe(0);
+    expect(world.getDynamicProperty(featurePropertyKey("rbow-ore"))).toBeUndefined();
+    expect(featureStatusLines()).toEqual([
+      'rbow-ore: packs off (Rbow Ore is turned on by activating "ElleeDog 67 Rbow Ore" (Behavior Packs) in Edit World. Its resource pack is added automatically.)',
+    ]);
+    const refused = setEnabled("rbow-ore", true);
+    expect(refused.changed).toBe(false);
+    expect(String(refused.error)).toContain("ElleeDog 67 Rbow Ore");
+    expect(String(setEnabled("rbow-ore", false).error)).toBe(
+      'Error: Rbow Ore is turned off by deactivating "ElleeDog 67 Rbow Ore" (Behavior Packs) and "ElleeDog 67 Rbow Ore Resources" (Resource Packs) in Edit World.',
+    );
+    expect(isEnabled("rbow-ore")).toBe(true);
+    present = true;
+    startEnabledFeatures();
+    expect(ore.log.starts).toBe(1);
+    expect(featureStatusLines()).toEqual(["rbow-ore: active"]);
   });
 });

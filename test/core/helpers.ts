@@ -11,8 +11,11 @@ export interface FakeFeatureLog {
 export function fakeFeature(
   id: FeatureId,
   options: {
+    kind?: FeatureDefinition["kind"];
+    packs?: readonly string[];
+    installed?: () => boolean;
+    manual?: Partial<FeatureDefinition["manual"]>;
     defaultEnabled?: boolean;
-    disabledNote?: string;
     failStart?: boolean;
     onStart?: (ctx: FeatureContext) => void;
     onStop?: (ctx: FeatureContext) => void;
@@ -27,8 +30,11 @@ export function fakeFeature(
       .map((part) => part[0]?.toUpperCase() + part.slice(1))
       .join(" "),
     summary: `${id} summary`,
+    kind: options.kind ?? "switch",
+    packs: options.packs,
+    installed: options.installed,
     defaultEnabled: options.defaultEnabled ?? true,
-    disabledNote: options.disabledNote,
+    manual: { about: `${id} about`, whileOff: `${id} while off`, ...options.manual },
     register: options.register,
     start(ctx) {
       log.starts++;

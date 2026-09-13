@@ -9,6 +9,7 @@ import {
   loadWorld,
   Player,
   players,
+  registerEntityType,
   runCommand,
   startup,
 } from "../../mocks/minecraft-server.ts";
@@ -34,6 +35,8 @@ export const PLAYER_PROPERTY_DEFAULTS: Readonly<Record<string, unknown>> = Objec
   "pet:off_shield_enchanted": false,
   "pet:seat_lift": 0,
   "pet:seat_kind": 0,
+  "pet:armor_lift": 0,
+  "pet:armor_scale": 1,
   "elleedog:rbow_armor_count": 0,
 });
 
@@ -98,11 +101,15 @@ export function declarePetEntities(): void {
   entityProperties["cav:diag_model"] = {};
 }
 
-/** Registers the pets feature with the core and loads the world, like the bundled script would. */
+/** The entity the Pets behavior pack declares and the feature probes for after world load. */
+export const PROBE_ENTITY = "pet:diag_model";
+
+/** Registers the pets feature with the core and loads a world whose Pets packs are active. */
 export function start(): void {
   declarePetEntities();
   bootstrap([pets]);
   startup();
+  registerEntityType(PROBE_ENTITY);
   loadWorld();
 }
 

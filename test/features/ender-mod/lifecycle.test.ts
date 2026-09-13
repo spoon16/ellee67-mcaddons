@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { bootstrap } from "../../../src/core/bootstrap.ts";
 import { disabledMessage } from "../../../src/core/commands.ts";
-import { isRunning, setEnabled } from "../../../src/core/features.ts";
+import { isRunning } from "../../../src/core/features.ts";
 import { enderMod } from "../../../src/features/ender-mod/index.ts";
 import {
   addPlayer,
@@ -12,6 +12,7 @@ import {
   entityProperties,
   loadWorld,
   type Player,
+  registerEntityType,
   reset,
   runCommand,
   startup,
@@ -22,6 +23,9 @@ import {
 
 const GATE = "elleedog:may_move_blocks";
 const COMMAND = "elleedog:ender_protect";
+/** The never-spawned marker entity the Ender Mod behavior pack declares and the feature probes for. */
+const MARKER = "elleedog:ender_mod_marker";
+const PACK_TITLE = "ElleeDog 67 Ender Mod";
 
 /** Spawns an Enderman carrying the override's property and announces it the way the engine does. */
 function spawnEnderman(x: number, z: number, y = 64, dimension: Dimension = dimensions.overworld): Entity {
@@ -45,10 +49,16 @@ function protect(operator: Player, ...args: unknown[]): void {
   expect(result.status).toBe(CustomCommandStatus.Success);
 }
 
+/** Boots the add-on with only ender-mod and its pack active. */
 function boot(): void {
   bootstrap([enderMod]);
   startup();
+  registerEntityType(MARKER);
   loadWorld();
+}
+
+function featuresReport(): string {
+  return String(runCommand("elleedog67:features", {}).message);
 }
 
 function subscriptionCounts() {
@@ -83,6 +93,7 @@ describe("ender-mod lifecycle", () => {
   it("sweeps Endermen that were already loaded to denied when the world loads", () => {
     bootstrap([enderMod]);
     startup();
+    registerEntityType(MARKER);
     const enderman = dimensions.overworld.spawnEntity("minecraft:enderman", { x: 0, y: 64, z: 0 });
     enderman.props[GATE] = true;
     loadWorld();
@@ -159,58 +170,51 @@ describe("ender-mod lifecycle", () => {
     expect(result.message).toBe("Run this command as a player with Operator permission.");
   });
 
-  it("restores vanilla Endermen while disabled and resumes gating when re-enabled", () => {
+  it("subscribes its handlers and the tick scan on world load when the Ender Mod pack is active", () => {
+    bootstrap([enderMod]);
+    startup();
+    registerEntityType(MARKER);
+    const before = subscriptionCounts();
+    loadWorld();
+    expect(isRunning("ender-mod")).toBe(true);
+    expect(subscriptionCounts()).toEqual({
+      place: before.place + 1,
+      break: before.break + 1,
+      spawn: before.spawn + 1,
+      load: before.load + 1,
+      leave: before.leave + 1,
+      intervals: before.intervals + 1,
+    });
+    expect(featuresReport()).toContain("ender-mod: active");
+  });
+
+  it("never starts without the pack, leaves vanilla Endermen alone and refuses the command with the pack hint", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    delete entityProperties["minecraft:enderman"];
     bootstrap([enderMod]);
     startup();
     const before = subscriptionCounts();
     loadWorld();
-    expect(subscriptionCounts()).toEqual({
-      place: before.place + 1,
-      break: before.break + 1,
-      spawn: before.spawn + 1,
-      load: before.load + 1,
-      leave: before.leave + 1,
-      intervals: before.intervals + 1,
-    });
-    const operator = addPlayer("Op");
-    const nearBuild = spawnEnderman(0, 0);
-    placeBlock(1, 1);
-    step(2);
-    expect(nearBuild.getProperty(GATE)).toBe(false);
-    protect(operator, "list");
-
-    expect(setEnabled("ender-mod", false)).toEqual({ changed: true });
     expect(isRunning("ender-mod")).toBe(false);
-    expect(subscriptionCounts()).toEqual({ ...before, spawn: before.spawn + 1, load: before.load + 1 });
-    step(1);
-    expect(nearBuild.getProperty(GATE)).toBe(true);
-    const wilderness = spawnEnderman(50, 50);
-    step(1);
-    expect(wilderness.getProperty(GATE)).toBe(true);
+    expect(subscriptionCounts()).toEqual(before);
+
+    const vanilla = spawnEnderman(0, 0);
+    placeBlock(1, 1);
     step(20);
-    expect(nearBuild.getProperty(GATE)).toBe(true);
-    expect(wilderness.getProperty(GATE)).toBe(true);
+    expect(vanilla.props).toEqual({});
+    expect(warn).not.toHaveBeenCalled();
+
+    const operator = addPlayer("Op");
     const refused = runCommand(COMMAND, { sourceEntity: operator }, "list");
     expect(refused).toEqual({ status: CustomCommandStatus.Failure, message: disabledMessage(enderMod) });
-    expect(refused.message).toBe("Ender Mod is disabled. An operator can run /elleedog67:enable ender-mod.");
-    placeBlock(51, 51);
-
-    expect(setEnabled("ender-mod", true)).toEqual({ changed: true });
-    expect(subscriptionCounts()).toEqual({
-      place: before.place + 1,
-      break: before.break + 1,
-      spawn: before.spawn + 1,
-      load: before.load + 1,
-      leave: before.leave + 1,
-      intervals: before.intervals + 1,
-    });
+    expect(refused.message).toContain(PACK_TITLE);
+    expect(refused.message).not.toContain("/elleedog67:enable");
     step(1);
-    expect(nearBuild.getProperty(GATE)).toBe(false);
-    expect(wilderness.getProperty(GATE)).toBe(false);
-    step(3);
-    expect(nearBuild.getProperty(GATE)).toBe(false);
-    expect(wilderness.getProperty(GATE)).toBe(true);
-    protect(operator, "list");
+    expect(operator.chat).toEqual([]);
+
+    const report = featuresReport();
+    expect(report).toContain("ender-mod: packs off");
+    expect(report).toContain(PACK_TITLE);
   });
 
   it("warns at most once per 200 ticks when the Enderman override is missing", () => {

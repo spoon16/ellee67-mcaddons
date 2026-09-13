@@ -390,7 +390,19 @@ export const stairSit: FeatureDefinition = {
   id: "stair-sit",
   title: "Stair Sitting",
   summary: "Sit on stairs with the Sit button, a crouch gesture or /sit:down",
+  kind: "switch",
   defaultEnabled: true,
+  manual: {
+    about:
+      "Sit on any stair: look at it with empty hands and press Sit, crouch and release while looking at it, or run /sit:down. While seated, use a nearby free stair to move there without standing up.",
+    commands: [
+      "/sit:down and /sit:stand",
+      "/sit:help, /sit:status",
+      "/sit:button true|false (native Sit prompts), /sit:gesture true|false (crouch-release sitting)",
+      "/sit:height <-0.5 to 0.5> (seat height), /sit:clear (operators: remove every seat helper)",
+    ],
+    whileOff: "Seats and Sit prompts are removed and the sit commands refuse. Nothing stays behind in the world.",
+  },
   register: registerCommands,
   start(ctx) {
     subscribe(ctx);

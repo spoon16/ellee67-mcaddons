@@ -163,9 +163,7 @@ describe("navigation", () => {
 
 describe("pack files", () => {
   it("item id, texture path and icon key agree", () => {
-    const item = (readStrictJson(path.join(BP, "items", "redstone-guide", "guide_book.json")) as Json)[
-      "minecraft:item"
-    ];
+    const item = (readStrictJson(path.join(BP, "items", "guide_book.json")) as Json)["minecraft:item"];
     expect(item.description.identifier).toBe(BOOK_ID);
     expect(item.components["minecraft:interact_button"]).toBe("Read Guide");
     expect(COMPONENT_ID in item.components).toBe(true);
@@ -178,7 +176,7 @@ describe("pack files", () => {
   });
 
   it("guide recipe is shapeless, uses exactly one redstone and one leather, and fits all 84 two-slot layouts", () => {
-    const root = readStrictJson(path.join(BP, "recipes", "redstone-guide", "guide_book.json")) as Json;
+    const root = readStrictJson(path.join(BP, "recipes", "guide_book.json")) as Json;
     const recipe = root["minecraft:recipe_shapeless"];
     expect(recipe).toBeDefined();
     expect(root["minecraft:recipe_shaped"]).toBeUndefined();

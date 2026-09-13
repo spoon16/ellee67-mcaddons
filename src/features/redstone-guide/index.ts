@@ -1,4 +1,4 @@
-import { type Entity, type Player, system, world } from "@minecraft/server";
+import { type Entity, ItemTypes, type Player, system, world } from "@minecraft/server";
 import { ActionFormData, FormCancelationReason } from "@minecraft/server-ui";
 import type { FeatureDefinition } from "../../core/features.ts";
 import { log } from "../../core/log.ts";
@@ -131,7 +131,15 @@ export const redstoneGuide: FeatureDefinition = {
   id: "redstone-guide",
   title: "Redstone Guide",
   summary: "Craft a guide book: 1 redstone + 1 leather",
-  defaultEnabled: true,
+  kind: "pack",
+  packs: ["redstone-guide", "redstone-guide-resources"],
+  installed: () => ItemTypes.get("elleedog_redstone:guide_book") !== undefined,
+  manual: {
+    about:
+      "Craft a Redstone Guide with 1 redstone and 1 leather. Using it opens pages on every redstone component, their recipes and three example builds, and remembers where you left off.",
+    whileOff:
+      "The guide cannot be crafted and existing guides turn into unknown items until the packs are active again.",
+  },
   register({ items }) {
     items.registerCustomComponent(COMPONENT_ID, {
       onUse: (event) => requestOpen(event.source),

@@ -1,0 +1,11 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "[json]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[typescript]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[javascript]": { "editor.defaultFormatter": "biomejs.biome" },
+  "files.exclude": { "dist": true, ".codegen-work": true },
+  "search.exclude": { "dist": true, ".codegen-work": true, "tools/codegen/pets/integration": true },
+  "files.eol": "\n",
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

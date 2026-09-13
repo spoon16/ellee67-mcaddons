@@ -1,0 +1,33 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": [
+      "src/**",
+      "test/**",
+      "tools/**",
+      "*.json",
+      "*.ts",
+      ".vscode/**",
+      "!tools/codegen/pets",
+      "!src/features/**/*.generated.js",
+      "!src/features/redstone-guide/guide_content.json"
+    ]
+  },
+  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 120 },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "suspicious": { "noExplicitAny": "off" }
+    }
+  },
+  "javascript": { "formatter": { "quoteStyle": "double", "semicolons": "always" } },
+  "overrides": [
+    {
+      "includes": ["src/features/**/*.js"],
+      "formatter": { "enabled": false },
+      "linter": { "enabled": false }
+    }
+  ]
+}

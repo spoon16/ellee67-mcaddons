@@ -1,0 +1,6 @@
+## ElleeDog 67 resource pack
+pack.name=ElleeDog 67 (Resources)
+pack.description=Pets, stair sitting, creeper and ender mods, redstone guide, rbow ore. Toggle features with the ElleeDog 67 Book or /elleedog67:enable.
+
+## core
+item.elleedog67:feature_book.name=ElleeDog 67 Book

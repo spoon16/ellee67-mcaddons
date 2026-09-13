@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.codegen-work/
+*.log
+.DS_Store
+tools/codegen/pets/.venv/
+__pycache__/
+*.pyc

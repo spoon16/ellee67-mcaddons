@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "npm",
+      "script": "build",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    { "label": "package (.mcaddon)", "type": "npm", "script": "package", "problemMatcher": [] },
+    {
+      "label": "test",
+      "type": "npm",
+      "script": "test",
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    { "label": "check (types + lint)", "type": "npm", "script": "check", "problemMatcher": [] },
+    { "label": "codegen", "type": "npm", "script": "codegen", "problemMatcher": [] }
+  ]
+}

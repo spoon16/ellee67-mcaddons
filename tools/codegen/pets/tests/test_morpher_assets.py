@@ -53,7 +53,7 @@ class MorpherAssets(unittest.TestCase):
     self.assertEqual(result,ident if ident in [1,2,3] and flag else 0)
  def test_initial_player_properties_are_native_not_pet_defaults(self):
   p=read(BP/'entities/player.json')['minecraft:entity']['description']['properties']
-  expected={'pet:model_id':0,'pet:view':'native','pet:motion':False,'pet:armor_fit':False,'pet:gear_fit':False,'pet:hand_height':0}
+  expected={'pet:model_id':0,'pet:view':'native','pet:motion':False,'pet:armor_fit':False,'pet:gear_fit':False,'pet:hand_height':0,'pet:armor_lift':0.0,'pet:armor_scale':1.0}
   for key,value in expected.items():self.assertEqual(p[key]['default'],value)
   for pet in PETS:self.assertEqual(pet['first_person']['default_hand_height'],2)
  def test_book_has_correct_title_use_component_and_touch_button(self):

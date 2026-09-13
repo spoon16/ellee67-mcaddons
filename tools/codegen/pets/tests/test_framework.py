@@ -258,7 +258,7 @@ class EquipmentTests(unittest.TestCase):
     self.assertTrue(visible[i])
  def test_native_offset_runs_continuously_without_native_bones_in_pet_mesh(self):
   for path in (RP/'attachables').glob('*.player.json'):
-   d=read(path)['minecraft:attachable']['description'];self.assertEqual(d['scripts']['animate'],['offset'])
+   d=read(path)['minecraft:attachable']['description'];self.assertEqual(d['scripts']['animate'],['offset',{'pet_fit':'variable.pet_fit_index > 0.0'}])
    for p in PETS:
     g=GEOMETRIES[d['geometry']['pet_'+p['id']]]
     self.assertTrue(all(b['name'].startswith('pet_') for b in g['bones']))

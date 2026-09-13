@@ -8,7 +8,7 @@ class PropertyDiagnostics(unittest.TestCase):
   raw=source.split('Object.freeze(',1)[1].rsplit(');',1)[0]
   schema=json.loads(raw)
   bp=json.loads((ROOT/'behavior_pack/entities/player.json').read_text())['minecraft:entity']['description']['properties']
-  self.assertEqual(schema,{k:v for k,v in bp.items() if k.startswith("pet:")});self.assertEqual(len(schema),17)
+  self.assertEqual(schema,{k:v for k,v in bp.items() if k.startswith("pet:")});self.assertEqual(len(schema),19)
   expected=hashlib.sha256(json.dumps(schema,sort_keys=True,separators=(',',':')).encode()).hexdigest()
   self.assertIn(expected,source)
  def test_gameplay_geometry_book_and_seating_inputs_preserved_from_044(self):

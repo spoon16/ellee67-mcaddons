@@ -39,7 +39,7 @@ def validate(root, rp, pets):
     for f in (rp/'attachables').glob('*.player.json'):
         d=read(f)['minecraft:attachable']['description']
         expected=['controller.render.pet.armor_native']+[f'controller.render.pet.armor_{p["id"]}' for p in pets]
-        if d['render_controllers']!=expected or d['scripts']['animate']!=['offset']:
+        if d['render_controllers']!=expected or d['scripts']['animate']!=['offset',{'pet_fit':'variable.pet_fit_index > 0.0'}]:
             raise ValueError('Armor cannot disable native offset evaluation or swap native geometry')
     world_meshes=0
     for f in (rp/'models/entity/pets').rglob('*.json'):

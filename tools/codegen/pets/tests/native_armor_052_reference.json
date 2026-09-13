@@ -23,9 +23,9 @@
     "catalog/equipment/armor_materials.json": "0a5cdb0920968cbe4abf89c670070265efb225c22666f826155dd3c40de736d2",
     "catalog/equipment/handhelds.json": "cf159545921a9abfc30f9aa425b21b69ca05ebcc2d8f4a80a1157031527a6114",
     "catalog/equipment/side_carry.json": "c36eebb9c9d61a95d8cf081f0c9147d8dfda928793769c9b5ada04aec14df0a2",
-    "catalog/pets/carter.json": "2dee7a0d2f22e9fef9efe23d83c4fb9bb4760afbcb763bb051a69caa2f343c69",
-    "catalog/pets/casper.json": "4fa6df14c85d7ab089c1809bb0cda3e5b08cb3a2c509caa21112635506168c84",
-    "catalog/pets/mochi.json": "5ecdf1a166183dbca95d122f1ca64f75b9a09ffa3d264719e941e40f9eec0c3f",
+    "catalog/pets/carter.json": "9a830c2ce6dc2022a559027350a28a71994708c343f9efa083b7eb0179fc9968",
+    "catalog/pets/casper.json": "871d22921f00d5f150858fdaec65030b4edb21b8d0a2408f73dc18af33f398df",
+    "catalog/pets/mochi.json": "96d046e79719cef30a041b99d1f59cc9a69996e2da871a73ff6028d90e4bd23d",
     "catalog/rigs/feline_v1.json": "d23cdf267891cb96155813976c4e728f523cee660765ca33bc28d15af374a00a",
     "catalog/rigs/native_v1.json": "f9c0fc7b842264541d51ab5788669eda9bae638b48d4db070d473b61ae12a5ea",
     "catalog/rigs/quadruped_clips.json": "b2b1cc6a879c243d36bbc58b8b3a33da4116cebe7668b2de31ba29b465c7ee74",
@@ -522,10 +522,10 @@
     "integration/rbow_1.2.0/tools/render_sleeve_fix.py": "5af2c5725de14e4b9a098e4016e52896748fa9ee97a4ac83e77ab6eb7ca8bd45"
   },
   "projected": {
-    "resource_pack/models/entity/pets/carter/armor_boots.geo.json": "8ea635e2505e8063a21ed03ca4acc287937cead6a97a29ed4656dcad38a1b5f8",
-    "resource_pack/models/entity/pets/carter/armor_chestplate.geo.json": "51b732d16a3429521045ef712e227ba2e2f6e22d4b7e5c2c2db611f1993dfd9f",
-    "resource_pack/models/entity/pets/carter/armor_helmet.geo.json": "cf5b88efdf1ee249a4c2198a11ff7ad6af0b5c79c5fa6ccff2b7ffb5b607fa6d",
-    "resource_pack/models/entity/pets/carter/armor_leggings.geo.json": "151bdfe8a192012cb03db62a8d2ea24f11f55dc1c009f4a61127c107674cf8b4",
+    "resource_pack/models/entity/pets/carter/armor_boots.geo.json": "7123941fd9830cc8e0bc76217f85452ac4d6c15992ba74088d14575fd8e8d0a7",
+    "resource_pack/models/entity/pets/carter/armor_chestplate.geo.json": "675648d40c887757deded5110b3b064cf449f0a08c2d398c35c4b5c97bb7dffb",
+    "resource_pack/models/entity/pets/carter/armor_helmet.geo.json": "198811a622ac9c702a1949aec575abbc374bf5139297cc6170eb7cf836425462",
+    "resource_pack/models/entity/pets/carter/armor_leggings.geo.json": "a1ac8fde95ee805a789450d06997bb01cd3fc591a0c36476678984383ffd9fd7",
     "resource_pack/models/entity/pets/carter/carry_main_book.geo.json": "87f7e408f1d899b44e3f5675c1f18cef30758cba8f3e76c1b045834f02fe5ab4",
     "resource_pack/models/entity/pets/carter/carry_main_cube.geo.json": "6d0e42ed55e72a297085f896d75d2384fe3bfeee0bebb34fdb2e1797044dfd18",
     "resource_pack/models/entity/pets/carter/carry_main_rbow_cube.geo.json": "45adc9fc0471970f5e2e4360d0a8d0eb9336b2130675090bf27f5f64fc1026b1",
@@ -642,7 +642,8 @@
         "pet_casper": "geometry.pet.casper.armor.helmet"
       },
       "animations": {
-        "offset": "animation.armor.helmet.offset"
+        "offset": "animation.armor.helmet.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/leather_helmet.player.json": {
@@ -665,7 +666,8 @@
         "pet_casper": "geometry.pet.casper.armor.helmet"
       },
       "animations": {
-        "offset": "animation.armor.helmet.offset"
+        "offset": "animation.armor.helmet.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/leather_chestplate.player.json": {
@@ -688,7 +690,8 @@
         "pet_casper": "geometry.pet.casper.armor.chestplate"
       },
       "animations": {
-        "offset": "animation.armor.chestplate.offset"
+        "offset": "animation.armor.chestplate.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/chainmail_leggings.player.json": {
@@ -711,7 +714,8 @@
         "pet_casper": "geometry.pet.casper.armor.leggings"
       },
       "animations": {
-        "offset": "animation.armor.leggings.offset"
+        "offset": "animation.armor.leggings.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/iron_boots.player.json": {
@@ -734,7 +738,8 @@
         "pet_casper": "geometry.pet.casper.armor.boots"
       },
       "animations": {
-        "offset": "animation.armor.boots.offset"
+        "offset": "animation.armor.boots.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/rbow_chestplate.player.json": {
@@ -757,7 +762,8 @@
         "pet_casper": "geometry.pet.casper.armor.chestplate"
       },
       "animations": {
-        "offset": "animation.armor.chestplate.offset"
+        "offset": "animation.armor.chestplate.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/netherite_leggings.player.json": {
@@ -780,7 +786,8 @@
         "pet_casper": "geometry.pet.casper.armor.leggings"
       },
       "animations": {
-        "offset": "animation.armor.leggings.offset"
+        "offset": "animation.armor.leggings.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/golden_leggings.player.json": {
@@ -803,7 +810,8 @@
         "pet_casper": "geometry.pet.casper.armor.leggings"
       },
       "animations": {
-        "offset": "animation.armor.leggings.offset"
+        "offset": "animation.armor.leggings.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/leather_leggings.player.json": {
@@ -826,7 +834,8 @@
         "pet_casper": "geometry.pet.casper.armor.leggings"
       },
       "animations": {
-        "offset": "animation.armor.leggings.offset"
+        "offset": "animation.armor.leggings.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/chainmail_boots.player.json": {
@@ -849,7 +858,8 @@
         "pet_casper": "geometry.pet.casper.armor.boots"
       },
       "animations": {
-        "offset": "animation.armor.boots.offset"
+        "offset": "animation.armor.boots.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/diamond_leggings.player.json": {
@@ -872,7 +882,8 @@
         "pet_casper": "geometry.pet.casper.armor.leggings"
       },
       "animations": {
-        "offset": "animation.armor.leggings.offset"
+        "offset": "animation.armor.leggings.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/iron_helmet.player.json": {
@@ -895,7 +906,8 @@
         "pet_casper": "geometry.pet.casper.armor.helmet"
       },
       "animations": {
-        "offset": "animation.armor.helmet.offset"
+        "offset": "animation.armor.helmet.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/netherite_boots.player.json": {
@@ -918,7 +930,8 @@
         "pet_casper": "geometry.pet.casper.armor.boots"
       },
       "animations": {
-        "offset": "animation.armor.boots.offset"
+        "offset": "animation.armor.boots.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/chainmail_chestplate.player.json": {
@@ -941,7 +954,8 @@
         "pet_casper": "geometry.pet.casper.armor.chestplate"
       },
       "animations": {
-        "offset": "animation.armor.chestplate.offset"
+        "offset": "animation.armor.chestplate.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/netherite_helmet.player.json": {
@@ -964,7 +978,8 @@
         "pet_casper": "geometry.pet.casper.armor.helmet"
       },
       "animations": {
-        "offset": "animation.armor.helmet.offset"
+        "offset": "animation.armor.helmet.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/diamond_boots.player.json": {
@@ -987,7 +1002,8 @@
         "pet_casper": "geometry.pet.casper.armor.boots"
       },
       "animations": {
-        "offset": "animation.armor.boots.offset"
+        "offset": "animation.armor.boots.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/diamond_chestplate.player.json": {
@@ -1010,7 +1026,8 @@
         "pet_casper": "geometry.pet.casper.armor.chestplate"
       },
       "animations": {
-        "offset": "animation.armor.chestplate.offset"
+        "offset": "animation.armor.chestplate.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/diamond_helmet.player.json": {
@@ -1033,7 +1050,8 @@
         "pet_casper": "geometry.pet.casper.armor.helmet"
       },
       "animations": {
-        "offset": "animation.armor.helmet.offset"
+        "offset": "animation.armor.helmet.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/netherite_chestplate.player.json": {
@@ -1056,7 +1074,8 @@
         "pet_casper": "geometry.pet.casper.armor.chestplate"
       },
       "animations": {
-        "offset": "animation.armor.chestplate.offset"
+        "offset": "animation.armor.chestplate.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/rbow_boots.player.json": {
@@ -1079,7 +1098,8 @@
         "pet_casper": "geometry.pet.casper.armor.boots"
       },
       "animations": {
-        "offset": "animation.armor.boots.offset"
+        "offset": "animation.armor.boots.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/iron_chestplate.player.json": {
@@ -1102,7 +1122,8 @@
         "pet_casper": "geometry.pet.casper.armor.chestplate"
       },
       "animations": {
-        "offset": "animation.armor.chestplate.offset"
+        "offset": "animation.armor.chestplate.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/golden_chestplate.player.json": {
@@ -1125,7 +1146,8 @@
         "pet_casper": "geometry.pet.casper.armor.chestplate"
       },
       "animations": {
-        "offset": "animation.armor.chestplate.offset"
+        "offset": "animation.armor.chestplate.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/golden_helmet.player.json": {
@@ -1148,7 +1170,8 @@
         "pet_casper": "geometry.pet.casper.armor.helmet"
       },
       "animations": {
-        "offset": "animation.armor.helmet.offset"
+        "offset": "animation.armor.helmet.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/golden_boots.player.json": {
@@ -1171,7 +1194,8 @@
         "pet_casper": "geometry.pet.casper.armor.boots"
       },
       "animations": {
-        "offset": "animation.armor.boots.offset"
+        "offset": "animation.armor.boots.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/rbow_helmet.player.json": {
@@ -1194,7 +1218,8 @@
         "pet_casper": "geometry.pet.casper.armor.helmet"
       },
       "animations": {
-        "offset": "animation.armor.helmet.offset"
+        "offset": "animation.armor.helmet.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/leather_boots.player.json": {
@@ -1217,7 +1242,8 @@
         "pet_casper": "geometry.pet.casper.armor.boots"
       },
       "animations": {
-        "offset": "animation.armor.boots.offset"
+        "offset": "animation.armor.boots.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/iron_leggings.player.json": {
@@ -1240,7 +1266,8 @@
         "pet_casper": "geometry.pet.casper.armor.leggings"
       },
       "animations": {
-        "offset": "animation.armor.leggings.offset"
+        "offset": "animation.armor.leggings.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     },
     "resource_pack/attachables/rbow_leggings.player.json": {
@@ -1263,7 +1290,8 @@
         "pet_casper": "geometry.pet.casper.armor.leggings"
       },
       "animations": {
-        "offset": "animation.armor.leggings.offset"
+        "offset": "animation.armor.leggings.offset",
+        "pet_fit": "animation.pet.armor_fit"
       }
     }
   },
@@ -1272,6 +1300,7 @@
     "tools/seating.py"
   ],
   "notes": [
-    "Armor adapters re-pinned after pre-scaling attachable meshes by the entity render scale; ride clips re-pinned after emitting Bedrock-sign rotations."
+    "Armor adapters re-pinned after pre-scaling attachable meshes by the entity render scale; ride clips re-pinned after emitting Bedrock-sign rotations.",
+    "Re-pinned for fitted-armor calibration: per-pet armor_attachable pre-scale in the catalog (Carter 1.0), Carter armor meshes, and the pet_fit animation on every armor adapter."
   ]
 }

@@ -94,6 +94,10 @@
       "sprite_thickness": 0.3,
       "mainhand_side": "right",
       "offhand_side": "left"
+    },
+    "armor_attachable": {
+      "scale": 0.9375,
+      "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
     }
   },
   "validation": {

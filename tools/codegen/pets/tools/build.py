@@ -17,6 +17,7 @@ from morpher_assets import generate as morpher_assets
 import rbow_compat
 from load_validation import validate_behavior_pack
 import seating
+from equipment import fit_clip as armor_fit_clip
 
 ROOT=Path(__file__).resolve().parents[1]
 OLD_SELECT="(query.has_property('pet:form') ? (query.property('pet:form') == 'carter') : 0.0)"
@@ -168,11 +169,16 @@ def build(root=ROOT,output=None):
         desc['properties'][f'pet:{hand}_shield_enchanted']={'type':'bool','default':False,'client_sync':True}
     desc['properties']['pet:seat_lift']={'type':'float','range':[-64.0,64.0],'default':0.0,'client_sync':True}
     desc['properties']['pet:seat_kind']={'type':'int','range':[0,4],'default':0,'client_sync':True}
+    # Live calibration of the fitted armor attachables: the wearer's armor meshes are lifted by pet:armor_lift model
+    # pixels and scaled by pet:armor_scale about the feet, on top of the per-pet pre-scale baked into the geometry.
+    desc['properties']['pet:armor_lift']={'type':'float','range':[-16.0,16.0],'default':0.0,'client_sync':True}
+    desc['properties']['pet:armor_scale']={'type':'float','range':[0.5,1.5],'default':1.0,'client_sync':True}
     for name,model in [('pet:become_human',0),('pet:become_carter',1)]:
         pd['minecraft:entity']['events'][name]={'set_property':{
             'pet:model_id':model,'pet:view':'paws' if model else 'native',
             'pet:motion':bool(model),'pet:armor_fit':bool(model),'pet:gear_fit':bool(model),
-            'pet:hand_height':2 if model else 0,'pet:seat_lift':0.0,'pet:seat_kind':0}}
+            'pet:hand_height':2 if model else 0,'pet:seat_lift':0.0,'pet:seat_kind':0,
+            'pet:armor_lift':0.0,'pet:armor_scale':1.0}}
     if len(desc['properties']) > 32: raise ValueError('Player property budget exceeded')
     # Generate the diagnostic contract from the same definitions shipped to Minecraft.
     schema={k:v for k,v in desc['properties'].items() if k.startswith('pet:')}
@@ -234,6 +240,7 @@ def build(root=ROOT,output=None):
     d['animations']['pet_paw_flex']='animation.pet.paw_flex';d['animations']['pet_fp_lift']='animation.pet.fp_lift'
     d['animations']['pet_seat_align']='animation.pet.seat_align'
     write(rp/'animations/pet_seating.animation.json',{'format_version':'1.8.0','animations':{'animation.pet.seat_align':seating.alignment_clip()}})
+    write(rp/'animations/pet_armor_fit.animation.json',{'format_version':'1.8.0','animations':{'animation.pet.armor_fit':armor_fit_clip()}})
     s['animate'].append({'pet_seat_align':'variable.pet_tp && query.is_riding'})
     s['animate'] += [{'pet_paw_flex':'variable.pet_fp_paws && variable.attack_time > 0.0'},{'pet_fp_lift':f'{fp} && ({EMPTY})'}]
     # Primary player rendering, retaining original Human visibility rules.

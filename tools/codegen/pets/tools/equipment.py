@@ -30,9 +30,20 @@ def uv_region(name):
         for f in ['north','south','east','west']:out[f]['uv_size'][1]=6
     return out
 
+def attachable_scale(root,pet):
+    """Pre-scale baked into a pet's armor meshes. Defaults to the player render scale; the catalog overrides per pet."""
+    return float(pet['equipment'].get('armor_attachable',{}).get('scale',entity_scale(root)))
+
+def fit_clip():
+    """Live calibration read from the wearer: lift in model pixels and a scale about the feet."""
+    lift="context.owning_entity->query.has_property('pet:armor_lift') ? context.owning_entity->query.property('pet:armor_lift') : 0.0"
+    scale="context.owning_entity->query.has_property('pet:armor_scale') ? context.owning_entity->query.property('pet:armor_scale') : 1.0"
+    return {'loop':True,'bones':{'pet_root':{'position':[0,lift,0],'scale':[scale,scale,scale]}}}
+
 def generate(root,pets,rp):
-    catalog=[];scale=entity_scale(root)
+    catalog=[]
     for p in pets:
+        scale=attachable_scale(root,p)
         source=read(root/p['model'])['minecraft:geometry'][0]
         fit=read(root/p['equipment']['armor_fit'])
         for slot,parts in fit['slots'].items():
@@ -66,8 +77,8 @@ def generate(root,pets,rp):
                'textures':{'default':config['texture_template'].format(layer=2 if slot=='leggings' else 1),'enchanted':'textures/misc/enchanted_actor_glint'},
                'geometry':geometry,'scripts':{'initialize':['variable.pet_fit_index = 0.0;'],'parent_setup':f'variable.{layer}_layer_visible = 0.0;',
                'pre_animation':[f'variable.pet_fit_index = ({fitted}) ? {index_expr} : 0.0;'],
-               'animate':['offset']},
-               'animations':{'offset':f'animation.armor.{slot}.offset'},
+               'animate':['offset',{'pet_fit':'variable.pet_fit_index > 0.0'}]},
+               'animations':{'offset':f'animation.armor.{slot}.offset','pet_fit':'animation.pet.armor_fit'},
                'render_controllers':['controller.render.pet.armor_native']+[f'controller.render.pet.armor_{p["id"]}' for p in pets]}
             write(rp/f'attachables/{material}_{slot}.player.json',{'format_version':'1.10.0','minecraft:attachable':{'description':d}})
             catalog.append({'item':item,'slot':slot,'material':material,'status':config.get('status','client-validation-required')})

@@ -60,7 +60,7 @@ class Restoration043(unittest.TestCase):
   for p in files:
    d=read(p)['minecraft:attachable']['description']
    self.assertEqual(d['render_controllers'],['controller.render.pet.armor_native']+[f'controller.render.pet.armor_{p["id"]}' for p in PETS])
-   self.assertEqual(d['scripts']['animate'],['offset'])
+   self.assertEqual(d['scripts']['animate'],['offset',{'pet_fit':'variable.pet_fit_index > 0.0'}])
    for n in d['render_controllers']:
     self.assertNotIn('arrays',cs[n])
     self.assertEqual(cs[n].get('rebuild_animation_matrices',False),n!='controller.render.pet.armor_native')
@@ -143,8 +143,9 @@ class Seating043(unittest.TestCase):
    bare=geometry(p);armor=geometry(p,'armor_chestplate')
    po={k:{a:np.array(b) for a,b in v.items()} for k,v in rig_numeric_pose(p).items()}
    # Attachable meshes are pre-scaled by the entity scale (see attachable_space.py), so compare against a scaled rig.
-   from attachable_space import entity_scale,scale_bones
-   a=matrices(scale_bones(bare['bones'],entity_scale(ROOT)),po);b=matrices(armor['bones'],po)
+   from attachable_space import scale_bones
+   from equipment import attachable_scale
+   a=matrices(scale_bones(bare['bones'],attachable_scale(ROOT,p)),po);b=matrices(armor['bones'],po)
    for n in ['pet_root','pet_body','pet_head']:np.testing.assert_allclose(a[n],b[n],atol=1e-5)
  def test_seat_alignment_never_offsets_the_native_player_root(self):
   a=read(RP/'animations/pet_seating.animation.json')['animations']['animation.pet.seat_align']

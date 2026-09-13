@@ -62,7 +62,7 @@ class TypedDefaults(unittest.TestCase):
   for folder in [BP,RB]:
    d=read(folder/'entities/player.json')['minecraft:entity']['description']['properties']
    validate_property_definitions(d)
-   self.assertEqual(len(d),18)
+   self.assertEqual(len(d),20)
    self.assertIs(type(d['pet:seat_lift']['default']),float)
    self.assertTrue(all(type(x) is float for x in d['pet:seat_lift']['range']))
  def test_all_shipped_float_event_resets_use_float_literals(self):
@@ -92,7 +92,10 @@ class TypedDefaults(unittest.TestCase):
   # Old snapshot deliberately keeps the invalid 0 as regression evidence.
   old=read(ROOT/'integration/pets_045_player.json')['minecraft:entity']['description']['properties']
   now=read(BP/'entities/player.json')['minecraft:entity']['description']['properties']
-  self.assertEqual({k:v for k,v in now.items() if k.startswith('pet:')},old)
+  # pet:armor_lift and pet:armor_scale were added for fitted-armor calibration; every older property is unchanged.
+  self.assertEqual({k:v for k,v in now.items() if k.startswith('pet:') and k not in ('pet:armor_lift','pet:armor_scale')},old)
+  self.assertEqual(now['pet:armor_lift'],{'type':'float','range':[-16.0,16.0],'default':0.0,'client_sync':True})
+  self.assertEqual(now['pet:armor_scale'],{'type':'float','range':[0.5,1.5],'default':1.0,'client_sync':True})
   self.assertIs(type(old['pet:seat_lift']['default']),int)
   self.assertIs(type(now['pet:seat_lift']['default']),float)
 

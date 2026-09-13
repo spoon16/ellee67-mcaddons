@@ -1,0 +1,21 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "sit:seat",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/sit_seat"
+      },
+      "geometry": {
+        "default": "geometry.sit_seat"
+      },
+      "render_controllers": [
+        "controller.render.sit_seat"
+      ],
+      "enable_attachables": false
+    }
+  }
+}

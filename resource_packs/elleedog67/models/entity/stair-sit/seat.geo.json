@@ -1,0 +1,47 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.sit_seat",
+        "texture_width": 16,
+        "texture_height": 16,
+        "visible_bounds_width": 0.01,
+        "visible_bounds_height": 0.01,
+        "visible_bounds_offset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -0.005,
+                0,
+                -0.005
+              ],
+              "size": [
+                0.01,
+                0.01,
+                0.01
+              ],
+              "uv": [
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

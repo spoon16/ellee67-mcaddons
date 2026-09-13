@@ -1,0 +1,127 @@
+{
+  "format_version": "1.21.80",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "sit:seat",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "sit:lease": {
+        "minecraft:timer": {
+          "looping": false,
+          "time": 10,
+          "time_down_event": {
+            "event": "sit:expire",
+            "target": "self"
+          }
+        }
+      },
+      "sit:remove": {
+        "minecraft:instant_despawn": {}
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "sit_seat"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 0.01,
+        "height": 0.01
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": false
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:movement": {
+        "value": 0
+      },
+      "minecraft:knockback_resistance": {
+        "value": 1
+      },
+      "minecraft:health": {
+        "value": 1,
+        "max": 1
+      },
+      "minecraft:damage_sensor": {
+        "triggers": [
+          {
+            "cause": "all",
+            "deals_damage": "no"
+          }
+        ]
+      },
+      "minecraft:fire_immune": {},
+      "minecraft:transient": {},
+      "minecraft:conditional_bandwidth_optimization": {
+        "default_values": {
+          "max_dropped_ticks": 0,
+          "max_optimized_distance": 80,
+          "use_motion_prediction_hints": true
+        }
+      },
+      "minecraft:rideable": {
+        "seat_count": 1,
+        "family_types": [
+          "player"
+        ],
+        "pull_in_entities": false,
+        "crouching_skip_interact": true,
+        "rider_can_interact": false,
+        "interact_text": "action.interact.sit67",
+        "dismount_mode": "default",
+        "seats": [
+          {
+            "position": [
+              0,
+              -0.35,
+              0
+            ],
+            "rotate_rider_by": 0
+          }
+        ]
+      }
+    },
+    "events": {
+      "minecraft:entity_spawned": {
+        "add": {
+          "component_groups": [
+            "sit:lease"
+          ]
+        }
+      },
+      "sit:heartbeat": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "sit:lease"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "sit:lease"
+              ]
+            }
+          }
+        ]
+      },
+      "sit:expire": {
+        "add": {
+          "component_groups": [
+            "sit:remove"
+          ]
+        }
+      }
+    }
+  }
+}

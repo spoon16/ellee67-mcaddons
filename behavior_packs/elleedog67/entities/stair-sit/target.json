@@ -1,0 +1,153 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "sit:target",
+      "is_spawnable": false,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "component_groups": {
+      "sit:lease": {
+        "minecraft:timer": {
+          "looping": false,
+          "time": 10,
+          "time_down_event": {
+            "event": "sit:expire",
+            "target": "self"
+          }
+        }
+      },
+      "sit:remove": {
+        "minecraft:instant_despawn": {}
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "sit_target"
+        ]
+      },
+      "minecraft:collision_box": {
+        "width": 0.9,
+        "height": 0.6
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": false
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:movement": {
+        "value": 0
+      },
+      "minecraft:knockback_resistance": {
+        "value": 1
+      },
+      "minecraft:health": {
+        "value": 1,
+        "max": 1
+      },
+      "minecraft:damage_sensor": {
+        "triggers": [
+          {
+            "cause": "all",
+            "deals_damage": "no"
+          }
+        ]
+      },
+      "minecraft:fire_immune": {},
+      "minecraft:transient": {},
+      "minecraft:interact": {
+        "interactions": [
+          {
+            "on_interact": {
+              "filters": {
+                "all_of": [
+                  {
+                    "test": "is_family",
+                    "subject": "other",
+                    "value": "player"
+                  },
+                  {
+                    "test": "is_sneaking",
+                    "subject": "other",
+                    "value": false
+                  },
+                  {
+                    "test": "all_slots_empty",
+                    "subject": "other",
+                    "value": "hand"
+                  },
+                  {
+                    "test": "has_tag",
+                    "subject": "other",
+                    "operator": "!=",
+                    "value": "ed67_sit_no_button"
+                  },
+                  {
+                    "any_of": [
+                      {
+                        "test": "is_riding",
+                        "subject": "other",
+                        "value": false
+                      },
+                      {
+                        "test": "is_vehicle_family",
+                        "subject": "other",
+                        "value": "sit_seat"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "event": "sit:heartbeat",
+              "target": "self"
+            },
+            "interact_text": "action.interact.sit67",
+            "use_item": false,
+            "swing": false,
+            "vibration": "none",
+            "cooldown": 0
+          }
+        ]
+      }
+    },
+    "events": {
+      "minecraft:entity_spawned": {
+        "add": {
+          "component_groups": [
+            "sit:lease"
+          ]
+        }
+      },
+      "sit:heartbeat": {
+        "sequence": [
+          {
+            "remove": {
+              "component_groups": [
+                "sit:lease"
+              ]
+            }
+          },
+          {
+            "add": {
+              "component_groups": [
+                "sit:lease"
+              ]
+            }
+          }
+        ]
+      },
+      "sit:expire": {
+        "add": {
+          "component_groups": [
+            "sit:remove"
+          ]
+        }
+      }
+    }
+  }
+}

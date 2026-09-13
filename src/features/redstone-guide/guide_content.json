@@ -1,0 +1,1944 @@
+{
+  "version": "1.0.3",
+  "entries": [
+    {
+      "id": "welcome",
+      "title": "Your Redstone Guide",
+      "section": "basics",
+      "group": "Getting started",
+      "pages": [
+        "§6CRAFT YOUR BOOK§r\nCombine 1 redstone dust and 1 leather in any two crafting slots. Their order and position do not matter. The result is one reusable guide.\n\n§6READ IT§r\nHold the guide in your main hand and use Read Guide. On a computer, right-click. Aim away from chests and other interactive blocks.\n\n§6FIND A TOPIC§r\nComponents explains how each part works. Recipes shows exact crafting rows. Three Builds gives step-by-step projects. Resume Reading remembers your last page for this player in this world.\n\nThe guide uses Minecraft's touch-friendly reading menus, not the vanilla written-book screen. The in-game item now uses the selected closed-book icon."
+      ]
+    },
+    {
+      "id": "power_basics",
+      "title": "Power, distance, and ticks",
+      "section": "basics",
+      "group": "Getting started",
+      "pages": [
+        "§6SIGNAL STRENGTH§r\nRedstone strength ranges from 0 (off) to 15. Dust loses one level with each step along a line, so a full-strength source reaches up to 15 dust positions. Put a repeater before the signal runs out to start a fresh full-strength line.\n\n§6PULSES AND DELAYS§r\nA lever stays on. A button gives a temporary signal. One redstone tick is 2 game ticks, normally 0.1 second; lag can make real time longer. A repeater adds 1-4 redstone ticks of delay.\n\n§6DIRECTIONS MATTER§r\nRepeater and comparator arrows point toward their output. An observer watches with its face and outputs through its red-dot side. Test each part with a lever and lamp before adding the next part."
+      ]
+    },
+    {
+      "id": "bedrock_rules",
+      "title": "Bedrock rules that matter",
+      "section": "basics",
+      "group": "Getting started",
+      "pages": [
+        "§6USE BEDROCK DESIGNS§r\nJava tutorials are not always transferable. Bedrock pistons, droppers, and dispensers do not use Java's quasi-connectivity. Give them a direct, ordinary power path.\n\n§6PISTONS§r\nDo not rely on Java one-tick sticky-piston block-spitting. Bedrock can move many container blocks, but immovable blocks and the 12-block push limit still matter.\n\n§6OBSERVERS§r\nThe exact updates detected can differ between editions. Check a sensor with a lamp before wiring a full farm.\n\n§6SIMULATION§r\nCircuits and crop growth depend on the area being simulated. This guide does not keep chunks loaded. Test at your world's normal simulation distance.\n\nMake a copy of a valuable world before testing any new add-on."
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Why is my circuit not working?",
+      "section": "basics",
+      "group": "Getting started",
+      "pages": [
+        "§6CHECK IN THIS ORDER§r\n1. Is there actually a power source? Follow the lit dust from the source to the output.\n2. Is the dust line too long? Insert a repeater while the incoming signal is still positive.\n3. Are repeaters, comparators, observers, hoppers, and pistons facing the right way?\n4. Is a hopper accidentally powered and locked?\n5. Is a piston blocked by an immovable block or more than 12 blocks?\n6. Does your machine need repeated pulses rather than constant power? Dispensers, droppers, and crafters act on new activations.\n7. Is this a Java-only tutorial?\n\n§6BOOK HELP§r\nMissing icon: activate this add-on's Resource pack. No reading menu: activate its Behavior pack, close other screens, and reopen the world. This book does not need an internet connection."
+      ]
+    },
+    {
+      "id": "dust",
+      "title": "Redstone dust",
+      "section": "components",
+      "group": "Wiring and logic",
+      "pages": [
+        "§6HOW IT WORKS§r\nCarries a signal over supported surfaces. Each step reduces the strength by one. Adjacent wires can connect and accidentally join two circuits.\n\n§6COMMON USES§r\nConnect switches to doors and lamps; distribute a signal; make timing and logic circuits.\n\n§eTRY THIS / TIP§r\nBuild lever > dust > repeater > lamp. Leave a gap between circuits you want to keep separate."
+      ]
+    },
+    {
+      "id": "torch",
+      "title": "Redstone torch",
+      "section": "components",
+      "group": "Wiring and logic",
+      "pages": [
+        "§6HOW IT WORKS§r\nNormally supplies power. It switches off when the block it is attached to is powered, so it can invert an input: on becomes off.\n\n§6COMMON USES§r\nNOT gates, torch towers, simple clocks, and default-on lighting.\n\n§eTRY THIS / TIP§r\nAttach a torch to one side of a block and a lever to another. Flip the lever. Extremely rapid switching can temporarily burn a torch out."
+      ],
+      "recipe": "recipe_torch"
+    },
+    {
+      "id": "redstone_block",
+      "title": "Block of redstone",
+      "section": "components",
+      "group": "Wiring and logic",
+      "pages": [
+        "§6HOW IT WORKS§r\nA constant strength-15 power source. It does not turn off like a torch and can be moved by pistons.\n\n§6COMMON USES§r\nMovable power sources, compact permanent power, and storing nine redstone dust.\n\n§eTRY THIS / TIP§r\nKeep it away from hoppers you want running: powering a hopper locks its own transfer mechanism."
+      ],
+      "recipe": "recipe_redstone_block"
+    },
+    {
+      "id": "repeater",
+      "title": "Redstone repeater",
+      "section": "components",
+      "group": "Wiring and logic",
+      "pages": [
+        "§6HOW IT WORKS§r\nAccepts power at its rear and sends strength 15 out its front. Use it to select 1, 2, 3, or 4 redstone ticks of delay.\n\n§6COMMON USES§r\nExtend long wires; isolate one direction; synchronize piston and lamp circuits.\n\n§eTRY THIS / TIP§r\nA powered repeater or comparator pointing into its side can lock its current output. Dust alone does not provide that side-locking input."
+      ],
+      "recipe": "recipe_repeater"
+    },
+    {
+      "id": "comparator",
+      "title": "Redstone comparator",
+      "section": "components",
+      "group": "Wiring and logic",
+      "pages": [
+        "§6HOW IT WORKS§r\nReads its rear input and the stronger side input. Compare mode passes the rear strength only when it is at least the side strength. Subtract mode outputs rear minus side, with a minimum of zero.\n\n§6COMMON USES§r\nRead container fullness, filter items, make threshold detectors, and process analog signals.\n\n§eTRY THIS / TIP§r\nUse the comparator to toggle modes; the small front torch lights in subtract mode. Its output points away from the container being read."
+      ],
+      "recipe": "recipe_comparator"
+    },
+    {
+      "id": "comparator_details",
+      "title": "Comparator readings",
+      "section": "basics",
+      "group": "Getting started",
+      "pages": [
+        "§6READING CONTAINERS§r\nAn empty ordinary inventory reads 0. Nonempty inventories produce 1-15 according to the average fraction filled across all slots. Fullness is not simply the number of items: stack sizes matter.\n\n§6SPECIAL READINGS§r\nLectern: page position.\nChiseled bookshelf: last slot interacted with, not number of books.\nCake: remaining slices.\nCauldron: fill state.\nComposter: composting level.\nItem frame: rotation of an inserted item.\nCopper bulb: lit state.\nCrafter: occupied plus disabled slots.\nCopper golem statue: pose.\n\n§6BUILD A TEST BENCH§r\nPlace a comparator pointing away from the block, then 15 dust in a straight line. Count lit positions. Use a full solid block behind an item frame to read it."
+      ]
+    },
+    {
+      "id": "solid_block",
+      "title": "Solid blocks as conductors",
+      "section": "components",
+      "group": "Wiring and logic",
+      "pages": [
+        "§6HOW IT WORKS§r\nMany full opaque blocks can carry power. A repeater pointing into a block strongly powers it, allowing dust on the far side to take a signal. Glass does not behave like this.\n\n§6COMMON USES§r\nHide wiring in walls, pass a signal through a block, and distribute power to adjacent mechanisms.\n\n§eTRY THIS / TIP§r\nPut a repeater into stone and a lamp beside that stone. Do not assume slabs, glass, or decorative blocks conduct like a full stone block."
+      ]
+    },
+    {
+      "id": "lever",
+      "title": "Lever",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nA manual on/off switch that stays in its chosen state until used again.\n\n§6COMMON USES§r\nMaster switches, testing circuits, hopper locks, and toggled doors.\n\n§eTRY THIS / TIP§r\nStart a new circuit with a lever before replacing it with an automatic sensor."
+      ],
+      "recipe": "recipe_lever"
+    },
+    {
+      "id": "wood_button",
+      "title": "Wooden buttons",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nGive a temporary signal when pressed. Wooden variants normally stay on for 1.5 seconds and can also be held active by a lodged arrow.\n\n§6COMMON USES§r\nDoor openers, target puzzles, and manual pulses for dispensers.\n\n§eTRY THIS / TIP§r\nA wooden button offers more walking time through a door than a stone button. All wood species serve the same redstone role."
+      ],
+      "recipe": "recipe_wood_button"
+    },
+    {
+      "id": "stone_button",
+      "title": "Stone button",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nProduces a short strength-15 signal when a player presses it, normally lasting one second. Unlike a wooden button, it is not activated by arrows.\n\n§6COMMON USES§r\nCompact door controls, dependable player-triggered pulses, and testing.\n\n§eTRY THIS / TIP§r\nPut a button on the solid block beside the lower half of an iron door."
+      ],
+      "recipe": "recipe_stone_button"
+    },
+    {
+      "id": "blackstone_button",
+      "title": "Polished blackstone button",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nActs like a stone button: a player-triggered temporary signal, normally one second long. Its material changes the appearance, not its basic logic.\n\n§6COMMON USES§r\nDark-themed door controls and Nether builds.\n\n§eTRY THIS / TIP§r\nUse polished blackstone, not ordinary blackstone, in its recipe."
+      ],
+      "recipe": "recipe_blackstone_button"
+    },
+    {
+      "id": "wood_plate",
+      "title": "Wooden pressure plates",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nProduce power when an entity rests on them, including players, mobs, and dropped items.\n\n§6COMMON USES§r\nAutomatic doors, item detection, and entrance triggers.\n\n§eTRY THIS / TIP§r\nA dropped item can keep one on. Use a stone plate when you only want living entities to trigger it."
+      ],
+      "recipe": "recipe_wood_plate"
+    },
+    {
+      "id": "stone_plate",
+      "title": "Stone pressure plate",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nActivates for players and mobs standing on it; dropped items do not activate it.\n\n§6COMMON USES§r\nAutomatic entrances and mob-triggered circuits.\n\n§eTRY THIS / TIP§r\nIt is not player-only. Mobs can use a plate-controlled entrance too."
+      ],
+      "recipe": "recipe_stone_plate"
+    },
+    {
+      "id": "blackstone_plate",
+      "title": "Polished blackstone pressure plate",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nFunctions like a stone pressure plate and detects players and mobs, not dropped items.\n\n§6COMMON USES§r\nAutomatic doors in dark builds and mob triggers.\n\n§eTRY THIS / TIP§r\nKeep surrounding redstone isolated so the plate does not power a second door accidentally."
+      ],
+      "recipe": "recipe_blackstone_plate"
+    },
+    {
+      "id": "light_plate",
+      "title": "Light weighted pressure plate",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nA gold plate with variable output. Its signal grows with the number of entities resting on it, up to strength 15.\n\n§6COMMON USES§r\nAnalog entity detection and measuring groups rather than just on/off presence.\n\n§eTRY THIS / TIP§r\nA dropped stack is an item entity; do not assume the displayed item count equals the plate's entity count."
+      ],
+      "recipe": "recipe_light_plate"
+    },
+    {
+      "id": "heavy_plate",
+      "title": "Heavy weighted pressure plate",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nAn iron plate whose output increases more slowly than the gold version, in groups of ten entities, up to strength 15.\n\n§6COMMON USES§r\nDetect large groups of entities and build analog thresholds.\n\n§eTRY THIS / TIP§r\nUse a comparator or a measured dust line when you need a threshold rather than any nonzero signal."
+      ],
+      "recipe": "recipe_heavy_plate"
+    },
+    {
+      "id": "tripwire_hook",
+      "title": "Tripwire hook",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nTwo hooks attached to facing solid surfaces become a detector when a continuous straight line of tripwire connects them.\n\n§6COMMON USES§r\nHallway alarms, mob detectors, and hidden triggers.\n\n§eTRY THIS / TIP§r\nBoth hooks must face one another at the same height. An unattached hook is not a working detector."
+      ],
+      "recipe": "recipe_tripwire_hook"
+    },
+    {
+      "id": "tripwire",
+      "title": "Tripwire / placed string",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nPlaced string links two facing tripwire hooks. An entity touching the connected line activates the hooks.\n\n§6COMMON USES§r\nWide doorway detection and subtle alarms.\n\n§eTRY THIS / TIP§r\nUse shears when removing tripwire to avoid the normal breaking trigger. The hook is crafted; string is normally obtained as loot."
+      ]
+    },
+    {
+      "id": "target",
+      "title": "Target block",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nA projectile hit produces a pulse. Hits nearer the center create a stronger signal.\n\n§6COMMON USES§r\nArchery games, combination challenges, and projectile-activated doors.\n\n§eTRY THIS / TIP§r\nRead it with a comparator or a dust line to distinguish a bullseye from an edge hit."
+      ],
+      "recipe": "recipe_target"
+    },
+    {
+      "id": "trapped_chest",
+      "title": "Trapped chest",
+      "section": "components",
+      "group": "Switches and triggers",
+      "pages": [
+        "§6HOW IT WORKS§r\nEmits redstone power while players have it open, with strength increasing with the number of viewers. It also works as a normal storage inventory.\n\n§6COMMON USES§r\nChest-opening alarms and locking a nearby hopper while a player accesses the chest.\n\n§eTRY THIS / TIP§r\nThe opening signal is not the same thing as a comparator reading of inventory fullness."
+      ],
+      "recipe": "recipe_trapped_chest"
+    },
+    {
+      "id": "observer",
+      "title": "Observer",
+      "section": "components",
+      "group": "Automatic sensors",
+      "pages": [
+        "§6HOW IT WORKS§r\nWatches the block directly in front of its face. A detected update creates a short full-strength pulse at the red-dot side on the opposite end.\n\n§6COMMON USES§r\nSugar cane farms, block-change detection, and update-triggered machinery.\n\n§eTRY THIS / TIP§r\nThe face watches; the red dot outputs. Bedrock does not detect every update in exactly the same way as Java."
+      ],
+      "recipe": "recipe_observer"
+    },
+    {
+      "id": "daylight",
+      "title": "Daylight detector",
+      "section": "components",
+      "group": "Automatic sensors",
+      "pages": [
+        "§6HOW IT WORKS§r\nGenerates a variable signal affected by daylight, the sky, time, and weather. Use it to switch between normal and inverted modes.\n\n§6COMMON USES§r\nNight lighting, day/night indicators, and timed outdoor circuits.\n\n§eTRY THIS / TIP§r\nUse inverted mode for night lights and keep the detector exposed to the sky. Weather can change when the lights switch."
+      ],
+      "recipe": "recipe_daylight"
+    },
+    {
+      "id": "sculk_sensor",
+      "title": "Sculk sensor",
+      "section": "components",
+      "group": "Automatic sensors",
+      "pages": [
+        "§6HOW IT WORKS§r\nDetects nearby vibrations from actions such as walking and block interactions, then produces a redstone response.\n\n§6COMMON USES§r\nWireless-feeling alarms, sound-triggered entrances, and activity detection.\n\n§eTRY THIS / TIP§r\nWool blocks vibration paths. Waterlogging removes its audible activation sound, not its ability to detect vibrations. It is obtained with Silk Touch, not crafted."
+      ]
+    },
+    {
+      "id": "calibrated_sensor",
+      "title": "Calibrated sculk sensor",
+      "section": "components",
+      "group": "Automatic sensors",
+      "pages": [
+        "§6HOW IT WORKS§r\nUses a redstone input on its amethyst-marked side to filter for a particular vibration frequency. With no filtering input it can listen more generally.\n\n§6COMMON USES§r\nMore selective vibration triggers and separating different kinds of player actions.\n\n§eTRY THIS / TIP§r\nThe calibration strength selects a vibration type; it is not a simple volume setting. Keep unwanted vibration paths blocked with wool."
+      ],
+      "recipe": "recipe_calibrated_sensor"
+    },
+    {
+      "id": "lightning_rod",
+      "title": "Lightning rod",
+      "section": "components",
+      "group": "Automatic sensors",
+      "pages": [
+        "§6HOW IT WORKS§r\nAttracts nearby lightning strikes within its effective range and gives a redstone pulse when struck.\n\n§6COMMON USES§r\nStorm alarms and lightning-triggered mechanisms.\n\n§eTRY THIS / TIP§r\nDo not rely on thunderstorms for an everyday door switch. Keep exposed lightning devices away from flammable structures."
+      ],
+      "recipe": "recipe_lightning_rod"
+    },
+    {
+      "id": "piston",
+      "title": "Piston",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nExtends one block when powered and can push a line of up to 12 movable blocks. An ordinary piston does not pull a block back.\n\n§6COMMON USES§r\nCrop harvesting, moving walls, block pushers, and simple doors.\n\n§eTRY THIS / TIP§r\nObsidian and other immovable blocks stop movement. In Bedrock, supply an ordinary direct power path."
+      ],
+      "recipe": "recipe_piston"
+    },
+    {
+      "id": "sticky_piston",
+      "title": "Sticky piston",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nPushes like a piston, then normally pulls the attached movable block back as it retracts.\n\n§6COMMON USES§r\nRetracting doors, bridges, movable redstone blocks, and slime or honey mechanisms.\n\n§eTRY THIS / TIP§r\nDo not copy Java-only one-tick block-spitting circuits. The recipe is just a slimeball above a piston."
+      ],
+      "recipe": "recipe_sticky_piston"
+    },
+    {
+      "id": "slime",
+      "title": "Slime block",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nWhen moved by a piston, it can carry adjacent blocks that can stick to it. Every moved block still counts toward the push limit.\n\n§6COMMON USES§r\nMoving platforms, flying-machine mechanisms, and multi-block doors.\n\n§eTRY THIS / TIP§r\nSlime and honey do not stick to each other. Leave clearance so the machine does not grab its surrounding walls."
+      ],
+      "recipe": "recipe_slime"
+    },
+    {
+      "id": "honey",
+      "title": "Honey block",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nA sticky movement block that can carry adjacent movable blocks in piston mechanisms. It also slows entities touching it.\n\n§6COMMON USES§r\nIndependent moving sections beside slime blocks, elevators, and moving platforms.\n\n§eTRY THIS / TIP§r\nHoney is not a normal redstone conductor. Route power intentionally rather than treating it as stone."
+      ],
+      "recipe": "recipe_honey"
+    },
+    {
+      "id": "lamp",
+      "title": "Redstone lamp",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nLights while powered, with a brief turn-off delay. It does not remember its state once power is removed.\n\n§6COMMON USES§r\nRoom lighting, status indicators, and circuit debugging.\n\n§eTRY THIS / TIP§r\nUse a copper bulb instead when a brief pulse should toggle the light and leave it in that state."
+      ],
+      "recipe": "recipe_lamp"
+    },
+    {
+      "id": "copper_bulb",
+      "title": "Copper bulb",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nEach new redstone activation toggles its light on or off. It remembers the state after the pulse ends. Oxidation reduces brightness.\n\n§6COMMON USES§r\nButton-toggle lights, compact memory, and status displays.\n\n§eTRY THIS / TIP§r\nWax preserves oxidation. A comparator reads 15 when the bulb is lit and 0 when unlit. Constant power does not repeatedly toggle it."
+      ],
+      "recipe": "recipe_copper_bulb"
+    },
+    {
+      "id": "note_block",
+      "title": "Note block",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nPlays a note on a new redstone activation. Use the block to tune it; the supporting block affects the instrument.\n\n§6COMMON USES§r\nDoorbells, musical sequences, and audible status signals.\n\n§eTRY THIS / TIP§r\nLeave space above it for an ordinary instrument setup. A repeating clock produces repeated notes; a held lever does not."
+      ],
+      "recipe": "recipe_note_block"
+    },
+    {
+      "id": "bell",
+      "title": "Bell",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nCan ring when activated by redstone and also works as a village gathering bell.\n\n§6COMMON USES§r\nDoorbells, alarm indicators, and village-themed notifications.\n\n§eTRY THIS / TIP§r\nA single button is enough for a simple bell trigger. Bells are obtained from villages or trading, not a normal crafting recipe."
+      ]
+    },
+    {
+      "id": "iron_door",
+      "title": "Iron door",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nOpens using redstone power instead of ordinary hand interaction. Removing the opening power closes it.\n\n§6COMMON USES§r\nControlled entrances, automatic doors, and secure-looking builds.\n\n§eTRY THIS / TIP§r\nProvide an inside control as well as an outside one so players cannot trap themselves."
+      ],
+      "recipe": "recipe_iron_door"
+    },
+    {
+      "id": "wood_door",
+      "title": "Wooden doors",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nCan be opened by hand or by redstone. All wood species serve the same basic redstone role.\n\n§6COMMON USES§r\nAutomatic entrances and decorative doors that also have manual access.\n\n§eTRY THIS / TIP§r\nA wooden door is not a secure player-only lock. Villagers and some mobs can interact with doors in relevant circumstances."
+      ],
+      "recipe": "recipe_wood_door"
+    },
+    {
+      "id": "copper_door",
+      "title": "Copper door",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nCan be opened by hand and can respond to redstone. Oxidation changes its appearance; waxing preserves the current stage.\n\n§6COMMON USES§r\nRedstone-controlled decorative entrances with copper styling.\n\n§eTRY THIS / TIP§r\nIt is not an iron door: players can still open it by hand."
+      ],
+      "recipe": "recipe_copper_door"
+    },
+    {
+      "id": "iron_trapdoor",
+      "title": "Iron trapdoor",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nChanges between its closed and open orientations when powered. It requires redstone rather than ordinary manual opening.\n\n§6COMMON USES§r\nControlled hatches, gates for entities, and adjustable water-flow barriers.\n\n§eTRY THIS / TIP§r\nCheck its placement orientation before wiring it; the same power state can look different depending on placement."
+      ],
+      "recipe": "recipe_iron_trapdoor"
+    },
+    {
+      "id": "wood_trapdoor",
+      "title": "Wooden trapdoors",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nCan be opened by hand or by power. Like other trapdoors, orientation and placement determine the resulting opening.\n\n§6COMMON USES§r\nHatches, mob-farm pathfinding features, and redstone-controlled barriers.\n\n§eTRY THIS / TIP§r\nTest the open and closed positions before you put water or entities next to the mechanism."
+      ],
+      "recipe": "recipe_wood_trapdoor"
+    },
+    {
+      "id": "copper_trapdoor",
+      "title": "Copper trapdoor",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nWorks as a manually operable or redstone-controlled hatch, with copper oxidation and waxing for its appearance.\n\n§6COMMON USES§r\nCopper-themed hatches, barriers, and controllable decoration.\n\n§eTRY THIS / TIP§r\nOxidation is not a timer for opening the trapdoor. Its open state still follows interaction or power."
+      ],
+      "recipe": "recipe_copper_trapdoor"
+    },
+    {
+      "id": "fence_gate",
+      "title": "Fence gate",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nOpens by hand or redstone. Removing power closes a redstone-opened gate.\n\n§6COMMON USES§r\nAnimal enclosures, pathways, and barriers in controlled entrances.\n\n§eTRY THIS / TIP§r\nLeave room for the player or mob to pass through the open gate."
+      ],
+      "recipe": "recipe_fence_gate"
+    },
+    {
+      "id": "tnt",
+      "title": "TNT",
+      "section": "components",
+      "group": "Movement and outputs",
+      "pages": [
+        "§6HOW IT WORKS§r\nRedstone activation primes TNT, starting a fuse before it explodes and can damage nearby builds.\n\n§6COMMON USES§r\nControlled demolition and minigames in disposable test areas.\n\n§eTRY THIS / TIP§r\nDo not test explosives beside your storage or main base. The guide never places or activates TNT automatically."
+      ],
+      "recipe": "recipe_tnt"
+    },
+    {
+      "id": "dispenser",
+      "title": "Dispenser",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nOn a new power pulse it uses a random occupied slot. Certain items have special actions: firing arrows, dispensing water, or applying bone meal. Other items are ejected.\n\n§6COMMON USES§r\nAutomatic watering, bone-meal farms, armor dispensers, and arrow launchers.\n\n§eTRY THIS / TIP§r\nIt does not place arbitrary building blocks. A held signal is one activation, not a repeating stream."
+      ],
+      "recipe": "recipe_dispenser"
+    },
+    {
+      "id": "dropper",
+      "title": "Dropper",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nMoves one item from a random occupied slot on each new activation. It inserts into a suitable container in front or ejects the item into the world.\n\n§6COMMON USES§r\nItem elevators, reward dispensers, and controlled transfers.\n\n§eTRY THIS / TIP§r\nA dropper ejects a water bucket as an item; a dispenser can use that bucket to place water."
+      ],
+      "recipe": "recipe_dropper"
+    },
+    {
+      "id": "hopper",
+      "title": "Hopper",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nCollects loose items above, pulls from a container above, and pushes toward its spout. Redstone power locks its own collection and transfer actions.\n\n§6COMMON USES§r\nAutomatic storage, furnace loading, and item sorters.\n\n§eTRY THIS / TIP§r\nSneak-place it against the destination so its spout points correctly. A powered hopper can still receive items pushed into it by another device."
+      ],
+      "recipe": "recipe_hopper"
+    },
+    {
+      "id": "crafter",
+      "title": "Crafter",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nCrafts one valid recipe on a new redstone activation and sends its output forward. Disable unused grid slots to help automated ingredient distribution.\n\n§6COMMON USES§r\nTurn farm products into blocks, craft supplies automatically, and make production lines.\n\n§eTRY THIS / TIP§r\nA comparator reports occupied plus disabled slots, not ordinary inventory fullness. A constant signal does not continuously craft."
+      ],
+      "recipe": "recipe_crafter"
+    },
+    {
+      "id": "chest",
+      "title": "Chest",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nStores items for hoppers and droppers. A comparator pointing away from it measures inventory fullness.\n\n§6COMMON USES§r\nStorage buffers, fullness alarms, and collection points.\n\n§eTRY THIS / TIP§r\nAn ordinary chest does not emit opening power like a trapped chest. It needs a comparator for a fullness signal."
+      ],
+      "recipe": "recipe_chest"
+    },
+    {
+      "id": "barrel",
+      "title": "Barrel",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nA storage inventory that hoppers can fill or empty and a comparator can read. It can open even with a solid block above it.\n\n§6COMMON USES§r\nCompact storage buffers and circuits with restricted vertical space.\n\n§eTRY THIS / TIP§r\nIt can also be a villager workstation. Placement in a village can change which villager claims it."
+      ]
+    },
+    {
+      "id": "copper_chest",
+      "title": "Copper chest",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nProvides storage and participates in copper-golem item sorting. Inventory automation and comparator readings are useful for monitoring the stored contents.\n\n§6COMMON USES§r\nInput buffers for copper-golem sorting and themed storage systems.\n\n§eTRY THIS / TIP§r\nA copper golem is not a redstone wire. Treat its movement and sorting time separately from deterministic redstone timing."
+      ]
+    },
+    {
+      "id": "shulker_box",
+      "title": "Shulker box",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nA portable inventory that retains contents when broken. Hoppers transfer its items and a comparator can measure fullness.\n\n§6COMMON USES§r\nBulk storage loading and unloading stations.\n\n§eTRY THIS / TIP§r\nUse a dispenser for automated shulker-box placement. Building a reliable full-box breaker requires a tested Bedrock design."
+      ]
+    },
+    {
+      "id": "furnace",
+      "title": "Furnace",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nSmelts items and has input, fuel, and output slots. Hoppers above load input; side hoppers load fuel; hoppers below remove output. A comparator reads its inventory.\n\n§6COMMON USES§r\nAutomatic smelters and detecting whether a smelter contains items.\n\n§eTRY THIS / TIP§r\nRedstone does not directly turn smelting on and off; control the ingredient or fuel supply instead."
+      ]
+    },
+    {
+      "id": "blast_furnace",
+      "title": "Blast furnace",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nSmelts supported metal-related items faster than a normal furnace. Hopper access and inventory comparator readings support automation.\n\n§6COMMON USES§r\nAutomated ore-processing lines.\n\n§eTRY THIS / TIP§r\nIt cannot cook every furnace recipe. Test your ingredient first."
+      ]
+    },
+    {
+      "id": "smoker",
+      "title": "Smoker",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nCooks supported food recipes faster than a normal furnace and accepts hopper-based loading and unloading.\n\n§6COMMON USES§r\nAutomatic food cooking and farming outputs.\n\n§eTRY THIS / TIP§r\nIt is for food, not ore smelting. Control supplies with hoppers rather than expecting power to stop the smoker."
+      ]
+    },
+    {
+      "id": "brewing_stand",
+      "title": "Brewing stand",
+      "section": "components",
+      "group": "Items and storage",
+      "pages": [
+        "§6HOW IT WORKS§r\nBrews potions when supplied with suitable bottles, ingredients, and blaze-powder fuel. Hopper access can automate transfers and a comparator reads its inventory.\n\n§6COMMON USES§r\nPotion brewing lines and inventory-status indicators.\n\n§eTRY THIS / TIP§r\nThe order of ingredients matters. A powered redstone line is not a direct brewing start button."
+      ]
+    },
+    {
+      "id": "lectern",
+      "title": "Lectern",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nHolds a readable book. Turning pages produces a redstone pulse, and a comparator reads a signal based on the current page position.\n\n§6COMMON USES§r\nPage-selected puzzles and secret doors.\n\n§eTRY THIS / TIP§r\nThis custom guide is a menu item, not a vanilla written book, so it cannot be placed on a lectern. Use a normal written book for a lectern circuit."
+      ],
+      "recipe": "recipe_lectern"
+    },
+    {
+      "id": "bookshelf",
+      "title": "Chiseled bookshelf",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nStores six books. A comparator reports the most recently interacted-with slot, not how many books the shelf holds.\n\n§6COMMON USES§r\nSecret book switches and slot-selection puzzles.\n\n§eTRY THIS / TIP§r\nAn ordinary bookshelf does not have this redstone behavior."
+      ],
+      "recipe": "recipe_bookshelf"
+    },
+    {
+      "id": "shelf",
+      "title": "Shelf",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nDisplays three item stacks. Redstone power changes its interaction so a player can exchange a section of their hotbar with the shelf. Adjacent powered shelves can work together.\n\n§6COMMON USES§r\nQuick tool-loadout swapping and equipment stations.\n\n§eTRY THIS / TIP§r\nPower prepares the swapping interaction; it does not automatically exchange your inventory when you walk past."
+      ]
+    },
+    {
+      "id": "cauldron",
+      "title": "Cauldron",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nA comparator can read its fill state. Bedrock supports more cauldron contents than Java, so use the correct content for your design.\n\n§6COMMON USES§r\nRain or liquid-level sensing and decorative analog controls.\n\n§eTRY THIS / TIP§r\nTest the output with a short dust line after changing its contents."
+      ],
+      "recipe": "recipe_cauldron"
+    },
+    {
+      "id": "composter",
+      "title": "Composter",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nOrganic items can increase its compost level and eventually produce bone meal. A comparator reads the current level.\n\n§6COMMON USES§r\nAutomatic composters and excess-crop recycling.\n\n§eTRY THIS / TIP§r\nLoad compostable items with a hopper above and collect bone meal below. Not every accepted item has the same composting chance."
+      ]
+    },
+    {
+      "id": "cake",
+      "title": "Cake",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nA comparator can read how much cake remains. Eating slices changes the output.\n\n§6COMMON USES§r\nEdible combination controls and compact adjustable signal sources.\n\n§eTRY THIS / TIP§r\nThe setting is consumed when you eat it. Plan to replace the cake when it runs out."
+      ]
+    },
+    {
+      "id": "item_frame",
+      "title": "Item frame and glow item frame",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nA comparator can read an inserted item's rotation through the full solid block behind the frame. Rotating the item changes the signal.\n\n§6COMMON USES§r\nCombination locks and selectable analog settings.\n\n§eTRY THIS / TIP§r\nA glow item frame makes the display easier to see; it is not itself a light-emitting power source."
+      ],
+      "recipe": "recipe_item_frame"
+    },
+    {
+      "id": "jukebox",
+      "title": "Jukebox",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nPlays inserted music discs. A comparator can distinguish discs using their output strengths, making disc choice useful as an input.\n\n§6COMMON USES§r\nMusic-controlled puzzles and disc selectors.\n\n§eTRY THIS / TIP§r\nDisc signal behavior is not the same as ordinary inventory fullness. Check the exact disc in your Bedrock build."
+      ],
+      "recipe": "recipe_jukebox"
+    },
+    {
+      "id": "beehive",
+      "title": "Beehive and bee nest",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nA comparator reads the honey level. Full honey indicates that the block is ready to harvest.\n\n§6COMMON USES§r\nAutomatic honey-bottle or honeycomb collection.\n\n§eTRY THIS / TIP§r\nA dispenser with the appropriate harvesting item can automate collection. Keep your bees safe when testing harvesting behavior."
+      ]
+    },
+    {
+      "id": "golem_statue",
+      "title": "Copper golem statue",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nA fully oxidized copper golem can become a statue. Its pose can be changed by interaction and read with a comparator.\n\n§6COMMON USES§r\nDecorative combination controls and pose-selection puzzles.\n\n§eTRY THIS / TIP§r\nA statue is a block, not an active sorting golem. Waxing and scraping affect its oxidation state."
+      ]
+    },
+    {
+      "id": "respawn_anchor",
+      "title": "Respawn anchor",
+      "section": "components",
+      "group": "Analog and special blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nStores glowstone charges for Nether respawning. A comparator can read its charge level.\n\n§6COMMON USES§r\nCharge-status indicators for Nether bases.\n\n§eTRY THIS / TIP§r\nUsing an anchor in the wrong dimension can cause an explosion. It is not a safe decorative switch in an Overworld house."
+      ]
+    },
+    {
+      "id": "rail",
+      "title": "Rail",
+      "section": "components",
+      "group": "Rails and advanced blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nCarries minecarts. Power can influence the selected direction at a suitable rail junction, but ordinary rails do not accelerate a cart by themselves.\n\n§6COMMON USES§r\nRail routes, junctions, and hopper-minecart collection systems.\n\n§eTRY THIS / TIP§r\nCheck junction direction with an empty cart before you send valuable cargo through it."
+      ],
+      "recipe": "recipe_rail"
+    },
+    {
+      "id": "powered_rail",
+      "title": "Powered rail",
+      "section": "components",
+      "group": "Rails and advanced blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nAccelerates minecarts when powered and brakes them when unpowered.\n\n§6COMMON USES§r\nStations, launchers, hills, and maintaining speed along a route.\n\n§eTRY THIS / TIP§r\nA stationary cart needs a useful launch direction, such as a slope or a solid block behind an end rail."
+      ],
+      "recipe": "recipe_powered_rail"
+    },
+    {
+      "id": "detector_rail",
+      "title": "Detector rail",
+      "section": "components",
+      "group": "Rails and advanced blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nEmits power when a minecart passes over or rests on it. Comparator readings can inspect supported container minecarts on the rail.\n\n§6COMMON USES§r\nArrival sensors, traffic signals, and unloading stations.\n\n§eTRY THIS / TIP§r\nThis is a sensor, not an accelerator."
+      ],
+      "recipe": "recipe_detector_rail"
+    },
+    {
+      "id": "activator_rail",
+      "title": "Activator rail",
+      "section": "components",
+      "group": "Rails and advanced blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nWhen powered, it triggers the special behavior of a compatible minecart: ejecting riders, priming TNT carts, or changing hopper-cart collection.\n\n§6COMMON USES§r\nPassenger unloading and controlling specialized minecarts.\n\n§eTRY THIS / TIP§r\nIt is not a powered rail. Do not use it as a substitute for track acceleration."
+      ],
+      "recipe": "recipe_activator_rail"
+    },
+    {
+      "id": "hopper_minecart",
+      "title": "Minecart with hopper",
+      "section": "components",
+      "group": "Rails and advanced blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nCollects items along its route, including through a full block above it, and can be emptied into a hopper beneath the track.\n\n§6COMMON USES§r\nCollecting drops under farm soil and fast moving pickup systems.\n\n§eTRY THIS / TIP§r\nKeep a stationary collection cart from rolling away. A powered activator rail disables its pickup until re-enabled by an unpowered activator rail."
+      ],
+      "recipe": "recipe_hopper_minecart"
+    },
+    {
+      "id": "chest_minecart",
+      "title": "Minecart with chest",
+      "section": "components",
+      "group": "Rails and advanced blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nMoves a storage inventory along rails. Hoppers can load or unload it when positioned correctly, and a comparator on a detector rail can read it.\n\n§6COMMON USES§r\nCargo transport and minecart-based storage delivery.\n\n§eTRY THIS / TIP§r\nStop the cart long enough to transfer the intended load."
+      ],
+      "recipe": "recipe_chest_minecart"
+    },
+    {
+      "id": "tnt_minecart",
+      "title": "Minecart with TNT",
+      "section": "components",
+      "group": "Rails and advanced blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nCarries an explosive payload. A powered activator rail can prime it; impacts and other conditions can also make it dangerous.\n\n§6COMMON USES§r\nSpecialized demolition and controlled minigames in disposable worlds.\n\n§eTRY THIS / TIP§r\nDo not send one through a valuable transport system."
+      ],
+      "recipe": "recipe_tnt_minecart"
+    },
+    {
+      "id": "command_block",
+      "title": "Command block",
+      "section": "components",
+      "group": "Rails and advanced blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nRuns a configured command. Impulse blocks run once when triggered; repeating blocks run repeatedly while enabled; chain blocks follow a command chain.\n\n§6COMMON USES§r\nAdventure maps, minigames, and administrator-controlled automation.\n\n§eTRY THIS / TIP§r\nCommand blocks are not survival-craftable. They require the appropriate commands and permissions. This guide itself needs no command blocks."
+      ]
+    },
+    {
+      "id": "sculk_shrieker",
+      "title": "Sculk shrieker",
+      "section": "components",
+      "group": "Rails and advanced blocks",
+      "pages": [
+        "§6HOW IT WORKS§r\nResponds to relevant player activity and sculk-sensor activation. Naturally generated shriekers can contribute to summoning a Warden.\n\n§6COMMON USES§r\nAdventure-map sound effects and sculk-themed mechanisms.\n\n§eTRY THIS / TIP§r\nPlayer-placed shriekers do not summon Wardens. This is not a general replacement for a redstone power source or ordinary alarm lamp."
+      ]
+    },
+    {
+      "id": "recipe_guide",
+      "title": "Redstone Guide",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6SHAPELESS INGREDIENTS§r\n1 redstone dust\n1 leather\n\n§6OUTPUT§r\n1 Redstone Guide\n\n§eNOTE§r\nAny two slots, in either order. Works in the small inventory grid or at a crafting table."
+      ],
+      "crafting": {
+        "shapeless": true,
+        "rows": [
+          [
+            1,
+            "redstone dust"
+          ],
+          [
+            1,
+            "leather"
+          ]
+        ],
+        "key": {},
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_sticky_piston",
+      "title": "Sticky piston",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [S]\nLower:  [P]\n\nS = slimeball\nP = piston\n\n§6OUTPUT§r\n1 Sticky piston\n\n§eNOTE§r\nSlimeball directly above the piston. No extra redstone, cobblestone, or iron is needed."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "S",
+          "P"
+        ],
+        "key": {
+          "S": "slimeball",
+          "P": "piston"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_observer",
+      "title": "Observer",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [C] [C] [C]\nMiddle:  [R] [R] [Q]\nBottom:  [C] [C] [C]\n\nC = cobblestone\nR = redstone dust\nQ = Nether quartz\n\n§6OUTPUT§r\n1 Observer\n\n§eNOTE§r\nUse Nether quartz, not a block of quartz. Ingredients total 6 cobblestone, 2 dust, and 1 quartz."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "CCC",
+          "RRQ",
+          "CCC"
+        ],
+        "key": {
+          "C": "cobblestone",
+          "R": "redstone dust",
+          "Q": "Nether quartz"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_dispenser",
+      "title": "Dispenser",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [C] [C] [C]\nMiddle:  [C] [B] [C]\nBottom:  [C] [R] [C]\n\nC = cobblestone\nB = bow\nR = redstone dust\n\n§6OUTPUT§r\n1 Dispenser\n\n§eNOTE§r\nTotals: 7 cobblestone, 1 bow, and 1 dust. Use a newly crafted bow to avoid ingredient-compatibility surprises."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "CCC",
+          "CBC",
+          "CRC"
+        ],
+        "key": {
+          "C": "cobblestone",
+          "B": "bow",
+          "R": "redstone dust"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_piston",
+      "title": "Piston",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [P] [P] [P]\nMiddle:  [C] [I] [C]\nBottom:  [C] [R] [C]\n\nP = wood planks\nC = cobblestone\nI = iron ingot\nR = redstone dust\n\n§6OUTPUT§r\n1 Piston"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "PPP",
+          "CIC",
+          "CRC"
+        ],
+        "key": {
+          "P": "wood planks",
+          "C": "cobblestone",
+          "I": "iron ingot",
+          "R": "redstone dust"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_dropper",
+      "title": "Dropper",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [C] [C] [C]\nMiddle:  [C] [.] [C]\nBottom:  [C] [R] [C]\n\nC = cobblestone\nR = redstone dust\n. = empty slot\n\n§6OUTPUT§r\n1 Dropper\n\n§eNOTE§r\nUnlike a dispenser, its center is empty; no bow is used."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "CCC",
+          "C.C",
+          "CRC"
+        ],
+        "key": {
+          "C": "cobblestone",
+          "R": "redstone dust"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_torch",
+      "title": "Redstone torch",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [R]\nLower:  [S]\n\nR = redstone dust\nS = stick\n\n§6OUTPUT§r\n1 Redstone torch"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "R",
+          "S"
+        ],
+        "key": {
+          "R": "redstone dust",
+          "S": "stick"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_repeater",
+      "title": "Redstone repeater",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [T] [R] [T]\nLower:  [S] [S] [S]\n\nT = redstone torch\nR = redstone dust\nS = stone\n\n§6OUTPUT§r\n1 Redstone repeater\n\n§eNOTE§r\nUse stone, not cobblestone or smooth stone. Smelt cobblestone once to get stone."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "TRT",
+          "SSS"
+        ],
+        "key": {
+          "T": "redstone torch",
+          "R": "redstone dust",
+          "S": "stone"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_comparator",
+      "title": "Redstone comparator",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [.] [T] [.]\nMiddle:  [T] [Q] [T]\nBottom:  [S] [S] [S]\n\nT = redstone torch\nQ = Nether quartz\nS = stone\n. = empty slot\n\n§6OUTPUT§r\n1 Redstone comparator\n\n§eNOTE§r\nThe bottom row is stone, not cobblestone."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          ".T.",
+          "TQT",
+          "SSS"
+        ],
+        "key": {
+          "T": "redstone torch",
+          "Q": "Nether quartz",
+          "S": "stone"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_hopper",
+      "title": "Hopper",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [I] [.] [I]\nMiddle:  [I] [C] [I]\nBottom:  [.] [I] [.]\n\nI = iron ingot\nC = chest\n. = empty slot\n\n§6OUTPUT§r\n1 Hopper\n\n§eNOTE§r\nFive iron ingots plus a chest."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "I.I",
+          "ICI",
+          ".I."
+        ],
+        "key": {
+          "I": "iron ingot",
+          "C": "chest"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_lamp",
+      "title": "Redstone lamp",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [.] [R] [.]\nMiddle:  [R] [G] [R]\nBottom:  [.] [R] [.]\n\nR = redstone dust\nG = glowstone block\n. = empty slot\n\n§6OUTPUT§r\n1 Redstone lamp"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          ".R.",
+          "RGR",
+          ".R."
+        ],
+        "key": {
+          "R": "redstone dust",
+          "G": "glowstone block"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_lever",
+      "title": "Lever",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [S]\nLower:  [C]\n\nS = stick\nC = cobblestone\n\n§6OUTPUT§r\n1 Lever"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "S",
+          "C"
+        ],
+        "key": {
+          "S": "stick",
+          "C": "cobblestone"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_redstone_block",
+      "title": "Block of redstone",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [R] [R] [R]\nMiddle:  [R] [R] [R]\nBottom:  [R] [R] [R]\n\nR = redstone dust\n\n§6OUTPUT§r\n1 Block of redstone\n\n§eNOTE§r\nCraft the block by itself to recover 9 dust."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "RRR",
+          "RRR",
+          "RRR"
+        ],
+        "key": {
+          "R": "redstone dust"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_wood_button",
+      "title": "Wooden button",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nRow:  [P]\n\nP = one wood plank\n\n§6OUTPUT§r\n1 Wooden button\n\n§eNOTE§r\nThe wood species determines the button appearance."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "P"
+        ],
+        "key": {
+          "P": "one wood plank"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_stone_button",
+      "title": "Stone button",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nRow:  [S]\n\nS = stone\n\n§6OUTPUT§r\n1 Stone button\n\n§eNOTE§r\nStone, not cobblestone."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "S"
+        ],
+        "key": {
+          "S": "stone"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_blackstone_button",
+      "title": "Polished blackstone button",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nRow:  [B]\n\nB = polished blackstone\n\n§6OUTPUT§r\n1 Polished blackstone button"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "B"
+        ],
+        "key": {
+          "B": "polished blackstone"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_wood_plate",
+      "title": "Wooden pressure plate",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nRow:  [P] [P]\n\nP = matching wood plank\n\n§6OUTPUT§r\n1 Wooden pressure plate"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "PP"
+        ],
+        "key": {
+          "P": "matching wood plank"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_stone_plate",
+      "title": "Stone pressure plate",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nRow:  [S] [S]\n\nS = stone\n\n§6OUTPUT§r\n1 Stone pressure plate"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "SS"
+        ],
+        "key": {
+          "S": "stone"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_blackstone_plate",
+      "title": "Polished blackstone pressure plate",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nRow:  [B] [B]\n\nB = polished blackstone\n\n§6OUTPUT§r\n1 Polished blackstone pressure plate"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "BB"
+        ],
+        "key": {
+          "B": "polished blackstone"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_light_plate",
+      "title": "Light weighted pressure plate",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nRow:  [G] [G]\n\nG = gold ingot\n\n§6OUTPUT§r\n1 Light weighted pressure plate"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "GG"
+        ],
+        "key": {
+          "G": "gold ingot"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_heavy_plate",
+      "title": "Heavy weighted pressure plate",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nRow:  [I] [I]\n\nI = iron ingot\n\n§6OUTPUT§r\n1 Heavy weighted pressure plate"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "II"
+        ],
+        "key": {
+          "I": "iron ingot"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_tripwire_hook",
+      "title": "Tripwire hook",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [I]\nMiddle:  [S]\nBottom:  [P]\n\nI = iron ingot\nS = stick\nP = wood plank\n\n§6OUTPUT§r\n2 Tripwire hook"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "I",
+          "S",
+          "P"
+        ],
+        "key": {
+          "I": "iron ingot",
+          "S": "stick",
+          "P": "wood plank"
+        },
+        "output": 2
+      }
+    },
+    {
+      "id": "recipe_trapped_chest",
+      "title": "Trapped chest",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6SHAPELESS INGREDIENTS§r\n1 chest\n1 tripwire hook\n\n§6OUTPUT§r\n1 Trapped chest"
+      ],
+      "crafting": {
+        "shapeless": true,
+        "rows": [
+          [
+            1,
+            "chest"
+          ],
+          [
+            1,
+            "tripwire hook"
+          ]
+        ],
+        "key": {},
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_daylight",
+      "title": "Daylight detector",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [G] [G] [G]\nMiddle:  [Q] [Q] [Q]\nBottom:  [S] [S] [S]\n\nG = glass block\nQ = Nether quartz\nS = wooden slab\n\n§6OUTPUT§r\n1 Daylight detector"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "GGG",
+          "QQQ",
+          "SSS"
+        ],
+        "key": {
+          "G": "glass block",
+          "Q": "Nether quartz",
+          "S": "wooden slab"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_target",
+      "title": "Target block",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [.] [R] [.]\nMiddle:  [R] [H] [R]\nBottom:  [.] [R] [.]\n\nR = redstone dust\nH = hay bale\n. = empty slot\n\n§6OUTPUT§r\n1 Target block"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          ".R.",
+          "RHR",
+          ".R."
+        ],
+        "key": {
+          "R": "redstone dust",
+          "H": "hay bale"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_note_block",
+      "title": "Note block",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [P] [P] [P]\nMiddle:  [P] [R] [P]\nBottom:  [P] [P] [P]\n\nP = wood plank\nR = redstone dust\n\n§6OUTPUT§r\n1 Note block"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "PPP",
+          "PRP",
+          "PPP"
+        ],
+        "key": {
+          "P": "wood plank",
+          "R": "redstone dust"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_crafter",
+      "title": "Crafter",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [I] [I] [I]\nMiddle:  [I] [T] [I]\nBottom:  [R] [D] [R]\n\nI = iron ingot\nT = crafting table\nR = redstone dust\nD = dropper\n\n§6OUTPUT§r\n1 Crafter\n\n§eNOTE§r\nThe bottom-center item is a dropper, not a dispenser."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "III",
+          "ITI",
+          "RDR"
+        ],
+        "key": {
+          "I": "iron ingot",
+          "T": "crafting table",
+          "R": "redstone dust",
+          "D": "dropper"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_copper_bulb",
+      "title": "Copper bulb",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [.] [C] [.]\nMiddle:  [C] [B] [C]\nBottom:  [.] [R] [.]\n\nC = copper block\nB = blaze rod\nR = redstone dust\n. = empty slot\n\n§6OUTPUT§r\n4 Copper bulb\n\n§eNOTE§r\nUse copper blocks, not copper ingots. This is the unoxidized version."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          ".C.",
+          "CBC",
+          ".R."
+        ],
+        "key": {
+          "C": "copper block",
+          "B": "blaze rod",
+          "R": "redstone dust"
+        },
+        "output": 4
+      }
+    },
+    {
+      "id": "recipe_calibrated_sensor",
+      "title": "Calibrated sculk sensor",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [.] [A] [.]\nLower:  [A] [S] [A]\n\nA = amethyst shard\nS = sculk sensor\n. = empty slot\n\n§6OUTPUT§r\n1 Calibrated sculk sensor"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          ".A.",
+          "ASA"
+        ],
+        "key": {
+          "A": "amethyst shard",
+          "S": "sculk sensor"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_lightning_rod",
+      "title": "Lightning rod",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [C]\nMiddle:  [C]\nBottom:  [C]\n\nC = copper ingot\n\n§6OUTPUT§r\n1 Lightning rod"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "C",
+          "C",
+          "C"
+        ],
+        "key": {
+          "C": "copper ingot"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_iron_door",
+      "title": "Iron door",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [I] [I]\nMiddle:  [I] [I]\nBottom:  [I] [I]\n\nI = iron ingot\n\n§6OUTPUT§r\n3 Iron door"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "II",
+          "II",
+          "II"
+        ],
+        "key": {
+          "I": "iron ingot"
+        },
+        "output": 3
+      }
+    },
+    {
+      "id": "recipe_wood_door",
+      "title": "Wooden door",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [P] [P]\nMiddle:  [P] [P]\nBottom:  [P] [P]\n\nP = matching wood plank\n\n§6OUTPUT§r\n3 Wooden door"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "PP",
+          "PP",
+          "PP"
+        ],
+        "key": {
+          "P": "matching wood plank"
+        },
+        "output": 3
+      }
+    },
+    {
+      "id": "recipe_copper_door",
+      "title": "Copper door",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [C] [C]\nMiddle:  [C] [C]\nBottom:  [C] [C]\n\nC = copper ingot\n\n§6OUTPUT§r\n3 Copper door\n\n§eNOTE§r\nUse ingots for this door, not blocks of copper."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "CC",
+          "CC",
+          "CC"
+        ],
+        "key": {
+          "C": "copper ingot"
+        },
+        "output": 3
+      }
+    },
+    {
+      "id": "recipe_iron_trapdoor",
+      "title": "Iron trapdoor",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [I] [I]\nLower:  [I] [I]\n\nI = iron ingot\n\n§6OUTPUT§r\n1 Iron trapdoor"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "II",
+          "II"
+        ],
+        "key": {
+          "I": "iron ingot"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_wood_trapdoor",
+      "title": "Wooden trapdoor",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [P] [P] [P]\nLower:  [P] [P] [P]\n\nP = matching wood plank\n\n§6OUTPUT§r\n2 Wooden trapdoor"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "PPP",
+          "PPP"
+        ],
+        "key": {
+          "P": "matching wood plank"
+        },
+        "output": 2
+      }
+    },
+    {
+      "id": "recipe_copper_trapdoor",
+      "title": "Copper trapdoor",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [C] [C] [C]\nLower:  [C] [C] [C]\n\nC = copper ingot\n\n§6OUTPUT§r\n2 Copper trapdoor\n\n§eNOTE§r\nCurrent copper recipes use ingots for trapdoors."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "CCC",
+          "CCC"
+        ],
+        "key": {
+          "C": "copper ingot"
+        },
+        "output": 2
+      }
+    },
+    {
+      "id": "recipe_fence_gate",
+      "title": "Fence gate",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [S] [P] [S]\nLower:  [S] [P] [S]\n\nS = stick\nP = matching wood plank\n\n§6OUTPUT§r\n1 Fence gate"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "SPS",
+          "SPS"
+        ],
+        "key": {
+          "S": "stick",
+          "P": "matching wood plank"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_slime",
+      "title": "Slime block",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [S] [S] [S]\nMiddle:  [S] [S] [S]\nBottom:  [S] [S] [S]\n\nS = slimeball\n\n§6OUTPUT§r\n1 Slime block"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "SSS",
+          "SSS",
+          "SSS"
+        ],
+        "key": {
+          "S": "slimeball"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_honey",
+      "title": "Honey block",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [H] [H]\nLower:  [H] [H]\n\nH = honey bottle\n\n§6OUTPUT§r\n1 Honey block\n\n§eNOTE§r\nArrange four honey bottles in a 2 x 2 square. The recipe also returns four empty glass bottles."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "HH",
+          "HH"
+        ],
+        "key": {
+          "H": "honey bottle"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_rail",
+      "title": "Rail",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [I] [.] [I]\nMiddle:  [I] [S] [I]\nBottom:  [I] [.] [I]\n\nI = iron ingot\nS = stick\n. = empty slot\n\n§6OUTPUT§r\n16 Rail"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "I.I",
+          "ISI",
+          "I.I"
+        ],
+        "key": {
+          "I": "iron ingot",
+          "S": "stick"
+        },
+        "output": 16
+      }
+    },
+    {
+      "id": "recipe_powered_rail",
+      "title": "Powered rail",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [G] [.] [G]\nMiddle:  [G] [S] [G]\nBottom:  [G] [R] [G]\n\nG = gold ingot\nS = stick\nR = redstone dust\n. = empty slot\n\n§6OUTPUT§r\n6 Powered rail"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "G.G",
+          "GSG",
+          "GRG"
+        ],
+        "key": {
+          "G": "gold ingot",
+          "S": "stick",
+          "R": "redstone dust"
+        },
+        "output": 6
+      }
+    },
+    {
+      "id": "recipe_detector_rail",
+      "title": "Detector rail",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [I] [.] [I]\nMiddle:  [I] [P] [I]\nBottom:  [I] [R] [I]\n\nI = iron ingot\nP = stone pressure plate\nR = redstone dust\n. = empty slot\n\n§6OUTPUT§r\n6 Detector rail"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "I.I",
+          "IPI",
+          "IRI"
+        ],
+        "key": {
+          "I": "iron ingot",
+          "P": "stone pressure plate",
+          "R": "redstone dust"
+        },
+        "output": 6
+      }
+    },
+    {
+      "id": "recipe_activator_rail",
+      "title": "Activator rail",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [I] [S] [I]\nMiddle:  [I] [T] [I]\nBottom:  [I] [S] [I]\n\nI = iron ingot\nS = stick\nT = redstone torch\n\n§6OUTPUT§r\n6 Activator rail"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "ISI",
+          "ITI",
+          "ISI"
+        ],
+        "key": {
+          "I": "iron ingot",
+          "S": "stick",
+          "T": "redstone torch"
+        },
+        "output": 6
+      }
+    },
+    {
+      "id": "recipe_chest",
+      "title": "Chest",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [P] [P] [P]\nMiddle:  [P] [.] [P]\nBottom:  [P] [P] [P]\n\nP = wood plank\n. = empty slot\n\n§6OUTPUT§r\n1 Chest"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "PPP",
+          "P.P",
+          "PPP"
+        ],
+        "key": {
+          "P": "wood plank"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_minecart",
+      "title": "Minecart",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nUpper:  [I] [.] [I]\nLower:  [I] [I] [I]\n\nI = iron ingot\n. = empty slot\n\n§6OUTPUT§r\n1 Minecart"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "I.I",
+          "III"
+        ],
+        "key": {
+          "I": "iron ingot"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_hopper_minecart",
+      "title": "Minecart with hopper",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6SHAPELESS INGREDIENTS§r\n1 minecart\n1 hopper\n\n§6OUTPUT§r\n1 Minecart with hopper"
+      ],
+      "crafting": {
+        "shapeless": true,
+        "rows": [
+          [
+            1,
+            "minecart"
+          ],
+          [
+            1,
+            "hopper"
+          ]
+        ],
+        "key": {},
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_chest_minecart",
+      "title": "Minecart with chest",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6SHAPELESS INGREDIENTS§r\n1 minecart\n1 chest\n\n§6OUTPUT§r\n1 Minecart with chest"
+      ],
+      "crafting": {
+        "shapeless": true,
+        "rows": [
+          [
+            1,
+            "minecart"
+          ],
+          [
+            1,
+            "chest"
+          ]
+        ],
+        "key": {},
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_tnt_minecart",
+      "title": "Minecart with TNT",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6SHAPELESS INGREDIENTS§r\n1 minecart\n1 TNT\n\n§6OUTPUT§r\n1 Minecart with TNT"
+      ],
+      "crafting": {
+        "shapeless": true,
+        "rows": [
+          [
+            1,
+            "minecart"
+          ],
+          [
+            1,
+            "TNT"
+          ]
+        ],
+        "key": {},
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_lectern",
+      "title": "Lectern",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [S] [S] [S]\nMiddle:  [.] [B] [.]\nBottom:  [.] [S] [.]\n\nS = wooden slab\nB = bookshelf\n. = empty slot\n\n§6OUTPUT§r\n1 Lectern\n\n§eNOTE§r\nUse a regular bookshelf, not a chiseled bookshelf."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "SSS",
+          ".B.",
+          ".S."
+        ],
+        "key": {
+          "S": "wooden slab",
+          "B": "bookshelf"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_bookshelf",
+      "title": "Chiseled bookshelf",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [P] [P] [P]\nMiddle:  [S] [S] [S]\nBottom:  [P] [P] [P]\n\nP = wood plank\nS = wooden slab\n\n§6OUTPUT§r\n1 Chiseled bookshelf"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "PPP",
+          "SSS",
+          "PPP"
+        ],
+        "key": {
+          "P": "wood plank",
+          "S": "wooden slab"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_cauldron",
+      "title": "Cauldron",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [I] [.] [I]\nMiddle:  [I] [.] [I]\nBottom:  [I] [I] [I]\n\nI = iron ingot\n. = empty slot\n\n§6OUTPUT§r\n1 Cauldron"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "I.I",
+          "I.I",
+          "III"
+        ],
+        "key": {
+          "I": "iron ingot"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_item_frame",
+      "title": "Item frame",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [S] [S] [S]\nMiddle:  [S] [L] [S]\nBottom:  [S] [S] [S]\n\nS = stick\nL = leather\n\n§6OUTPUT§r\n1 Item frame"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "SSS",
+          "SLS",
+          "SSS"
+        ],
+        "key": {
+          "S": "stick",
+          "L": "leather"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_jukebox",
+      "title": "Jukebox",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [P] [P] [P]\nMiddle:  [P] [D] [P]\nBottom:  [P] [P] [P]\n\nP = wood plank\nD = diamond\n\n§6OUTPUT§r\n1 Jukebox"
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "PPP",
+          "PDP",
+          "PPP"
+        ],
+        "key": {
+          "P": "wood plank",
+          "D": "diamond"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "recipe_tnt",
+      "title": "TNT",
+      "section": "recipes",
+      "group": "Crafting recipes",
+      "pages": [
+        "§6CRAFTING GRID§r\nTop:  [G] [S] [G]\nMiddle:  [S] [G] [S]\nBottom:  [G] [S] [G]\n\nG = gunpowder\nS = sand or red sand\n\n§6OUTPUT§r\n1 TNT\n\n§eNOTE§r\nExplosive: test only in a safe, disposable area."
+      ],
+      "crafting": {
+        "shapeless": false,
+        "rows": [
+          "GSG",
+          "SGS",
+          "GSG"
+        ],
+        "key": {
+          "G": "gunpowder",
+          "S": "sand or red sand"
+        },
+        "output": 1
+      }
+    },
+    {
+      "id": "build_night_lights",
+      "title": "1. Automatic night lights",
+      "section": "builds",
+      "group": "Three builds",
+      "pages": [
+        "§6MATERIALS§r\n1 daylight detector; 1 repeater; 1 redstone lamp; 4 redstone dust; full solid support blocks.\n\n§6BUILD§r\n1. Make a flat row of support blocks outside under open sky.\n2. On the row place: detector > dust > dust > dust > dust > repeater > lamp.\n3. Point the repeater toward the lamp.\n4. Use the detector until it is in inverted (night) mode.\n\n§6RESULT§r\nA nonzero signal at the repeater becomes full strength and lights the lamp. As the sky darkens, the lamp switches on without another button press.",
+        "§6TEST AND IMPROVE§r\nWait for night and then daylight. Weather and sky exposure affect the switching threshold, so test it where it will actually be used.\n\nAdd more lamps after the repeater, with dust and extra repeaters as needed. Keep each wire run short enough to retain a positive signal.\n\n§6TROUBLESHOOT§r\nAlways on in daytime? Check that the detector is inverted.\nNever on? Check the repeater direction and the dust path.\nUnpredictable threshold? Remove the roof above the detector and test in clear weather.\n\n§eThis uses a redstone lamp, not a copper bulb: a bulb toggles state rather than directly following day/night power."
+      ]
+    },
+    {
+      "id": "build_door",
+      "title": "2. Button-operated iron door",
+      "section": "builds",
+      "group": "Three builds",
+      "pages": [
+        "§6MATERIALS§r\n1 iron door; 2 wooden buttons; 1 full solid block, plus your wall and floor.\n\n§6BUILD§r\n1. Place the iron door in an opening on a solid floor.\n2. Put a full stone block immediately beside the LOWER half of the door, at the same height as that half.\n3. Attach one wooden button to the outside-facing side of this stone block.\n4. Attach the second button to its inside-facing side.\n5. Press either button. The powered stone block opens the adjacent door.\n\n§6RESULT§r\nThe door opens briefly and then closes. Both sides have a way through.",
+        "§6TEST AND IMPROVE§r\nTry the outside button, walk through, and test the inside button. Do this before sealing the rest of the room.\n\nWooden buttons give about 1.5 seconds to enter under normal game speed. A lever can hold the door open instead.\n\n§6OPTIONAL AUTOMATIC EXIT§r\nA stone pressure plate immediately beside the lower half of the door can act as an inside exit trigger. Remember that mobs can activate stone plates too.\n\n§6TROUBLESHOOT§r\nThe button must be attached to the full block beside the lower door half, not to a remote wall. Glass is not a substitute for the conducting stone block."
+      ]
+    },
+    {
+      "id": "build_sugar_cane",
+      "title": "3. Automatic sugar cane harvester",
+      "section": "builds",
+      "group": "Three builds",
+      "pages": [
+        "§6MATERIALS§r\n1 dirt; 1 sugar cane; water beside the dirt; 1 piston; 1 observer; 1 redstone dust; 1 full solid wiring block; glass for an enclosure.\n\n§6BUILD ONE CELL§r\n1. Plant sugar cane on dirt with water directly beside the dirt.\n2. Put a piston behind the cane, facing the space where the SECOND cane block will grow. Leave the bottom cane untouched.\n3. Place an observer directly on top of the piston. Its face watches the THIRD cane position; its red dot faces away from the cane.\n4. Put a full solid block directly behind the piston. Put dust on top of that block. The observer's red dot now points into this dust.\n5. Enclose the sides with glass, leaving the growth spaces clear.",
+        "§6WHAT HAPPENS§r\nWhen the third cane grows, the observer powers the dust behind it. The block below that dust powers the adjacent piston. The piston breaks the upper cane, leaving the bottom to regrow.\n\n§6AUTOMATIC COLLECTION§r\nPlace a stationary hopper minecart on a rail directly beneath the dirt supporting the cane. Put a hopper below the rail, aimed into a chest. The cart collects drops through the dirt; the hopper empties the cart. Contain the rail so the cart cannot roll away.\n\n§6TEST§r\nManually place cane until it is three high. Check that only the upper section breaks and that the base survives. Then test collection before duplicating the cell.\n\n§eThis is a sugar cane design. Do not use it as an automatic wheat-replanting tutorial."
+      ]
+    }
+  ]
+}

@@ -75,10 +75,12 @@ marks them and the manifests `linguist-generated` so GitHub folds them in diffs.
    change cannot churn the repo.
 4. **Manifests.** `tools/manifests.ts` rewrites all nine manifests from `packs.json`.
 
-Not part of `npm run codegen`: the ElleeDog 67 Manual item icon
-(`resource_packs/elleedog67/textures/items/elleedog67_feature_book.png`) is drawn by
-`tools/art/manual_book.py` from the generated Pet Morpher book (chestnut leather, Carter's face, a
-green 67). Rerun it by hand after changing the drawing:
+Not part of `npm run codegen`: the ElleeDog 67 Manual artwork is 64x64 pixel art drawn by
+`tools/art/manual_book.py` (a red leather book with gold corners; the black cat, the bearded man,
+Carter in his shades and the white cat on a grass strip above the "ElleeDog 67" logo and a MANUAL
+banner). The script renders it as the book item texture
+(`resource_packs/elleedog67/textures/items/elleedog67_feature_book.png`, 128x128) and as the two
+core pack icons (256x256). Rerun it by hand after changing the drawing:
 
 ```
 uv run --project tools/codegen/pets --frozen python tools/art/manual_book.py

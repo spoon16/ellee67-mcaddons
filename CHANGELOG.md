@@ -1,10 +1,16 @@
 # Changelog
 
+## 0.2.3
+
+- New ElleeDog 67 Manual artwork, drawn as pixel art from the concept cover: a red leather book with
+  gold corners and gems, the black cat, the bearded man, Carter in his shades and the white cat on a
+  grass strip, the "ElleeDog 67" logo and a MANUAL banner. It is the book's item texture and, at
+  256x256, the icon of the two core packs, so the manual and the core packs match in Edit World.
+  `tools/art/manual_book.py` draws it.
+
 ## 0.2.2
 
-- The book is called the ElleeDog 67 Manual and has its own icon: a chestnut Minecraft book with
-  Carter's face and a green 67 on the cover, in the style of the Pet Morpher and Redstone Guide books.
-  `tools/art/manual_book.py` draws it from the Pet Morpher book's geometry.
+- The book is called the ElleeDog 67 Manual and has its own icon (replaced in 0.2.3).
 
 ## 0.2.1
 

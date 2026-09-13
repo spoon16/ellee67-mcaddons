@@ -9,7 +9,7 @@ from PIL import Image
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tools'))
 from catalog import read,load_catalog
 from molang_subset import Expression
-from seating import ride_clip,transformed_vertices,vertices
+from seating import ride_clip,transformed_vertices,vertices,rig_pose,bedrock_pose
 from rig_math import matrices
 import animation_sample as sample
 RP=ROOT/'resource_pack';BP=ROOT/'behavior_pack'
@@ -20,6 +20,7 @@ SHARED=read(RP/'animations/pet_shared.animation.json')['animations']
 def anim(p):return read(RP/f'animations/pets/{p["id"]}.animation.json')['animations']
 def geometry(p,part='model'):return read(RP/f'models/entity/pets/{p["id"]}/{part}.geo.json')['minecraft:geometry'][0]
 def numeric_pose(p):return ride_clip(ROOT,p)['bones']
+def rig_numeric_pose(p):return rig_pose(numeric_pose(p))
 def expression_for_attachable(path):
  s=read(path)['minecraft:attachable']['description']['scripts']['pre_animation'][0]
  return Expression(s.split('=',1)[1].rstrip(';').replace('context.owning_entity->','owner.'))
@@ -93,34 +94,45 @@ class Restoration043(unittest.TestCase):
 class Seating043(unittest.TestCase):
  def test_torso_is_truly_upright_in_seated_pose(self):
   for p in PETS:
-   pitch=numeric_pose(p)['pet_body']['rotation'][0]
+   pitch=rig_numeric_pose(p)['pet_body']['rotation'][0]
    self.assertGreaterEqual(pitch,45);self.assertLessEqual(pitch,60)
+ def test_emitted_clip_uses_bedrock_rotation_sign(self):
+  # Vanilla animation.cat.sit raises the chest with body -45 and folds the hind legs with -90:
+  # negative X pitches the nose up in Bedrock, the opposite of rig_math. A positive body pitch
+  # here is the face-down "backwards sit" seen on the client.
+  for p in PETS:
+   pose=numeric_pose(p);pitch=pose['pet_body']['rotation'][0]
+   self.assertLess(pitch,-44,p['id']);self.assertEqual(pose['pet_head']['rotation'][0],-pitch)
+   for side in ['left','right']:
+    self.assertEqual(pose['pet_front_'+side]['rotation'][0],-pitch)
+    self.assertLess(pose['pet_rear_'+side]['rotation'][0],0);self.assertEqual(pose[f'pet_rear_{side}_paw']['rotation'][0],80.0)
+   self.assertEqual(bedrock_pose(rig_pose(pose)),pose)
  def test_all_four_paw_bottoms_contact_zero_plane(self):
   for p in PETS:
-   g=geometry(p);pose=numeric_pose(p)
+   g=geometry(p);pose=rig_numeric_pose(p)
    for side in ['left','right']:
     for leg in ['front','rear']:
      pts=transformed_vertices(g,pose,[f'pet_{leg}_{side}_paw'])
      self.assertAlmostEqual(pts[:,1].min(),0,places=6,msg=(p['id'],leg,side))
  def test_front_shins_and_all_paw_soles_are_level(self):
   for p in PETS:
-   g=geometry(p);pose={k:{a:np.array(b) for a,b in v.items()} for k,v in numeric_pose(p).items()};ms=matrices(g['bones'],pose)
+   g=geometry(p);pose={k:{a:np.array(b) for a,b in v.items()} for k,v in rig_numeric_pose(p).items()};ms=matrices(g['bones'],pose)
    for side in ['left','right']:
     np.testing.assert_allclose(ms['pet_front_'+side][:3,:3]@np.array([0,1,0]),[0,1,0],atol=1e-7)
     for leg in ['front','rear']:
      np.testing.assert_allclose(ms[f'pet_{leg}_{side}_paw'][:3,:3]@np.array([0,1,0]),[0,1,0],atol=1e-7)
  def test_hind_legs_fold_forward_not_stand(self):
   for p in PETS:
-   g=geometry(p);po={k:{a:np.array(b) for a,b in v.items()} for k,v in numeric_pose(p).items()};ms=matrices(g['bones'],po)
+   g=geometry(p);po={k:{a:np.array(b) for a,b in v.items()} for k,v in rig_numeric_pose(p).items()};ms=matrices(g['bones'],po)
    for side in ['left','right']:
     v=ms['pet_rear_'+side][:3,:3]@np.array([0,1,0]);self.assertLess(abs(v[1]),.2);self.assertGreater(abs(v[2]),.9)
  def test_head_is_counter_rotated_upright(self):
   for p in PETS:
-   pose={k:{a:np.array(b) for a,b in v.items()} for k,v in numeric_pose(p).items()};m=matrices(geometry(p)['bones'],pose)
+   pose={k:{a:np.array(b) for a,b in v.items()} for k,v in rig_numeric_pose(p).items()};m=matrices(geometry(p)['bones'],pose)
    np.testing.assert_allclose(m['pet_head'][:3,:3],[ [1,0,0],[0,1,0],[0,0,1] ],atol=1e-7)
  def test_tail_does_not_start_under_seat(self):
   for p in PETS:
-   g=geometry(p);pts=transformed_vertices(g,numeric_pose(p),[b['name'] for b in g['bones'] if b['name'].startswith('pet_tail')])
+   g=geometry(p);pts=transformed_vertices(g,rig_numeric_pose(p),[b['name'] for b in g['bones'] if b['name'].startswith('pet_tail')])
    self.assertGreaterEqual(pts[:,1].min(),.19)
  def test_generated_ride_not_scaled_by_canine_feline_gait(self):
   for p in PETS:
@@ -129,9 +141,11 @@ class Seating043(unittest.TestCase):
  def test_body_armor_inherits_same_seated_bones(self):
   for p in PETS:
    bare=geometry(p);armor=geometry(p,'armor_chestplate')
-   po={k:{a:np.array(b) for a,b in v.items()} for k,v in numeric_pose(p).items()}
-   a=matrices(bare['bones'],po);b=matrices(armor['bones'],po)
-   for n in ['pet_root','pet_body','pet_head']:np.testing.assert_allclose(a[n],b[n])
+   po={k:{a:np.array(b) for a,b in v.items()} for k,v in rig_numeric_pose(p).items()}
+   # Attachable meshes are pre-scaled by the entity scale (see attachable_space.py), so compare against a scaled rig.
+   from attachable_space import entity_scale,scale_bones
+   a=matrices(scale_bones(bare['bones'],entity_scale(ROOT)),po);b=matrices(armor['bones'],po)
+   for n in ['pet_root','pet_body','pet_head']:np.testing.assert_allclose(a[n],b[n],atol=1e-5)
  def test_seat_alignment_never_offsets_the_native_player_root(self):
   a=read(RP/'animations/pet_seating.animation.json')['animations']['animation.pet.seat_align']
   self.assertEqual(set(a['bones']),{'pet_root'})

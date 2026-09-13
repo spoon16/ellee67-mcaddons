@@ -6631,7 +6631,7 @@
       "bones": {
         "pet_body": {
           "rotation": [
-            52.0,
+            -52.0,
             0.0,
             0.0
           ],
@@ -6643,14 +6643,14 @@
         },
         "pet_head": {
           "rotation": [
-            -52.0,
+            52.0,
             0.0,
             0.0
           ]
         },
         "pet_front_left": {
           "rotation": [
-            -52.0,
+            52.0,
             0.0,
             0.0
           ],
@@ -6669,7 +6669,7 @@
         },
         "pet_rear_left": {
           "rotation": [
-            28.0,
+            -28.0,
             0.0,
             0.0
           ],
@@ -6681,14 +6681,14 @@
         },
         "pet_rear_left_paw": {
           "rotation": [
-            -80.0,
+            80.0,
             0.0,
             0.0
           ]
         },
         "pet_front_right": {
           "rotation": [
-            -52.0,
+            52.0,
             0.0,
             0.0
           ],
@@ -6707,7 +6707,7 @@
         },
         "pet_rear_right": {
           "rotation": [
-            28.0,
+            -28.0,
             0.0,
             0.0
           ],
@@ -6719,15 +6719,15 @@
         },
         "pet_rear_right_paw": {
           "rotation": [
-            -80.0,
+            80.0,
             0.0,
             0.0
           ]
         },
         "pet_tail_base": {
           "rotation": [
-            -9.0,
-            35.0,
+            9.0,
+            -35.0,
             0.0
           ],
           "position": [
@@ -6738,14 +6738,14 @@
         },
         "pet_tail_mid": {
           "rotation": [
-            18.0,
+            -18.0,
             0.0,
             0.0
           ]
         },
         "pet_tail_tip": {
           "rotation": [
-            18.0,
+            -18.0,
             0.0,
             0.0
           ]

@@ -3,11 +3,27 @@
 This is an offline rig calculation, not a Minecraft renderer. Per-mount support
 height is a separate client-synchronized root translation supplied by seating.js.
 Standing/walking source geometry is not modified.
+
+The solve runs in rig_math's right-handed frame. Bedrock rotates bones with the
+opposite sign on X and Y: vanilla animation.cat.sit raises the chest with
+body rotation [-45, 0, 0] and folds the hind legs forward with -90, so a
+right-handed +45 would draw the cat nose-down. The emitted clip therefore
+carries Bedrock-sign rotations; bedrock_pose/rig_pose convert between the two.
 """
 from itertools import product
 import numpy as np
 from catalog import read
 from rig_math import matrices, rotation
+
+BEDROCK_ROTATION_SIGN=np.array([-1.,-1.,1.])
+
+def bedrock_pose(pose):
+    """Rig-space pose (right-handed) to the rotation signs Bedrock expects."""
+    return {n:{k:(list(np.array(v,float)*BEDROCK_ROTATION_SIGN) if k=='rotation' else list(v)) for k,v in ch.items()} for n,ch in pose.items()}
+
+def rig_pose(pose):
+    """Bedrock-sign pose back to rig space for offline geometry checks."""
+    return bedrock_pose(pose)
 
 def vertices(c):
     a=np.array(c['origin'],float);b=a+np.array(c['size'],float)
@@ -20,6 +36,7 @@ def vertices(c):
     return points
 
 def transformed_vertices(g, pose, names):
+    """World-space cube corners for a rig-space pose."""
     mats=matrices(g['bones'],{n:{k:np.array(v,float) for k,v in ch.items()} for n,ch in pose.items()})
     pts=[]
     for b in g['bones']:
@@ -64,9 +81,10 @@ def ride_clip(root,pet):
     points=transformed_vertices(g,pose,[n for n in by if n.startswith('pet_tail')])
     if points.size and points[:,1].min()<.2:
         pose['pet_tail_base']['position']=(r.T@np.array([0.,.2-points[:,1].min(),0.])).tolist()
+    pose=bedrock_pose(pose)
     # Stable precision makes the output deterministic across builds.
     for ch in pose.values():
-        for k,v in ch.items():ch[k]=[round(float(x),8) for x in v]
+        for k,v in ch.items():ch[k]=[round(float(x),8)+0.0 for x in v]
     return {'loop':True,'bones':pose}
 
 def alignment_clip():

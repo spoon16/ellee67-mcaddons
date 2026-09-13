@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2
+
+- The book is called the ElleeDog 67 Manual and has its own icon: a chestnut Minecraft book with
+  Carter's face and a green 67 on the cover, in the style of the Pet Morpher and Redstone Guide books.
+  `tools/art/manual_book.py` draws it from the Pet Morpher book's geometry.
+
 ## 0.2.1
 
 No gameplay changes. Every script is TypeScript now: the feature modules that 0.1.0 carried over as

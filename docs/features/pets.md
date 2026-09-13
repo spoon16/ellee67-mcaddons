@@ -199,7 +199,7 @@ per line with a screenshot.
     removes only yours.
 13. While transformed, deactivate "ElleeDog 67 Pets" and "ElleeDog 67 Pets Resources" in Edit World
     and reopen the world: you are a normal player, `/pet:form carter` replies with the pack hint,
-    the Pet Morpher shows as an unknown item, and the ElleeDog 67 Book reads `[PACKS OFF] Pets`.
+    the Pet Morpher shows as an unknown item, and the ElleeDog 67 Manual reads `[PACKS OFF] Pets`.
     Reactivate both packs and reopen: your pet returns on join without a chat line.
 14. Watch the content log for the whole session: only explicit command errors may appear. With Pets
     active and Rbow Ore not, note any missing-texture message from the Rbow slots.

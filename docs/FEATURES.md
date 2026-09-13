@@ -51,7 +51,7 @@ The manual marks its Home buttons `[ON]`, `[OFF]`, `[ACTIVE]` and `[PACKS OFF]`.
 | `/elleedog67:features` | anyone | lists the six features with their state and, for inactive pack features, the pack hint |
 | `/elleedog67:enable <feature>` | operators | switch features: turns the feature on, effective on the next tick. Pack features: replies with the packs to activate and changes nothing |
 | `/elleedog67:disable <feature>` | operators | switch features: turns the feature off and restores vanilla behaviour. Pack features: replies with the packs to deactivate |
-| `/elleedog67:book` | operators | gives the caller an ElleeDog 67 Book |
+| `/elleedog67:book` | operators | gives the caller an ElleeDog 67 Manual |
 
 No core command needs cheats. `<feature>` is one of the ids above. If the game rejects the
 hyphenated names when the pack loads, the command accepts them as plain text and `stair_sit` works
@@ -61,7 +61,7 @@ A feature's own commands (`/sit:*`, `/pet:*`, `/elleedog:ender_protect`) refuse 
 is off. A switch feature answers "X is disabled. An operator can run /elleedog67:enable x."; a pack
 feature answers "X is not active." followed by the pack hint.
 
-## The ElleeDog 67 Book
+## The ElleeDog 67 Manual
 
 The in-game manual. Players whose gamertag starts with `ElleeDog` receive one when they join (the
 list is `BOOK_HOLDER_HANDLES` in `src/core/config.ts`); operators get one with `/elleedog67:book`.

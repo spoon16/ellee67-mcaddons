@@ -70,7 +70,7 @@ Lang keys, under `## stair-sit` in the core resource pack's `texts/en_US.lang` a
 
 ## What off means
 
-Turn off from the Stair Sitting page of the ElleeDog 67 Book (ElleeDog or an operator) or with
+Turn off from the Stair Sitting page of the ElleeDog 67 Manual (ElleeDog or an operator) or with
 `/elleedog67:disable stair-sit`. Every rider is stood up (moved to a safe spot next to the stair when one
 is free), every loaded `sit:seat` and `sit:target` is removed, and the gesture, target discovery and sweep
 loops stop. Block and target clicks are no longer intercepted, and every `sit:*` command answers

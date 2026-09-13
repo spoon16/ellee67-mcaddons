@@ -101,7 +101,7 @@ Use a copy of the world with "ElleeDog 67 Redstone Guide" active.
 4. From a component page use "Show crafting recipe", then "Back to component".
 5. Read to the second page of a build and close the book. Use it again: "Resume reading" is the first button and
    opens that page. Leave and rejoin the world and check Resume reading again.
-6. Use the book with the ElleeDog 67 Book's manual still open. The guide should open once that menu is closed; if
+6. Use the book with the ElleeDog 67 Manual's manual still open. The guide should open once that menu is closed; if
    it reports "Close the other screen, then use Read Guide again.", close every menu and use it again.
 7. Two players read at the same time. Each sees their own pages and their own bookmark.
 8. Close the book deliberately. It must not reopen by itself.

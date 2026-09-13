@@ -28,7 +28,7 @@ ships no entities, items, recipes or textures.
 
 ## What off means
 
-Turn off from the Creeper Mod page of the ElleeDog 67 Book (ElleeDog or an operator) or with
+Turn off from the Creeper Mod page of the ElleeDog 67 Manual (ElleeDog or an operator) or with
 `/elleedog67:disable creeper-mod`. Creeper explosions behave like vanilla: blocks break, mobs and
 items take blast damage, and creepers drop kill loot again. Nothing from this feature stays in the
 world. The setting is per world and survives rejoins.

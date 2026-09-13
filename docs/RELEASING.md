@@ -45,7 +45,7 @@ old one otherwise. Add a `CHANGELOG.md` entry before bumping.
      removed. Two packs cannot both replace `minecraft:player` or `minecraft:enderman`.
 7. Leave and reopen the world. Run `/elleedog67:features`: Stair Sitting and Creeper Mod are on,
    and each optional feature reads active or packs off according to what you activated. The
-   ElleeDog 67 Book says the same and names the packs for anything still off.
+   ElleeDog 67 Manual says the same and names the packs for anything still off.
 
 ## Updating a world to a newer version
 

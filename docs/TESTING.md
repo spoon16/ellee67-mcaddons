@@ -53,7 +53,7 @@ step that changes them ends with reopening the world.
      does not appear, look in the content log for a `registerEnum` error: that means the
      hyphenated ids were rejected and the text fallback is in use (still fine), or the whole
      script failed (not fine).
-   - Join as a player named ElleeDog: the ElleeDog 67 Book appears in the inventory, with the lore
+   - Join as a player named ElleeDog: the ElleeDog 67 Manual appears in the inventory, with the lore
      "The ElleeDog 67 manual." Use it: Home lists six features, marked `[ON]` for Stair Sitting
      and Creeper Mod and `[PACKS OFF]` for the other four, then "Setup and packs" and
      "Commands". Open each page. The Pets page names "ElleeDog 67 Pets" and "ElleeDog 67 Pets

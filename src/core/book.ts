@@ -13,7 +13,7 @@ import { openManual } from "./manual.ts";
 
 export const BOOK_ID = `${NAMESPACE}:feature_book`;
 export const BOOK_COMPONENT = `${NAMESPACE}:open_feature_menu`;
-export const BOOK_TITLE = "ElleeDog 67 Book";
+export const BOOK_TITLE = "ElleeDog 67 Manual";
 export const BOOK_LORE = "The ElleeDog 67 manual.";
 export const NOT_ALLOWED_MESSAGE = "Only ElleeDog or an operator can turn features on or off from this book.";
 

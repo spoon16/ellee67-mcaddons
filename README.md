@@ -1,13 +1,13 @@
 # ElleeDog 67
 
 One Minecraft Bedrock add-on: nine packs in one `.mcaddon`. The two core packs carry the
-ElleeDog 67 Book (the in-game manual), Stair Sitting, Creeper Mod and every script. The other four
+ElleeDog 67 Manual (the in-game manual), Stair Sitting, Creeper Mod and every script. The other four
 features each ship in their own packs and are turned on by activating those packs in the world
 settings.
 
 | Pack | What it turns on | Type | Needed |
 |---|---|---|---|
-| ElleeDog 67 (Behavior) | the ElleeDog 67 Book manual, Stair Sitting, Creeper Mod, and the scripts every other pack uses | behavior | required |
+| ElleeDog 67 (Behavior) | the ElleeDog 67 Manual manual, Stair Sitting, Creeper Mod, and the scripts every other pack uses | behavior | required |
 | ElleeDog 67 (Resources) | the book and Stair Sitting visuals | resource | required; added with the Behavior pack |
 | ElleeDog 67 Pets | Pets: become Carter, Mochi or Casper with the Pet Morpher book, with fitted armor and mouth-carried tools | behavior | optional |
 | ElleeDog 67 Pets Resources | pet models, animations and fitted armor | resource | optional; added with Pets |
@@ -26,7 +26,7 @@ engine mock and by pack validation, which is not the same thing. The manual chec
 1. Download `ElleeDog67_<version>.mcaddon` from the latest GitHub Release (or the CI artifact) and
    open it with Minecraft. One import brings in all nine packs.
 2. Edit a copy of your world. Under Behavior Packs, activate "ElleeDog 67 (Behavior)". That gives
-   you the ElleeDog 67 Book, Stair Sitting and Creeper Mod; "ElleeDog 67 (Resources)" comes along
+   you the ElleeDog 67 Manual, Stair Sitting and Creeper Mod; "ElleeDog 67 (Resources)" comes along
    on its own.
 3. Activate the optional packs you want: "ElleeDog 67 Pets", "ElleeDog 67 Rbow Ore",
    "ElleeDog 67 Ender Mod", "ElleeDog 67 Redstone Guide". Each one pulls in its resource pack and
@@ -34,7 +34,7 @@ engine mock and by pack validation, which is not the same thing. The manual chec
 4. Two ordering rules: keep "ElleeDog 67 Pets Resources" above "ElleeDog 67 Rbow Ore Resources",
    and put any other pack that replaces the player or Endermen below the ElleeDog packs, or remove
    it. Everything else can be in any order.
-5. In game, the **ElleeDog 67 Book** is the manual. It lists every feature, whether it is on, and
+5. In game, the **ElleeDog 67 Manual** is the manual. It lists every feature, whether it is on, and
    which packs turn it on or off. Anyone holding a book can read it. Players named ElleeDog (who
    receive one on join) and operators can flip the two switches, Stair Sitting and Creeper Mod,
    from its pages. `/elleedog67:features` prints the same states in chat. None of this needs cheats.

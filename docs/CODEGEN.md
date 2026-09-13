@@ -75,6 +75,15 @@ marks them and the manifests `linguist-generated` so GitHub folds them in diffs.
    change cannot churn the repo.
 4. **Manifests.** `tools/manifests.ts` rewrites all nine manifests from `packs.json`.
 
+Not part of `npm run codegen`: the ElleeDog 67 Manual item icon
+(`resource_packs/elleedog67/textures/items/elleedog67_feature_book.png`) is drawn by
+`tools/art/manual_book.py` from the generated Pet Morpher book (chestnut leather, Carter's face, a
+green 67). Rerun it by hand after changing the drawing:
+
+```
+uv run --project tools/codegen/pets --frozen python tools/art/manual_book.py
+```
+
 There is no union or verification step for shared files: each pack ships its own `texts/`,
 `textures/item_texture.json`, `textures/terrain_texture.json` and `blocks.json`, and the game
 merges them across active packs. The core resource pack's `texts/` and `item_texture.json` are

@@ -122,7 +122,7 @@ The core (`src/core/`) provides:
   component's callbacks do nothing. The message is "X is disabled. An operator can run
   /elleedog67:enable x." for a switch feature and "X is not active." plus the pack hint for a pack
   feature.
-- `book.ts`: the ElleeDog 67 Book item, who receives it, and the entitlement check for the switch
+- `book.ts`: the ElleeDog 67 Manual item, who receives it, and the entitlement check for the switch
   buttons.
 - `manual.ts`: the manual pages, built from the feature definitions and `packs.json`.
 

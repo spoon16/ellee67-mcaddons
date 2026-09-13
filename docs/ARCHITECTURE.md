@@ -91,7 +91,8 @@ Bedrock cannot unregister commands or item components after startup, which is wh
 directly. A feature that needs to keep a small listener alive *while disabled* (Ender resets its
 gate property on newly loaded Endermen, Pets forces native form on joining players) creates its
 own `new FeatureContext(id)` inside `stop()`, keeps it in a module variable, and disposes it at
-the top of `start()`.
+the top of `start()`. A feature that loads already disabled gets `stop()` called once at world
+load (without a `start()`), so those guards exist from the first tick; `stop()` must tolerate that.
 
 ## What "disabled" means per feature
 

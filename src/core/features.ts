@@ -25,7 +25,10 @@ export interface FeatureDefinition {
   alwaysOn?(ctx: FeatureContext): void;
   /** Subscribes events and intervals through `ctx`; also performs any load-time work directly. */
   start(ctx: FeatureContext): void;
-  /** Restores the closest thing to vanilla; `ctx` is disposed right after this returns. */
+  /**
+   * Restores the closest thing to vanilla; `ctx` is disposed right after this returns. Also called once at world
+   * load when the feature is disabled, so it must work without a preceding `start()`.
+   */
   stop(ctx: FeatureContext): void;
 }
 
@@ -129,6 +132,23 @@ export function startEnabledFeatures(): void {
       }
     }
     if (isEnabled(definition.id)) startFeature(definition.id);
+    else settleDisabled(definition);
+  }
+}
+
+/**
+ * A feature that loads disabled still gets `stop()` once, so anything it does to keep the world vanilla-like
+ * while off (Ender's property reset, Pets forcing native form) is in place from the first tick. `stop()` must
+ * therefore tolerate never having been started.
+ */
+function settleDisabled(definition: FeatureDefinition): void {
+  const context = new FeatureContext(definition.id);
+  try {
+    definition.stop(context);
+  } catch (error) {
+    log.warn(`${definition.id} failed to settle while disabled: ${log.describe(error)}`);
+  } finally {
+    context.dispose();
   }
 }
 

@@ -29,6 +29,15 @@ describe("feature registry", () => {
     expect(featureStatusLines()).toEqual(["pets: enabled", "creeper-mod: disabled"]);
   });
 
+  it("settles a feature that loads disabled by calling stop() once without start()", () => {
+    const pets = fakeFeature("pets", { defaultEnabled: false });
+    defineFeatures([pets.definition]);
+    startEnabledFeatures();
+    expect(pets.log.starts).toBe(0);
+    expect(pets.log.stops).toBe(1);
+    expect(isRunning("pets")).toBe(false);
+  });
+
   it("honours a stored world setting over the default", () => {
     const pets = fakeFeature("pets");
     defineFeatures([pets.definition]);

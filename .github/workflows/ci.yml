@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Check, test, build, package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+      - run: npm run package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ElleeDog67-addon
+          path: |
+            dist/*.mcaddon
+            dist/*.mcpack
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+
+  codegen-check:
+    name: Generated files are up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: npm ci
+      - run: uv sync --frozen --project tools/codegen/pets
+      - run: npm run codegen
+      - name: Fail if codegen changed anything
+        run: |
+          git status --porcelain
+          git diff --stat --exit-code
+          test -z "$(git status --porcelain)"

@@ -1,0 +1,44 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "67 Rbow Spear Lab - Behavior",
+    "description": "Standalone renderer diagnosis, not a gameplay update. Five numbered Creative controls. Ellee Schoonover | ellee@ellee.com.",
+    "uuid": "45077ca3-94f2-53c6-8747-e7e18f8c7039",
+    "version": [
+      0,
+      1,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "50ce7148-36c3-57a7-b017-1becfbf8b45f",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "Ellee Schoonover (ellee@ellee.com)"
+    ]
+  },
+  "dependencies": [
+    {
+      "uuid": "471fa819-30e2-5a8e-8f52-6bd8421b2dd7",
+      "version": [
+        0,
+        1,
+        0
+      ]
+    }
+  ]
+}

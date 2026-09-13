@@ -1,0 +1,75 @@
+{
+  "guard": "q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')",
+  "phase": "math.clamp((v.attack_time ?? 0.0), 0.0, 1.0)",
+  "pulse": "math.sin(math.pow(math.clamp((v.attack_time ?? 0.0), 0.0, 1.0), 0.55) * 180.0)",
+  "raise": "math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0)",
+  "ready": "(math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0))))",
+  "fatigue": "math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - q.kinetic_weapon_dismount_duration) / 20.0, 0.0, 1.0)",
+  "sway": "(math.sin(q.life_time * 150.0) * math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - q.kinetic_weapon_dismount_duration) / 20.0, 0.0, 1.0) * (math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0)))))",
+  "patched_channels": {
+    "animation.player.first_person.melee_spear_attack/rightitem/position/0": {
+      "rbow": -1.5,
+      "otherwise": "-1.5 + v.fp_melee_spear_attack_item_position_x"
+    },
+    "animation.player.first_person.melee_spear_attack/rightitem/position/1": {
+      "rbow": 2.0,
+      "otherwise": "2.0 + v.fp_melee_spear_attack_item_position_y"
+    },
+    "animation.player.first_person.melee_spear_attack/rightitem/position/2": {
+      "rbow": 3.5,
+      "otherwise": "3.5 + v.fp_melee_spear_attack_item_position_z"
+    },
+    "animation.player.first_person.melee_spear_attack/rightitem/rotation/1": {
+      "rbow": 55.0,
+      "otherwise": "55.0 + v.fp_melee_spear_attack_item_rotation_y"
+    },
+    "animation.player.first_person.melee_spear_attack/rightitem/rotation/2": {
+      "rbow": -12.5,
+      "otherwise": "-12.5 + v.fp_melee_spear_attack_item_rotation_z"
+    },
+    "animation.player.first_person.melee_spear_use/rightitem/position/0": {
+      "rbow": -1.5,
+      "otherwise": "-1.5 + v.fp_melee_spear_use_item_position_x"
+    },
+    "animation.player.first_person.melee_spear_use/rightitem/position/1": {
+      "rbow": 2.0,
+      "otherwise": "2.0 + v.fp_melee_spear_use_item_position_y"
+    },
+    "animation.player.first_person.melee_spear_use/rightitem/position/2": {
+      "rbow": 3.5,
+      "otherwise": "3.5 + v.fp_melee_spear_use_item_position_z"
+    },
+    "animation.player.first_person.melee_spear_use/rightitem/rotation/1": {
+      "rbow": 55.0,
+      "otherwise": "55.0 + v.fp_melee_spear_use_item_rotation_y"
+    },
+    "animation.player.first_person.melee_spear_use/rightitem/rotation/2": {
+      "rbow": -12.5,
+      "otherwise": "-12.5 + v.fp_melee_spear_use_item_rotation_z"
+    },
+    "animation.player.melee_spear_attack/rightarm/rotation/0": {
+      "rbow": "(v.tp_melee_spear_base_arm_rotation_x ?? 0.0) + q.target_x_rotation - q.is_sneaking * 27.0 - this - 35.0 * math.sin(math.pow(math.clamp((v.attack_time ?? 0.0), 0.0, 1.0), 0.55) * 180.0)",
+      "otherwise": "v.tp_melee_spear_base_arm_rotation_x + q.target_x_rotation - q.is_sneaking * 27.0 - this + v.tp_melee_spear_attack_arm_rotation_x"
+    },
+    "animation.player.melee_spear_attack/rightitem/rotation/0": {
+      "rbow": "-20.0 * math.sin(math.pow(math.clamp((v.attack_time ?? 0.0), 0.0, 1.0), 0.55) * 180.0)",
+      "otherwise": "v.tp_melee_spear_attack_item_rotation_x"
+    },
+    "animation.humanoid.melee_spear_use/rightarm/rotation/0": {
+      "rbow": "(v.tp_melee_spear_base_arm_rotation_x ?? 0.0) + q.target_x_rotation - q.is_sneaking * 27.0 - this - 45.0 * (math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0))))",
+      "otherwise": "v.tp_melee_spear_base_arm_rotation_x + q.target_x_rotation - q.is_sneaking * 27.0 - this + v.tp_melee_spear_use_arm_rotation_x"
+    },
+    "animation.humanoid.melee_spear_use/rightarm/rotation/1": {
+      "rbow": "math.clamp(q.target_y_rotation, -60.0, 45.0) - this + 6.0 * (math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0))))",
+      "otherwise": "math.clamp(q.target_y_rotation, -60.0, 45.0) - this + v.tp_melee_spear_use_arm_rotation_y"
+    },
+    "animation.humanoid.melee_spear_use/rightarm/rotation/2": {
+      "rbow": "1.5 * (math.sin(q.life_time * 150.0) * math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - q.kinetic_weapon_dismount_duration) / 20.0, 0.0, 1.0) * (math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0)))))",
+      "otherwise": "v.tp_melee_spear_use_arm_rotation_z"
+    },
+    "animation.humanoid.melee_spear_use/rightitem/rotation/0": {
+      "rbow": "-20.0 * (math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0))))",
+      "otherwise": "v.tp_melee_spear_use_item_rotation_x"
+    }
+  }
+}

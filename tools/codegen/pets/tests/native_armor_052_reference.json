@@ -1,0 +1,1274 @@
+{
+  "reference_release": "0.5.1",
+  "raw": {
+    "assets/pets/carter/armor_fit.json": "6e20f075ac38d7949c08603479d3d8fc5e4c4e1e935e7707d5f3c7a2317957a3",
+    "assets/pets/carter/coat.png": "e3e51d7a55ea2edbe48fb5eab4a8036355c33a6376fdbc783090ad39cd11dc86",
+    "assets/pets/carter/icon.png": "05d474776fa0fe1af87572221d199a0174109f00528f29ab153c36b7e4053115",
+    "assets/pets/carter/model.geo.json": "66b3ac4bbbc3b02cd3ab8aac718214775303629685500bc454e44bc99f2c0a90",
+    "assets/pets/carter/paws.geo.json": "562120e03a4b3da671c805a105e75ae5a476259d974b4508b5419ed2c1905b8a",
+    "assets/pets/carter/paws.png": "0d488b5b9eeb189f589b674f39b2e6762893f1b13663525c2308235c3284d581",
+    "assets/pets/casper/coat.png": "3c7f38fc516ddc1139dade21ce5032145a70c7e97d47599ed40742c645a79ccd",
+    "assets/pets/casper/icon.png": "a104d767a57953b05ab3509a9e4ebb61e9e1a8735eae030a0deb6ce5318a197a",
+    "assets/pets/casper/paws.png": "3527c406e75aa36d1dfc73c82d46a888ec6e29cbef05e869ae3cf7bc587521fd",
+    "assets/pets/mochi/armor_fit.json": "aad3581775cf0dc7a98aba9e87cd2e54f5df07f0e2b24c5fe36037158ff0558b",
+    "assets/pets/mochi/coat.png": "9312fdf81bd3b5cb1697b88457a69b1bfe40c3eac8303156d2c6df9533465957",
+    "assets/pets/mochi/icon.png": "487301bce2492bfd37e86644447b6d0c78638b0aa861b191d00ac9a8a8a682ab",
+    "assets/pets/mochi/model.geo.json": "2d63cde30f1d45481ad3f9f1c5551a477c8346da8cb087c4b9f18c8b4ce9da1c",
+    "assets/pets/mochi/paws.geo.json": "cd27db032dc3f811d6e46895adbd633286e3d99af7508ff04bf998b8b55840f9",
+    "assets/pets/mochi/paws.png": "7c3a459bf8532271825a90ea1f8a0644273234d3f652b119c6b15e1b599a6d89",
+    "assets/shared/morpher_book.png": "12d927c37a80f34102697673625c2735ccd5be7323ea36039061a77ecd9d1590",
+    "assets/shared/morpher_book_option3_source.png": "e1c7f0a98e71ab740cbe8d7a02fa82742a6ac5b995d10ea833d68b1528f02109",
+    "assets/shared/pack_icon.png": "102231c7e7cdc76a4187e74d671f30a0f85f0c06fb03af0cd3355c0959fb2660",
+    "assets/shared/pack_icon_source.png": "0dd310dbf7be68be449765d3c581000677a5006633ec79f7528973e62965a6e0",
+    "catalog/equipment/armor_materials.json": "0a5cdb0920968cbe4abf89c670070265efb225c22666f826155dd3c40de736d2",
+    "catalog/equipment/handhelds.json": "cf159545921a9abfc30f9aa425b21b69ca05ebcc2d8f4a80a1157031527a6114",
+    "catalog/equipment/side_carry.json": "c36eebb9c9d61a95d8cf081f0c9147d8dfda928793769c9b5ada04aec14df0a2",
+    "catalog/pets/carter.json": "2dee7a0d2f22e9fef9efe23d83c4fb9bb4760afbcb763bb051a69caa2f343c69",
+    "catalog/pets/casper.json": "4fa6df14c85d7ab089c1809bb0cda3e5b08cb3a2c509caa21112635506168c84",
+    "catalog/pets/mochi.json": "5ecdf1a166183dbca95d122f1ca64f75b9a09ffa3d264719e941e40f9eec0c3f",
+    "catalog/rigs/feline_v1.json": "d23cdf267891cb96155813976c4e728f523cee660765ca33bc28d15af374a00a",
+    "catalog/rigs/native_v1.json": "f9c0fc7b842264541d51ab5788669eda9bae638b48d4db070d473b61ae12a5ea",
+    "catalog/rigs/quadruped_clips.json": "b2b1cc6a879c243d36bbc58b8b3a33da4116cebe7668b2de31ba29b465c7ee74",
+    "catalog/rigs/quadruped_states.json": "6e88c0e5e418a695600095b4ff427a97e6e9a2c328d4b029ee7740d6c7bbbd0c",
+    "catalog/rigs/spaniel_v1.json": "a1d746bfeee5abb391894c9d510593673c0ff76656065b9d745a2dd917e26330",
+    "catalog/wire_ids.json": "c808f6b9ecf06dd534833bb2d7b8a81c784193787bb9227186e8ae69940dd865",
+    "integration/rbow_1.2.0/.gitignore": "c8e9aa7bb9545c4cfc3b6d926d8eb095e403b7ae87d62df9f90553a51fbd93a9",
+    "integration/rbow_1.2.0/CHANGELOG.md": "7ce370f35e758d8e0d875a3b224370464e029bacf5e25668e68633629e4eac94",
+    "integration/rbow_1.2.0/LICENSE": "0d8760b23f47dc4268b8273d5bb6bea9a246a8689598d11236f3b5a8856f28f7",
+    "integration/rbow_1.2.0/README.md": "d781c7ed0223eaaea104848ef27b8699f730acef23a865b867dfe7897160e1dd",
+    "integration/rbow_1.2.0/TEST_RESULTS.txt": "8190269ecb1fabdcaeee397d9f6cbb09869408e6f4be90bd89f8e855fa993b87",
+    "integration/rbow_1.2.0/THIRD_PARTY_NOTICES.md": "e1643edc132a8d1353498b4fbf414dd5c87fda1148933384fcd13a850e73d9d0",
+    "integration/rbow_1.2.0/art/concepts/67_Rbow_Ore_Mod_v1.1.3_Armor.png": "aab0a9c166e3aeeee2e01d0219345041561d394f785779f612e4e45170ad3a25",
+    "integration/rbow_1.2.0/art/concepts/67_Rbow_Ore_Mod_v1.1.3_Inventory.png": "23c7fbd721fb0486b5a13ae8a9a9dfa9a90e9b6660552d0267d84a5579af4867",
+    "integration/rbow_1.2.0/art/concepts/67_Rbow_Prismatic_Armor.png": "edb63e7a4f09bda7ffb5e7205bd2ca9a81ef26c92d64520f2b925173e0778116",
+    "integration/rbow_1.2.0/art/concepts/67_Rbow_Prismatic_Inventory.png": "28d48c9aed2e214a7122a463e8ac17f3ef3f5990c555357775aed384e81090a8",
+    "integration/rbow_1.2.0/art/original/ElleeDog_67_Rbow_Ore.png": "c69021ae0a98f9e2e3b5f483a47ce5a7fee5978977e120ef7362aafc505ebb92",
+    "integration/rbow_1.2.0/art/original/approved_concept.png": "3e44174b4c2a31c35ddcb21c043da1a3286f8658147d9c54b42a52f1e8a1fcb2",
+    "integration/rbow_1.2.0/art/original/preferred_overview.png": "971fee57fb5f08edab3020e340d1021d93fdc02dd4cb0d7a096bbc108b56b9a4",
+    "integration/rbow_1.2.0/art/previews/67_Rbow_Ore_Mod_v1.1.7_Sleeve_Comparison.png": "bca6eaa73e33bcfe3f71b23f373a09063d2bb932c28de4a9b3e343263bf68d92",
+    "integration/rbow_1.2.0/art/previews/block_projections/deepslate_rbow_ore.png": "3d4857cd0132f0f2401e07b99da51ae369ee2ae81d25fabf65c844c49c998b64",
+    "integration/rbow_1.2.0/art/previews/block_projections/rbow_block.png": "bf6cc1ee93f653e7a13ee6117bcc6606bebe502229f65d2840c659cace1760d8",
+    "integration/rbow_1.2.0/art/previews/block_projections/rbow_ore.png": "b5d674045a85bea1ed173a23d47f42b002880668c0258c02a6c890d54672cbc4",
+    "integration/rbow_1.2.0/art/previews/sprite_atlas_128.png": "306dd51be8127ec94679fb4a68e795c4bf0bcd150b7b05d08d2129bc0db89ecd",
+    "integration/rbow_1.2.0/art/prismatic/previews/sprite_atlas_128.png": "306dd51be8127ec94679fb4a68e795c4bf0bcd150b7b05d08d2129bc0db89ecd",
+    "integration/rbow_1.2.0/art/prismatic/textures/blocks/deepslate_rbow_ore.png": "12fb5407d162311616aa9787c35d49fb09314e76e0b5d36ec9b20ba75ec95a15",
+    "integration/rbow_1.2.0/art/prismatic/textures/blocks/rbow_block.png": "d22ba6836aecbe8f645a80575f90ac55369e0d1ed8f8e19252844f83bf696617",
+    "integration/rbow_1.2.0/art/prismatic/textures/blocks/rbow_block_top.png": "2297abd4f1fb9b41f6360881705cdaf980e2e0e792d4c3fcb066e95812c1e2c0",
+    "integration/rbow_1.2.0/art/prismatic/textures/blocks/rbow_ore.png": "b81f8a27a464eed5d66dbb06d1e2222644c7057d5eac09cb056d17b6eaef69bc",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/raw_rbow_ore.png": "a544e242da70881729b42413be0b84383b1ddfd4dab512dd7d47289da4d3bffe",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_axe.png": "b938daf2eb85ce9a57d4c6bc726e68400e079ad16b981ede54db093d2f44ca30",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_boots.png": "04c2b08adedd3e26ec01544dff472f3ccf01fa258caef65877bd68d609b8ee65",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_chestplate.png": "d3f38d1133e9fd40edb4ef8d91e32a8902e9ca57df170da22fe98135a46cd7eb",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_helmet.png": "ac0fc73894fda7b539ea0f365d4c4e569fd8d276a180b8a01c72183b730eb0ab",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_hoe.png": "1f449ac3e001f6bf70570da1b95897c300347fe8f03f9a944de5e1d5782eba4a",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_ingot.png": "8cd701fe5650c7d534db512c5ca161e934a8aa4bda5368df58e64b53123a86e8",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_leggings.png": "900c4386db1d1b24172cd9f083a83b9930333cd99cbfcd0d81af8bcab5762540",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_nug.png": "a742ec54f30279bcb29e5058e71d4d28e2282d35bf4fef654084fe83daf579fe",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_pickaxe.png": "a3196ae894a219c317659f6033354181ef2810aee9114700ff68a3e8216aa62a",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_shovel.png": "7219817af0a22bd092be9491c518baeda572458010f97cfb3185613fc05e1dde",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_spear.png": "2c10b511cd45d3dbddbc4aa08432b0097af0226ce2cb7cbdac09b133ff38755b",
+    "integration/rbow_1.2.0/art/prismatic/textures/items/rbow_sword.png": "0cf5b758c62172a1727ff746c87d0a7f9f4dad27a77be0ee58f60792b41248b2",
+    "integration/rbow_1.2.0/art/prismatic/textures/models/armor/rbow_1.png": "808279fb7f1d76c983b94bf267385b62345ace1ede863bc5761bde7fd656de49",
+    "integration/rbow_1.2.0/art/prismatic/textures/models/armor/rbow_2.png": "cbd3f5e8abeaa75c4e7117ab567d074a5cd1ad212dfc29fbd5b6c701755736e1",
+    "integration/rbow_1.2.0/art/references/netherite_1.png": "1050f0705b04d5f8f7010ae30fce82d167ae24ecca126e7041670cb1533af87c",
+    "integration/rbow_1.2.0/art/references/netherite_2.png": "3f5bca2bda8bfaec2d8912280d09e68751baa4a30f7d92483436ea61e732f569",
+    "integration/rbow_1.2.0/art/references/netherite_hoe.png": "d0ce0f1fd989c8ce408b9db865ada6b89bcb4632aa0b5ca595096fe7b74961fd",
+    "integration/rbow_1.2.0/art/references/netherite_spear_entity.png": "2935208bf11136bfc8c567d7c8be7869993f97fed293a285a6d81c7c3704fe43",
+    "integration/rbow_1.2.0/art/references/netherite_spear_item.png": "b18daf573a39b022412d624233b44697f3a620430da65e9f6f9681cb08c6809e",
+    "integration/rbow_1.2.0/art/references/player.vanilla.json": "91d833706b33477293053921af7604c29c687b33e7064130342b37e3b6614434",
+    "integration/rbow_1.2.0/art/references/rbow_1.v1.1.6.png": "c8fb5f65102bc93a71bf7291006080fd44a6c48f7bca7ff40fc0c2eb07f928e5",
+    "integration/rbow_1.2.0/art/references/spear.animation.vanilla.json": "98a6ae7f26d3ff080ec97ef92bb0ad3bea75727b98706cab22ac25f5f64a983e",
+    "integration/rbow_1.2.0/art/references/spear_player_actions.vanilla.json": "29312cac2b2345ea5e09dfa85f320bf7bce1596122be1be0848abc6ae386b5ab",
+    "integration/rbow_1.2.0/art/spear/rbow_held_lab5.png": "a7feabcb5d5609140b6972a5776ab74c40c9ef435460db788f7bff184950a494",
+    "integration/rbow_1.2.0/behavior_pack/LICENSE": "0d8760b23f47dc4268b8273d5bb6bea9a246a8689598d11236f3b5a8856f28f7",
+    "integration/rbow_1.2.0/behavior_pack/THIRD_PARTY_NOTICES.md": "e1643edc132a8d1353498b4fbf414dd5c87fda1148933384fcd13a850e73d9d0",
+    "integration/rbow_1.2.0/behavior_pack/blocks/deepslate_rbow_ore.json": "59c3ae11f06bb3592cc21b221e2ace9634713bbf4e2f53b8ceb1510ddbf6fbc3",
+    "integration/rbow_1.2.0/behavior_pack/blocks/rbow_block.json": "393f8b2577e3239ce7e6bfcaa9647d6f291be0d20694788402ddac2788f11987",
+    "integration/rbow_1.2.0/behavior_pack/blocks/rbow_ore.json": "3520b982fcf764f7f7a8332eb0960900d705e8f6ba9a0ab27217345b6dd034c6",
+    "integration/rbow_1.2.0/behavior_pack/entities/player.json": "50199eee31dee92761372cef9839fb71f64e899d21f578fb2e8a4ae1c39d1e9e",
+    "integration/rbow_1.2.0/behavior_pack/entities/rbow_drop.json": "5777b156b4f3025cb7a195ecf1df7477f8c2d84c55945e84a9cb3378071803e1",
+    "integration/rbow_1.2.0/behavior_pack/feature_rules/rbow_ore_distribution.json": "55ea07f3df67b1c4685ffdceb34cc154b4fb716b0e07f41c08d2e9b4b6541ce8",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein.json": "8d0e142bc0aa9e102b328ae3ea3011b17b028233b966f6011c05b275150bba59",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_10_0.json": "62f387d9c3d4cb03e70036d3ae4f54f7925d41e6f9f29a3fdc0576281bee868d",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_10_1.json": "9d6435fbd4620df0d7f2030af11f338799d22df57fa0056225366dcb6caeb8f6",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_10_2.json": "0148c551abb18761eacccfd54ce914e340d414c112bd9ddacce2b41e3623d720",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_10_3.json": "3fd880c93257f8b1e03f8f8dd345d36e958b11f4aa897494e2e2a8466563fac2",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_11_0.json": "c1c8cdc4aa9daa007849ccada1ade71ed8f622ad480eb6daa24bd37ff4bcba2b",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_11_1.json": "51b43f9fedc84783ec75c773f63bf9f0cae83a6591f6f9cec2fc2fb86a2f62bc",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_11_2.json": "9abcd3cb9e222ea270321d4616419b806ed962cdb48ad14b281d7a5088ae4c89",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_11_3.json": "028fc5d9487ca4877e302e561fe90482335c0447a10a305ec6d1f52f45e23439",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_12_0.json": "e4b5f8e5033205553b4c2a89cbaae0f26db1b92caf87dfbddc902c9d5e5e7f30",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_12_1.json": "81beaad2813f1486c1b5b7d1e5e089e22b11c89d5f23361b9e6b0933822319c7",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_12_2.json": "b928a4ecb149e7dd3e843f083787eb3966cf51aed4606b69919469049d4fdb93",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_12_3.json": "f5f3de541c479cfe7ae1f6a730e60e9927a4fc2f837e338f1cfbf4ae45644b94",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_13_0.json": "7a2981a5c376fd36ca07e65017cbfb72f5904e6d0e2f76a53a0bacc963f3d7d6",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_13_1.json": "04bfbfb972e53d7d55c0506091892f955de70bd14e5168ff838b28f659b3fa95",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_13_2.json": "a4da8278225cbdbd1ee92f82f2a506a207813d448caf78c747b52c51a1b620a9",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_13_3.json": "914edd4d795b41d9190431107cbd29fac82933047bdb56c4d42a459718ef1f3e",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_14_0.json": "335bb02ae802e4586b7caa5aae9262eccfdd89d70956a4906d48c107d21f24e5",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_14_1.json": "1eaeafbd25a26c2f9a80572838a9c6c6ce9072a152de046cb36e7fa5d35b91d6",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_14_2.json": "f8f3a514baf01cf282f3a1ddc275df73e2fed6cc51b447b92bd61c1c32cfc2a3",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_14_3.json": "04d112f97e9c4a3e41222b48edd27905a91f65238519ded95d9e60cb06e7d1bf",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_15_0.json": "44ee667098437a4031ea2e430ab975c1096f974bfff797b5274db0959833aa30",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_15_1.json": "42008900869ea1134ed27c66ae8b050a2e24620b0fbb05e7c3d9a903bcea9ee7",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_15_2.json": "60735a4c08e11e479446b682f19b3c847ac5076bfac83414694c46cb7e4f208b",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_15_3.json": "07b20783bc3fc17fa42e71e0bf63770318221705d412c6600aa7744978dffd49",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_16_0.json": "e2aa0d6366019035fbb29f13ba38d768cc2cf66d180521fb3f65255b76f45ed2",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_16_1.json": "8970262c3dafbf84e6dbabb3c7d5e384bee019c4ba282bb76243b28d09ca02c4",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_16_2.json": "5439926049d0c8f4a9eb0ec5a3589b2ab8958309084aa44cbceab65a5cd1eab8",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_16_3.json": "4c3df3a6ab0f2dbd92bc6b15cf7c53c34264d8a97ef8bdeebf0be15acfd26f05",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_8_0.json": "cd2cc7f23ce27178ca2c731a29f7586074adcba5f3684b3f54d5a3e9bd5b0c9a",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_8_1.json": "e015886ecbaf6a2af2e2050a04f32576c29dc902d41832a98d63888272f660fb",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_8_2.json": "da93f01f4cdc52ec937a752022d88412e35c0604aa63b533abd5a2ee5e2f420b",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_8_3.json": "2127e242d271be3db6751fd2096c5fecc75af5b9fb77863aa9a1abacf4946671",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_9_0.json": "1747b332694060db52144c62957d0570bb8b23db7173bfb3e208a4bfe94505c2",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_9_1.json": "6155841ec36047eb171edffb0cbafb2ca52ea6c86fb8df408e0ac1a413f68457",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_9_2.json": "d6dde5ed48106a63c64f3008bf3968f2a99004e9e7d2df956c9d45eb47ad29b4",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_9_3.json": "32e503479c63e1f2e55fcfb92fe3f4c0f2f37e597c40c1c448896dc8b1a0ef9f",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_10_0.json": "0229852d7196a1281d0cd9f5c8982fc7d94d20cf9ecf05ad9ba526d04ef6bf45",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_10_1.json": "05c7b338a785359486a4e1ce053264c11e8109f35642bf73cccea5a5e7e194b3",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_10_2.json": "d080f50da32d5d13668878559670ffff050ec976d10f291abe5424173a984400",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_10_3.json": "ecead346e05a9965b6dcdf145c6477907e5e22511e42be73644052d80f09f938",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_11_0.json": "8180a262bde3d5c57e8fd11f2960fdde9b7fb6de6b3eb8f6239176f1f46aca83",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_11_1.json": "9d82aed9dc019ac9d788c2ab483e3362e80db660bbf8be2504280b334010a6ca",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_11_2.json": "9cfbcbe7658b67d60318ae0320f2eef99d78e730468f6dc0bf2f266a57e6abba",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_11_3.json": "4e06474b27d60aaa4c9cca15091dd558a9dcaa8a4ace45800b67333228f5d2fe",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_12_0.json": "4553ae780dcbfd3fbbb5778c7d6760b17a98d124855f89145aeb269787417b85",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_12_1.json": "c7c4b2d2fd834598d970eba2de0b518abc953594194706ead9277d0fbefd43e9",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_12_2.json": "718e09c09ef2266ddde7dda240403e31362679f09c6a4719ccf2a0ef4174437c",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_12_3.json": "90fab4d5647d30f3902d5b4c02d1016156c66816981c22d8345affc0fd4cdd51",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_13_0.json": "8daca55d4401226e465e0f75eff3b24b989472f5a42caa418f45e42057a51979",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_13_1.json": "bb1675dd6e9be247c0ad135d14335481927333db9639ed256ce4f9ebaf8f8a9d",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_13_2.json": "cd3c2976564b5fe349c893648af55590faf06fc7dfc5567a19956b82bef818e1",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_13_3.json": "869f7286a107c1230410ecbb3af4a47cc3096512fbbec1db4f753771cc49d346",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_14_0.json": "f9f4442282f8e8d9cd5797299cfbc345fe317ab62aaf08feb41fa9a27db84a55",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_14_1.json": "e9beb3f8416ed7382c512fbd35075ee25f066f9ff9b365c1d0b6aa43af608120",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_14_2.json": "8788775cfb35ca104e3f39e8a71490d4e6d6ddfad09d7cac5bc08fe40373a413",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_14_3.json": "da3a608ab5183395226892137c03e29ba53cd52234f16bebccb5260de2dd73a7",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_15_0.json": "f842db802696230a1a84a37ef67eff29df80b6bd6e4c141ede476f267a5df264",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_15_1.json": "f887440ffc9605685e74f669fa99bbe5157db5cea679b508c8637ebb59852f17",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_15_2.json": "59390f49d216c422cc491c52d43d39b0f01a82839043cfeba3e8d6244264bb95",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_15_3.json": "cffcb9e2efdd4b85384977179b30f1ab58e90d07ed85561b661c0f4a5633f070",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_16_0.json": "f976347d86ec964ac1b871c464d2b14340cb50ebbdc6f02a2550ccd1dea753e9",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_16_1.json": "a18ee5b631536806b5ebdca1313d51f21f720a35c6239ee680c4d6611fef9344",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_16_2.json": "70a0f323d134f73d45fd8aec7bede7f61649545b341e32a6a1a1c3619cae3c70",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_16_3.json": "9cbe2204a9c83c7bc9bf3fb12ea428566741ac92d2d56644bac2cfbd1e541370",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_8_0.json": "48ad08d2edb340905567141d4698bcf7a0297748a24e462648d50acb48fe16c2",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_8_1.json": "8582b1055aa11d11b5b756b6148a28bbef07792f57ff54a4e09ee233dbad88a4",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_8_2.json": "2148a310695efe11d27fb0ee0ea6475ede445c48559c6a1021dda52c90b61131",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_8_3.json": "f3ad4ecbac81de0ad21b19fba11246f2b7a48df0645edb206fbe56a089562350",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_9_0.json": "90390069a7b7cb7c28da462121932860a130d3b97b623502165b8928228a958d",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_9_1.json": "3120f39819ed6af662e117c699779ae05105cbf8600bb0cb9c10ce714d4efa86",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_9_2.json": "79a7ffdb980902f94184feb3958112b840d010e9b4c76e668fac5175728d4f64",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_deepslate_9_3.json": "ce88226a597fd513ee4ad89e29ed3a98575abf18c13812399723f7b8a840f2af",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_10_0.json": "1075d092b70bb024e751f63b0e555f68cf0c8b0349c5c1c09b8f263510b47a84",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_10_1.json": "5d9a087b7b9b4e4ad982dd05744269d2324daee44c615be1128c144df6b69f79",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_10_2.json": "9c6c3fa93dd1ee5a3e6182e2254be3a93f1df6833cf0c279a07447476c2aca34",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_10_3.json": "fa8b48be3a15eb5e9f74e4f430d8c41c56ab5768b78ab41280aa068d89754846",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_11_0.json": "0115fc2520262960f6b1dfc211122ad85c150269a016bb923bc8e7e691ae206d",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_11_1.json": "c1cf21acb49d7e570f1a2dd68270ddc63d59f24f9c11fafaadf35b257082d14e",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_11_2.json": "add4558f63a121dec8f3cc0450d2b2728f861270b061356077c98f34619c8cf4",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_11_3.json": "cf3281663655f8e50f418bc200f911f9bf656940f711b19812849eb201140d45",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_12_0.json": "25d67f45495d6f92d8c2d315c88966c2e1f39a17cdab552b1549ec9db385df10",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_12_1.json": "684703c102cd684a066e3092d156e713bd6747195f6b4ad51f626e7d0297ad6d",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_12_2.json": "8c6afcab28656c9730fb8ccd7f42c105a8e36eea5f00c88a4fc26fb7d1e5bef6",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_12_3.json": "bc89340cf5b75a2dab714ab6b0f6a95892f804b11761fe6a8df3eb6940e2c01f",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_13_0.json": "b618d6a193d4fda0c1d24a5beddbd258d54d5bbbca7fb8505221654ce873428f",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_13_1.json": "761e63106482fb1323b132e0e2cf51311d037c1f50185c75d5c22972c9cfca6f",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_13_2.json": "bceb5de62e9b6a70c9e52b3e4ded7cdd5a4b4c25de1b0ece7b760fe48ea999d9",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_13_3.json": "ef6b42d904d0367694b5d5a4c692ac41d9b8e836afe305d958e2888e0a2cf348",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_14_0.json": "d30c758f900ebc72d41c3f6ab394733bbe40af748751549041011d87712b91f6",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_14_1.json": "ace1a8086ec5a2aef26c72b02d8a106832d327fd798ccab4fd491969cdb34262",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_14_2.json": "6982433f18feb5b8b605d1a8f78c9dc5f80b35e35c833f15e1694cff3b9cb5f6",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_14_3.json": "ea2e6462ef1c100ba30e3c1c24f90c1e9076d3178ce35088f8e0c805e876f495",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_15_0.json": "814a1a9aea3651f05936b89fd6963472bb72144905c1736ff37762b1f4bd753a",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_15_1.json": "ec2ff9b4476bb8d011da9db51f2b5dba7ece84e1c9066e7d0668578a2515a62f",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_15_2.json": "162f718ef9a9eb3a30664682355f172e3413e141e304fb1b2d1f46ae5bbde03f",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_15_3.json": "38969926ecf9de767da47a959d712f3fef039889f6290b911569157d5d860753",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_16_0.json": "fe8646df81c3a3a89f5366f28b0025b43bd7cd97a226837a6ff53c4345541ff6",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_16_1.json": "5e7b1449e9d2f2c8092b40e36f0c1ed9cd85924aac539ffd6149b563ea2a8c5a",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_16_2.json": "f18e733b49b84a7323513ca63a028fe57ca239650205994b446811bba387ec01",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_16_3.json": "b97837bbd68b0565017a3e5e76dcd870999fe07405791bf25793e8643572107c",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_8_0.json": "37d8fa70ac4a0a39cf6c81cceccf54636bcc5b8d6f02adcd73e43b846e8ebccb",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_8_1.json": "008ce6a6c30ed3d790ddc6b77ca7d09ca88413f5cbbacb9fbb178895f2339543",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_8_2.json": "57f11eb99b355488c459f699d66d26575515f40a632988114a19552df1bdd878",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_8_3.json": "0acf028fa58630abf875af3577d0ebb0003d0e1e2d253c1841276f3b72ac50fe",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_9_0.json": "aca31356edb7f30a9567925b490f665df65a55695e96b6f4a87f107391ca47e1",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_9_1.json": "a8cd5d172b939c4fd6046e4fdc3468e7e19f5c8b4b2ebc032de89b1e6226509f",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_9_2.json": "c1898675a09911ade0c7b37f13e0edfddaf7606b7ba8f61363befb4805821777",
+    "integration/rbow_1.2.0/behavior_pack/features/rbow_vein_stone_9_3.json": "93f115664fae0e8c337f99dfb6fb214fd5b0c590f9e8160bd9ed4e76d21a8ed1",
+    "integration/rbow_1.2.0/behavior_pack/functions/elleedog/rbow_test_kit.mcfunction": "8650638894fbb488e71344915af1157fc34c7f81f9ec87626b93eeb41b39578f",
+    "integration/rbow_1.2.0/behavior_pack/items/deepslate_rbow_ore.json": "ff2adbe17d9026f3b41f5e6ba16624f61fe8ca71b93cce207df0bcae484e8398",
+    "integration/rbow_1.2.0/behavior_pack/items/raw_rbow_ore.json": "c43aafc52a244ee940a4f82524ae4fc306b8e2f10460eabc7f9bbee5d87e12d2",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_axe.json": "0bed9ed6abd19fce440f2154d2be84e7c1e67a760a7b2254d7383743979fad84",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_block.json": "44f6ddf07ce65160acaf5fdeb1e2e3013e9927d75fbe7e05489659b817c8640d",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_boots.json": "3ebe82db72e6d39fd488e24c9c9a380ee194406d80223f5f146f981ef9d99644",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_chestplate.json": "45be91df31a6105434d33b88d836fe71776c23c435aa96c9528327032dacab5d",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_helmet.json": "eb8a247379776379438937cc25054af484c8dc437fbdcb03d26b7ce0cf0a3fe2",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_hoe.json": "0df97855c4fbdce231f9461f31699cd9d31786a95c02c947050540643215bae3",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_ingot.json": "b18c209e99e8253a87330304e7e55c32792163f3e680a5c174fe2c64e73b7bd9",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_leggings.json": "84854f57d242b42103b6f90d8f78b720acb15f560489b11c8d55d59d18f75a62",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_nug.json": "632a143a102fc4f2e8bc608b1537a101e802d12874aedc1630620acd8e2763ac",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_ore.json": "18a2613485920a13f6b244c9c6533933f48af9464bca6089d4f7e68c4c4bf2db",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_pickaxe.json": "bc9a3990328c90466073b805ff418b5ee2ca7845d819a9657b567256e0775347",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_shovel.json": "76c7984a980935df79ae27cfb1970b5b9298584fd89ecb4f93fa78f8507453ac",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_spear.json": "2512cab02321984df13db882a474b612c3615a1e63ef7c501b0f6fa32f3d84e1",
+    "integration/rbow_1.2.0/behavior_pack/items/rbow_sword.json": "2cd54eeca7189b2f6f1dc02e4346fd83658cf67454fd2d6441b87158e3355b20",
+    "integration/rbow_1.2.0/behavior_pack/loot_tables/blocks/rbow_empty.json": "af73bfdbddd392cbfcf94acfc3638cdeb8cc8f69f70341727b8e174504a838d3",
+    "integration/rbow_1.2.0/behavior_pack/manifest.json": "3340fe0657bc7bca5a376cfce74f9579923c971c2fc14a9fa693ce3dc21d6381",
+    "integration/rbow_1.2.0/behavior_pack/pack_icon.png": "c4719b9314c8944ac74e769224d7cb2c2bd53f501d8b1dbef474ec8ec7f3bfb1",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_axe.json": "dc4687102564b3f6cce0191d9c33bf9a4bca863e14cc6d5b6fd090e6f6285e09",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_block.json": "cc1fac47ef41046f0f0eb6bde2d3679f7a7c61e823dbca823d471738371b70dc",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_boots.json": "03a833490f183fd3970e79cf01fbb84afbb9df266f2d182465afe3997933b638",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_chestplate.json": "ff785e8abe28436964da6f02915447f1e445a158082187e07a5c390137f1b187",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_helmet.json": "9f3ba0ae0091ad8e0c779fd84d754a2efb8eb0dcbff1722348ab6e17999362dc",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_hoe.json": "2aff4b0cdc1b72b222fa2b9cccbffc6e1f68512e67a75f227c3c57bc1e11a873",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_ingot_from_nugs.json": "6026f52718b44b642b92f24f717c79dbb0045794d5ca972aef107f3135458ce7",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_ingots_from_block.json": "f4a11418b320a48494fb0802da862a57d7a82949e97bd938a76774f9dc47716a",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_leggings.json": "91eb77d247308dcff9e8486f61dc5360474279cc6f6a91d0b764255ca251ef85",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_nugs_from_ingot.json": "006d1e9fab5050b4b32c1023988373192e094035a38faccf33214dff1dec674f",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_pickaxe.json": "d340b5bb2005135bf7ec82dfee47c770c2e6355691d98e1eceae91dca85e2235",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_shovel.json": "555e2fe4684973149d904c1850f812d665e5082d1ec80e24424b9ac1c7c1fdae",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_spear.json": "1e4f5b99e64659ded3ca13a9430573f1b6cff90928a757ea489d9d2a3a219bea",
+    "integration/rbow_1.2.0/behavior_pack/recipes/rbow_sword.json": "17e4ef41033379a465efa190e198e6d39c71ff0a88789758c789d8dec5ab01d7",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_axe.json": "f58fcc4dce2a53c55de9b96b488ca72481fa7b3d04c71b5681ca19989bdc415d",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_boots.json": "40a9d964ad53348f299324f592cdc9052825fdb153e91c56d908af97b42d31ef",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_chestplate.json": "f2c9d19378b6d7c5eca34bff4abd821efa2f16d0011cfe0af68480f40169a0f3",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_helmet.json": "6082ed3ed17eb58209ef25a33e38ef046d4b286a9de06a628e75a3266a9eba9f",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_hoe.json": "2f27f1928949ca82855f9297818ec1dd25276ccb1223cdd54e14a5de73bc611c",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_leggings.json": "504c1ce997d9c3cb95c35dee5794cb0fe58c6ec72cb5f9bc6deb9632bf44dd90",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_pickaxe.json": "7435a5c32de576b6ca515bced7efebf165ab03e1a3d18ecb97ffde94c680f48d",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_shovel.json": "3ce46bb4274e2184dc72b72e02fb32c422ff276b144e06d6df90e6cf9bd68872",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_spear.json": "13b7cb53210d9045be449ffaaae7719e391af3b9ca4c7c3db8cf977d24cda8f3",
+    "integration/rbow_1.2.0/behavior_pack/recipes/recycle_rbow_sword.json": "827cda1faf3fd244f6652798622fd3ed18046e81c6853186d6020ca43bf5f474",
+    "integration/rbow_1.2.0/behavior_pack/recipes/smelt_deepslate_rbow_ore.json": "0b6298fedfc71947d2a8688c97f7019ef640be82a40eb5a2b22161f8a555457b",
+    "integration/rbow_1.2.0/behavior_pack/recipes/smelt_raw_rbow_ore.json": "55eb508bd7bfdf634728debb83050a42f9cd96f7bdc70114b14c66c36266d04f",
+    "integration/rbow_1.2.0/behavior_pack/recipes/smelt_rbow_ore.json": "52787562615e0d78a7f317dc4853de692a827dd0f47b9a7bc6132bd9ebd8bb29",
+    "integration/rbow_1.2.0/behavior_pack/scripts/bootstrap.js": "64d39fc142dad59a9c21d41b604012db5232f07db0438293914f89d1ca2bc293",
+    "integration/rbow_1.2.0/behavior_pack/scripts/legacy_drop_logic.js": "a345162a25a706c078d6deb41db0aff06470fd2bbec55352e524227e8006c4e9",
+    "integration/rbow_1.2.0/behavior_pack/scripts/legacy_drops.js": "b60903f13946b7997f368c5a09f55223be7098884a3c45b3d0d79730820d5ea3",
+    "integration/rbow_1.2.0/behavior_pack/scripts/main.js": "37b241a930bc562e85652f538d822f8f8352b98c45ca8bcbe2822fb0ecd825ab",
+    "integration/rbow_1.2.0/behavior_pack/scripts/rules.js": "eb0a2d569ff887e9deffe73b122fa6cd37f2b11769fbcbb83f2671824ee0f777",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_10_0.mcstructure": "7d55db534e0f25aaa099ff17ac7fc5bf9021087e558c219f88899c3061f7acf3",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_10_1.mcstructure": "ec0bef29409c64bbf110d70667ad5872e9bfb05885c1940d07ee88ec9e8cddc0",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_10_2.mcstructure": "646ba62aa4c54ca8dbe4d8d5a5eeac8afdfd6d733679dba51df613a4f6eaee22",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_10_3.mcstructure": "7901f98ba7ade773e959aab11837f0b4034492f2fc2c202640ec896998af1569",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_11_0.mcstructure": "01afee98de2940fa32eaa3bdc405cb856679bf50e7b3c6e552163aab50a6d42c",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_11_1.mcstructure": "60327c2c54c96f4f26fa98b7a85ba641f4efb04ddb4f828e1d70d9db2001b30a",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_11_2.mcstructure": "b4a80d800ac51c4074e9d76cdb670970388d9c5d6ab94cc1175cb6d4ebba4780",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_11_3.mcstructure": "8e768c717df231ab9286f79703d56f31c035e9fc290d7e1df4dd62a936327feb",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_12_0.mcstructure": "ac4bcd44ab944127ee2322ef2e9fb7ae5f686c45784fdea4d0bb091f5abece2e",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_12_1.mcstructure": "1cda14fc0f7589058d94d37dd73bc65b25f92879d39a7bff2fd33a2f33b832af",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_12_2.mcstructure": "8c1c6d176bbab80e925c39761b29efbfcd233b00c5ee6d55b2dd98d353344b5c",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_12_3.mcstructure": "46a033a478699ddb502607e3395de1da226cca4cc4e83e5e765c0a6eae983f57",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_13_0.mcstructure": "4192e14913d24956096510385107245a28b66c95ee71ca4f49718580f8484b74",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_13_1.mcstructure": "2ce08eadf5933325411b2e77b74ff50c479346c0871a62c40a06e986a1611096",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_13_2.mcstructure": "6c188e433286f1b98ffd23ab717ff8bb8673523c31997a102ddb795b5a0da5fc",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_13_3.mcstructure": "fed8c93a425f49a0e7f677c0848072eebf3c97cd074107c031b3fc64fd288dd9",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_14_0.mcstructure": "696ee0b781a348fdb3073e7772951cd46d7c6bcf9f46f90569eca64d8227f8a6",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_14_1.mcstructure": "2c60fc02ea0c11e9404c935661c6e535fbdca1c1839b914356d92a95cd3b2924",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_14_2.mcstructure": "452706ecaff05cd42e5d2495abb0fa98ce7e70bb24f48af7a1a04944bd1e274c",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_14_3.mcstructure": "3e6c5f2539af8f6ac832755323b0b40c944b258b2c867bbcd411385b41b8d67b",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_15_0.mcstructure": "4be16b66f222a87fb37001878d784f66f3776d433e9568c5102c29c51f93ccc7",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_15_1.mcstructure": "dcb2ae33c8e781d329dee5864f58018f03007795280c6b1aba1675ab51074f5f",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_15_2.mcstructure": "d82e5e8d0e48405a3da5c1062d7fc16ecc16cfac2676b330ac47b93413e48409",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_15_3.mcstructure": "aab21e5d7c4be3f5080cd8c798a307757e25c5b322cf5176e5509792caef71ef",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_16_0.mcstructure": "5e73210da43b010e950737c6889673df5545af86cf9b55680b7a2991987b0a23",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_16_1.mcstructure": "b51ffdcdf88749ab99e8e59642bd5066e92976b3b97c6e67a55a684f6f702e2e",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_16_2.mcstructure": "423fadf20c88c98a0377b835055ef99087bf40d0d675ae269626f32d70d57312",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_16_3.mcstructure": "7c3014d144e5ebd861c2280a37d6f68d110b32a66e9e681d0466b446d4e2381b",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_8_0.mcstructure": "d49f498d964540044bd06b5123aba4a9ac2eee1f0d394a993906bae5baadf4be",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_8_1.mcstructure": "b1200761a19197bdb41b20662693a5e3c1d5a85c1bd20a7b919dd225ce99f0c7",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_8_2.mcstructure": "c30c808a02af2c5f4a3219ee91234bf53782576d451d7112a6aa4385d2e5f51e",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_8_3.mcstructure": "ab00c75f97f5083564bc48ec669413aa95f7b7052a0fac14353ed48c8638c082",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_9_0.mcstructure": "f50320c6b0201b2334f7e89020aef3234dd4ebdd45d30841854fbc3e24a186b8",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_9_1.mcstructure": "93a082b5b7cdd155a2ef0c9d2f79ca21e59f50c68c585d0ff2cf87f258d54b9b",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_9_2.mcstructure": "d0f79b7dc31f180addf487a1e7ff8745e4878bb0521c4600daf04621afcf1ad6",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_deepslate_9_3.mcstructure": "09e597c1f20348131506f37272ac7bd2860a2844d3332be37fd080b2968f6701",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_10_0.mcstructure": "2bef45e2ca43ce7ab28e9aec9a3e26c7e42ff680b92b0813d488d3edd17f1b34",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_10_1.mcstructure": "f35b4ddd6c5740e6f68022edd961bbdeec58b78e12060185ed9726667a5b79e6",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_10_2.mcstructure": "89aa42f815203bb1400307d36f4edf547c0c3d598137ec1e9cf949b3ad64c78d",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_10_3.mcstructure": "f62810dc6f5322263772c7300fddf95945122b1cc7a0106432b1fae58148bfe8",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_11_0.mcstructure": "9f9ecd023c3fe8fc59a5b0b1bfa9b8cde068c951f17ee53862e39cee91042e7e",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_11_1.mcstructure": "4a85626dcc3668673e4eeed83a7ff2c5f8b0d1a54235c4eafecccc18ef01e39e",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_11_2.mcstructure": "58550bf9eed0a0392df57cf158d6076886074addc2c2dac7bd12a9087e041e22",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_11_3.mcstructure": "737847c667e2b29dde7d2010a0e4d23718605b7d86cdfc1fdc15347a0d2d7e76",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_12_0.mcstructure": "beec6ebf961c12de8e0d433027347aa691f5e3b18740b02084ec75220688ff1f",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_12_1.mcstructure": "b8d53f69f601bf94a340de3cb1d7b93268980a44d48444b7bc29c6c3a51a08b4",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_12_2.mcstructure": "bb7974c7572fc188f7de22f80386fc75f897c9dab462c78b030e569c3258cdaf",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_12_3.mcstructure": "a1ee9e3c80e6cc0bbe19428bf374af6886e8f526a43262de19835fb50726d219",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_13_0.mcstructure": "98cf0137ae571ee5d788df9243d272dde29a8fc1598c64d2c711c1d745f2ec66",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_13_1.mcstructure": "1f9d94903ddf7fe149edff3fb60e4a791fbee91cf4f0f9117d3db78ef5d98a84",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_13_2.mcstructure": "b4b19991984544b2f985a5471311f2c4ae2f1715f1f385aea04d38827c8ff000",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_13_3.mcstructure": "ab6ff6a21618fdf2715594cbe1a60cd2de96858419289c6d5c95db01e59f502d",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_14_0.mcstructure": "c5e29c4e1e9c3930ba3c0f9d1cac4fe5ba1ee2a55b67e320970f077fb4dbfbdc",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_14_1.mcstructure": "76afbd781f3e3bd9debbb692b0ab640d9b40cfb5463a5931529883b188f4faef",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_14_2.mcstructure": "3d1050e7847e948c722e291b43dfe2247d4699717a9d6d0985534f9b2605053e",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_14_3.mcstructure": "04eb58556345473fa75e0a20eee46527dd90e90516362fa31ee1bd0d14773751",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_15_0.mcstructure": "efee9725fc898f624b82aec2675affe4deedfda978deb3557d1cf044e8500d0f",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_15_1.mcstructure": "e7790df5ae671e8d223f58a18e56460064a13a817f6fc794d1afcc503728a0eb",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_15_2.mcstructure": "ff27397f69b37230a4ff1d447fa3393a53e718db8a6cf89e5dd094f44e694e59",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_15_3.mcstructure": "f0c2f93cc1f4da13981e13229d0028a4edb91f43363c12a79ca79a26a048c7ff",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_16_0.mcstructure": "c5caa8b218568c25798ca7e7707056ec149726e04fc0f8743b516f889e8080b1",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_16_1.mcstructure": "96ec88ca7079c55b43fcb80431b4c1c9dc38f28305af3eca533e546541e6abf6",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_16_2.mcstructure": "2719a25f176fae46da0b58ba5bcb959c4e99e6779bb49b1b8330fa8b1ed95548",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_16_3.mcstructure": "98f600289b9c898cf65f569ac6bbfb17e449ed8deac56fba1a3b7be9ac1e7b67",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_8_0.mcstructure": "7d7c1b30b88e4c36d48ee59dde6d838f9356f3cf3315c76c21288ed0658880ef",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_8_1.mcstructure": "d67da20b414ba57b93c5738ef1fd0006868285e65de2de00cdd753e44fea910e",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_8_2.mcstructure": "9966ceb0985f57a22c069bd3b81078e3acab593f1f9e571d16d8adee5b693389",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_8_3.mcstructure": "f3fd9e422b623c305facd16fc8d239d6ec3f42af95d86ab6e75a4f4340c8b75d",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_9_0.mcstructure": "b1f2186234c03ad0c608e00c07caccad4bad175cebd488cbd297e5626543e1e3",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_9_1.mcstructure": "59af69125b5dec1249a299d36f077297dc3cdfe70804076ccc7f5658544f7f94",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_9_2.mcstructure": "79ea5aa10ca5e23fc577997e94fb22fb9ca260750263c32f4b52fab0839cd87d",
+    "integration/rbow_1.2.0/behavior_pack/structures/elleedog/rbow_vein_stone_9_3.mcstructure": "1e313c6115ca145af201c6857875ec50799c79cc7bddd150595424b0a1c551c5",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/behavior_pack/THIRD_PARTY_NOTICES.md": "cc4a5c397536936c63b45633db317ff6b53c6d9bd327608fa9690101560d8021",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/behavior_pack/items/a.json": "f6d4b4b351a29a263dcec09e6cfe90af0ac8c52d743a83cbeec9edb863c98e40",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/behavior_pack/items/b.json": "44aacec0ec32a50a1c734685108fb4a04669f75694d1db00406268c383842466",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/behavior_pack/items/c.json": "21a954138fc38947e9344a30a8816d4bdcac1f61aebaa92a5425688ce4bad0b9",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/behavior_pack/items/d.json": "941227630b86b7e320875652a3b0a8f845a36d81fb6b055566ee9715e148c18c",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/behavior_pack/manifest.json": "b0633ecadca953c3370774228f9c104fff3c215308fbde5a1274b3cff8f92c7e",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/behavior_pack/pack_icon.png": "c4719b9314c8944ac74e769224d7cb2c2bd53f501d8b1dbef474ec8ec7f3bfb1",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/experiment.json": "16482ce1c62a572013e4d3d992a805cd3b7873bd8b23a3474575892ca988d91b",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/THIRD_PARTY_NOTICES.md": "cc4a5c397536936c63b45633db317ff6b53c6d9bd327608fa9690101560d8021",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/animations/spear.animation.json": "315a908651472aca9a389e19724d07e3cc257edd069134a41831d7ea77c432fb",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/attachables/a.json": "baabe3a517431509bf9da6b87648a0ad519b8acc018ccefd6d55c5b0ff084e88",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/attachables/b.json": "2b438da448317565a846108e370b63b634447cd537a3d2b6c12024ca2b2404e9",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/attachables/c.json": "cae7ab8803c1fd0377cd478edadc8702d021f49164bf23e43a4e8f96ae5c0932",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/attachables/d.json": "14c950ee44268769705a35a05d48a898b05f26b574fe1abf34ab75e2d53b9126",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/manifest.json": "17f67c135939323a8fe91f7afe59a446652de21761377999b03555acd36ac3fe",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/models/entity/spear.geo.json": "a0ddbe90adfc7876d48c236de9efcef28fddd425554a92d593056faae070f5fd",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/pack_icon.png": "c4719b9314c8944ac74e769224d7cb2c2bd53f501d8b1dbef474ec8ec7f3bfb1",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/render_controllers/spear.render_controllers.json": "8fb16c1d88feda05893eb83a0ca861e5b3cfa0beddb9be1763ef42b2897a25a5",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/textures/entity/rbow_held.png": "a7feabcb5d5609140b6972a5776ab74c40c9ef435460db788f7bff184950a494",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/textures/item_texture.json": "5064fbc9ac51ebe883a3b4c851d61e1ea53d7384fed89201075fa658290ade09",
+    "integration/rbow_1.2.0/diagnostics/history/spear_alignment/resource_pack/textures/items/control_icon.png": "2c10b511cd45d3dbddbc4aa08432b0097af0226ce2cb7cbdac09b133ff38755b",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/behavior_pack/THIRD_PARTY_NOTICES.md": "cc4a5c397536936c63b45633db317ff6b53c6d9bd327608fa9690101560d8021",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/behavior_pack/items/native_animated.json": "16d5b6a5093b9a1d210281682c345b7b6b61006d7277fa15b4fe75ffa5f0e04b",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/behavior_pack/items/native_static.json": "d6c18084e2d4c84ae56c356b73e77a7dc30007622b019ecec6f1e07ea849fe04",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/behavior_pack/items/rbow_animated.json": "05c9a7f412ad72c137cc9b9121d5473e6703e7dffdc4b551f9be38f5435cdcf4",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/behavior_pack/items/sprite.json": "428791bfcde60002cb59812d2c07d76b8354e91ff3511a487d36755155f44b2f",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/behavior_pack/items/trident_control.json": "f8f85d8a9e2caf95aca0a4b36eb169070f50dd6436a1167d1363a40200a5ef3a",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/behavior_pack/manifest.json": "53d603550cdd06287ee93965aa2a705f9127b46bd28d3e067ce773b3f1271301",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/behavior_pack/pack_icon.png": "c4719b9314c8944ac74e769224d7cb2c2bd53f501d8b1dbef474ec8ec7f3bfb1",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/experiment.json": "55c402ac8b23b29a268973c3a671412aaab2feac32cab21a3f3a371e918b4ae9",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/THIRD_PARTY_NOTICES.md": "cc4a5c397536936c63b45633db317ff6b53c6d9bd327608fa9690101560d8021",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/animations/spear.animation.json": "a0022feab5a9e81de1fc62f2dbdb10f981aa6460ac7f2849d229ec3d48d33f06",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/attachables/native_animated.json": "894f78a0a58025545f36dc07117e2ac4cb6e91dfe053ab4fd1ac60e721b9098a",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/attachables/native_static.json": "67dc0d296f3dc8d33efb52c9975f928bec7efa3d5c099a33bff61a18cc919d9d",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/attachables/rbow_animated.json": "6f1b9de0b35366ee1c63ffdfb08d2f9d70897a136a8995013cd1945af7511000",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/attachables/trident_control.json": "705263f691fcc56e0b4c8b4d7320bb11f02abb4c63cb3a1147ac55171546127e",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/manifest.json": "463cc78ff5cf5fd6731f7a73e9a32808cdbf84167cc18c52cca433beef0d6d2f",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/models/entity/spear.geo.json": "2bb83171faf49aec17c81a55570272cbd500c9894ea55a18a05ead41b3b4be53",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/pack_icon.png": "c4719b9314c8944ac74e769224d7cb2c2bd53f501d8b1dbef474ec8ec7f3bfb1",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/render_controllers/spear.render_controllers.json": "ee16aecf21418ec542db7b484128ba1402de9a0a09d9c49be9133620bb6b20ec",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/textures/entity/native_reference.png": "2935208bf11136bfc8c567d7c8be7869993f97fed293a285a6d81c7c3704fe43",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/textures/entity/rbow_held.png": "a7feabcb5d5609140b6972a5776ab74c40c9ef435460db788f7bff184950a494",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/textures/item_texture.json": "728f721ec69f089fbfdd4df60a018d640b043a0d84d9ddf3b6ef9c6acd54b88d",
+    "integration/rbow_1.2.0/diagnostics/history/spear_lab/resource_pack/textures/items/control_icon.png": "2c10b511cd45d3dbddbc4aa08432b0097af0226ce2cb7cbdac09b133ff38755b",
+    "integration/rbow_1.2.0/diagnostics/references/spear.animation.json": "98a6ae7f26d3ff080ec97ef92bb0ad3bea75727b98706cab22ac25f5f64a983e",
+    "integration/rbow_1.2.0/diagnostics/references/spear.geo.json": "a428a61ae662c49e5b76cc73df57c24e480e837df5f34f7ff18c65c26baab242",
+    "integration/rbow_1.2.0/diagnostics/references/trident.attachable.json": "370c2033b288b5cbbba322cc65a74d4737580c37ab6e00399c9c24eac3f652ba",
+    "integration/rbow_1.2.0/docs/ART_ACCEPTANCE.md": "14f11fe694f51ad0f0483c15921da05631811a412ea6a57ecce26f6958658c10",
+    "integration/rbow_1.2.0/docs/ART_PROVENANCE.json": "16d06f93a69974442eb45ffe1c9674f58729f39aff41e530f9428abd4da53a7b",
+    "integration/rbow_1.2.0/docs/RELEASE_VALIDATION.json": "ee60bd685213bdf4455db3b3a54e4cc355674a02804f91fbdec546d39bf1ca30",
+    "integration/rbow_1.2.0/docs/REPORTED_ISSUES.md": "b4b91aa96cbe9cef0a450a9cd21e738f9220e853bf61184f52bd5d0f08289355",
+    "integration/rbow_1.2.0/docs/SOURCES.md": "acf500c1fdbd5a836f28c9ea6ce690813db40e9559c48ded971ab769f1e794cd",
+    "integration/rbow_1.2.0/docs/SPEAR_ALIGNMENT_LAB.md": "002195203507f482cd419abc4e60f726c9dbb7583c7bb65132aa5e4a667959de",
+    "integration/rbow_1.2.0/docs/SPEAR_DIAGNOSIS.md": "c308ad86d2ceb5b531851ddd58a260a43910b4f7deb54bb4b90404e65a231ed7",
+    "integration/rbow_1.2.0/docs/SPEAR_LAB.md": "8fa7f7fb4fd52d8f5ad314329c0349c0bda2451035cb282c64de0a1c330d5f77",
+    "integration/rbow_1.2.0/docs/SULFUR_CUBES.md": "c948023440bec6da89f0be75bae28dac2a123ec3d8ad5c55b00771256952f750",
+    "integration/rbow_1.2.0/docs/TRIM_SUPPORT.md": "f1aa11173e2ac0836d2599fc710ea88a3218739389173fa1b34da5345e57d2d4",
+    "integration/rbow_1.2.0/docs/art_assets_lock.json": "391f17389d451bc2486ef8138afb15e8388162399d2b248cd73e4e63f457130d",
+    "integration/rbow_1.2.0/docs/art_baseline_hashes.json": "11c372a9e3b0b1aa1b317bde50a4e501fce7a72d673977555c80ab0f2a6254ae",
+    "integration/rbow_1.2.0/docs/build_settings.json": "27685e24f3fdfb06f0aabe8619122dc7838ddfe0ad816c7f1890dd93750c7a1f",
+    "integration/rbow_1.2.0/docs/history/ART_ACCEPTANCE.md": "b002a00d19a815aaa0d3afb8b62e0abe1920cddd81f270226dfb01ceb82dd6bc",
+    "integration/rbow_1.2.0/docs/history/ART_PROVENANCE.json": "29d2f47e7d4291d489b4b06727daa05efbcf1653d28296796906693da25bc0fc",
+    "integration/rbow_1.2.0/docs/history/IMPLEMENTATION_PLAN.md": "b31e1025a48a5704f3a2812b643b698258a05804b3f0b044f662749ee1c3c5a8",
+    "integration/rbow_1.2.0/docs/history/TRIM_SUPPORT.md": "b839dc814b1643532c8b86ef4f448569a6a68db175abfdd528df3b6c51318ec1",
+    "integration/rbow_1.2.0/docs/history/v1.1.3_art_aligned_baseline_test_log.txt": "217ab601e669b04a9f881d32c3ddba3e8ff4883f8e241127712b18347eaf56f5",
+    "integration/rbow_1.2.0/docs/history/v1.1.3_sources.md": "377528526b341f486d01dfca36d371285edb4ba0911c1eca15bb23a99fd093e6",
+    "integration/rbow_1.2.0/docs/history/v1.1.3_status.json": "49788e40b3161505bf5eb0869dacf54e797606d66c17152f3f4264f7d103175f",
+    "integration/rbow_1.2.0/docs/history/v1.1.3_trim_provenance.json": "baa6337848015470c912e0d472e721e867984576936c56d346176c9b0c95b598",
+    "integration/rbow_1.2.0/docs/history/v1.1.9_README.md": "537a20c20f0659912f2cc172f569d8829d852714b0fbaa1140fab9f79c626a77",
+    "integration/rbow_1.2.0/docs/native_spear_reference/PROVENANCE.json": "83157916234a1e82abf96a8993294e9668cd0335f76e7866cbc118b60a61e784",
+    "integration/rbow_1.2.0/docs/native_spear_reference/spear.animation.json": "fd2c1727ce130cdeba2cb341bb6ab2edc41c7ee564afaea8990a2d0624ff1820",
+    "integration/rbow_1.2.0/docs/native_spear_reference/spear.animation_controllers.json": "3296c8db1868c1dc8526036405fc076943f7d6578ebe41efb1fbc9eaea6e00c1",
+    "integration/rbow_1.2.0/docs/native_spear_reference/spear.geo.json": "a428a61ae662c49e5b76cc73df57c24e480e837df5f34f7ff18c65c26baab242",
+    "integration/rbow_1.2.0/docs/release_1.2.0_baseline.json": "05449a4e557262012a3d80dd967072908de9193537706b14127c5ac33c0a3ed8",
+    "integration/rbow_1.2.0/docs/release_status.json": "6e41a19b1e67091e721984f8b10a18f030cd419ae6b0fba99576b149c9e10eeb",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/README.md": "26199875f83b1606d6e635a50ac1271b0556422f7dfebdd9ca98b311fc6eaada",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/resource_pack__animations__rbow_spear_actions.animation.json.txt": "9feccecc271dbca48fd78790eae8e99cd31b54b83651a53b15ef4672618367d4",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/resource_pack__animations__rbow_spear_direct.animation.json.txt": "40afe12e2e5b0a79f4c164d203017779a8a4618d4ef401d1b6f2e6138c38f601",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/resource_pack__attachables__rbow_spear_compact.json.txt": "6a36e6f60630796c1d28adc8373e9a3de8d89a5843aeb06f3bfe1f3e4b033ac6",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/resource_pack__models__entity__rbow_spear_compact.geo.json.txt": "14c71f807e1b6e34a1f5e29d1eba77501f3b0913b60a1bf6381bd9ad18085c48",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tests__test_115.pre119.py.txt": "a0fa8f427b435e458d8ad02171e6e5040e5694c60fb49fd9c2fe49bbe284cf7b",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tests__test_116_spear_actions.py.txt": "23ddf18a95028490239dd7ad7273e36483fff843d19c81efceea91f093ccb0e3",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tests__test_117_spear_visual.py.txt": "58a96d88372a00b32cec7340961f118ef9bb8aeac0cfaafc1d0f90cbf1c2f423",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tests__test_118_spear_lab.original.py.txt": "bb2dff6b5ba2241b5ba566214757576ff6de48ba94427082570496069cc20526",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tests__test_118_spear_lab.py.pre1110.txt": "9fbbd5c5c227380328594099431c7585b5ac06df0cc79eeac45672a51cefd5ca",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tests__test_119_alignment.py.pre1110.txt": "240b8acb361af484821b430c7d0f9851add32a16dc0862e8215f599dfc63a498",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tools__build_spear_actions.py.txt": "6d23635b0bd0952ea3a692df04895e09e7e598737ec009f143b26698624085a3",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tools__build_spear_alignment.py.pre1110.txt": "57a66a587c4d9dd97350cbd65d2e79e0916962c4a76db0aff26dbc38d6fb6893",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tools__build_spear_lab.py.pre1110.txt": "5bfa96a338e7a9f7fc88fbeeafa4ec472cccec016485e887051464c34a2a7651",
+    "integration/rbow_1.2.0/docs/retired_spear_experiments/tools__build_spear_visual.py.txt": "e3818c3abb8da9851de9f24a2194ea62405a4291ca23f67af8e45712287254bc",
+    "integration/rbow_1.2.0/docs/sulfur_cube_reference/contract.json": "98541eca808733807e1f55b27933b26368e644f82b57ea946dbf9c9d86b2e762",
+    "integration/rbow_1.2.0/docs/v1.1.0_RELEASE_NOTES.md": "1f9ae00b5e76bf8edbd19df6addec7de5b29f50c68b75818d32839f216dd5649",
+    "integration/rbow_1.2.0/docs/v1.1.10_Validation.json": "f1038917898b560b252a38ec31d094507251ada64c8c0df4e13d34556b5270f7",
+    "integration/rbow_1.2.0/docs/v1.1.10_sources.md": "94cd2588f7d2a9886929735bdfcc9b9358898277cd19c682915b5aed3e3a4e1d",
+    "integration/rbow_1.2.0/docs/v1.1.10_spear_texture_lock.json": "3398afe24abd96ccc79535958f755e895caf5d6dc9e8cd6216b8342789aef0b3",
+    "integration/rbow_1.2.0/docs/v1.1.10_status.json": "b65efb53dbb68564cde0bf06833cce1b8e6c0b3c227983b18244161769a19336",
+    "integration/rbow_1.2.0/docs/v1.1.10_user_feedback.json": "bf3b0c9d1ec6dfe39cae40f6fec3855acc1d5925fb2229df7952790fa33b14a5",
+    "integration/rbow_1.2.0/docs/v1.1.1_runtime_baseline.json": "0a547899918b40a0e69f3205952c4c6bd5198c9efc5f331cb75dc3b8245995ed",
+    "integration/rbow_1.2.0/docs/v1.1.2_status.json": "43800778b2ad843849f5f63139f0b7a5f20bce37ad4a2ee9e831b9d32a176b8c",
+    "integration/rbow_1.2.0/docs/v1.1.3_art_aligned_baseline.json": "cccb88958c93a0c017e14d30fc7d3a87cec84d81999e63ff969b4046e733730f",
+    "integration/rbow_1.2.0/docs/v1.1.4_change_scope.json": "84dd7a4a834b1ac1446b82acebeec2c24f2300d5425c39baca2d7fcad4f144b5",
+    "integration/rbow_1.2.0/docs/v1.1.4_recipes.json": "0761767b4ae219fee377913630e8f985e12a70f7206a2e7ec82fcc2c494c7f6e",
+    "integration/rbow_1.2.0/docs/v1.1.4_runtime_baseline.json": "e05f616eb3ed957249c04102b57c3b3610acdf8879a704de2d326a9e60db2236",
+    "integration/rbow_1.2.0/docs/v1.1.4_status.json": "abe714b8227db2cc6f137c64312c384cf2a13f1e347d14e9d5a287e21c55df2d",
+    "integration/rbow_1.2.0/docs/v1.1.5_RELEASE_NOTES.md": "ec66ff3922f9f1105ad4093b483d8d35b4df82e65468b1c744f0e616ba1d3886",
+    "integration/rbow_1.2.0/docs/v1.1.5_changes.json": "49809482d3bf24dd3fe2a82d2a5770ef7509d2b7753d05df1865fff4dc94deb3",
+    "integration/rbow_1.2.0/docs/v1.1.5_runtime_baseline.json": "4670fca8b1e65083e0f6d72a3a6c62b24fc2cec3ca098a3cd93f116eddcef209",
+    "integration/rbow_1.2.0/docs/v1.1.5_sources.md": "8366c6043821a04e45d075b7cbb574295896ca81f6c3e4c2492f0e626ac4410f",
+    "integration/rbow_1.2.0/docs/v1.1.5_status.json": "979085101cd86363a805b2c08bec1bcb579232586bbc6bc7f599ab59bc7922bf",
+    "integration/rbow_1.2.0/docs/v1.1.6_action_curves.json": "7d02bad32b76dba0d5748961fe3c0aea0160ed5a513d8ad65b89e4349e16e997",
+    "integration/rbow_1.2.0/docs/v1.1.6_main_script.json": "70f6466866b2f683cbaba2c7dc2c2d2c0ff997897a72996619e8ef1db9ab6076",
+    "integration/rbow_1.2.0/docs/v1.1.6_runtime_baseline.json": "0d5bb7ba586ccb2481fe36875581094a01f7e7aabab566360d2e111cf12f883a",
+    "integration/rbow_1.2.0/docs/v1.1.6_sources.md": "354067c098e792b1d6c953a948d4816129517b6b5f3b33259678bbd07545cb56",
+    "integration/rbow_1.2.0/docs/v1.1.6_status.json": "a81e528bf58821182bb601ecd5aef3ec8e13d8c9c543df796160df5ac632f7ca",
+    "integration/rbow_1.2.0/docs/v1.1.7_RELEASE_NOTES.md": "6e4eb1a79b94be0789d1454bae965ce048dc795bcb36214773964df47c095de0",
+    "integration/rbow_1.2.0/docs/v1.1.7_RELEASE_VALIDATION.json": "f2c6770b32e66100dbf9e1cf140c5bf4d4f428796091c343dc73c3c4cbb7c427",
+    "integration/rbow_1.2.0/docs/v1.1.7_change_scope.json": "255da63962860e7d544e6b30e7a7d5d31dbac9a61d853f59107dc2dc6680eacc",
+    "integration/rbow_1.2.0/docs/v1.1.7_main_script.txt": "970c9db1078f82bf97f90262147b59ff785acbf2c956587ee88ecc2e3839ba2d",
+    "integration/rbow_1.2.0/docs/v1.1.7_parent_curves.json": "c62362d244c44521f3ddbca1a193b9200ed8e097f2a51f430172aa70b7301eab",
+    "integration/rbow_1.2.0/docs/v1.1.7_runtime_baseline.json": "5e525bb8a45a0f3252a966233b30b357d2208d2e2d874ab7bf70d1ea7b030993",
+    "integration/rbow_1.2.0/docs/v1.1.7_sleeve_fix.json": "e15f8fbad2ca0609befa6f164c6612bb22ae4d1c3dd71d678849254330fb61c0",
+    "integration/rbow_1.2.0/docs/v1.1.7_sources.md": "b21e63d6f703908e386fc7a9f3425916872cd044f13afcdcb44718c1dc8cb1b4",
+    "integration/rbow_1.2.0/docs/v1.1.7_spear_visual.json": "65b90df890c1bc809e3b5b4cb63c74cc3e7397bd7c19142f4d0520c2dc3bab70",
+    "integration/rbow_1.2.0/docs/v1.1.7_status.json": "6db0d5061a096cfc7274120eb90208d9b913825fe1c41044fe1a6e4fcc9cb390",
+    "integration/rbow_1.2.0/docs/v1.1.8_README.md": "6e6c986821a9722165de8a7c169f4b58183e607d3ae7eb310e498c7e82a4fcc4",
+    "integration/rbow_1.2.0/docs/v1.1.8_change_scope.json": "ac6e1977e3d2171069adb92dd4199a20307790f08e2855cf870f50d5e89f6908",
+    "integration/rbow_1.2.0/docs/v1.1.8_main_script.txt": "4f08528e6e8f014381ead267dcc4921de535ec4f6052f66ee8652e0fbd1338b1",
+    "integration/rbow_1.2.0/docs/v1.1.8_runtime_baseline.json": "624b0a1197588d266be882f9a571ca04b679e4060ebc30224f2729aa03a1061c",
+    "integration/rbow_1.2.0/docs/v1.1.8_status.json": "ea04702088c7e99cca42be91b57026f80240375b3979e83a1eedfcf8a1ed6589",
+    "integration/rbow_1.2.0/docs/v1.1.9_Validation.json": "440c237d230db55681517b6e55baed7c1222a8daee924235dc7604746a86df69",
+    "integration/rbow_1.2.0/docs/v1.1.9_main_script.txt": "4b3c160818790668b99dcdfa6e952235373a0080d639a2c673294a070a85e707",
+    "integration/rbow_1.2.0/docs/v1.1.9_runtime_baseline.json": "08b7a74104bb75ba25d86a0bca44ce389b2c054b8e1364a2c2f9dea348f72d50",
+    "integration/rbow_1.2.0/docs/v1.1.9_sources.md": "22f422596d7a3691b51b9d9392598ac79491155e697e4b62c1ec506adaddee6e",
+    "integration/rbow_1.2.0/docs/v1.1.9_status.json": "af1c6332e6dfc918cbe4d878c96eb2e78b205bd0ff8ed3b3ed1926c2c5b1f18a",
+    "integration/rbow_1.2.0/docs/vein_templates.json": "5430a040efc18fbd871957a63bb49779d156b8e3d6118b2e183c9c5cad479464",
+    "integration/rbow_1.2.0/package.json": "ef771baa93ef07f6a67434ffb3d82cfba4061c366635eee8fb0ddc1344f75c08",
+    "integration/rbow_1.2.0/release.json": "899b0d0eca8c2ca42d7ec705d09b920d04d7c7e0361680c17ae69007b7d15820",
+    "integration/rbow_1.2.0/requirements-dev.txt": "f5c2b6cd9f5c621c359f9a2fdf8982adf7f14361c964353705d2c333083e48cc",
+    "integration/rbow_1.2.0/resource_pack/LICENSE": "0d8760b23f47dc4268b8273d5bb6bea9a246a8689598d11236f3b5a8856f28f7",
+    "integration/rbow_1.2.0/resource_pack/THIRD_PARTY_NOTICES.md": "e1643edc132a8d1353498b4fbf414dd5c87fda1148933384fcd13a850e73d9d0",
+    "integration/rbow_1.2.0/resource_pack/attachables/rbow_boots.json": "2c9490deb635b89c69e558256936547eee11416861e2e7799da2fa1c74258925",
+    "integration/rbow_1.2.0/resource_pack/attachables/rbow_boots.player.json": "92ec6b9deee5b254c6207c6d2bc7e940d638391a41b50a2a209ecb85fa1ff4ce",
+    "integration/rbow_1.2.0/resource_pack/attachables/rbow_chestplate.json": "f570867bf9bdb578f73727456837e1b3cc98e12ca8958078cafe9c648ef026de",
+    "integration/rbow_1.2.0/resource_pack/attachables/rbow_chestplate.player.json": "54c3e1f68ac0715e7333445bf7018605e6e934b6da9df0e216b6a1c83191c151",
+    "integration/rbow_1.2.0/resource_pack/attachables/rbow_helmet.json": "f95caaa237cf55dbe5718dc9a157feec7cf23e42fc4c625659d5c40975b16e9a",
+    "integration/rbow_1.2.0/resource_pack/attachables/rbow_helmet.player.json": "c500845dd322414bd76dbb12c469f8382fe01d8a411da13ee7a198bf9c781add",
+    "integration/rbow_1.2.0/resource_pack/attachables/rbow_leggings.json": "09eee3fe9ef5895917f33c2faac4e95294108a7ce2f43ce8ea870653b2a958fe",
+    "integration/rbow_1.2.0/resource_pack/attachables/rbow_leggings.player.json": "e5503bdfbc8ae1f674682460ee67b43d0bf70574f62cdd1b38eda57f8bd533d5",
+    "integration/rbow_1.2.0/resource_pack/attachables/rbow_spear_native.json": "5d88ecffed3182ada988b6f193d4ffc13e444d0254052ab965a5b9e6a366b8a8",
+    "integration/rbow_1.2.0/resource_pack/blocks.json": "72c3c617f82f9e7bb4bb07ad854c0ff34468ff8214438e3db0f391619736106a",
+    "integration/rbow_1.2.0/resource_pack/entity/rbow_drop.entity.json": "9548e7599b90a6eacf3d321ad28ab70b6489cd5395ce336544390e9e3658784a",
+    "integration/rbow_1.2.0/resource_pack/manifest.json": "3872c38b832cbea4ef810a760a3e95bf1d43e8d7704e3177dfe2cd5fbba8036b",
+    "integration/rbow_1.2.0/resource_pack/models/entity/legacy_drop.geo.json": "f9963dd2302892bd3ea11b842bfe79e6f147160513d2f8068c9ad8e9da21a8e9",
+    "integration/rbow_1.2.0/resource_pack/pack_icon.png": "c4719b9314c8944ac74e769224d7cb2c2bd53f501d8b1dbef474ec8ec7f3bfb1",
+    "integration/rbow_1.2.0/resource_pack/render_controllers/legacy_drop.render_controllers.json": "2c707631eb38a02983043171525dc295346eacd67591fb5a277c9c6fabe734a7",
+    "integration/rbow_1.2.0/resource_pack/texts/en_GB.lang": "b4447531b1a01f6e9085d1267e1a2c6cd7c7d3f65b9b383b072e0db74009ed1e",
+    "integration/rbow_1.2.0/resource_pack/texts/en_US.lang": "b4447531b1a01f6e9085d1267e1a2c6cd7c7d3f65b9b383b072e0db74009ed1e",
+    "integration/rbow_1.2.0/resource_pack/texts/languages.json": "d2b2e391e608527393560c152c1f63c380d7bd8c5b5dbe27d4041688e9ea275a",
+    "integration/rbow_1.2.0/resource_pack/textures/blocks/deepslate_rbow_ore.png": "12fb5407d162311616aa9787c35d49fb09314e76e0b5d36ec9b20ba75ec95a15",
+    "integration/rbow_1.2.0/resource_pack/textures/blocks/rbow_block.png": "d22ba6836aecbe8f645a80575f90ac55369e0d1ed8f8e19252844f83bf696617",
+    "integration/rbow_1.2.0/resource_pack/textures/blocks/rbow_block_top.png": "2297abd4f1fb9b41f6360881705cdaf980e2e0e792d4c3fcb066e95812c1e2c0",
+    "integration/rbow_1.2.0/resource_pack/textures/blocks/rbow_ore.png": "b81f8a27a464eed5d66dbb06d1e2222644c7057d5eac09cb056d17b6eaef69bc",
+    "integration/rbow_1.2.0/resource_pack/textures/entity/rbow_spear_lab5.png": "a7feabcb5d5609140b6972a5776ab74c40c9ef435460db788f7bff184950a494",
+    "integration/rbow_1.2.0/resource_pack/textures/item_texture.json": "ec5300777d3ea1844bc5caea36bb2e0be6783ef02d95e6714ec48a5e9cc76364",
+    "integration/rbow_1.2.0/resource_pack/textures/items/raw_rbow_ore.png": "a544e242da70881729b42413be0b84383b1ddfd4dab512dd7d47289da4d3bffe",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_axe.png": "b938daf2eb85ce9a57d4c6bc726e68400e079ad16b981ede54db093d2f44ca30",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_boots.png": "04c2b08adedd3e26ec01544dff472f3ccf01fa258caef65877bd68d609b8ee65",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_chestplate.png": "d3f38d1133e9fd40edb4ef8d91e32a8902e9ca57df170da22fe98135a46cd7eb",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_helmet.png": "ac0fc73894fda7b539ea0f365d4c4e569fd8d276a180b8a01c72183b730eb0ab",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_hoe.png": "1f449ac3e001f6bf70570da1b95897c300347fe8f03f9a944de5e1d5782eba4a",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_ingot.png": "8cd701fe5650c7d534db512c5ca161e934a8aa4bda5368df58e64b53123a86e8",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_leggings.png": "900c4386db1d1b24172cd9f083a83b9930333cd99cbfcd0d81af8bcab5762540",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_nug.png": "a742ec54f30279bcb29e5058e71d4d28e2282d35bf4fef654084fe83daf579fe",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_pickaxe.png": "a3196ae894a219c317659f6033354181ef2810aee9114700ff68a3e8216aa62a",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_shovel.png": "7219817af0a22bd092be9491c518baeda572458010f97cfb3185613fc05e1dde",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_spear.png": "2c10b511cd45d3dbddbc4aa08432b0097af0226ce2cb7cbdac09b133ff38755b",
+    "integration/rbow_1.2.0/resource_pack/textures/items/rbow_sword.png": "0cf5b758c62172a1727ff746c87d0a7f9f4dad27a77be0ee58f60792b41248b2",
+    "integration/rbow_1.2.0/resource_pack/textures/models/armor/rbow_1.png": "808279fb7f1d76c983b94bf267385b62345ace1ede863bc5761bde7fd656de49",
+    "integration/rbow_1.2.0/resource_pack/textures/models/armor/rbow_2.png": "cbd3f5e8abeaa75c4e7117ab567d074a5cd1ad212dfc29fbd5b6c701755736e1",
+    "integration/rbow_1.2.0/resource_pack/textures/terrain_texture.json": "f779b5c62eddc934e1990b4b83aa1bae929c834dcc3f192cbc4c377787bff7d1",
+    "integration/rbow_1.2.0/tests/legacy_drop_logic.test.mjs": "dd1a91d0d941e2a4783cbcda63bb97b0db79e2d581e197f449e6796578073d00",
+    "integration/rbow_1.2.0/tests/molang_subset.py": "555e210b1bd5dbcecb63c56970ba8639eaf01f7f8d3fca3c599b7ef075e42d89",
+    "integration/rbow_1.2.0/tests/rules.test.mjs": "297713f8bcc345c4eee8ba464f72b6d0d0ecac15c3433a3cfdd9ac8db42e38b5",
+    "integration/rbow_1.2.0/tests/runtime.test.mjs": "1ba37276ed98e9d1068160452e32338c09dc3b82eab57925ecd2cab738fb49e3",
+    "integration/rbow_1.2.0/tests/test_1110_native_spear.py": "794fc403cce232e30da272b11a6e9160336bfe6de2e648087b7e8fb20cbbe601",
+    "integration/rbow_1.2.0/tests/test_115.py": "c5ca4bb1aa2487a9dcd280d1dae668f26f5aaea3c0b1fc348431449392775137",
+    "integration/rbow_1.2.0/tests/test_117_sleeves.py": "d2934c5c429f1c73feede539d7fceb8c201871d1b7a9dea476487125e05cafc4",
+    "integration/rbow_1.2.0/tests/test_pack.py": "f44e151acf856acdb020b78e8fcb3cc877e1f39d334a89490828a823dd72bdef",
+    "integration/rbow_1.2.0/tests/test_prismatic_art.py": "41b66a4d9d60e991ea5926660594e89505254a88cfa16258f0b3e787ecefa7cf",
+    "integration/rbow_1.2.0/tests/test_release_120.py": "f718d0d8e6cfff551d78e3203382caec50fff6294033242c6eb1313b867f6d7a",
+    "integration/rbow_1.2.0/tests/trim_cleanup.test.mjs": "e63d1a13e3205e33a7ae01e779cdc161c59f6819b1dcf0f540a83dc43f1b3d4f",
+    "integration/rbow_1.2.0/tools/build.py": "2b4b771be50cb509cb7eb1a1dbac20ceb2b2a2f5d363749c8d1c72016e143018",
+    "integration/rbow_1.2.0/tools/build_assets.py": "95503356a121d63698229ef7baa140b71cb38841602456b1476967f52f8b8015",
+    "integration/rbow_1.2.0/tools/build_data.py": "fa4f279c641e585ecd2baf15a16a7912881d3ea02414985de41ea6089faefab4",
+    "integration/rbow_1.2.0/tools/build_native_spear.py": "78c887f5f0333333ee9815a7f32b763f6a2269eded18beedd1c84baaba2c563d",
+    "integration/rbow_1.2.0/tools/build_player.py": "33078564d73ab6aa151f18da4920c0f0ec3d09abca3822a311262407ed496256",
+    "integration/rbow_1.2.0/tools/regenerate.py": "a9e5f61c07703637d2765dc211dd0fa6e948b6df47bd5deafc4d36485dd94265",
+    "integration/rbow_1.2.0/tools/render_armor.py": "cbefb2d7b4db7533e1497518319dca712693fddd944c713e07cabe5e06e4b487",
+    "integration/rbow_1.2.0/tools/render_sleeve_fix.py": "5af2c5725de14e4b9a098e4016e52896748fa9ee97a4ac83e77ab6eb7ca8bd45"
+  },
+  "projected": {
+    "resource_pack/models/entity/pets/carter/armor_boots.geo.json": "77a96df1261b1ea6ff8289cddd19d286b8d17177a66c55aa40e3a8ba5bd3528a",
+    "resource_pack/models/entity/pets/carter/armor_chestplate.geo.json": "610328dd419925baf5b3167e8e2fc798a8e3b2858c25586d7dfa8583d19d0236",
+    "resource_pack/models/entity/pets/carter/armor_helmet.geo.json": "798a680a8edc765ab366988bbb48d363933ddb2832c707d8e03b7757d49f3fcc",
+    "resource_pack/models/entity/pets/carter/armor_leggings.geo.json": "02cfbf82eaaf9e453a24a6396ff353727486f898580d452d909beb2224583676",
+    "resource_pack/models/entity/pets/carter/carry_main_book.geo.json": "87f7e408f1d899b44e3f5675c1f18cef30758cba8f3e76c1b045834f02fe5ab4",
+    "resource_pack/models/entity/pets/carter/carry_main_cube.geo.json": "6d0e42ed55e72a297085f896d75d2384fe3bfeee0bebb34fdb2e1797044dfd18",
+    "resource_pack/models/entity/pets/carter/carry_main_rbow_cube.geo.json": "45adc9fc0471970f5e2e4360d0a8d0eb9336b2130675090bf27f5f64fc1026b1",
+    "resource_pack/models/entity/pets/carter/carry_main_sprite.geo.json": "4f4b844417df6c6b8ff9dc3ad6ec55ac3f64b8a59caa2190591852a675e76a0b",
+    "resource_pack/models/entity/pets/carter/carry_main_sprite32.geo.json": "03998a1c70b1a99a880298ab74ecf544a084b014f19114091b6de42d14af4871",
+    "resource_pack/models/entity/pets/carter/carry_main_stairs.geo.json": "b852e16c71cc7bc194f074602f627511a5814086bd959b33cd4a2e16e3e74dad",
+    "resource_pack/models/entity/pets/carter/carry_off_book.geo.json": "a1f630642e376143f496841e6128acb3dade3ffeadbbf2f81a390c98a773ed94",
+    "resource_pack/models/entity/pets/carter/carry_off_cube.geo.json": "a859b5739b5043de33aacd52cdbb7521a25ddc5523ab87e8008557960ef87f73",
+    "resource_pack/models/entity/pets/carter/carry_off_rbow_cube.geo.json": "fac21aa76349813fdeaec53aa31e1af2e047606e41b662fcafdac4600150af03",
+    "resource_pack/models/entity/pets/carter/carry_off_sprite.geo.json": "89996c5b13b9b944cac795808594d178e2138adaf605ed00caff54873d41e8df",
+    "resource_pack/models/entity/pets/carter/carry_off_sprite32.geo.json": "22a9110ced539903244e9c26ee6d563fdbd7549d5450de8a80df21114f980778",
+    "resource_pack/models/entity/pets/carter/carry_off_stairs.geo.json": "7437151d261274425195cb1085793e4098b0edd767c50068f859436ac41b8eb3",
+    "resource_pack/models/entity/pets/carter/model.geo.json": "90896ff5fb75e6c44a786aa2676dfed609b07c49a735e60bb7679d067e0e5b40",
+    "resource_pack/models/entity/pets/carter/paws.geo.json": "603bd005b07fd16d46e599ada81c08d2ff14eded69724205b6e810e9d40efed2",
+    "resource_pack/models/entity/pets/carter/shield_left.geo.json": "170e82cfc49d8315d6f2c45742ff60688ebdd016f95c8e4b60452ee75af5c619",
+    "resource_pack/models/entity/pets/carter/shield_right.geo.json": "8463c95923ebc8da545f0bedfebe4680641f193f2a00d28a0d848de72d316696",
+    "resource_pack/models/entity/pets/carter/tool_axe.geo.json": "54ce99ccb9a59afd2da8f9b0d1643c07fc926ce9f6165e2bf3ba923becd8ac48",
+    "resource_pack/models/entity/pets/carter/tool_hoe.geo.json": "6b8b9a69c8544a017fc82666bffe025b4b1fb0edc03b76da5434ff12bb654088",
+    "resource_pack/models/entity/pets/carter/tool_pickaxe.geo.json": "d77a7c8862579feb6b1001d3a8f11cba6f1d731b30b74f52aa4d2c118d3981ff",
+    "resource_pack/models/entity/pets/carter/tool_rbow_axe.geo.json": "f0b9f94388f7a2673c17fa8293a29d52df7e214204fdfc54b195eafb457fc817",
+    "resource_pack/models/entity/pets/carter/tool_rbow_hoe.geo.json": "7bcc1805d11c0c52997da835debb91bf2aeac089b20a3b3f80a5c039fa46f25f",
+    "resource_pack/models/entity/pets/carter/tool_rbow_pickaxe.geo.json": "b194325c18f7abf68812866f19944ab3b1690a52b031479b90b2bc9d8b52d4fe",
+    "resource_pack/models/entity/pets/carter/tool_rbow_shovel.geo.json": "e78c063842233232f12884d4a14112d74f37f19c9ed4452b4eaf5cca3094e23a",
+    "resource_pack/models/entity/pets/carter/tool_rbow_spear.geo.json": "a3b94f70c25035f7597e9c25d2bf7ace7c8015850d313caac797fc2dd7d91070",
+    "resource_pack/models/entity/pets/carter/tool_rbow_sword.geo.json": "a75c11133933773106e84c290b6692a5188d239305f6c60d1c188849c5e55890",
+    "resource_pack/models/entity/pets/carter/tool_shovel.geo.json": "f70bd87d890c96881393389b69a0eb7e6c282e00e7448ebf433bf0aed12d2eae",
+    "resource_pack/models/entity/pets/carter/tool_sword.geo.json": "2635f423795dbdbc4972782b573705bb9cbc5847cf69bdb8d989666df81664ca",
+    "resource_pack/models/entity/pets/casper/armor_boots.geo.json": "3343fed132363faaaeeffdc8f73c89e514f8ba432776afbb84f757e4da7343a7",
+    "resource_pack/models/entity/pets/casper/armor_chestplate.geo.json": "11994bb2b1f4ef6be93638ffc3f837560be6f8aa2622efb468d5853b8de6838d",
+    "resource_pack/models/entity/pets/casper/armor_helmet.geo.json": "e137bf82a7562c5e34a1076be17a4711a359e057b3114d8338942d762ee18ffa",
+    "resource_pack/models/entity/pets/casper/armor_leggings.geo.json": "267e3bc05dbc4b661c654bf720dbcf4c1293fc2c7894d6f336367ba71562539d",
+    "resource_pack/models/entity/pets/casper/carry_main_book.geo.json": "65349ea8ec34c10593cf648b30a4de84aada076daa921549310376f647a91091",
+    "resource_pack/models/entity/pets/casper/carry_main_cube.geo.json": "89a1a20b7fb80d84e3c518b9b4416cd1f6f85c068dd5ef3de6f01c918a33749e",
+    "resource_pack/models/entity/pets/casper/carry_main_rbow_cube.geo.json": "3c87dc78a2c7d2ae189c130431a39b2b2b57bd70c63a7495648c24ea953ce913",
+    "resource_pack/models/entity/pets/casper/carry_main_sprite.geo.json": "3cc6b88aefdc4e061b565d19bf9bf32f1a6e5a0837acc36def8f76d1e9b6b964",
+    "resource_pack/models/entity/pets/casper/carry_main_sprite32.geo.json": "0dceb4bb49c24bea08583f27316aa513645da3f95fb13df4e7f1119bab6995a0",
+    "resource_pack/models/entity/pets/casper/carry_main_stairs.geo.json": "d7b3983c53ecc86706eceb1f7f5a4bec03978176a676b0fb01ffe2ec51a04696",
+    "resource_pack/models/entity/pets/casper/carry_off_book.geo.json": "4897f40bee85afa7def7d2e715e6f50b23e7d072d99dacca28e554cd7553cf74",
+    "resource_pack/models/entity/pets/casper/carry_off_cube.geo.json": "ccac2695c05ed462f409e6addcdc6370afd9a55a12889d7f0f802902b11a0d06",
+    "resource_pack/models/entity/pets/casper/carry_off_rbow_cube.geo.json": "d10fc5a761c5ad513ef436d197f17d4a70faba32f4b2bdba80cf659a8fe5ff66",
+    "resource_pack/models/entity/pets/casper/carry_off_sprite.geo.json": "c004060ef681cf437aa023ceedee76eb1629d9a1c446481ca5c9b1f81f4c34b9",
+    "resource_pack/models/entity/pets/casper/carry_off_sprite32.geo.json": "4d4cfab7b2019d8a22c657e7ace4a646726ef9775ef1d2a27df9e9568e19bdc0",
+    "resource_pack/models/entity/pets/casper/carry_off_stairs.geo.json": "953be354a2dad6f604f4bebb258d2e49377240e762e2e0756c79ad2382914acb",
+    "resource_pack/models/entity/pets/casper/model.geo.json": "a0626fbe480b89add3ef360699d3ec1b62225db5fafd84fbafdc2dbe8ffd028a",
+    "resource_pack/models/entity/pets/casper/paws.geo.json": "644d4fc8cadf0b7b080958731bc34ff96924dc1bb426043f26a257b5d46ab093",
+    "resource_pack/models/entity/pets/casper/shield_left.geo.json": "867a1b515c86cc731a35c179eff8e4fed67f2ade436ad5b16361cd54256a252f",
+    "resource_pack/models/entity/pets/casper/shield_right.geo.json": "7e1b8a016b79a6d2ae602aa96748b0e5ab8bb68e459928b402bc866278eaf25e",
+    "resource_pack/models/entity/pets/casper/tool_axe.geo.json": "86e5b770026eabae7fff3ccbb97e5222c2d355e6f8868848d24cf4faab6a52f6",
+    "resource_pack/models/entity/pets/casper/tool_hoe.geo.json": "cdc50a7ac7ab3dbf2369dbbbed0342298e0517c31ee77444b776d4d39cc167c9",
+    "resource_pack/models/entity/pets/casper/tool_pickaxe.geo.json": "f5fa5a594b9e50fc808c41ea4182ba22a07fddf0b935bd35422bb361d45f4d23",
+    "resource_pack/models/entity/pets/casper/tool_rbow_axe.geo.json": "c3548019da00745bc78ce1720daee536d1aa313d3b0303d2bd50f2f7131befb2",
+    "resource_pack/models/entity/pets/casper/tool_rbow_hoe.geo.json": "e285ccd78bad13bc82d5d72f30f1a06ddcefed26fcb53dc2553a9c810b6dcd9f",
+    "resource_pack/models/entity/pets/casper/tool_rbow_pickaxe.geo.json": "e798e9c3ec7a37f0088b665481e2128b70ca86911a567a9e37ef783c1a2373fd",
+    "resource_pack/models/entity/pets/casper/tool_rbow_shovel.geo.json": "69fb54eb9dd2647fb3750f580191fa56bbb4a8daf4d20b36a8af6f2f85d23d55",
+    "resource_pack/models/entity/pets/casper/tool_rbow_spear.geo.json": "13343f31bb1622189f19de3221949d508b344167cf7a61bfa5ba19dbc3ca124d",
+    "resource_pack/models/entity/pets/casper/tool_rbow_sword.geo.json": "c159b912f8985fc7752d447b66f7b14f47ecd7be9bcdbb8d64a319684a0a3024",
+    "resource_pack/models/entity/pets/casper/tool_shovel.geo.json": "2db7a1661214fab1f87c51579563b554f59f7c6971de760d94adab1d06e4593a",
+    "resource_pack/models/entity/pets/casper/tool_sword.geo.json": "5a835e74675f0cc2360424ed53cb4f23ceeb8bc0409c768ed8ae242b3446305c",
+    "resource_pack/models/entity/pets/mochi/armor_boots.geo.json": "d13383bc4c7155ed3ac57a261066a8956f4d6ea6026e8db807de9c6308bc0961",
+    "resource_pack/models/entity/pets/mochi/armor_chestplate.geo.json": "b0e51b1b749226a122ca255210b22db4fc89edb44b0c72b6fe541371139a401c",
+    "resource_pack/models/entity/pets/mochi/armor_helmet.geo.json": "90944c43b3ebe3cc421307eb2702ff36ac5158df71442843e004b27846e0bc70",
+    "resource_pack/models/entity/pets/mochi/armor_leggings.geo.json": "f1ead5b751b3a4da77013ed3153745f29736613eb5f4ace8e263e3950efe4b5a",
+    "resource_pack/models/entity/pets/mochi/carry_main_book.geo.json": "19b28cbb9988214363ab5bd1b0409fdca9fba3fa3f2daa013729f45fa184be97",
+    "resource_pack/models/entity/pets/mochi/carry_main_cube.geo.json": "67406f11ec01db5a04ca54b2711c404de8734013353558e46d3b72b1bf8a0bb3",
+    "resource_pack/models/entity/pets/mochi/carry_main_rbow_cube.geo.json": "ae3ba963dd6aa9a14ea3eb8a62be95de1a42a6ed2f45262dc143a3989916542b",
+    "resource_pack/models/entity/pets/mochi/carry_main_sprite.geo.json": "e945cae04cc1a90a71a92e87f46d06c7fabbbaadc4dee0d6fc475388645b68dc",
+    "resource_pack/models/entity/pets/mochi/carry_main_sprite32.geo.json": "14cb662afce8504ff72155ceff2c83bd467353eedf8e7e14ea802099658e0cb8",
+    "resource_pack/models/entity/pets/mochi/carry_main_stairs.geo.json": "e7e68420f093707cf6961906df7251d15d553e962b36ccb9d27e5a7c4190691a",
+    "resource_pack/models/entity/pets/mochi/carry_off_book.geo.json": "2412f556c8f70bf31a68dd06ef6a6bea46427afc50f35fc39a1285f1cc41bc39",
+    "resource_pack/models/entity/pets/mochi/carry_off_cube.geo.json": "8338428285800551753d3c0ae2e4f8cbffda1ebf4681e578d69c97a83eb999aa",
+    "resource_pack/models/entity/pets/mochi/carry_off_rbow_cube.geo.json": "643da259f9833412e738d9f7eee6a05aa3045596c65bcd4404588de7bee712d5",
+    "resource_pack/models/entity/pets/mochi/carry_off_sprite.geo.json": "d7f2de9c1a34eadd686394d133108534736d2046741cb69194e583df6e3f2863",
+    "resource_pack/models/entity/pets/mochi/carry_off_sprite32.geo.json": "f367b58698f2f3dcbeb276b84cae71f6017d346e45748821d89909f63dd54f59",
+    "resource_pack/models/entity/pets/mochi/carry_off_stairs.geo.json": "92b2cefbbc1eb7e012fe3a34b7bdb7c919f11c26bcb853b5545d96e30e95d4c4",
+    "resource_pack/models/entity/pets/mochi/model.geo.json": "fd166c712bb56945a53b52a633e5513f4d7e99a3427922183fe409c633921305",
+    "resource_pack/models/entity/pets/mochi/paws.geo.json": "e3ae1d7f7da9c630131b145488338b0ec646851979e7dffb0760afb74149a0ce",
+    "resource_pack/models/entity/pets/mochi/shield_left.geo.json": "6331c18d6d5d06055b64cebd2afe2b62717c61fdea31819a0e1b163cc8cbf0bf",
+    "resource_pack/models/entity/pets/mochi/shield_right.geo.json": "9cd7bcff83b968d77cc8affd1fec0bfc506b294280924f36d22db1f49574dab7",
+    "resource_pack/models/entity/pets/mochi/tool_axe.geo.json": "e2938f095c893f8ebb8aef5c74f7c5f7d3bebf72b0ea2d99c8bbe553dcc815ad",
+    "resource_pack/models/entity/pets/mochi/tool_hoe.geo.json": "848fb64c8bcb8388f3cc60d4fa57d991cd80ff9fe16907f606f46daa1b8fd903",
+    "resource_pack/models/entity/pets/mochi/tool_pickaxe.geo.json": "fc2c3704cc53f44af82a5abcf08c9bc4c5b7d55faa8e1f24c59e64f0659b1ce2",
+    "resource_pack/models/entity/pets/mochi/tool_rbow_axe.geo.json": "4bb5446675b78cc6b711f5e6b54cda41948e0b5bb05bed59d9fbfa07e7aafb01",
+    "resource_pack/models/entity/pets/mochi/tool_rbow_hoe.geo.json": "83cb9a1d1e2e688f7aa509f012fc236f8e5a6d643072c67b40b113e0639e85c1",
+    "resource_pack/models/entity/pets/mochi/tool_rbow_pickaxe.geo.json": "0c5bc60d9a9258b62413d2f39389abfc2368fe8dcfea00937d20bea7aa050164",
+    "resource_pack/models/entity/pets/mochi/tool_rbow_shovel.geo.json": "59afbe16957b31dd0ad0fb3b09cd202734d75c997223e06c682b287a81fa11a5",
+    "resource_pack/models/entity/pets/mochi/tool_rbow_spear.geo.json": "56ec4fa6916e3fe48c127f71cd1f1a4efb1cdedb532e8c012b9374697dd887a8",
+    "resource_pack/models/entity/pets/mochi/tool_rbow_sword.geo.json": "3c86d7e9922a66d4c52c90c02a8ef1de64d848cc8d58f428c707eb3240a249d9",
+    "resource_pack/models/entity/pets/mochi/tool_shovel.geo.json": "7fc79b4f51597c6683cead44a39f45228dbdd44624af27f3015bb86709f58aaf",
+    "resource_pack/models/entity/pets/mochi/tool_sword.geo.json": "141b329efad181edde1f45d81f299da112bd7ce02fae671be822cd53f39d90f5",
+    "resource_pack/animations/pet_seating.animation.json": "f92f88dc8361a8f1068fa6b0255ae162fc10bf9a8f810b45a5666c441ce33c77",
+    "resource_pack/animations/pet_shared.animation.json": "f1f15dddd3d2b11c44b36c4ee8b62404260df50f7de895c524722317cdd6fa19",
+    "resource_pack/animations/pets/carter.animation.json": "697be5a9d59d7a3cc0f40c9ddad9024da2eec5dc69a9824d14780bc876c70cb9",
+    "resource_pack/animations/pets/casper.animation.json": "0a5ff3639a3ed0c570f49465249e4059f1b636f5cf453a19735ca080904ee24a",
+    "resource_pack/animations/pets/mochi.animation.json": "26829d63800dd24ae19790b390c207695fd0ac43dae799b4647c658ac96eec43"
+  },
+  "armor_fields": {
+    "resource_pack/attachables/chainmail_helmet.player.json": {
+      "identifier": "minecraft:chainmail_helmet.player",
+      "item": {
+        "minecraft:chainmail_helmet": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/chain_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.helmet",
+        "pet_carter": "geometry.pet.carter.armor.helmet",
+        "pet_mochi": "geometry.pet.mochi.armor.helmet",
+        "pet_casper": "geometry.pet.casper.armor.helmet"
+      },
+      "animations": {
+        "offset": "animation.armor.helmet.offset"
+      }
+    },
+    "resource_pack/attachables/leather_helmet.player.json": {
+      "identifier": "minecraft:leather_helmet.player",
+      "item": {
+        "minecraft:leather_helmet": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor_leather",
+        "enchanted": "armor_leather_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/leather_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.helmet",
+        "pet_carter": "geometry.pet.carter.armor.helmet",
+        "pet_mochi": "geometry.pet.mochi.armor.helmet",
+        "pet_casper": "geometry.pet.casper.armor.helmet"
+      },
+      "animations": {
+        "offset": "animation.armor.helmet.offset"
+      }
+    },
+    "resource_pack/attachables/leather_chestplate.player.json": {
+      "identifier": "minecraft:leather_chestplate.player",
+      "item": {
+        "minecraft:leather_chestplate": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor_leather",
+        "enchanted": "armor_leather_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/leather_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.chestplate",
+        "pet_carter": "geometry.pet.carter.armor.chestplate",
+        "pet_mochi": "geometry.pet.mochi.armor.chestplate",
+        "pet_casper": "geometry.pet.casper.armor.chestplate"
+      },
+      "animations": {
+        "offset": "animation.armor.chestplate.offset"
+      }
+    },
+    "resource_pack/attachables/chainmail_leggings.player.json": {
+      "identifier": "minecraft:chainmail_leggings.player",
+      "item": {
+        "minecraft:chainmail_leggings": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/chain_2",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.leggings",
+        "pet_carter": "geometry.pet.carter.armor.leggings",
+        "pet_mochi": "geometry.pet.mochi.armor.leggings",
+        "pet_casper": "geometry.pet.casper.armor.leggings"
+      },
+      "animations": {
+        "offset": "animation.armor.leggings.offset"
+      }
+    },
+    "resource_pack/attachables/iron_boots.player.json": {
+      "identifier": "minecraft:iron_boots.player",
+      "item": {
+        "minecraft:iron_boots": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/iron_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.boots",
+        "pet_carter": "geometry.pet.carter.armor.boots",
+        "pet_mochi": "geometry.pet.mochi.armor.boots",
+        "pet_casper": "geometry.pet.casper.armor.boots"
+      },
+      "animations": {
+        "offset": "animation.armor.boots.offset"
+      }
+    },
+    "resource_pack/attachables/rbow_chestplate.player.json": {
+      "identifier": "elleedog:rbow_chestplate.player",
+      "item": {
+        "elleedog:rbow_chestplate": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/rbow_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.chestplate",
+        "pet_carter": "geometry.pet.carter.armor.chestplate",
+        "pet_mochi": "geometry.pet.mochi.armor.chestplate",
+        "pet_casper": "geometry.pet.casper.armor.chestplate"
+      },
+      "animations": {
+        "offset": "animation.armor.chestplate.offset"
+      }
+    },
+    "resource_pack/attachables/netherite_leggings.player.json": {
+      "identifier": "minecraft:netherite_leggings.player",
+      "item": {
+        "minecraft:netherite_leggings": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/netherite_2",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.leggings",
+        "pet_carter": "geometry.pet.carter.armor.leggings",
+        "pet_mochi": "geometry.pet.mochi.armor.leggings",
+        "pet_casper": "geometry.pet.casper.armor.leggings"
+      },
+      "animations": {
+        "offset": "animation.armor.leggings.offset"
+      }
+    },
+    "resource_pack/attachables/golden_leggings.player.json": {
+      "identifier": "minecraft:golden_leggings.player",
+      "item": {
+        "minecraft:golden_leggings": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/gold_2",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.leggings",
+        "pet_carter": "geometry.pet.carter.armor.leggings",
+        "pet_mochi": "geometry.pet.mochi.armor.leggings",
+        "pet_casper": "geometry.pet.casper.armor.leggings"
+      },
+      "animations": {
+        "offset": "animation.armor.leggings.offset"
+      }
+    },
+    "resource_pack/attachables/leather_leggings.player.json": {
+      "identifier": "minecraft:leather_leggings.player",
+      "item": {
+        "minecraft:leather_leggings": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor_leather",
+        "enchanted": "armor_leather_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/leather_2",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.leggings",
+        "pet_carter": "geometry.pet.carter.armor.leggings",
+        "pet_mochi": "geometry.pet.mochi.armor.leggings",
+        "pet_casper": "geometry.pet.casper.armor.leggings"
+      },
+      "animations": {
+        "offset": "animation.armor.leggings.offset"
+      }
+    },
+    "resource_pack/attachables/chainmail_boots.player.json": {
+      "identifier": "minecraft:chainmail_boots.player",
+      "item": {
+        "minecraft:chainmail_boots": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/chain_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.boots",
+        "pet_carter": "geometry.pet.carter.armor.boots",
+        "pet_mochi": "geometry.pet.mochi.armor.boots",
+        "pet_casper": "geometry.pet.casper.armor.boots"
+      },
+      "animations": {
+        "offset": "animation.armor.boots.offset"
+      }
+    },
+    "resource_pack/attachables/diamond_leggings.player.json": {
+      "identifier": "minecraft:diamond_leggings.player",
+      "item": {
+        "minecraft:diamond_leggings": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/diamond_2",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.leggings",
+        "pet_carter": "geometry.pet.carter.armor.leggings",
+        "pet_mochi": "geometry.pet.mochi.armor.leggings",
+        "pet_casper": "geometry.pet.casper.armor.leggings"
+      },
+      "animations": {
+        "offset": "animation.armor.leggings.offset"
+      }
+    },
+    "resource_pack/attachables/iron_helmet.player.json": {
+      "identifier": "minecraft:iron_helmet.player",
+      "item": {
+        "minecraft:iron_helmet": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/iron_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.helmet",
+        "pet_carter": "geometry.pet.carter.armor.helmet",
+        "pet_mochi": "geometry.pet.mochi.armor.helmet",
+        "pet_casper": "geometry.pet.casper.armor.helmet"
+      },
+      "animations": {
+        "offset": "animation.armor.helmet.offset"
+      }
+    },
+    "resource_pack/attachables/netherite_boots.player.json": {
+      "identifier": "minecraft:netherite_boots.player",
+      "item": {
+        "minecraft:netherite_boots": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/netherite_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.boots",
+        "pet_carter": "geometry.pet.carter.armor.boots",
+        "pet_mochi": "geometry.pet.mochi.armor.boots",
+        "pet_casper": "geometry.pet.casper.armor.boots"
+      },
+      "animations": {
+        "offset": "animation.armor.boots.offset"
+      }
+    },
+    "resource_pack/attachables/chainmail_chestplate.player.json": {
+      "identifier": "minecraft:chainmail_chestplate.player",
+      "item": {
+        "minecraft:chainmail_chestplate": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/chain_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.chestplate",
+        "pet_carter": "geometry.pet.carter.armor.chestplate",
+        "pet_mochi": "geometry.pet.mochi.armor.chestplate",
+        "pet_casper": "geometry.pet.casper.armor.chestplate"
+      },
+      "animations": {
+        "offset": "animation.armor.chestplate.offset"
+      }
+    },
+    "resource_pack/attachables/netherite_helmet.player.json": {
+      "identifier": "minecraft:netherite_helmet.player",
+      "item": {
+        "minecraft:netherite_helmet": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/netherite_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.helmet",
+        "pet_carter": "geometry.pet.carter.armor.helmet",
+        "pet_mochi": "geometry.pet.mochi.armor.helmet",
+        "pet_casper": "geometry.pet.casper.armor.helmet"
+      },
+      "animations": {
+        "offset": "animation.armor.helmet.offset"
+      }
+    },
+    "resource_pack/attachables/diamond_boots.player.json": {
+      "identifier": "minecraft:diamond_boots.player",
+      "item": {
+        "minecraft:diamond_boots": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/diamond_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.boots",
+        "pet_carter": "geometry.pet.carter.armor.boots",
+        "pet_mochi": "geometry.pet.mochi.armor.boots",
+        "pet_casper": "geometry.pet.casper.armor.boots"
+      },
+      "animations": {
+        "offset": "animation.armor.boots.offset"
+      }
+    },
+    "resource_pack/attachables/diamond_chestplate.player.json": {
+      "identifier": "minecraft:diamond_chestplate.player",
+      "item": {
+        "minecraft:diamond_chestplate": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/diamond_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.chestplate",
+        "pet_carter": "geometry.pet.carter.armor.chestplate",
+        "pet_mochi": "geometry.pet.mochi.armor.chestplate",
+        "pet_casper": "geometry.pet.casper.armor.chestplate"
+      },
+      "animations": {
+        "offset": "animation.armor.chestplate.offset"
+      }
+    },
+    "resource_pack/attachables/diamond_helmet.player.json": {
+      "identifier": "minecraft:diamond_helmet.player",
+      "item": {
+        "minecraft:diamond_helmet": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/diamond_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.helmet",
+        "pet_carter": "geometry.pet.carter.armor.helmet",
+        "pet_mochi": "geometry.pet.mochi.armor.helmet",
+        "pet_casper": "geometry.pet.casper.armor.helmet"
+      },
+      "animations": {
+        "offset": "animation.armor.helmet.offset"
+      }
+    },
+    "resource_pack/attachables/netherite_chestplate.player.json": {
+      "identifier": "minecraft:netherite_chestplate.player",
+      "item": {
+        "minecraft:netherite_chestplate": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/netherite_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.chestplate",
+        "pet_carter": "geometry.pet.carter.armor.chestplate",
+        "pet_mochi": "geometry.pet.mochi.armor.chestplate",
+        "pet_casper": "geometry.pet.casper.armor.chestplate"
+      },
+      "animations": {
+        "offset": "animation.armor.chestplate.offset"
+      }
+    },
+    "resource_pack/attachables/rbow_boots.player.json": {
+      "identifier": "elleedog:rbow_boots.player",
+      "item": {
+        "elleedog:rbow_boots": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/rbow_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.boots",
+        "pet_carter": "geometry.pet.carter.armor.boots",
+        "pet_mochi": "geometry.pet.mochi.armor.boots",
+        "pet_casper": "geometry.pet.casper.armor.boots"
+      },
+      "animations": {
+        "offset": "animation.armor.boots.offset"
+      }
+    },
+    "resource_pack/attachables/iron_chestplate.player.json": {
+      "identifier": "minecraft:iron_chestplate.player",
+      "item": {
+        "minecraft:iron_chestplate": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/iron_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.chestplate",
+        "pet_carter": "geometry.pet.carter.armor.chestplate",
+        "pet_mochi": "geometry.pet.mochi.armor.chestplate",
+        "pet_casper": "geometry.pet.casper.armor.chestplate"
+      },
+      "animations": {
+        "offset": "animation.armor.chestplate.offset"
+      }
+    },
+    "resource_pack/attachables/golden_chestplate.player.json": {
+      "identifier": "minecraft:golden_chestplate.player",
+      "item": {
+        "minecraft:golden_chestplate": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/gold_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.chestplate",
+        "pet_carter": "geometry.pet.carter.armor.chestplate",
+        "pet_mochi": "geometry.pet.mochi.armor.chestplate",
+        "pet_casper": "geometry.pet.casper.armor.chestplate"
+      },
+      "animations": {
+        "offset": "animation.armor.chestplate.offset"
+      }
+    },
+    "resource_pack/attachables/golden_helmet.player.json": {
+      "identifier": "minecraft:golden_helmet.player",
+      "item": {
+        "minecraft:golden_helmet": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/gold_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.helmet",
+        "pet_carter": "geometry.pet.carter.armor.helmet",
+        "pet_mochi": "geometry.pet.mochi.armor.helmet",
+        "pet_casper": "geometry.pet.casper.armor.helmet"
+      },
+      "animations": {
+        "offset": "animation.armor.helmet.offset"
+      }
+    },
+    "resource_pack/attachables/golden_boots.player.json": {
+      "identifier": "minecraft:golden_boots.player",
+      "item": {
+        "minecraft:golden_boots": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/gold_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.boots",
+        "pet_carter": "geometry.pet.carter.armor.boots",
+        "pet_mochi": "geometry.pet.mochi.armor.boots",
+        "pet_casper": "geometry.pet.casper.armor.boots"
+      },
+      "animations": {
+        "offset": "animation.armor.boots.offset"
+      }
+    },
+    "resource_pack/attachables/rbow_helmet.player.json": {
+      "identifier": "elleedog:rbow_helmet.player",
+      "item": {
+        "elleedog:rbow_helmet": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/rbow_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.helmet",
+        "pet_carter": "geometry.pet.carter.armor.helmet",
+        "pet_mochi": "geometry.pet.mochi.armor.helmet",
+        "pet_casper": "geometry.pet.casper.armor.helmet"
+      },
+      "animations": {
+        "offset": "animation.armor.helmet.offset"
+      }
+    },
+    "resource_pack/attachables/leather_boots.player.json": {
+      "identifier": "minecraft:leather_boots.player",
+      "item": {
+        "minecraft:leather_boots": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor_leather",
+        "enchanted": "armor_leather_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/leather_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.boots",
+        "pet_carter": "geometry.pet.carter.armor.boots",
+        "pet_mochi": "geometry.pet.mochi.armor.boots",
+        "pet_casper": "geometry.pet.casper.armor.boots"
+      },
+      "animations": {
+        "offset": "animation.armor.boots.offset"
+      }
+    },
+    "resource_pack/attachables/iron_leggings.player.json": {
+      "identifier": "minecraft:iron_leggings.player",
+      "item": {
+        "minecraft:iron_leggings": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/iron_2",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.leggings",
+        "pet_carter": "geometry.pet.carter.armor.leggings",
+        "pet_mochi": "geometry.pet.mochi.armor.leggings",
+        "pet_casper": "geometry.pet.casper.armor.leggings"
+      },
+      "animations": {
+        "offset": "animation.armor.leggings.offset"
+      }
+    },
+    "resource_pack/attachables/rbow_leggings.player.json": {
+      "identifier": "elleedog:rbow_leggings.player",
+      "item": {
+        "elleedog:rbow_leggings": "query.owner_identifier == 'minecraft:player'"
+      },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/rbow_2",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.leggings",
+        "pet_carter": "geometry.pet.carter.armor.leggings",
+        "pet_mochi": "geometry.pet.mochi.armor.leggings",
+        "pet_casper": "geometry.pet.casper.armor.leggings"
+      },
+      "animations": {
+        "offset": "animation.armor.leggings.offset"
+      }
+    }
+  },
+  "source_mutations": [
+    "tools/equipment.py",
+    "tools/seating.py"
+  ]
+}

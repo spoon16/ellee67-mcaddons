@@ -1,0 +1,44 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "elleedog:rbow_drop",
+      "is_spawnable": false,
+      "is_summonable": false,
+      "properties": {
+        "elleedog:drop_art": {
+          "type": "int",
+          "range": [
+            0,
+            15
+          ],
+          "default": 0,
+          "client_sync": false
+        }
+      }
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "elleedog_legacy_drop"
+        ]
+      },
+      "minecraft:persistent": {},
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": false
+      },
+      "minecraft:collision_box": {
+        "width": 0.0,
+        "height": 0.0
+      },
+      "minecraft:inventory": {
+        "inventory_size": 1,
+        "container_type": "inventory",
+        "private": true,
+        "can_be_siphoned_from": false
+      }
+    },
+    "events": {}
+  }
+}

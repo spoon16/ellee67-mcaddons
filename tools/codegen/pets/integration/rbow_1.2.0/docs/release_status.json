@@ -1,0 +1,38 @@
+{
+  "version": [
+    1,
+    2,
+    0
+  ],
+  "channel": "release",
+  "user_confirmation": {
+    "source_version": "1.1.10",
+    "reported_on": "2026-09-12",
+    "text": "The Rbow spear now works. We are satisified with this outcome.",
+    "scope": "User confirmed the native Rbow spear outcome; no broader acceptance results inferred.",
+    "spear_status": "USER_CONFIRMED",
+    "same_spear_files_in_release": true
+  },
+  "sulfur_cubes": {
+    "implementation": "Native bouncy item tag on the three existing block items only.",
+    "status": "IMPLEMENTED; client feeding, display and persistence checks NOT RUN",
+    "custom_entity_override": false,
+    "new_scripts": false,
+    "items": [
+      "elleedog:rbow_block",
+      "elleedog:rbow_ore",
+      "elleedog:deepslate_rbow_ore"
+    ]
+  },
+  "assistant_engine_tests_run": 0,
+  "assistant_client_tests_run": 0,
+  "assistant_realm_tests_run": 0,
+  "known_limits": [
+    "New sulfur-cube interaction/rendering requires a client check.",
+    "Native trims on Rbow armor are retained; a complete client/Realm acceptance matrix has not been run.",
+    "Dropped Rbow items can be destroyed by explosions; placed-block blast resistance is retained.",
+    "Redstone-like ore rarity is configured but has not been empirically calibrated.",
+    "The existing behavior-pack player override for armor knockback can conflict with other player overrides.",
+    "Legacy custom-drop recovery from earlier versions is retained but not engine-validated."
+  ]
+}

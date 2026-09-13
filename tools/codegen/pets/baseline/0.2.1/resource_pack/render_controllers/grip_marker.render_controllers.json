@@ -1,0 +1,22 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.pet.grip_marker": {
+      "rebuild_animation_matrices": true,
+      "geometry": "Geometry.pet_grip_marker",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.pet_grip_marker"
+      ],
+      "part_visibility": [
+        {
+          "*": true
+        }
+      ]
+    }
+  }
+}

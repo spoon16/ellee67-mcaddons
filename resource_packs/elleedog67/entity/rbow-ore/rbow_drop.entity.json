@@ -1,0 +1,20 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "elleedog:rbow_drop",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/items/rbow_ingot"
+      },
+      "geometry": {
+        "default": "geometry.elleedog.legacy_drop"
+      },
+      "render_controllers": [
+        "controller.render.elleedog.legacy_drop"
+      ]
+    }
+  }
+}

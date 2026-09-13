@@ -1,0 +1,78 @@
+{
+  "version": [
+    1,
+    1,
+    9
+  ],
+  "release_kind": "Lab-5-based fixed-translation hypothesis, placement test",
+  "production_case": "d",
+  "fixed_position_before": [
+    0,
+    24,
+    -27
+  ],
+  "fixed_position_candidate": [
+    0,
+    0,
+    0
+  ],
+  "alignment_status": "NOT RUN",
+  "assistant_engine_tests_run": 0,
+  "assistant_client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "user_lab_report": {
+    "1": {
+      "renders": true,
+      "brandishes": false,
+      "note": "Looks correct, no brandishing."
+    },
+    "2": {
+      "renders": true,
+      "brandishes": false,
+      "note": "Trident visible. Hold-only control deliberately has no attack/use behavior."
+    },
+    "3": {
+      "renders": true,
+      "brandishes": true,
+      "note": "Looks like a Netherite object; same reported behavior as 4."
+    },
+    "4": {
+      "renders": true,
+      "brandishes": true,
+      "note": "Looks like a Netherite object; same reported behavior as 3."
+    },
+    "5": {
+      "renders": true,
+      "brandishes": true,
+      "placement_correct": false,
+      "note": "Very low in first person; displaced behind player in third person."
+    }
+  },
+  "interpretation": "Lab 5 is a user-validated visible/brandishing rendering path, not a validated alignment. Fixed translation is the next isolated variable. Zero translation is not derived as an exact solution from the screenshots.",
+  "preserved": [
+    "Lab 5 mesh, pivot, scale, texture, materials and rotation expressions",
+    "all 19 previous runtime PNGs",
+    "all gameplay except diagnostic version",
+    "1.1.7 sleeve fix",
+    "normal drops",
+    "standard trims on Rbow armor"
+  ],
+  "not_claimed": [
+    "precise hand alignment",
+    "correct first-person framing",
+    "full jab/charge/tired-state validation",
+    "armor-stand alignment",
+    "Realm validation"
+  ],
+  "separate_alignment_lab": "diagnostics/spear_alignment; optional standalone A/B/C/D comparison; not bundled with the main gameplay installer",
+  "screenshots": [
+    {
+      "file": "IMG_1227.PNG",
+      "sha256": "1e99902f8cd404a0c52d9018930a40eb34ae3a88581577a0b506fc5bf3f17a25"
+    },
+    {
+      "file": "IMG_1228.PNG",
+      "sha256": "92685a517c3f9d3da712eb5c7a4618aa04ba4e85430f971cf47861488d733a91"
+    }
+  ]
+}

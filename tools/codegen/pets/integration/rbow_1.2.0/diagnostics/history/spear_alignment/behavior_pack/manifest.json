@@ -1,0 +1,44 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "67 Rbow Spear Alignment Lab - Behavior",
+    "description": "Four translation-only comparisons using the working Lab 5 mesh and motions. No gameplay-world dependency. Ellee Schoonover | ellee@ellee.com.",
+    "uuid": "7db07634-f4cf-5390-aab9-f228e993ead9",
+    "version": [
+      0,
+      2,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "d4e52181-ec49-5f2b-85f3-a72eaf71d06c",
+      "version": [
+        0,
+        2,
+        0
+      ]
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "Ellee Schoonover — ellee@ellee.com"
+    ]
+  },
+  "dependencies": [
+    {
+      "uuid": "ad935ac7-65f5-5f0d-9d97-3d1799732016",
+      "version": [
+        0,
+        2,
+        0
+      ]
+    }
+  ]
+}

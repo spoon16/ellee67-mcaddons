@@ -1,0 +1,82 @@
+{
+  "behavior_pack": {
+    "added": [],
+    "removed": [],
+    "modified": [
+      "entities/player.json",
+      "manifest.json",
+      "recipes/paw_token.json",
+      "scripts/catalog.generated.js",
+      "scripts/main.js",
+      "scripts/property_schema.generated.js",
+      "scripts/rbow_compat.js"
+    ]
+  },
+  "resource_pack": {
+    "added": [
+      "textures/entity/pets/markers/carter_051.png",
+      "textures/entity/pets/markers/casper_051.png",
+      "textures/entity/pets/markers/cube_051.png",
+      "textures/entity/pets/markers/grip_051.png",
+      "textures/entity/pets/markers/human_051.png",
+      "textures/entity/pets/markers/mochi_051.png",
+      "textures/ui/pet_diag_051.png"
+    ],
+    "removed": [
+      "textures/entity/pets/markers/carter_050.png",
+      "textures/entity/pets/markers/casper_050.png",
+      "textures/entity/pets/markers/cube_050.png",
+      "textures/entity/pets/markers/grip_050.png",
+      "textures/entity/pets/markers/human_050.png",
+      "textures/entity/pets/markers/mochi_050.png",
+      "textures/ui/pet_diag_050.png"
+    ],
+    "modified": [
+      "entity/diag_cube.entity.json",
+      "entity/player.entity.json",
+      "manifest.json",
+      "texts/cs_CZ.lang",
+      "texts/da_DK.lang",
+      "texts/de_DE.lang",
+      "texts/en_GB.lang",
+      "texts/en_US.lang",
+      "texts/es_ES.lang",
+      "texts/es_MX.lang",
+      "texts/fi_FI.lang",
+      "texts/fr_CA.lang",
+      "texts/fr_FR.lang",
+      "texts/hu_HU.lang",
+      "texts/id_ID.lang",
+      "texts/it_IT.lang",
+      "texts/ja_JP.lang",
+      "texts/ko_KR.lang",
+      "texts/nb_NO.lang",
+      "texts/nl_NL.lang",
+      "texts/pl_PL.lang",
+      "texts/pt_BR.lang",
+      "texts/pt_PT.lang",
+      "texts/ru_RU.lang",
+      "texts/sk_SK.lang",
+      "texts/sv_SE.lang",
+      "texts/tr_TR.lang",
+      "texts/uk_UA.lang",
+      "texts/zh_CN.lang",
+      "texts/zh_TW.lang"
+    ]
+  },
+  "rbow_behavior_pack": {
+    "added": [],
+    "removed": [],
+    "modified": [
+      "entities/player.json",
+      "manifest.json"
+    ]
+  },
+  "rbow_resource_pack": {
+    "added": [],
+    "removed": [],
+    "modified": [
+      "manifest.json"
+    ]
+  }
+}

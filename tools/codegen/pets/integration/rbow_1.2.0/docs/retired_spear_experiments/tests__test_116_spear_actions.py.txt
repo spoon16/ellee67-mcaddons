@@ -1,0 +1,123 @@
+"""Retained TP / non-Rbow contracts; FP parent locked for direct 1.1.7 animation. NOT client rendering."""
+from pathlib import Path
+import copy,hashlib,json,math,re,subprocess,sys,unittest
+from molang_subset import evaluate,Parser
+R=Path(__file__).resolve().parents[1];BP=R/'behavior_pack';RP=R/'resource_pack'
+def read(path):return json.loads(path.read_text())
+A=RP/'animations/rbow_spear_actions.animation.json'
+REF=R/'art/references/spear_player_actions.vanilla.json'
+def env(**kw):
+ x={'slot.weapon.mainhand':'elleedog:rbow_spear','v.attack_time':0.5,'q.main_hand_item_use_duration':20.0,'q.kinetic_weapon_delay':8.0,'q.kinetic_weapon_dismount_duration':50.0,'q.kinetic_weapon_damage_duration':175.0,'q.life_time':1.0,'q.target_x_rotation':0.0,'q.target_y_rotation':0.0,'q.is_sneaking':0.0,'v.tp_melee_spear_base_arm_rotation_x':-40.0,'v.attack_body_rot_y':2.0,'this':0.0}
+ # Deliberately nonzero original deltas to detect accidental vanilla replacement.
+ for name in re.findall(r'\bv\.[a-zA-Z0-9_]+',REF.read_text()):x.setdefault(name,7.25)
+ x.update(kw);return x
+class SpearActions116(unittest.TestCase):
+ def test_exactly_four_action_overrides_no_idle_or_trident_route(self):
+  names=set(read(A)['animations'])
+  self.assertEqual(names,{'animation.player.first_person.melee_spear_attack','animation.player.first_person.melee_spear_use','animation.player.melee_spear_attack','animation.humanoid.melee_spear_use'})
+  self.assertNotIn('brandish_spear',A.read_text());self.assertNotIn('animation.humanoid.charging',A.read_text())
+ def test_no_player_entity_controller_or_old_texture_mesh_added(self):
+  self.assertFalse((RP/'entity/player.entity.json').exists());self.assertFalse((RP/'animation_controllers').exists())
+  self.assertFalse((RP/'attachables/rbow_spear.json').exists())
+  for p in RP.rglob('*.json'):self.assertNotIn('texture_meshes',p.read_text(),str(p))
+ def test_runtime_footprint_only_animation_metadata_diagnostic_and_sleeve_endcap(self):
+  before=read(R/'docs/v1.1.5_runtime_baseline.json')['sha256']
+  now={p.relative_to(R).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for folder in [BP,RP] for p in folder.rglob('*') if p.is_file()}
+  self.assertEqual(set(now)-set(before),{'resource_pack/animations/rbow_spear_actions.animation.json', *read(R/'docs/v1.1.7_change_scope.json')['added']})
+  self.assertEqual(set(before)-set(now),set())
+  allowed={'behavior_pack/manifest.json','resource_pack/manifest.json','behavior_pack/scripts/main.js','behavior_pack/THIRD_PARTY_NOTICES.md','resource_pack/THIRD_PARTY_NOTICES.md','resource_pack/textures/models/armor/rbow_1.png'}
+  self.assertLessEqual({p for p in before if before[p]!=now[p]},allowed)
+ def test_spear_item_definition_exactly_unchanged(self):
+  before=read(R/'docs/v1.1.5_runtime_baseline.json')['sha256']
+  p=BP/'items/rbow_spear.json';self.assertEqual(hashlib.sha256(p.read_bytes()).hexdigest(),before[p.relative_to(R).as_posix()])
+  c=read(p)['minecraft:item']['components'];self.assertNotIn('minecraft:use_animation',c);self.assertTrue(c['minecraft:hand_equipped']['value'])
+ def test_eighteen_runtime_textures_unchanged_except_sleeve_endcap(self):
+  before=read(R/'docs/v1.1.5_runtime_baseline.json')['sha256'];files=list((RP/'textures').rglob('*.png'));self.assertEqual(len(files),19)
+  for p in files:
+   if p.relative_to(R).as_posix()=='resource_pack/textures/models/armor/rbow_1.png':continue # Exact 64-pixel delta checked in test_117_sleeves.
+   self.assertEqual(hashlib.sha256(p.read_bytes()).hexdigest(),before[p.relative_to(R).as_posix()])
+ def test_unchanged_third_person_grip_translation(self):
+  for name,j in read(A)['animations'].items():
+   if 'first_person' not in name:
+    self.assertEqual(j['bones']['rightitem']['position'],[0.0,-1.5,-1.5])
+    self.assertNotIn('position',j['bones']['rightarm'])
+ def test_no_scaling_geometry_or_runtime_commands(self):
+  text=A.read_text()
+  for s in ['scale','geometry','texture','/playanimation','command','timeline','on_entry'] :self.assertNotIn('"'+s+'"',text)
+ def test_every_changed_channel_gated_to_exact_mainhand_item(self):
+  original=read(REF);new=read(A);count=0
+  for name,j in original['animations'].items():
+   self.assertEqual(set(new['animations'][name]),set(j))
+   for bone,channels in j['bones'].items():
+    for channel,values in channels.items():
+     for i,old in enumerate(values):
+      value=new['animations'][name]['bones'][bone][channel][i]
+      if value!=old:
+       count+=1;self.assertTrue(value.startswith("(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ?"))
+       self.assertTrue(value.endswith(f': ({old})'));Parser(value).parse()
+  self.assertEqual(count,16)
+ def test_unpatched_structure_matches_native_reference(self):
+  new=read(A);reference=read(REF)
+  for name,j in reference['animations'].items():
+   for bone,channels in j['bones'].items():
+    for key,values in channels.items():
+     for i,old in enumerate(values):
+      actual=new['animations'][name]['bones'][bone][key][i]
+      if actual!=old:new['animations'][name]['bones'][bone][key][i]=old
+  self.assertEqual(new,reference)
+ def test_other_items_use_exact_vanilla_math(self):
+  refs=read(REF)['animations'];anims=read(A)['animations']
+  for item in ['minecraft:netherite_spear','minecraft:iron_spear','minecraft:trident','minecraft:diamond_sword','other:custom_spear','']:
+   e=env(**{'slot.weapon.mainhand':item})
+   for name,j in refs.items():
+    for bone,channels in j['bones'].items():
+     for key,values in channels.items():
+      for i,old in enumerate(values):self.assertAlmostEqual(evaluate(anims[name]['bones'][bone][key][i],e),evaluate(old,e))
+ def test_offhand_rbow_does_not_activate_patch(self):
+  e=env(**{'slot.weapon.mainhand':'minecraft:iron_spear','slot.weapon.offhand':'elleedog:rbow_spear'})
+  sample=read(A)['animations']['animation.player.first_person.melee_spear_attack']['bones']['rightitem']['position'][0]
+  ref=read(REF)['animations']['animation.player.first_person.melee_spear_attack']['bones']['rightitem']['position'][0]
+  self.assertEqual(evaluate(sample,e),evaluate(ref,e))
+ def test_attack_curve_finite_bounded_and_returns_to_hold(self):
+  curves=read(R/'docs/v1.1.7_parent_curves.json');values=[]
+  for phase in [-5,0,0.001]+[x/100 for x in range(101)]+[1.5,999]:
+   p=evaluate(curves['pulse'],env(**{'v.attack_time':phase}));self.assertTrue(math.isfinite(p));self.assertGreaterEqual(p,-1e-12);self.assertLessEqual(p,1.00001);values.append(p)
+  self.assertGreater(max(values),.99)
+  self.assertAlmostEqual(evaluate(curves['pulse'],env(**{'v.attack_time':0})),0)
+  self.assertAlmostEqual(evaluate(curves['pulse'],env(**{'v.attack_time':1})),0)
+ def test_missing_attack_time_has_safe_zero_fallback(self):
+  e=env();e.pop('v.attack_time');self.assertEqual(evaluate(read(R/'docs/v1.1.7_parent_curves.json')['pulse'],e),0)
+ def test_fp_attack_and_use_start_at_exact_native_hold_transform(self):
+  for mode in ['attack','use']:
+   j=read(A)['animations']['animation.player.first_person.melee_spear_'+mode]['bones']['rightitem']
+   e=env(**{'v.attack_time':0,'q.main_hand_item_use_duration':0})
+   for key,expected in [('position',[-1.5,2.0,3.5]),('rotation',[45.0,55.0,-12.5])]:
+    for v,n in zip(j[key],expected):self.assertAlmostEqual(evaluate(v,e),n)
+ def test_charge_curves_raise_hold_and_lower(self):
+  ready=read(R/'docs/v1.1.7_parent_curves.json')['ready']
+  for ticks,want in [(0,0),(4,.5),(8,1),(20,1),(58,1),(171,1),(177,.5),(183,0),(2000,0)]:self.assertAlmostEqual(evaluate(ready,env(**{'q.main_hand_item_use_duration':ticks})),want)
+ def test_zero_delay_negative_time_and_infinite_charge_window(self):
+  ready=read(R/'docs/v1.1.7_parent_curves.json')['ready']
+  for delay in [0,1,8,50]:
+   for ticks in [-10,0,1,5000]:self.assertTrue(math.isfinite(evaluate(ready,env(**{'q.main_hand_item_use_duration':ticks,'q.kinetic_weapon_delay':delay}))))
+  self.assertEqual(evaluate(ready,env(**{'q.main_hand_item_use_duration':5000,'q.kinetic_weapon_damage_duration':-1})),1)
+ def test_tp_actions_remain_nonconstant_without_engine_attachable_variables(self):
+  e=env()
+  for key in list(e):
+   if key.startswith('v.fp_melee_spear_') or key.startswith('v.tp_melee_spear_'):e.pop(key)
+  for name in read(A)['animations']:
+   if 'first_person' in name:continue # Now held constant; direct FP mesh has separate movement tests.
+   channel='rotation'
+   bone='rightitem' if 'first_person' in name else 'rightarm'
+   expression=read(A)['animations'][name]['bones'][bone][channel][0]
+   e0=e|{'v.attack_time':0,'q.main_hand_item_use_duration':0}
+   e1=e|{'v.attack_time':.3,'q.main_hand_item_use_duration':20}
+   self.assertNotEqual(evaluate(expression,e0),evaluate(expression,e1))
+ def test_regeneration_exact_animation_bytes(self):
+  old=A.read_bytes();subprocess.run([sys.executable,str(R/'tools/build_spear_actions.py')],check=True,stdout=subprocess.PIPE)
+  self.assertEqual(old,A.read_bytes())
+ def test_latest_status_keeps_engine_validation_unrun(self):
+  status=read(R/'docs/v1.1.6_status.json');self.assertEqual(status['version'],[1,1,6])
+  for key in ['engine_tests_run','client_render_tests_run','realm_tests_run']:self.assertEqual(status[key],0)
+  self.assertTrue(status['user_confirmed_115_spear_placement']);self.assertFalse(status['116_animations_client_confirmed'])
+if __name__=='__main__':unittest.main()

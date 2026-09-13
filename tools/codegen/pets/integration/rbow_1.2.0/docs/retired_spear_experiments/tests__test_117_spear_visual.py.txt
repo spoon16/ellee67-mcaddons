@@ -1,0 +1,168 @@
+"""1.1.7 explicit render graph, sprite geometry and action arithmetic checks.
+The local Molang subset does NOT execute Minecraft or prove client rendering.
+"""
+from pathlib import Path
+import hashlib,json,math,subprocess,sys,unittest
+from PIL import Image
+from molang_subset import evaluate,Parser
+R=Path(__file__).resolve().parents[1];RP=R/'resource_pack'
+def read(p):return json.loads((R/p).read_text())
+ATT='resource_pack/attachables/rbow_spear_compact.json'
+GEO='resource_pack/models/entity/rbow_spear_compact.geo.json'
+ANIM='resource_pack/animations/rbow_spear_direct.animation.json'
+SPEAR='resource_pack/textures/items/rbow_spear.png'
+
+def context(**kwargs):
+    e={'owner.identifier':'minecraft:player','c.item_slot':'main_hand','owner.v.attack_time':0,
+       'owner.v.item_use_normalized':0,'q.delta_time':1/20,'q.life_time':0,'c.is_first_person':1}
+    e.update(kwargs);return e
+
+def frame(e):
+    e=e.copy()
+    for line in read(ATT)['minecraft:attachable']['description']['scripts']['pre_animation']:
+        name,expression=line[:-1].split(' = ',1)
+        e[name]=evaluate(expression,e)
+    return e
+
+def fp(e):
+    bones=read(ANIM)['animations']['animation.elleedog.rbow_spear.first_person']['bones']
+    return {b:{ch:[evaluate(x,e) for x in vals] for ch,vals in channels.items()} for b,channels in bones.items()}
+
+class SpearVisual117(unittest.TestCase):
+    def test_attachable_replaces_only_rbow_spear_and_uses_existing_png(self):
+        d=read(ATT)['minecraft:attachable']['description']
+        self.assertEqual(d['identifier'],'elleedog:rbow_spear')
+        self.assertNotIn('item',d)
+        self.assertEqual(d['textures']['default'],'textures/items/rbow_spear')
+        self.assertEqual(d['render_controllers'],['controller.render.item_default'])
+        self.assertIn('enchanted',d['materials']);self.assertIn('enchanted',d['textures'])
+
+    def test_model_bound_to_actual_item_slot_not_fixed_world_position(self):
+        g=read(GEO)['minecraft:geometry'][0];bones=g['bones']
+        self.assertEqual(bones[0]['binding'],'q.item_slot_to_bone_name(c.item_slot)')
+        self.assertEqual(bones[0]['pivot'],[0,24,0])
+        self.assertEqual(bones[1]['parent'],bones[0]['name'])
+        self.assertEqual(bones[2]['parent'],bones[1]['name'])
+        self.assertNotIn('texture_meshes',str(g))
+
+    def test_126_texels_not_a_large_textured_rectangle(self):
+        cubes=read(GEO)['minecraft:geometry'][0]['bones'][2]['cubes']
+        im=Image.open(R/SPEAR).convert('RGBA')
+        points={(x,y) for y in range(32) for x in range(32) if im.getpixel((x,y))[3]}
+        self.assertEqual(len(cubes),len(points));self.assertEqual(len(cubes),126)
+        uvpoints={(round(c['uv']['north']['uv'][0]-.01),round(c['uv']['north']['uv'][1]-.01)) for c in cubes}
+        self.assertEqual(points,uvpoints)
+        for c in cubes:
+            self.assertEqual(c['size'],[.5,.5,.5])
+            for f in c['uv'].values():self.assertEqual(f['uv_size'],[.98,.98])
+
+    def test_faces_always_sample_a_single_opaque_source_texel(self):
+        im=Image.open(R/SPEAR).convert('RGBA')
+        for c in read(GEO)['minecraft:geometry'][0]['bones'][2]['cubes']:
+            for f in c['uv'].values():
+                x,y=f['uv'];self.assertEqual(im.getpixel((int(x),int(y)))[3],255)
+                self.assertLess(x+f['uv_size'][0],int(x)+1)
+                self.assertLess(y+f['uv_size'][1],int(y)+1)
+
+    def test_entire_geometry_is_compact_and_centered_near_hand(self):
+        cubes=read(GEO)['minecraft:geometry'][0]['bones'][2]['cubes']
+        mins=[min(c['origin'][i] for c in cubes) for i in range(3)]
+        maxs=[max(c['origin'][i]+c['size'][i] for c in cubes) for i in range(3)]
+        self.assertLessEqual(maxs[0]-mins[0],16);self.assertLessEqual(maxs[1]-mins[1],16)
+        self.assertAlmostEqual(maxs[2]-mins[2],.5)
+        self.assertTrue(any(all(c['origin'][i]<=[0,24,0][i]<=c['origin'][i]+c['size'][i] for i in range(3)) for c in cubes))
+        self.assertLess(max(math.dist(c['origin'],[0,24,0]) for c in cubes),17)
+
+    def test_animation_aliases_resolve_to_the_visible_bones(self):
+        d=read(ATT)['minecraft:attachable']['description'];g=read(GEO)['minecraft:geometry'][0]
+        self.assertEqual(d['geometry']['default'],g['description']['identifier'])
+        anims=read(ANIM)['animations'];names={b['name'] for b in g['bones']}
+        self.assertEqual(set(d['animations'].values()),set(anims))
+        for anim in anims.values():self.assertLessEqual(set(anim['bones']),names)
+        self.assertIn('rbow_grip',anims[d['animations']['fp']]['bones'])
+
+    def test_mutually_exclusive_view_routes(self):
+        animate=read(ATT)['minecraft:attachable']['description']['scripts']['animate']
+        for val in [0,1]:
+            active=[name for route in animate for name,expr in route.items() if evaluate(expr,{'c.is_first_person':val})]
+            self.assertEqual(active,['fp' if val else 'tp'])
+
+    def test_all_preanimation_statements_numeric_subset_parse(self):
+        prep=read(ATT)['minecraft:attachable']['description']['scripts']['pre_animation']
+        for s in prep:
+            self.assertTrue(s.endswith(';'));Parser(s[:-1].split(' = ',1)[1]).parse()
+        self.assertTrue(all(math.isfinite(v) for k,v in frame(context()).items() if k.startswith('v.rb_')))
+
+    def test_attack_input_rotates_visible_mesh_bone_without_target(self):
+        poses=[]
+        for phase in [0,.1,.25,.4,.7,1]:
+            e=frame(context(**{'owner.v.attack_time':phase}))
+            poses.append(fp(e)['rbow_grip']['rotation'][0])
+        self.assertGreater(max(poses)-min(poses),65)
+        self.assertAlmostEqual(poses[0],poses[-1])
+        self.assertNotIn('target',str(read(ATT)))
+
+    def test_charge_input_changes_mesh_root_transform(self):
+        idle=fp(frame(context()))['rbow_grip']['rotation'][0]
+        e=context(**{'owner.v.item_use_normalized':.000001})
+        for _ in range(8):e=frame(e)
+        ready=fp(e)['rbow_grip']['rotation'][0]
+        self.assertAlmostEqual(idle-ready,57)
+        self.assertAlmostEqual(e['v.rb_use_seconds'],.4)
+
+    def test_hold_use_suppresses_jab_and_release_resets_ready_pose(self):
+        e=context(**{'owner.v.item_use_normalized':.0002,'owner.v.attack_time':.4})
+        for _ in range(20):e=frame(e)
+        self.assertEqual(e['v.rb_jab'],0);self.assertEqual(e['v.rb_ready'],1)
+        e['owner.v.item_use_normalized']=0;e['owner.v.attack_time']=0;e=frame(e)
+        self.assertEqual(e['v.rb_use_seconds'],0);self.assertEqual(e['v.rb_ready'],0)
+        self.assertEqual(fp(e),fp(frame(context())))
+
+    def test_charge_accumulator_is_seconds_not_ambiguous_native_duration(self):
+        for fps in [20,30,60,120]:
+            e=context(**{'owner.v.item_use_normalized':.000001,'q.delta_time':1/fps})
+            for _ in range(fps):e=frame(e)
+            self.assertAlmostEqual(e['v.rb_use_seconds'],1,places=6);self.assertEqual(e['v.rb_ready'],1)
+
+    def test_damage_window_lowers_weapon_without_giving_new_damage(self):
+        e=context(**{'owner.v.item_use_normalized':.000001})
+        for _ in range(210):e=frame(e)
+        self.assertEqual(e['v.rb_ready'],0)
+        self.assertLessEqual(e['v.rb_use_seconds'],10.15)
+        self.assertNotIn('timeline',str(read(ANIM)))
+
+    def test_armor_stand_does_not_read_player_action_state(self):
+        e=frame(context(**{'owner.identifier':'minecraft:armor_stand','owner.v.attack_time':.5,'owner.v.item_use_normalized':1}))
+        for k in ['v.rb_attack','v.rb_using','v.rb_jab','v.rb_ready']:self.assertEqual(e[k],0)
+        tp=read(ANIM)['animations']['animation.elleedog.rbow_spear.third_person']['bones']
+        self.assertEqual(tp['rbow_grip']['position'],[0,0,0]);self.assertEqual(tp['rbow_grip']['rotation'],[0,0,0])
+
+    def test_offhand_has_no_mainhand_attack_or_charge(self):
+        e=frame(context(**{'c.item_slot':'off_hand','owner.v.attack_time':.5,'owner.v.item_use_normalized':1}))
+        self.assertEqual(e['v.rb_attack'],0);self.assertEqual(e['v.rb_ready'],0)
+
+    def test_absent_public_owner_values_fall_back_to_idle(self):
+        e=context();del e['owner.v.attack_time'];del e['owner.v.item_use_normalized']
+        self.assertEqual(fp(frame(e)),fp(frame(context())))
+
+    def test_extreme_inputs_produce_only_finite_bounded_transforms(self):
+        for attack in [-4,0,.5,1,100]:
+            for use in [0,1]:
+                e=frame(context(**{'owner.v.attack_time':attack,'owner.v.item_use_normalized':use,'q.delta_time':10000}))
+                pose=fp(e);rot=pose['rbow_grip']['rotation']
+                self.assertTrue(all(math.isfinite(v) and abs(v)<180 for v in rot))
+                self.assertGreaterEqual(pose['rbow_axis']['position'][1],-1e-12)
+                self.assertLessEqual(pose['rbow_axis']['position'][1],1.5)
+                self.assertEqual(pose['rbow_grip']['position'],[0,0,0])
+
+    def test_generator_recreates_the_exact_runtime_graph(self):
+        paths=[ATT,GEO,ANIM];old={p:(R/p).read_bytes() for p in paths}
+        subprocess.run([sys.executable,str(R/'tools/build_spear_visual.py')],check=True,stdout=subprocess.PIPE)
+        self.assertEqual(old,{p:(R/p).read_bytes() for p in paths})
+
+    def test_explicit_client_validation_limit_is_recorded(self):
+        d=read('docs/v1.1.7_spear_visual.json')
+        self.assertEqual(d['client_render_tests_run'],0);self.assertGreater(len(d['known_risks']),0)
+        self.assertEqual(d['sprite_sha256'],hashlib.sha256((R/SPEAR).read_bytes()).hexdigest())
+
+if __name__=='__main__':unittest.main()

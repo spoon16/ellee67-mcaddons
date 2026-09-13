@@ -1,0 +1,35 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "67 Rbow Ore Mod — Resources",
+    "description": "1.2.0: Vibrant Rbow item and block textures, worn armor, standard armor trims and native spear rendering. Ellee Schoonover | ellee@ellee.com.",
+    "uuid": "898ad9f2-55bc-4347-aa25-9079c12c8cb9",
+    "version": [
+      1,
+      2,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "6cae9868-30da-4771-865d-52fe0ef0687f",
+      "version": [
+        1,
+        2,
+        0
+      ]
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "Ellee Schoonover — ellee@ellee.com"
+    ],
+    "license": "See LICENSE and THIRD_PARTY_NOTICES.md"
+  }
+}

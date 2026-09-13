@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+"""Patch the four native spear ACTION animations for the compact Rbow sprite.
+
+1.1.7 holds the Rbow FP parent item at its idle baseline while the new compact
+attachable animates its OWN visible grip/shaft bones. TP arm curves stay as in
+1.1.6. No player entity replacement, script, or item-stat changes.
+Native idle/hold animations and the native controller state transitions remain
+untouched. Every changed expression selects the exact Rbow item;
+all other held items evaluate the original Mojang expression verbatim.
+
+These are client-test candidate curves, not engine-validated animation claims.
+The numerically tested Molang subset is only a local evaluator, not Minecraft.
+"""
+from __future__ import annotations
+import copy, json
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+GUARD="q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')"
+# Native player.attack_time drives jab phase, including air attacks. Avoid
+# replacing it with a hit callback, a command, or a separate server-side timer.
+PHASE='math.clamp((v.attack_time ?? 0.0), 0.0, 1.0)'
+PULSE=f'math.sin(math.pow({PHASE}, 0.55) * 180.0)'
+# Use elapsed native item-use time with the component delay. Tick/unit alignment
+# is an explicit client acceptance check; docs do not specify all query units.
+# Clamp and guard denominators; this is NOT bow-like damage accumulation.
+USED='math.max(0.0, q.main_hand_item_use_duration)'
+DELAY='math.max(1.0, q.kinetic_weapon_delay)'
+RAISE=f'math.clamp({USED} / {DELAY}, 0.0, 1.0)'
+FATIGUE=f'math.clamp(({USED} - {DELAY} - q.kinetic_weapon_dismount_duration) / 20.0, 0.0, 1.0)'
+# Lower during the final 12 ticks of the damage window. Respect infinite duration.
+LOWER=f"(q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp(({USED} - {DELAY} - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0))"
+READY=f'({RAISE} * (1.0 - {LOWER}))'
+SWAY=f'(math.sin(q.life_time * 150.0) * {FATIGUE} * {READY})'
+
+def choose(new: str|float, original: str|float) -> str:
+    return f'({GUARD}) ? ({new}) : ({original})'
+
+def build():
+    source=json.loads((ROOT/'art/references/spear_player_actions.vanilla.json').read_text())
+    out=copy.deepcopy(source)
+    patches={}
+    def channel(animation,bone,kind,index,expression):
+        old=source['animations'][animation]['bones'][bone][kind][index]
+        out['animations'][animation]['bones'][bone][kind][index]=choose(expression,old)
+        patches[f'{animation}/{bone}/{kind}/{index}']={'rbow':expression,'otherwise':old}
+    # Hold the FP parent at the native HOLD baseline in all action states.
+    # The compact attachable animates its own root/shaft, avoiding double motion.
+    name='animation.player.first_person.melee_spear_attack'
+    for i,expr in enumerate([-1.5, 2.0, 3.5]):
+        channel(name,'rightitem','position',i,expr)
+    for i,expr in enumerate([45.0, 55.0, -12.5]):
+        if i:channel(name,'rightitem','rotation',i,expr)
+    name='animation.player.first_person.melee_spear_use'
+    for i,expr in enumerate([-1.5, 2.0, 3.5]):
+        channel(name,'rightitem','position',i,expr)
+    channel(name,'rightitem','rotation',1,55.0)
+    channel(name,'rightitem','rotation',2,-12.5)
+    # Third-person keeps the native hand/item translation fixed: only the arm
+    # and wrist turn, so the item does not slide independently out of the hand.
+    base='(v.tp_melee_spear_base_arm_rotation_x ?? 0.0) + q.target_x_rotation - q.is_sneaking * 27.0 - this'
+    name='animation.player.melee_spear_attack'
+    channel(name,'rightarm','rotation',0,f'{base} - 35.0 * {PULSE}')
+    channel(name,'rightitem','rotation',0,f'-20.0 * {PULSE}')
+    name='animation.humanoid.melee_spear_use'
+    channel(name,'rightarm','rotation',0,f'{base} - 45.0 * {READY}')
+    channel(name,'rightarm','rotation',1,f'math.clamp(q.target_y_rotation, -60.0, 45.0) - this + 6.0 * {READY}')
+    channel(name,'rightarm','rotation',2,f'1.5 * {SWAY}')
+    channel(name,'rightitem','rotation',0,f'-20.0 * {READY}')
+    path=ROOT/'resource_pack/animations/rbow_spear_actions.animation.json'
+    path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text(json.dumps(out,indent=2)+'\n')
+    (ROOT/'docs/v1.1.7_parent_curves.json').write_text(json.dumps({
+        'guard':GUARD,'phase':PHASE,'pulse':PULSE,'raise':RAISE,
+        'ready':READY,'fatigue':FATIGUE,'sway':SWAY,
+        'patched_channels':patches
+    },indent=2)+'\n')
+    print('Generated FP parent-baseline guards and retained TP arm curves; no gameplay changes.')
+if __name__=='__main__':build()

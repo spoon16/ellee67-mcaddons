@@ -1,0 +1,13 @@
+[project]
+name = "elleedog67-pets-compiler"
+version = "0.5.2"
+description = "Generates the Pets and Rbow pack content for the ElleeDog 67 add-on. Run through `npm run codegen`."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  # Pinned: PNG bytes must match the hash-locked references the compiler tests check. 11.0.0 reproduces them; 11.1+ and 12.x encode differently.
+  "pillow==11.0.0",
+  "numpy>=1.24",
+]
+
+[tool.uv]
+package = false

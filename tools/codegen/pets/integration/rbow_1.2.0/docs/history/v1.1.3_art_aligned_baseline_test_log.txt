@@ -1,0 +1,100 @@
+test_all_eighteen_native_patterns_shipped (test_113.Release113.test_all_eighteen_native_patterns_shipped) ... ok
+test_all_exported_sprite_edges_are_binary (test_113.Release113.test_all_exported_sprite_edges_are_binary) ... ok
+test_base_armor_textures_are_not_overridden (test_113.Release113.test_base_armor_textures_are_not_overridden) ... ok
+test_bootstrap_and_dependencies (test_113.Release113.test_bootstrap_and_dependencies) ... ok
+test_carrier_visuals_have_independent_meshes (test_113.Release113.test_carrier_visuals_have_independent_meshes) ... ok
+test_damage_sensor_not_item_runtime_alias (test_113.Release113.test_damage_sensor_not_item_runtime_alias) ... ok
+test_default_and_workshop_render_routes (test_113.Release113.test_default_and_workshop_render_routes) ... ok
+test_every_template_has_multiple_colours (test_113.Release113.test_every_template_has_multiple_colours) ... ok
+test_four_synchronized_slots_on_both_owners (test_113.Release113.test_four_synchronized_slots_on_both_owners) ... ok
+test_native_third_slot_is_not_falsely_enabled (test_113.Release113.test_native_third_slot_is_not_falsely_enabled) ... ok
+test_no_native_item_entity_override (test_113.Release113.test_no_native_item_entity_override) ... ok
+test_only_native_pattern_pixels_are_coloured (test_113.Release113.test_only_native_pattern_pixels_are_coloured) ... ok
+test_protective_carrier_has_persistent_native_inventory (test_113.Release113.test_protective_carrier_has_persistent_native_inventory) ... ok
+test_release_does_not_claim_engine_pass (test_113.Release113.test_release_does_not_claim_engine_pass) ... ok
+test_workshop_preserves_ids_and_uses_clones (test_113.Release113.test_workshop_preserves_ids_and_uses_clones) ... ok
+test_all_72_structure_files_decode_and_have_exact_connected_counts (test_pack.PackTests.test_all_72_structure_files_decode_and_have_exact_connected_counts) ... ok
+test_all_item_ids_names_and_counts (test_pack.PackTests.test_all_item_ids_names_and_counts) ... ok
+test_all_json_parses_without_duplicate_keys (test_pack.PackTests.test_all_json_parses_without_duplicate_keys) ... ok
+test_all_sixteen_armor_states_have_exactly_one_sensor_result (test_pack.PackTests.test_all_sixteen_armor_states_have_exactly_one_sensor_result) ... ok
+test_all_sixteen_items_have_explicit_namespaced_icons (test_pack.PackTests.test_all_sixteen_items_have_explicit_namespaced_icons) ... ok
+test_armor_numbers_and_repair_enchant_slots (test_pack.PackTests.test_armor_numbers_and_repair_enchant_slots) ... ok
+test_atlas_paths_exist (test_pack.PackTests.test_atlas_paths_exist) ... ok
+test_attachables_reference_matching_ids_and_real_textures (test_pack.PackTests.test_attachables_reference_matching_ids_and_real_textures) ... ok
+test_custom_blocks_fire_blast_and_empty_native_loot (test_pack.PackTests.test_custom_blocks_fire_blast_and_empty_native_loot) ... ok
+test_feature_graph_has_no_missing_references (test_pack.PackTests.test_feature_graph_has_no_missing_references) ... ok
+test_item_fire_protection_and_block_item_replacement (test_pack.PackTests.test_item_fire_protection_and_block_item_replacement) ... ok
+test_localization_all_items_and_blocks_have_names (test_pack.PackTests.test_localization_all_items_and_blocks_have_names) ... ok
+test_manifests_ids_version_and_dependency (test_pack.PackTests.test_manifests_ids_version_and_dependency) ... ok
+test_modern_block_parser_tags (test_pack.PackTests.test_modern_block_parser_tags) ... ok
+test_native_style_spear_recipe_and_material_conversion (test_pack.PackTests.test_native_style_spear_recipe_and_material_conversion) ... ok
+test_no_automatic_cheats_or_global_gameplay_commands (test_pack.PackTests.test_no_automatic_cheats_or_global_gameplay_commands) ... ok
+test_only_declared_entities_are_overridden (test_pack.PackTests.test_only_declared_entities_are_overridden) ... ok
+test_original_art_pipeline_does_not_read_vanilla_or_poster_pixels (test_pack.PackTests.test_original_art_pipeline_does_not_read_vanilla_or_poster_pixels) ... ok
+test_pack_icons_use_uploaded_artwork (test_pack.PackTests.test_pack_icons_use_uploaded_artwork) ... ok
+test_player_override_preserves_reference_except_explicit_armor_additions (test_pack.PackTests.test_player_override_preserves_reference_except_explicit_armor_additions) ... ok
+test_png_assets_and_transparency (test_pack.PackTests.test_png_assets_and_transparency) ... ok
+test_preview_uses_current_name (test_pack.PackTests.test_preview_uses_current_name) ... ok
+test_recipe_references_unlocks_and_no_pattern_collision (test_pack.PackTests.test_recipe_references_unlocks_and_no_pattern_collision) ... ok
+test_spear_uses_native_components_not_throwable_or_custom_attack (test_pack.PackTests.test_spear_uses_native_components_not_throwable_or_custom_attack) ... ok
+test_sprite_edges_have_no_fringes_or_semitransparent_pixels (test_pack.PackTests.test_sprite_edges_have_no_fringes_or_semitransparent_pixels) ... ok
+test_standard_trims_enabled_without_overwriting_vanilla_materials (test_pack.PackTests.test_standard_trims_enabled_without_overwriting_vanilla_materials) ... ok
+test_tool_numbers_and_components (test_pack.PackTests.test_tool_numbers_and_components) ... ok
+test_world_generation_height_dimension_and_distribution (test_pack.PackTests.test_world_generation_height_dimension_and_distribution) ... ok
+test_all_seven_reported_icons_resolve (test_prismatic_art.PrismaticArt.test_all_seven_reported_icons_resolve) ... ok
+test_armor_dimensions_and_distinct_layers (test_prismatic_art.PrismaticArt.test_armor_dimensions_and_distinct_layers) ... ok
+test_atlas_is_composed_from_runtime_sprites (test_prismatic_art.PrismaticArt.test_atlas_is_composed_from_runtime_sprites) ... FAIL
+test_generator_recreates_runtime_pixels_without_reference_images (test_prismatic_art.PrismaticArt.test_generator_recreates_runtime_pixels_without_reference_images) ... FAIL
+test_inventory_dimensions (test_prismatic_art.PrismaticArt.test_inventory_dimensions) ... ok
+test_no_vanilla_images_used_to_regenerate_rbow_art (test_prismatic_art.PrismaticArt.test_no_vanilla_images_used_to_regenerate_rbow_art) ... ok
+test_rainbow_armor_not_monochrome_with_a_few_colored_pixels (test_prismatic_art.PrismaticArt.test_rainbow_armor_not_monochrome_with_a_few_colored_pixels) ... /mnt/data/rbow114_work/67_Rbow_Ore_Mod/tests/test_prismatic_art.py:45: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  for r,g,b,a in Image.open(p).convert('RGBA').getdata():
+ok
+test_runtime_images_are_exactly_the_new_authored_files (test_prismatic_art.PrismaticArt.test_runtime_images_are_exactly_the_new_authored_files) ... ok
+test_silhouettes_have_no_floating_noise (test_prismatic_art.PrismaticArt.test_silhouettes_have_no_floating_noise) ... FAIL
+test_armor_stand_uses_static_binding_pose (test_spear_attachment.SpearAttachment.test_armor_stand_uses_static_binding_pose) ... ok
+test_attachment_references_resolve_to_shipped_animations (test_spear_attachment.SpearAttachment.test_attachment_references_resolve_to_shipped_animations) ... ok
+test_exclusive_view_context_routes (test_spear_attachment.SpearAttachment.test_exclusive_view_context_routes) ... ok
+test_first_person_retains_native_use_and_attack_rotation (test_spear_attachment.SpearAttachment.test_first_person_retains_native_use_and_attack_rotation) ... ok
+test_first_person_uses_native_translation (test_spear_attachment.SpearAttachment.test_first_person_uses_native_translation) ... ok
+test_held_sprite_not_inventory_diagonal (test_spear_attachment.SpearAttachment.test_held_sprite_not_inventory_diagonal) ... ok
+test_native_binding_and_texture_mesh_geometry_retained (test_spear_attachment.SpearAttachment.test_native_binding_and_texture_mesh_geometry_retained) ... ok
+test_no_old_zero_offset_hold_still_active (test_spear_attachment.SpearAttachment.test_no_old_zero_offset_hold_still_active) ... ok
+test_owner_variables_have_zero_fallbacks (test_spear_attachment.SpearAttachment.test_owner_variables_have_zero_fallbacks) ... ok
+test_regeneration_keeps_the_pose_repair (test_spear_attachment.SpearAttachment.test_regeneration_keeps_the_pose_repair) ... ok
+test_spear_gameplay_unchanged_from_original (test_spear_attachment.SpearAttachment.test_spear_gameplay_unchanged_from_original) ... ok
+test_third_person_retains_native_use_rotation (test_spear_attachment.SpearAttachment.test_third_person_retains_native_use_rotation) ... ok
+test_third_person_uses_native_idle_translation_and_attack_variable (test_spear_attachment.SpearAttachment.test_third_person_uses_native_idle_translation_and_attack_variable) ... ok
+test_trimmable_armor_remains_separate_from_new_trim_material (test_spear_attachment.SpearAttachment.test_trimmable_armor_remains_separate_from_new_trim_material) ... ok
+
+======================================================================
+FAIL: test_atlas_is_composed_from_runtime_sprites (test_prismatic_art.PrismaticArt.test_atlas_is_composed_from_runtime_sprites)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/data/rbow114_work/67_Rbow_Ore_Mod/tests/test_prismatic_art.py", line 61, in test_atlas_is_composed_from_runtime_sprites
+    self.assertEqual(atlas.crop((x,y,x+32,y+32)).tobytes(),Image.open(TEX/'items'/f'{name}.png').convert('RGBA').tobytes())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'\x0[234 chars]x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0[13095 chars]\x00' != b'\x0[234 chars]x00\x9a\x8c\x95\xff\x9a\x8c\x95\xff\x00\x00\x0[11842 chars]\x00'
+
+======================================================================
+FAIL: test_generator_recreates_runtime_pixels_without_reference_images (test_prismatic_art.PrismaticArt.test_generator_recreates_runtime_pixels_without_reference_images)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/data/rbow114_work/67_Rbow_Ore_Mod/tests/test_prismatic_art.py", line 67, in test_generator_recreates_runtime_pixels_without_reference_images
+    self.assertEqual((Path(temp)/'textures'/relative).read_bytes(),p.read_bytes(),str(relative))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'\x8[94 chars]x06\xd5IDATx\x9c\xed\x97[l\\\xd5\x15\x86\xbfs\[5002 chars]\x82' != b'\x8[94 chars]x06\xa8IDATx\x9c\xcd\x97\xcb\x8f\x1cW\x15\xc6\[4799 chars]\x82' : items/rbow_block.png
+
+======================================================================
+FAIL: test_silhouettes_have_no_floating_noise (test_prismatic_art.PrismaticArt.test_silhouettes_have_no_floating_noise)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/data/rbow114_work/67_Rbow_Ore_Mod/tests/test_prismatic_art.py", line 39, in test_silhouettes_have_no_floating_noise
+    self.assertEqual(len(sizes),2 if p.stem=='rbow_boots' else 1,str(p))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 3 != 1 : /mnt/data/rbow114_work/67_Rbow_Ore_Mod/resource_pack/textures/items/deepslate_rbow_ore.png
+
+----------------------------------------------------------------------
+Ran 66 tests in 1.818s
+
+FAILED (failures=3)

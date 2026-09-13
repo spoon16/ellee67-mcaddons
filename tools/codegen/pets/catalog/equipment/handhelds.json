@@ -1,0 +1,413 @@
+{
+  "schema_version": 1,
+  "rendering": "pixel-extruded native icon, third-person only",
+  "items": [
+    {
+      "id": "minecraft:wooden_sword",
+      "texture": "textures/items/wood_sword",
+      "shape": "sword",
+      "grip_pixel": [
+        4.5,
+        11.5
+      ]
+    },
+    {
+      "id": "minecraft:wooden_pickaxe",
+      "texture": "textures/items/wood_pickaxe",
+      "shape": "pickaxe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:wooden_axe",
+      "texture": "textures/items/wood_axe",
+      "shape": "axe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:wooden_shovel",
+      "texture": "textures/items/wood_shovel",
+      "shape": "shovel",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:wooden_hoe",
+      "texture": "textures/items/wood_hoe",
+      "shape": "hoe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:stone_sword",
+      "texture": "textures/items/stone_sword",
+      "shape": "sword",
+      "grip_pixel": [
+        4.5,
+        11.5
+      ]
+    },
+    {
+      "id": "minecraft:stone_pickaxe",
+      "texture": "textures/items/stone_pickaxe",
+      "shape": "pickaxe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:stone_axe",
+      "texture": "textures/items/stone_axe",
+      "shape": "axe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:stone_shovel",
+      "texture": "textures/items/stone_shovel",
+      "shape": "shovel",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:stone_hoe",
+      "texture": "textures/items/stone_hoe",
+      "shape": "hoe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:iron_sword",
+      "texture": "textures/items/iron_sword",
+      "shape": "sword",
+      "grip_pixel": [
+        4.5,
+        11.5
+      ]
+    },
+    {
+      "id": "minecraft:iron_pickaxe",
+      "texture": "textures/items/iron_pickaxe",
+      "shape": "pickaxe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:iron_axe",
+      "texture": "textures/items/iron_axe",
+      "shape": "axe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:iron_shovel",
+      "texture": "textures/items/iron_shovel",
+      "shape": "shovel",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:iron_hoe",
+      "texture": "textures/items/iron_hoe",
+      "shape": "hoe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:golden_sword",
+      "texture": "textures/items/gold_sword",
+      "shape": "sword",
+      "grip_pixel": [
+        4.5,
+        11.5
+      ]
+    },
+    {
+      "id": "minecraft:golden_pickaxe",
+      "texture": "textures/items/gold_pickaxe",
+      "shape": "pickaxe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:golden_axe",
+      "texture": "textures/items/gold_axe",
+      "shape": "axe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:golden_shovel",
+      "texture": "textures/items/gold_shovel",
+      "shape": "shovel",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:golden_hoe",
+      "texture": "textures/items/gold_hoe",
+      "shape": "hoe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:diamond_sword",
+      "texture": "textures/items/diamond_sword",
+      "shape": "sword",
+      "grip_pixel": [
+        4.5,
+        11.5
+      ]
+    },
+    {
+      "id": "minecraft:diamond_pickaxe",
+      "texture": "textures/items/diamond_pickaxe",
+      "shape": "pickaxe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:diamond_axe",
+      "texture": "textures/items/diamond_axe",
+      "shape": "axe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:diamond_shovel",
+      "texture": "textures/items/diamond_shovel",
+      "shape": "shovel",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:diamond_hoe",
+      "texture": "textures/items/diamond_hoe",
+      "shape": "hoe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:netherite_sword",
+      "texture": "textures/items/netherite_sword",
+      "shape": "sword",
+      "grip_pixel": [
+        4.5,
+        11.5
+      ]
+    },
+    {
+      "id": "minecraft:netherite_pickaxe",
+      "texture": "textures/items/netherite_pickaxe",
+      "shape": "pickaxe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:netherite_axe",
+      "texture": "textures/items/netherite_axe",
+      "shape": "axe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:netherite_shovel",
+      "texture": "textures/items/netherite_shovel",
+      "shape": "shovel",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:netherite_hoe",
+      "texture": "textures/items/netherite_hoe",
+      "shape": "hoe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:copper_sword",
+      "texture": "textures/items/copper_sword",
+      "shape": "sword",
+      "grip_pixel": [
+        4.5,
+        11.5
+      ]
+    },
+    {
+      "id": "minecraft:copper_pickaxe",
+      "texture": "textures/items/copper_pickaxe",
+      "shape": "pickaxe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:copper_axe",
+      "texture": "textures/items/copper_axe",
+      "shape": "axe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:copper_shovel",
+      "texture": "textures/items/copper_shovel",
+      "shape": "shovel",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "minecraft:copper_hoe",
+      "texture": "textures/items/copper_hoe",
+      "shape": "hoe",
+      "grip_pixel": [
+        6.5,
+        9.5
+      ]
+    },
+    {
+      "id": "elleedog:rbow_sword",
+      "texture": "textures/items/rbow_sword",
+      "shape": "rbow_sword",
+      "grip_pixel": [
+        6.5,
+        25.5
+      ],
+      "pixel_resolution": 32,
+      "source_texture": "integration/rbow_1.2.0/resource_pack/textures/items/rbow_sword.png",
+      "bake_pixel_rotation_z": -45,
+      "visual_scale": 1.0,
+      "prune_transparent": true,
+      "provider": "rbow_1.2.0"
+    },
+    {
+      "id": "elleedog:rbow_pickaxe",
+      "texture": "textures/items/rbow_pickaxe",
+      "shape": "rbow_pickaxe",
+      "grip_pixel": [
+        13.5,
+        17.5
+      ],
+      "pixel_resolution": 32,
+      "source_texture": "integration/rbow_1.2.0/resource_pack/textures/items/rbow_pickaxe.png",
+      "bake_pixel_rotation_z": -45,
+      "visual_scale": 1.0,
+      "prune_transparent": true,
+      "provider": "rbow_1.2.0"
+    },
+    {
+      "id": "elleedog:rbow_axe",
+      "texture": "textures/items/rbow_axe",
+      "shape": "rbow_axe",
+      "grip_pixel": [
+        12.5,
+        19.5
+      ],
+      "pixel_resolution": 32,
+      "source_texture": "integration/rbow_1.2.0/resource_pack/textures/items/rbow_axe.png",
+      "bake_pixel_rotation_z": -45,
+      "visual_scale": 1.0,
+      "prune_transparent": true,
+      "provider": "rbow_1.2.0"
+    },
+    {
+      "id": "elleedog:rbow_shovel",
+      "texture": "textures/items/rbow_shovel",
+      "shape": "rbow_shovel",
+      "grip_pixel": [
+        12.5,
+        19.5
+      ],
+      "pixel_resolution": 32,
+      "source_texture": "integration/rbow_1.2.0/resource_pack/textures/items/rbow_shovel.png",
+      "bake_pixel_rotation_z": -45,
+      "visual_scale": 1.0,
+      "prune_transparent": true,
+      "provider": "rbow_1.2.0"
+    },
+    {
+      "id": "elleedog:rbow_hoe",
+      "texture": "textures/items/rbow_hoe",
+      "shape": "rbow_hoe",
+      "grip_pixel": [
+        12.5,
+        19.5
+      ],
+      "pixel_resolution": 32,
+      "source_texture": "integration/rbow_1.2.0/resource_pack/textures/items/rbow_hoe.png",
+      "bake_pixel_rotation_z": -45,
+      "visual_scale": 1.0,
+      "prune_transparent": true,
+      "provider": "rbow_1.2.0"
+    },
+    {
+      "id": "elleedog:rbow_spear",
+      "texture": "textures/items/rbow_spear",
+      "shape": "rbow_spear",
+      "grip_pixel": [
+        15.5,
+        16.5
+      ],
+      "pixel_resolution": 32,
+      "source_texture": "integration/rbow_1.2.0/resource_pack/textures/items/rbow_spear.png",
+      "bake_pixel_rotation_z": -45,
+      "visual_scale": 1.0,
+      "prune_transparent": true,
+      "provider": "rbow_1.2.0"
+    }
+  ],
+  "first_person": "unchanged native item rendering",
+  "texture_size": 16
+}

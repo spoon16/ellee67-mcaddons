@@ -1,0 +1,120 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "elleedog:rbow_hoe",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.elleedog:rbow_hoe.name"
+      },
+      "minecraft:fire_resistant": {
+        "value": true
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": {
+        "textures": {
+          "default": "elleedog:rbow_hoe"
+        }
+      },
+      "minecraft:durability": {
+        "max_durability": 2032
+      },
+      "minecraft:repairable": {
+        "repair_items": [
+          {
+            "items": [
+              "elleedog:rbow_hoe"
+            ],
+            "repair_amount": "context.other->query.remaining_durability + 0.05 * query.max_durability"
+          },
+          {
+            "items": [
+              "elleedog:rbow_ingot"
+            ],
+            "repair_amount": "query.max_durability * 0.25"
+          }
+        ]
+      },
+      "minecraft:tags": {
+        "tags": [
+          "elleedog:rbow",
+          "minecraft:netherite_tier",
+          "minecraft:is_tool",
+          "minecraft:is_hoe"
+        ]
+      },
+      "minecraft:hand_equipped": true,
+      "minecraft:damage": {
+        "value": 0
+      },
+      "minecraft:enchantable": {
+        "slot": "hoe",
+        "value": 15
+      },
+      "elleedog:rbow_tool": {},
+      "minecraft:digger": {
+        "use_efficiency": true,
+        "destroy_speeds": [
+          {
+            "block": {
+              "tags": "q.any_tag('leaves', 'plant', 'minecraft:is_hoe_item_destructible')"
+            },
+            "speed": 9
+          },
+          {
+            "block": "minecraft:hay_block",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:sponge",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:wet_sponge",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:nether_wart_block",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:warped_wart_block",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:dried_kelp_block",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:target",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:moss_block",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:sculk",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:sculk_catalyst",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:sculk_sensor",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:sculk_shrieker",
+            "speed": 9
+          }
+        ]
+      }
+    }
+  }
+}

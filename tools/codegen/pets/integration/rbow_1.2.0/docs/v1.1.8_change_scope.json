@@ -1,0 +1,14 @@
+{
+  "added": [],
+  "removed": [
+    "resource_pack/animations/rbow_spear_actions.animation.json",
+    "resource_pack/animations/rbow_spear_direct.animation.json",
+    "resource_pack/attachables/rbow_spear_compact.json",
+    "resource_pack/models/entity/rbow_spear_compact.geo.json"
+  ],
+  "changed": [
+    "behavior_pack/manifest.json",
+    "behavior_pack/scripts/main.js",
+    "resource_pack/manifest.json"
+  ]
+}

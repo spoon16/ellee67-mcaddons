@@ -1,0 +1,63 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ElleeDog 67 Pets BP 0.2.1 PAW + GRIP FIX",
+    "description": "Carter movement + mouth-tool + first-person paw test. /pet:form carter. P7/D7 0.2.1 markers. Client-test candidate; not engine/Realm-validated.",
+    "uuid": "636ed133-1dbb-5bec-8794-3275dae20ecb",
+    "version": [
+      0,
+      2,
+      1
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "61d94531-47bb-59c1-8bdf-fa7f0fc57fde",
+      "version": [
+        0,
+        2,
+        1
+      ]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "59952251-51cc-526f-a5fb-8ed2289bf0f9",
+      "version": [
+        0,
+        2,
+        1
+      ],
+      "entry": "scripts/main.js"
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "ElleeDog 67"
+    ]
+  },
+  "dependencies": [
+    {
+      "uuid": "2474e3c2-8b08-5f12-8336-0ec2b6aa077c",
+      "version": [
+        0,
+        2,
+        1
+      ]
+    },
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.9.0"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.0.0"
+    }
+  ]
+}

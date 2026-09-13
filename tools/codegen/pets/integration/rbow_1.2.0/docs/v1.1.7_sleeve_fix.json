@@ -1,0 +1,75 @@
+{
+  "version": [
+    1,
+    1,
+    7
+  ],
+  "baseline": "1.1.6 Spear Animation Test",
+  "source_file": "resource_pack/textures/models/armor/rbow_1.png",
+  "source_before_sha256": "c8fb5f65102bc93a71bf7291006080fd44a6c48f7bca7ff40fc0c2eb07f928e5",
+  "source_after_sha256": "808279fb7f1d76c983b94bf267385b62345ace1ede863bc5761bde7fd656de49",
+  "native_uv_origin": [
+    40,
+    16
+  ],
+  "native_arm_cube_size": [
+    4,
+    12,
+    4
+  ],
+  "native_uv_texture_size": [
+    64,
+    32
+  ],
+  "exported_texture_size": [
+    128,
+    64
+  ],
+  "uv_scale": 2,
+  "bottom_face_uv_rectangle_exclusive": [
+    48,
+    16,
+    52,
+    20
+  ],
+  "bottom_face_exported_rectangle_exclusive": [
+    96,
+    32,
+    104,
+    40
+  ],
+  "changed_pixels": 64,
+  "transparent_rgba": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "existing_open_sleeve_side_rectangle_exclusive": [
+    80,
+    58,
+    112,
+    64
+  ],
+  "sleeve_length_changed": false,
+  "geometry_changed": false,
+  "rainbow_colors_changed": false,
+  "arm_mapping": "Both native arms use UV [40,16]; the left arm is mirrored. Clearing the shared bottom cap corrects both sides.",
+  "native_geometry_reference": {
+    "url": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/models/entity/player_armor.json",
+    "blob_sha": "3a8119970a6ed398543f21014cae21bc5b3d5bde",
+    "read_on": "2026-09-12"
+  },
+  "runtime_paths_changed_allowed": [
+    "behavior_pack/manifest.json",
+    "resource_pack/manifest.json",
+    "behavior_pack/scripts/main.js",
+    "resource_pack/textures/models/armor/rbow_1.png"
+  ],
+  "engine_tests_run": 0,
+  "client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "standard_trims_on_rbow_armor": "Configuration unchanged; re-check freshly trimmed chestplate and an existing trimmed piece in game.",
+  "source_preview": "Software-rasterized texture/box comparison; not a game screenshot. Includes an underside view omitted by older previews.",
+  "scope": "Sleeve fix only; combined release also repairs the first-person spear renderer. See v1.1.7_change_scope.json."
+}

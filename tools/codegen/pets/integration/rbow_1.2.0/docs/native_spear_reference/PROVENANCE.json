@@ -1,0 +1,19 @@
+{
+  "purpose": "Normalized offline contract fixtures for tests only; not installed into the resource pack",
+  "reference_tag": "v1.26.40.05",
+  "upstream": "Mojang/bedrock-samples",
+  "files": {
+    "spear.geo.json": {
+      "path": "resource_pack/models/entity/spear.geo.json",
+      "git_blob_sha": "5bbd4cd2a913c2ca1c49dfea4b5edf5528230fde"
+    },
+    "spear.animation.json": {
+      "path": "resource_pack/animations/spear.animation.json",
+      "git_blob_sha": "795ba40d93d701c8dd047e8e64fdef90e9eb0c24"
+    },
+    "spear.animation_controllers.json": {
+      "path": "resource_pack/animation_controllers/spear.animation_controllers.json",
+      "git_blob_sha": "c47e55c7487fb78688832986b95904dfa5321ee6"
+    }
+  }
+}

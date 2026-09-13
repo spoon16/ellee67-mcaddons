@@ -1,0 +1,51 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.pet.probe_cube": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ]
+    },
+    "controller.render.pet.probe_model": {
+      "arrays": {
+        "geometries": {
+          "Array.pet_probe_geo": [
+            "Geometry.pet_carter",
+            "Geometry.pet_mochi",
+            "Geometry.pet_casper"
+          ]
+        },
+        "textures": {
+          "Array.pet_probe_tex": [
+            "Texture.pet_carter",
+            "Texture.pet_mochi",
+            "Texture.pet_casper"
+          ]
+        }
+      },
+      "geometry": "Array.pet_probe_geo[variable.pet_probe_index]",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Array.pet_probe_tex[variable.pet_probe_index]"
+      ],
+      "part_visibility": [
+        {
+          "*": true
+        },
+        {
+          "pet_debug_mouth": false
+        }
+      ]
+    }
+  }
+}

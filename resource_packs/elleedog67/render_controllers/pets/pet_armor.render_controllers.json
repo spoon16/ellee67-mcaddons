@@ -1,0 +1,76 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.pet.armor_native": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "variable.is_enchanted ? Material.enchanted : Material.default"
+        }
+      ],
+      "textures": [
+        "variable.has_trim ? variable.trim_path : Texture.default",
+        "Texture.enchanted"
+      ],
+      "part_visibility": [
+        {
+          "*": "variable.pet_fit_index == 0.0"
+        }
+      ]
+    },
+    "controller.render.pet.armor_carter": {
+      "geometry": "Geometry.pet_carter",
+      "materials": [
+        {
+          "*": "variable.is_enchanted ? Material.enchanted : Material.default"
+        }
+      ],
+      "textures": [
+        "variable.has_trim ? variable.trim_path : Texture.default",
+        "Texture.enchanted"
+      ],
+      "rebuild_animation_matrices": true,
+      "part_visibility": [
+        {
+          "*": "variable.pet_fit_index == 1.0"
+        }
+      ]
+    },
+    "controller.render.pet.armor_mochi": {
+      "geometry": "Geometry.pet_mochi",
+      "materials": [
+        {
+          "*": "variable.is_enchanted ? Material.enchanted : Material.default"
+        }
+      ],
+      "textures": [
+        "variable.has_trim ? variable.trim_path : Texture.default",
+        "Texture.enchanted"
+      ],
+      "rebuild_animation_matrices": true,
+      "part_visibility": [
+        {
+          "*": "variable.pet_fit_index == 2.0"
+        }
+      ]
+    },
+    "controller.render.pet.armor_casper": {
+      "geometry": "Geometry.pet_casper",
+      "materials": [
+        {
+          "*": "variable.is_enchanted ? Material.enchanted : Material.default"
+        }
+      ],
+      "textures": [
+        "variable.has_trim ? variable.trim_path : Texture.default",
+        "Texture.enchanted"
+      ],
+      "rebuild_animation_matrices": true,
+      "part_visibility": [
+        {
+          "*": "variable.pet_fit_index == 3.0"
+        }
+      ]
+    }
+  }
+}

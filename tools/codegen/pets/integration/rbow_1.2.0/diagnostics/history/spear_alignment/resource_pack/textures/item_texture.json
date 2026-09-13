@@ -1,0 +1,9 @@
+{
+  "resource_pack_name": "67 Rbow Spear Alignment Lab",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "elleedog_spear_alignment:icon": {
+      "textures": "textures/items/control_icon"
+    }
+  }
+}

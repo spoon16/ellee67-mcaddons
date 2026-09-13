@@ -1,0 +1,14 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_furnace": {
+    "description": {
+      "identifier": "elleedog:smelt_deepslate_rbow_ore"
+    },
+    "tags": [
+      "furnace",
+      "blast_furnace"
+    ],
+    "input": "elleedog:deepslate_rbow_ore",
+    "output": "elleedog:rbow_ingot"
+  }
+}

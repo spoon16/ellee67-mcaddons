@@ -1,0 +1,29 @@
+{
+  "version": [
+    1,
+    1,
+    4
+  ],
+  "baseline": "1.1.3 Art Aligned",
+  "target_engine_inherited": "26.45 (unchanged target; not verified on a client)",
+  "min_engine_version": [
+    1,
+    26,
+    40
+  ],
+  "rbow_as_trim_material": false,
+  "custom_smithing_interaction": false,
+  "native_trims_on_rbow_armor_configured": true,
+  "native_trim_recipe_base_tag": "minecraft:trimmable_armors",
+  "native_trim_render_controller": "controller.render.armor",
+  "runtime_texture_files_preserved": 23,
+  "vanilla_armor_attachable_overrides": 0,
+  "armor_stand_entity_override": false,
+  "remaining_vanilla_entity_override": "minecraft:player, for existing equipment knockback behavior only",
+  "protected_drops": "Unchanged custom inventory-backed pickup entities; engine acceptance NOT RUN.",
+  "engine_tests_run": 0,
+  "client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "known_inherited_art_test": "Silhouette/no-floating-noise QA is an explicitly expected failure; no texture edit requested.",
+  "migration": "Previous custom overlays stop rendering. No inventories are rewritten. Old custom overlay lore/property may remain inert; native trim data are not removed."
+}

@@ -1,0 +1,142 @@
+"""File/contract regression tests. No client rendering is simulated or claimed."""
+from __future__ import annotations
+import copy,hashlib,json,subprocess,sys,unittest
+from pathlib import Path
+from PIL import Image
+R=Path(__file__).resolve().parents[1];BP=R/'behavior_pack';RP=R/'resource_pack'
+LR=R/'diagnostics/spear_lab/resource_pack';AL=R/'diagnostics/spear_alignment'
+NEW={
+ 'resource_pack/attachables/rbow_spear_lab5.json',
+ 'resource_pack/models/entity/rbow_spear_lab5.geo.json',
+ 'resource_pack/animations/rbow_spear_lab5.animation.json',
+ 'resource_pack/render_controllers/rbow_spear_lab5.render_controllers.json',
+ 'resource_pack/textures/entity/rbow_spear_lab5.png',
+}
+OFFSETS={'a':[0,24,-27],'b':[0,0,-27],'c':[0,24,0],'d':[0,0,0]}
+def read(p):return json.loads(p.read_text())
+def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def desc(p):return read(p)['minecraft:attachable']['description']
+def animations(p):return read(p)['animations']
+def runtime_hashes():return {p.relative_to(R).as_posix():digest(p) for f in [BP,RP] for p in f.rglob('*') if p.is_file()}
+
+def normalized(d):
+ d=copy.deepcopy(d)
+ for k in ['identifier','textures','geometry','animations','render_controllers']:d.pop(k)
+ return d
+
+class Alignment119(unittest.TestCase):
+ def test_exact_runtime_addition_and_change_allowlist(self):
+  old=read(R/'docs/v1.1.8_runtime_baseline.json')['sha256'];now=runtime_hashes()
+  self.assertEqual(set(now)-set(old),NEW);self.assertEqual(set(old)-set(now),set())
+  changes={k for k in old if now[k]!=old[k]}
+  self.assertEqual(changes,{'behavior_pack/manifest.json','resource_pack/manifest.json','behavior_pack/scripts/main.js'})
+ def test_all_19_existing_pngs_exactly_unchanged(self):
+  old=read(R/'docs/v1.1.8_runtime_baseline.json')['sha256']
+  paths=[k for k in old if k.startswith('resource_pack/textures/') and k.endswith('.png')]
+  self.assertEqual(len(paths),19)
+  for k in paths:self.assertEqual(digest(R/k),old[k],k)
+  self.assertEqual(len(list((RP/'textures').rglob('*.png'))),20)
+ def test_all_gameplay_and_recipes_unchanged_except_version(self):
+  old=read(R/'docs/v1.1.8_runtime_baseline.json')['sha256']
+  for p in BP.rglob('*'):
+   if not p.is_file() or p.relative_to(BP).as_posix() in ['manifest.json','scripts/main.js']:continue
+   self.assertEqual(digest(p),old[p.relative_to(R).as_posix()])
+  self.assertEqual((BP/'scripts/main.js').read_text(),(R/'docs/v1.1.8_main_script.txt').read_text().replace('67 Rbow Ore Mod 1.1.8 | diagnostic check','67 Rbow Ore Mod 1.1.9 | diagnostic check'))
+ def test_same_hand_binding_mesh_scale_and_pivot_as_working_lab5(self):
+  actual=read(RP/'models/entity/rbow_spear_lab5.geo.json');base=read(LR/'models/entity/spear.geo.json')
+  actual['minecraft:geometry'][0]['description']['identifier']=base['minecraft:geometry'][0]['description']['identifier']
+  self.assertEqual(actual,base)
+ def test_new_held_texture_is_byte_identical_to_working_lab5(self):
+  p=RP/'textures/entity/rbow_spear_lab5.png'
+  self.assertEqual(p.read_bytes(),(LR/'textures/entity/rbow_held.png').read_bytes())
+  im=Image.open(p);self.assertEqual(im.size,(32,32));self.assertEqual(im.getbbox(),(0,0,32,32))
+ def test_materials_glint_scripts_and_gates_are_lab5_unchanged(self):
+  a=desc(RP/'attachables/rbow_spear_lab5.json');b=desc(LR/'attachables/rbow_animated.json')
+  self.assertEqual(normalized(a),normalized(b))
+  self.assertEqual(a['textures']['enchanted'],b['textures']['enchanted'])
+ def test_renderer_is_lab5_renderer_not_new_cube_or_player_override(self):
+  old=read(LR/'render_controllers/spear.render_controllers.json')['render_controllers']
+  new=read(RP/'render_controllers/rbow_spear_lab5.render_controllers.json')['render_controllers']
+  self.assertEqual(list(old.values()),list(new.values()))
+  self.assertFalse((RP/'entity/player.entity.json').exists())
+  self.assertEqual(list((RP/'animation_controllers').glob('*.json')),[])
+  for p in (RP/'animations').glob('*.json'):
+   for key in animations(p):self.assertTrue(key.startswith('animation.elleedog.rbow_spear_lab5.'))
+ def test_only_fixed_translation_changed_with_rotations_preserved(self):
+  a=desc(RP/'attachables/rbow_spear_lab5.json');b=desc(LR/'attachables/rbow_animated.json')
+  aa=animations(RP/'animations/rbow_spear_lab5.animation.json');ba=animations(LR/'animations/spear.animation.json')
+  for alias in a['animations']:
+   current=copy.deepcopy(aa[a['animations'][alias]]);old=copy.deepcopy(ba[b['animations'][alias]])
+   newpos=current['bones']['spear'].pop('position');oldpos=old['bones']['spear'].pop('position')
+   self.assertEqual(current,old)
+   self.assertEqual(newpos[:2],[0,0]);self.assertEqual(oldpos[:2],[0,24])
+   if alias=='tp':
+    self.assertEqual(newpos[2],'0.0 + '+oldpos[2][len('-27.0 + '):])
+   else:self.assertEqual(newpos[2],0);self.assertEqual(oldpos[2],-27)
+ def test_native_attack_displacement_not_removed(self):
+  a=animations(RP/'animations/rbow_spear_lab5.animation.json')
+  p=a['animation.elleedog.rbow_spear_lab5.d_tp']['bones']['spear']['position'][2]
+  self.assertEqual(p,'0.0 + (c.owning_entity->v.tp_melee_spear_attack_attachable_position_z ?? 0.0)')
+  rot=a['animation.elleedog.rbow_spear_lab5.d_fp']['bones']['spear']['rotation'][2]
+  self.assertIn('fp_melee_spear_use_attachable_rotation_z',rot);self.assertIn('fp_melee_spear_attack_attachable_rotation_z',rot)
+ def test_three_view_routes_resolve_and_armor_stand_avoids_owner_animation_vars(self):
+  d=desc(RP/'attachables/rbow_spear_lab5.json');an=animations(RP/'animations/rbow_spear_lab5.animation.json')
+  self.assertEqual(set(d['animations']),{'fp','tp','nonplayer'})
+  for key in d['animations'].values():self.assertIn(key,an)
+  self.assertNotIn('owning_entity',json.dumps(an[d['animations']['nonplayer']]))
+  self.assertEqual(d['identifier'],'elleedog:rbow_spear')
+ def test_paired_manifest_versions_and_original_uuids(self):
+  conf=read(R/'docs/build_settings.json')
+  self.assertEqual(conf['version'],[1,1,9])
+  b=read(BP/'manifest.json');r=read(RP/'manifest.json')
+  for name,m in [('bp',b),('rp',r)]:
+   self.assertEqual(m['header']['uuid'],conf['uuid'][name]);self.assertEqual(m['header']['version'],[1,1,9])
+   for module in m['modules']:self.assertEqual(module['version'],[1,1,9])
+  self.assertIn({'uuid':r['header']['uuid'],'version':[1,1,9]},b['dependencies'])
+ def test_candidate_status_distinguishes_user_lab_success_from_untested_alignment(self):
+  s=read(R/'docs/v1.1.9_status.json')
+  self.assertEqual(s['production_case'],'d');self.assertEqual(s['alignment_status'],'NOT RUN')
+  self.assertEqual(s['assistant_engine_tests_run'],0)
+  self.assertTrue(s['user_lab_report']['5']['renders']);self.assertTrue(s['user_lab_report']['5']['brandishes'])
+  self.assertFalse(s['user_lab_report']['5']['placement_correct'])
+ def test_four_offset_controls_differ_only_in_names_and_translations(self):
+  ref=desc(LR/'attachables/rbow_animated.json');oldan=animations(LR/'animations/spear.animation.json')
+  aa=animations(AL/'resource_pack/animations/spear.animation.json')
+  self.assertEqual({p.stem for p in (AL/'behavior_pack/items').glob('*.json')},set(OFFSETS))
+  for case,pos in OFFSETS.items():
+   d=desc(AL/f'resource_pack/attachables/{case}.json');self.assertEqual(normalized(d),normalized(ref))
+   for alias,key in d['animations'].items():
+    a=copy.deepcopy(aa[key]);b=copy.deepcopy(oldan[ref['animations'][alias]])
+    actual=a['bones']['spear'].pop('position');old=b['bones']['spear'].pop('position')
+    self.assertEqual(a,b);self.assertEqual(actual[:2],pos[:2])
+    self.assertEqual(actual[2],f'{float(pos[2]):.1f} + '+old[2][len('-27.0 + '):] if alias=='tp' else pos[2])
+ def test_alignment_items_do_not_change_combat_or_inject_animations(self):
+  ref=read(R/'diagnostics/spear_lab/behavior_pack/items/rbow_animated.json')['minecraft:item']['components']
+  for p in (AL/'behavior_pack/items').glob('*.json'):
+   c=read(p)['minecraft:item']['components']
+   for k in ref:
+    if k not in ['minecraft:icon','minecraft:display_name']:self.assertEqual(c[k],ref[k])
+  for folder in ['entities','scripts','recipes','features','feature_rules']:self.assertFalse((AL/'behavior_pack'/folder).exists())
+  self.assertFalse((AL/'resource_pack/entity').exists())
+ def test_alignment_lab_does_not_require_gameplay_pack(self):
+  b=read(AL/'behavior_pack/manifest.json');r=read(AL/'resource_pack/manifest.json')
+  self.assertEqual(b['dependencies'],[{'uuid':r['header']['uuid'],'version':[0,2,0]}])
+  mainids=set(read(R/'docs/build_settings.json')['uuid'].values())
+  for m in [b,r]:
+   self.assertEqual(m['header']['version'],[0,2,0]);self.assertNotIn(m['header']['uuid'],mainids)
+  e=read(AL/'experiment.json');self.assertTrue(e['not_in_production_installer'])
+  self.assertEqual(set(e['alignment_results'].values()),{'NOT RUN'})
+ def test_exact_new_png_is_only_spear_image_in_alignment_lab(self):
+  self.assertEqual((AL/'resource_pack/textures/entity/rbow_held.png').read_bytes(),(LR/'textures/entity/rbow_held.png').read_bytes())
+  self.assertEqual(len(list((AL/'resource_pack/textures/entity').glob('*.png'))),1)
+ def test_main_and_alignment_d_have_same_semantic_rendering(self):
+  a=desc(RP/'attachables/rbow_spear_lab5.json');d=desc(AL/'resource_pack/attachables/d.json')
+  aa=animations(RP/'animations/rbow_spear_lab5.animation.json');da=animations(AL/'resource_pack/animations/spear.animation.json')
+  self.assertEqual(normalized(a),normalized(d))
+  for alias in a['animations']:self.assertEqual(aa[a['animations'][alias]],da[d['animations'][alias]])
+ def test_generator_recreates_exact_runtime_and_alignment_pack(self):
+  def snap(folder):return {p.relative_to(folder).as_posix():digest(p) for p in folder.rglob('*') if p.is_file()}
+  before=runtime_hashes();lab=snap(AL)
+  subprocess.run([sys.executable,str(R/'tools/build_spear_alignment.py')],cwd=R,check=True,stdout=subprocess.PIPE)
+  self.assertEqual(before,runtime_hashes());self.assertEqual(lab,snap(AL))
+if __name__=='__main__':unittest.main()

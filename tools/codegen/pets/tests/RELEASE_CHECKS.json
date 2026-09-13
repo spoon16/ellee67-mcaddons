@@ -1,0 +1,24 @@
+{
+  "build": "0.5.1-player-load-fix",
+  "script_tests": {
+    "passed": 199,
+    "failed": 0,
+    "type": "explicit API mocks"
+  },
+  "python_tests": {
+    "passed": 231,
+    "failed": 0,
+    "type": "compiler, assets, numerical, package and loader-type authoring checks"
+  },
+  "new_loader_regressions": 19,
+  "independent_builds_identical": true,
+  "source_archive_clean_rebuild_identical": true,
+  "minecraft_execution": false,
+  "realm_execution": false,
+  "root_cause": "Float entity default serialized as JSON integer 0; now decimal 0.0 in both behavior packs.",
+  "not_claimed_resolved": [
+    "actorless Persona queries",
+    "all previously unverified equipment/sitting rendering"
+  ],
+  "deactivate": "PLAYER DEFINITION TEST 0.1.0"
+}

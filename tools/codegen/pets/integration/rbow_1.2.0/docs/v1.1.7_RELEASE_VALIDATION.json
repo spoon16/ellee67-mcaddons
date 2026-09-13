@@ -1,0 +1,80 @@
+{
+  "version": "1.1.7",
+  "build": "67_Rbow_Ore_Mod_v1.1.7_Visual_Repair_Test",
+  "based_on": "1.1.6 Spear Animation Test",
+  "local_checks": {
+    "python_passed": 108,
+    "javascript_mock_passed": 77,
+    "total_passed": 185,
+    "failed": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "javascript_syntax": "PASS",
+    "archive_crc_and_source_payload_match": "PASS"
+  },
+  "engine_tests_run": 0,
+  "client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "client_validated": false,
+  "independent_source_rebuild": "PASS: extracted source ZIP, regenerated art/data/models, ran tests, rebuilt byte-for-byte identical mcaddon",
+  "sha256_mcaddon": "8d37f5edd0ddfffef477e4b34e381f71126aa02d901d814eb6e662c1eea2463e",
+  "packs": [
+    {
+      "file": "67_Rbow_Ore_Mod_Behavior.mcpack",
+      "name": "67 Rbow Ore Mod \u2014 Behavior",
+      "version": [
+        1,
+        1,
+        7
+      ],
+      "files": 241
+    },
+    {
+      "file": "67_Rbow_Ore_Mod_Resources.mcpack",
+      "name": "67 Rbow Ore Mod \u2014 Resources",
+      "version": [
+        1,
+        1,
+        7
+      ],
+      "files": 44
+    }
+  ],
+  "runtime_delta": {
+    "added": [
+      "resource_pack/animations/rbow_spear_direct.animation.json",
+      "resource_pack/attachables/rbow_spear_compact.json",
+      "resource_pack/models/entity/rbow_spear_compact.geo.json"
+    ],
+    "removed": [],
+    "changed": [
+      "behavior_pack/manifest.json",
+      "behavior_pack/scripts/main.js",
+      "resource_pack/animations/rbow_spear_actions.animation.json",
+      "resource_pack/manifest.json",
+      "resource_pack/textures/models/armor/rbow_1.png"
+    ]
+  },
+  "artwork": {
+    "total_runtime_pngs": 19,
+    "unchanged_runtime_pngs": 18,
+    "only_edited_image": "textures/models/armor/rbow_1.png",
+    "changed_pixels": 64,
+    "palette_and_surviving_pixels_unchanged": true
+  },
+  "spear": {
+    "previous_fp_motion_user_report": "still upright; sound only",
+    "new_path": "compact bound pixel-cube mesh with its own FP action bones",
+    "sprite_unchanged": true,
+    "item_stats_unchanged": true,
+    "126_pixel_cubes": true,
+    "old_texture_mesh_restored": false,
+    "exact_grip_screen_pose_client_verified": false
+  },
+  "notes": [
+    "Local model and Molang arithmetic tests do not execute Minecraft.",
+    "Spear held renderer changed; FP view/hand fit and armor-stand alignment require a client check.",
+    "Other animation resource packs or custom character geometry can change parent poses/public variables.",
+    "Native trimmed chestplate rendering must also be checked; preview shows untrimmed base texture only."
+  ]
+}

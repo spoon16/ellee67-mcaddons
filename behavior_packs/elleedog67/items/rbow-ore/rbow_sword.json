@@ -1,0 +1,76 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "elleedog:rbow_sword",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.elleedog:rbow_sword.name"
+      },
+      "minecraft:fire_resistant": {
+        "value": true
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": {
+        "textures": {
+          "default": "elleedog:rbow_sword"
+        }
+      },
+      "minecraft:durability": {
+        "max_durability": 2032
+      },
+      "minecraft:repairable": {
+        "repair_items": [
+          {
+            "items": [
+              "elleedog:rbow_sword"
+            ],
+            "repair_amount": "context.other->query.remaining_durability + 0.05 * query.max_durability"
+          },
+          {
+            "items": [
+              "elleedog:rbow_ingot"
+            ],
+            "repair_amount": "query.max_durability * 0.25"
+          }
+        ]
+      },
+      "minecraft:tags": {
+        "tags": [
+          "elleedog:rbow",
+          "minecraft:netherite_tier",
+          "minecraft:is_tool",
+          "minecraft:is_sword"
+        ]
+      },
+      "minecraft:hand_equipped": true,
+      "minecraft:damage": {
+        "value": 8
+      },
+      "minecraft:enchantable": {
+        "slot": "sword",
+        "value": 15
+      },
+      "elleedog:rbow_tool": {},
+      "minecraft:digger": {
+        "use_efficiency": true,
+        "destroy_speeds": [
+          {
+            "block": {
+              "tags": "q.any_tag('web', 'plant')"
+            },
+            "speed": 1
+          },
+          {
+            "block": "minecraft:web",
+            "speed": 15
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "elleedog_spear_alignment:b",
+      "materials": {
+        "default": "entity_alphatest",
+        "enchanted": "entity_alphatest_glint"
+      },
+      "textures": {
+        "default": "textures/entity/rbow_held",
+        "enchanted": "textures/misc/enchanted_item_glint"
+      },
+      "geometry": {
+        "default": "geometry.elleedog.spear_alignment"
+      },
+      "animations": {
+        "fp": "animation.elleedog.spear_alignment.b_fp",
+        "tp": "animation.elleedog.spear_alignment.b_tp",
+        "nonplayer": "animation.elleedog.spear_alignment.b_nonplayer"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.is_enchanted = query.is_enchanted;"
+        ],
+        "animate": [
+          {
+            "fp": "q.is_owner_identifier_any('minecraft:player') && c.is_first_person"
+          },
+          {
+            "tp": "q.is_owner_identifier_any('minecraft:player') && !c.is_first_person"
+          },
+          {
+            "nonplayer": "!q.is_owner_identifier_any('minecraft:player')"
+          }
+        ]
+      },
+      "render_controllers": [
+        "controller.render.elleedog.spear_alignment"
+      ]
+    }
+  }
+}

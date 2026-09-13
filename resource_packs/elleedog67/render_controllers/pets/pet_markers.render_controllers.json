@@ -1,0 +1,43 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.pet.marker": {
+      "geometry": "Geometry.pet_marker",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "arrays": {
+        "textures": {
+          "Array.pet_markers": [
+            "Texture.pet_marker_human",
+            "Texture.pet_marker_carter",
+            "Texture.pet_marker_mochi",
+            "Texture.pet_marker_casper"
+          ]
+        }
+      },
+      "textures": [
+        "Array.pet_markers[variable.pet_index]"
+      ]
+    },
+    "controller.render.pet.grip_marker": {
+      "rebuild_animation_matrices": true,
+      "geometry": "Geometry.pet_grip_marker",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.pet_grip_marker"
+      ],
+      "part_visibility": [
+        {
+          "*": true
+        }
+      ]
+    }
+  }
+}

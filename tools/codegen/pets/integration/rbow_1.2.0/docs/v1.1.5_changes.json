@@ -1,0 +1,30 @@
+{
+  "removed_runtime_and_generator_paths": [
+    "behavior_pack/scripts/protected_drops.js",
+    "behavior_pack/scripts/item_transactions.js",
+    "behavior_pack/scripts/catalog.js",
+    "resource_pack/models/entity/rbow_drop.geo.json",
+    "resource_pack/animations/rbow_drop.animation.json",
+    "resource_pack/render_controllers/rbow_drop.render_controllers.json",
+    "resource_pack/attachables/rbow_spear.json",
+    "resource_pack/models/entity/rbow_spear.geo.json",
+    "resource_pack/animations/rbow_spear.animation.json",
+    "resource_pack/render_controllers/rbow_spear.render_controllers.json",
+    "tools/build_spear_attachment.py"
+  ],
+  "removed_texture_paths": [
+    "items/rbow_ore.png",
+    "items/deepslate_rbow_ore.png",
+    "items/rbow_block.png",
+    "entity/rbow_spear.png"
+  ],
+  "placed_block_blast_resistance": "retained native component; no explosion listener",
+  "dropped_items": "native minecraft:item; not explosion-proof",
+  "legacy_drop_definition": "migration-only; cannot spawn/summon; no health/damage sensor",
+  "spear": "native hand_equipped icon rendering; custom long mesh removed; gameplay data unchanged",
+  "block_icons": "native block_placer rendering; no custom icon component",
+  "recipe_discovery": "all 14 crafting recipes unlock on any of the 16 Rbow items; native toast respects world settings",
+  "native_trims_on_rbow_armor": "unchanged",
+  "rbow_as_trim_material": false,
+  "retained_png_count": 19
+}

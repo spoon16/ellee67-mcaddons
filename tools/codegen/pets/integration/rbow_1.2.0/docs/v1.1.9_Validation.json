@@ -1,0 +1,153 @@
+{
+  "build": "1.1.9 Spear Alignment Test",
+  "local_test_results": {
+    "python_pass": 105,
+    "javascript_pass": 77,
+    "total_pass": 182,
+    "failures": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "javascript_syntax": "PASS",
+    "archive_integrity": "PASS"
+  },
+  "rebuild": {
+    "source_extracted_to_new_directory": true,
+    "all_generators_run": true,
+    "full_test_suite_rerun": true,
+    "installers_identical": true
+  },
+  "runtime_change_scope": {
+    "compared_to": "1.1.8",
+    "existing_pngs_unchanged": 19,
+    "new_held_png_copied_exactly_from_Lab_5": 1,
+    "spear_stats_recipes_and_gameplay_unchanged": true,
+    "sleeve_fix_retained": true,
+    "new_files": 5,
+    "changed_existing_files": [
+      "behavior_pack/manifest.json",
+      "resource_pack/manifest.json",
+      "behavior_pack/scripts/main.js (diagnostic version only)"
+    ]
+  },
+  "candidate": {
+    "based_on": "user-reported working Lab 5 renderer",
+    "only_render_parameter_changed_from_lab5": "fixed translation [0,24,-27] -> [0,0,0]",
+    "exact_3d_correction_not_determined_from_screenshots": true,
+    "alignment": "NOT RUN",
+    "do_not_claim_confirmed_fix": true
+  },
+  "assistant_engine_tests_run": 0,
+  "assistant_client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "prior_user_lab_results": {
+    "1": {
+      "renders": true,
+      "brandishes": false,
+      "note": "Looks correct, no brandishing."
+    },
+    "2": {
+      "renders": true,
+      "brandishes": false,
+      "note": "Trident visible. Hold-only control deliberately has no attack/use behavior."
+    },
+    "3": {
+      "renders": true,
+      "brandishes": true,
+      "note": "Looks like a Netherite object; same reported behavior as 4."
+    },
+    "4": {
+      "renders": true,
+      "brandishes": true,
+      "note": "Looks like a Netherite object; same reported behavior as 3."
+    },
+    "5": {
+      "renders": true,
+      "brandishes": true,
+      "placement_correct": false,
+      "note": "Very low in first person; displaced behind player in third person."
+    }
+  },
+  "artifacts": {
+    "67_Rbow_Ore_Mod_v1.1.9_Spear_Alignment_Test.mcaddon": {
+      "sha256": "031b82d36dc6c70d9905702ce66f12ae7c0fed4900235c13164104a9b993490b",
+      "bytes": 409827,
+      "independent_regenerated_installer_identical": true,
+      "root_manifests": [
+        {
+          "name": "67 Rbow Ore Mod \u2014 Behavior",
+          "uuid": "ea58ca29-f4bb-4cc7-8d8c-3d7e0a39c867",
+          "version": [
+            1,
+            1,
+            9
+          ],
+          "files": 241
+        },
+        {
+          "name": "67 Rbow Ore Mod \u2014 Resources",
+          "uuid": "898ad9f2-55bc-4347-aa25-9079c12c8cb9",
+          "version": [
+            1,
+            1,
+            9
+          ],
+          "files": 45
+        }
+      ]
+    },
+    "67_Rbow_Spear_Alignment_Lab_v0.2.0.mcaddon": {
+      "sha256": "1c014521e1bd24777b1a7c62aa5ece269a78f615deb0880afd89a1c4d2ee098c",
+      "bytes": 318928,
+      "independent_regenerated_installer_identical": true,
+      "root_manifests": [
+        {
+          "name": "67 Rbow Spear Alignment Lab - Behavior",
+          "uuid": "7db07634-f4cf-5390-aab9-f228e993ead9",
+          "version": [
+            0,
+            2,
+            0
+          ],
+          "files": 7
+        },
+        {
+          "name": "67 Rbow Spear Alignment Lab - Resources",
+          "uuid": "ad935ac7-65f5-5f0d-9d97-3d1799732016",
+          "version": [
+            0,
+            2,
+            0
+          ],
+          "files": 13
+        }
+      ]
+    },
+    "67_Rbow_Spear_Render_Lab_v0.1.0.mcaddon": {
+      "sha256": "30b0697c45929205d17f7f8b314425428ea599c9e24a428a6560c5eb7f93c2ba",
+      "bytes": 320314,
+      "independent_regenerated_installer_identical": true,
+      "root_manifests": [
+        {
+          "name": "67 Rbow Spear Lab - Behavior",
+          "uuid": "45077ca3-94f2-53c6-8747-e7e18f8c7039",
+          "version": [
+            0,
+            1,
+            0
+          ],
+          "files": 8
+        },
+        {
+          "name": "67 Rbow Spear Lab - Resources",
+          "uuid": "471fa819-30e2-5a8e-8f52-6bd8421b2dd7",
+          "version": [
+            0,
+            1,
+            0
+          ],
+          "files": 14
+        }
+      ]
+    }
+  }
+}

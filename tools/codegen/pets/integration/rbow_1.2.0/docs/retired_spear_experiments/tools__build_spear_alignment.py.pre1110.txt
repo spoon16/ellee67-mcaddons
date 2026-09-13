@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+"""Promote the user-tested Lab 5 renderer, changing ONLY fixed translation.
+
+This is a client alignment experiment, not proof of correct hand placement.
+No texture reconstruction, scale, pivot, mesh rotation, or combat edits.
+The original v0.1.0 diagnostic controls stay intact as pinned comparisons.
+"""
+from __future__ import annotations
+import copy
+import json
+import shutil
+import uuid
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+LAB = ROOT / 'diagnostics/spear_lab'
+LR = LAB / 'resource_pack'
+OUT = ROOT / 'diagnostics/spear_alignment'
+CASES = {
+    'a': {'label': 'Spear Alignment A - Original Lab 5', 'position': [0, 24, -27]},
+    'b': {'label': 'Spear Alignment B - Remove Y Offset', 'position': [0, 0, -27]},
+    'c': {'label': 'Spear Alignment C - Remove Z Offset', 'position': [0, 24, 0]},
+    'd': {'label': 'Spear Alignment D - Remove Both Offsets', 'position': [0, 0, 0]},
+}
+MAIN_CASE = 'd'
+NS = 'elleedog_spear_alignment:'
+
+
+def read(p: Path):
+    return json.loads(p.read_text())
+
+
+def write(p: Path, obj) -> None:
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(obj, indent=2, ensure_ascii=False)+'\n', encoding='utf8')
+
+
+def bundle(item_id: str, family: str, case: str, texture: str):
+    """Return the Lab 5 render chain with new names and selected base offset.
+
+    All action-dependent offsets and rotation expressions are byte-identical
+    string values to the reported-working Lab 5. Translation variants are
+    deliberately not described as corrected coordinate systems until tested.
+    """
+    d = copy.deepcopy(read(LR/'attachables/rbow_animated.json')['minecraft:attachable']['description'])
+    g = copy.deepcopy(read(LR/'models/entity/spear.geo.json'))
+    r = copy.deepcopy(read(LR/'render_controllers/spear.render_controllers.json'))
+    original_animations = read(LR/'animations/spear.animation.json')['animations']
+    geom_id = 'geometry.'+family
+    rc_id = 'controller.render.'+family
+    d['identifier'] = item_id
+    d['textures']['default'] = texture
+    d['geometry']['default'] = geom_id
+    d['render_controllers'] = [rc_id]
+    g['minecraft:geometry'][0]['description']['identifier'] = geom_id
+    r['render_controllers'] = {rc_id: next(iter(r['render_controllers'].values()))}
+    animations = {}
+    for alias, original_key in list(d['animations'].items()):
+        key = f'animation.{family}.{case}_{alias}'
+        a = copy.deepcopy(original_animations[original_key])
+        bone = a['bones']['spear']
+        oldpos = bone['position']
+        pos = CASES[case]['position'][:]
+        if isinstance(oldpos[2], str):
+            assert oldpos[2].startswith('-27.0 + '), oldpos[2]
+            pos[2] = f'{float(pos[2]):.1f} + '+oldpos[2][len('-27.0 + '):]
+        bone['position'] = pos
+        d['animations'][alias] = key
+        animations[key] = a
+    return ({'format_version':'1.10.0', 'minecraft:attachable':{'description':d}},
+            g, r, animations)
+
+
+def build_production() -> None:
+    rp = ROOT/'resource_pack'
+    a,g,r,animations = bundle('elleedog:rbow_spear','elleedog.rbow_spear_lab5',MAIN_CASE,
+                              'textures/entity/rbow_spear_lab5')
+    write(rp/'attachables/rbow_spear_lab5.json', a)
+    write(rp/'models/entity/rbow_spear_lab5.geo.json', g)
+    write(rp/'render_controllers/rbow_spear_lab5.render_controllers.json', r)
+    write(rp/'animations/rbow_spear_lab5.animation.json',
+          {'format_version':'1.10.0','animations':animations})
+    dest = rp/'textures/entity/rbow_spear_lab5.png'
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(LR/'textures/entity/rbow_held.png', dest)
+
+
+def uid(s: str) -> str:
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, 'elleedog/rbow/spear-alignment/v1/'+s))
+
+
+def build_lab() -> None:
+    if OUT.exists(): shutil.rmtree(OUT)
+    bp, rp = OUT/'behavior_pack', OUT/'resource_pack'
+    version = [0,2,0]
+    for which, dest, typ in [('bp',bp,'data'), ('rp',rp,'resources')]:
+        manifest = {
+            'format_version':2,
+            'header':{'name':f'67 Rbow Spear Alignment Lab - {"Behavior" if which=="bp" else "Resources"}',
+                      'description':'Four translation-only comparisons using the working Lab 5 mesh and motions. No gameplay-world dependency. Ellee Schoonover | ellee@ellee.com.',
+                      'uuid':uid(which), 'version':version, 'min_engine_version':[1,26,40]},
+            'modules':[{'type':typ, 'uuid':uid(which+'_module'), 'version':version}],
+            'metadata':{'authors':['Ellee Schoonover — ellee@ellee.com']}}
+        if which == 'bp':
+            manifest['dependencies']=[{'uuid':uid('rp'),'version':version}]
+        write(dest/'manifest.json',manifest)
+        shutil.copyfile(ROOT/'resource_pack/pack_icon.png',dest/'pack_icon.png')
+        shutil.copyfile(LR/'THIRD_PARTY_NOTICES.md',dest/'THIRD_PARTY_NOTICES.md')
+    for path in [rp/'textures/entity', rp/'textures/items']: path.mkdir(parents=True,exist_ok=True)
+    shutil.copyfile(LR/'textures/entity/rbow_held.png',rp/'textures/entity/rbow_held.png')
+    shutil.copyfile(LR/'textures/items/control_icon.png',rp/'textures/items/control_icon.png')
+    write(rp/'textures/item_texture.json', {'resource_pack_name':'67 Rbow Spear Alignment Lab',
+          'texture_name':'atlas.items','texture_data':{NS+'icon':{'textures':'textures/items/control_icon'}}})
+    all_animations = {}
+    for case, settings in CASES.items():
+        ident = NS+case
+        item=copy.deepcopy(read(LAB/'behavior_pack/items/rbow_animated.json'))
+        item['minecraft:item']['description']['identifier']=ident
+        c=item['minecraft:item']['components']
+        c['minecraft:display_name']['value']=settings['label']
+        c['minecraft:icon']={'textures':{'default':NS+'icon'}}
+        write(bp/f'items/{case}.json',item)
+        a,g,r,animations = bundle(ident,'elleedog.spear_alignment',case,'textures/entity/rbow_held')
+        write(rp/f'attachables/{case}.json',a)
+        write(rp/'models/entity/spear.geo.json',g)
+        write(rp/'render_controllers/spear.render_controllers.json',r)
+        all_animations.update(animations)
+    write(rp/'animations/spear.animation.json',{'format_version':'1.10.0','animations':all_animations})
+    write(OUT/'experiment.json',{
+        'version':version,'namespace':NS,'cases':CASES,'production_case':MAIN_CASE,
+        'only_experimental_variable':'Fixed XYZ translation in the same three Lab 5 view routes.',
+        'original_lab5_user_report':'Visible and brandishes, but too low in first person and displaced behind player in third person.',
+        'alignment_results':{c:'NOT RUN' for c in CASES},
+        'assistant_engine_tests_run':0,'assistant_client_render_tests_run':0,'realm_tests_run':0,
+        'not_in_production_installer':True,
+        'all_four_share':['mesh','held texture','scale','pivot','rotation expressions','native combat components'],
+        'limitations':'The screenshot pair cannot determine exact 3D offsets. Case D is a hypothesis, not calibrated or engine-verified placement.'})
+
+
+if __name__=='__main__':
+    build_production()
+    build_lab()
+    print('Built 1.1.9 Lab-5-based placement candidate and separate A/B/C/D alignment lab.')

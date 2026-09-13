@@ -1,0 +1,48 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.pet.diag_prop": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ],
+      "part_visibility": [
+        {
+          "*": true
+        },
+        {
+          "cav_debug_mouth": false
+        }
+      ]
+    },
+    "controller.render.pet.diag_p2": {
+      "geometry": "Geometry.cav_p2",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "arrays": {
+        "textures": {
+          "Array.cav_marker": [
+            "Texture.cav_p2",
+            "Texture.cav_d2"
+          ]
+        }
+      },
+      "textures": [
+        "Array.cav_marker[(query.has_property('pet:form') ? (query.property('pet:form') == 'carter') : 0.0)]"
+      ],
+      "part_visibility": [
+        {
+          "*": "!query.is_invisible"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "product": "ElleeDog 67 Pets",
+  "version": [
+    0,
+    5,
+    2
+  ],
+  "build": "0.5.2-native-armor-isolation",
+  "minimum_engine": [
+    1,
+    26,
+    40
+  ],
+  "script_api": {
+    "server": "2.9.0",
+    "ui": "2.0.0"
+  },
+  "max_wire_id": 4095,
+  "release_label": "NATIVE ARMOR",
+  "default_armor_fitted": true,
+  "branding": {
+    "source": "assets/shared/pack_icon_source.png",
+    "source_sha256": "0dd310dbf7be68be449765d3c581000677a5006633ec79f7528973e62965a6e0",
+    "output": "assets/shared/pack_icon.png",
+    "size": [
+      256,
+      256
+    ],
+    "change": "Exact user-supplied artwork; resize only, no crop or redesign."
+  },
+  "morpher_art": {
+    "source": "assets/shared/morpher_book_option3_source.png",
+    "source_sha256": "e1c7f0a98e71ab740cbe8d7a02fa82742a6ac5b995d10ea833d68b1528f02109",
+    "texture_size": [
+      128,
+      128
+    ],
+    "selected_option": 3,
+    "change": "Approved green-and-cream book. Entire image resized, not cropped or redrawn."
+  },
+  "integration": {
+    "rbow_source": "integration/rbow_1.2.0",
+    "source_version": [
+      1,
+      2,
+      0
+    ],
+    "companion_version": [
+      1,
+      2,
+      3
+    ],
+    "mode": "matched-four-pack-bundle",
+    "source_archive_sha256": "d026175c58cf2c2161e493e207f73762d45286c426c2ad326ac3d1f8998b88c4"
+  }
+}

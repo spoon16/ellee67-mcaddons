@@ -1,0 +1,239 @@
+{
+  "generator": "tools/paint_prism.py",
+  "source_images_read_by_generator": 0,
+  "old_texture_masks_read": 0,
+  "game_engine_tests_run": 0,
+  "files": [
+    {
+      "path": "textures/blocks/deepslate_rbow_ore.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "9ea7f073306c8da47c46166160c1ee87769c0e464dde2b516313c820a6f1b587",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 1024
+    },
+    {
+      "path": "textures/blocks/rbow_block.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "fc37093029729aa1ca8bb74ecb799f22255b64506280a1ea777782a239b0a3d9",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 1024
+    },
+    {
+      "path": "textures/blocks/rbow_block_top.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "47b0cb9c21d6ca2909b604155bf5f2920d184995b0be7e5c0a4033b06d3c4987",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 1024
+    },
+    {
+      "path": "textures/blocks/rbow_ore.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "25d4355795bc0efbe5cdca4ad00a1517ed9f5620e5526d2271c49f483599c919",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 1024
+    },
+    {
+      "path": "textures/entity/rbow_spear.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "8563b6c686f888e14103556edeb16e406b05f8924d19bd8cb541eda8b4736d6a",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 182
+    },
+    {
+      "path": "textures/items/deepslate_rbow_ore.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "0a1d50b3418425551b5e4e129875b4356d8cf0a6963543d5c2ab02a5a3712c76",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 617
+    },
+    {
+      "path": "textures/items/raw_rbow_ore.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "18846f0aa3e550f6fc6f3d8bd4b4b147a1b752f5de9c2b949bd75976ab57894f",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 572
+    },
+    {
+      "path": "textures/items/rbow_axe.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "49e655735204b48f38f8da15b14f747e4a22b15170105360fea5df05f66556e2",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 276
+    },
+    {
+      "path": "textures/items/rbow_block.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "eb9d3cf83d0cd2e6df7402d1b2d88dd552f9a124e60b567c9b75a5d1386200ff",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 617
+    },
+    {
+      "path": "textures/items/rbow_boots.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "38e8d04448a4cbe94096b88a234d0cff90d458185605224caa9eeeb48c9cb26f",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 478
+    },
+    {
+      "path": "textures/items/rbow_chestplate.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "41118c27aed1e3dc696dced133333e4e8f7fc7a5e444ba94224cf10ca619be06",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 535
+    },
+    {
+      "path": "textures/items/rbow_helmet.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "dfe606b8ca6d8fbe65ca46d72424a1f04f322ca5374eccfc6add783c424d3044",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 411
+    },
+    {
+      "path": "textures/items/rbow_hoe.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "135bfd50f7748f7747d9bea95cd417dc1217f73fb3d1faa967d75d9e4b4b224e",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 201
+    },
+    {
+      "path": "textures/items/rbow_ingot.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "93b7a249974b3bcaf60d385a494c650ef3fff6c88d1ecd09707785b06b6d0aed",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 362
+    },
+    {
+      "path": "textures/items/rbow_leggings.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "b8aee728ac37f7886a8f20afd4833644bd32fcdb4d79453345ac9a9cc5a8a6c7",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 518
+    },
+    {
+      "path": "textures/items/rbow_nug.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "c582d1085ea7410d769b0e909c94a5b1704dcacb3644d486313f7fb1fd05ac75",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 150
+    },
+    {
+      "path": "textures/items/rbow_ore.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "63ed769f1b05afafdf7582874e8d2f46bc9d365add94bbf89a96a16e4a465f79",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 617
+    },
+    {
+      "path": "textures/items/rbow_pickaxe.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "4f25cda19fbf8918d0d07263d00f2e502d3496445a9f545154e0efc059715c56",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 280
+    },
+    {
+      "path": "textures/items/rbow_shovel.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "13e988a0ae5580b4c16f51eb11ea900e0af9e1f817e3098e131cef772acb43dd",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 281
+    },
+    {
+      "path": "textures/items/rbow_spear.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "cb73f087f4347a797d93e1b9dbad1f9ccb2f20b70931d5534c2bc5a73a257318",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 182
+    },
+    {
+      "path": "textures/items/rbow_sword.png",
+      "size": [
+        32,
+        32
+      ],
+      "sha256": "e90d189930474b67575d7a6858b71dcc1d9fa9526dde021e5864fc5a6a3a7977",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 269
+    },
+    {
+      "path": "textures/models/armor/rbow_1.png",
+      "size": [
+        128,
+        64
+      ],
+      "sha256": "4561f404186e5f66a34ef4bf2626db3edcc9e3d2532f0ab6ca064548e70bfc94",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 3912
+    },
+    {
+      "path": "textures/models/armor/rbow_2.png",
+      "size": [
+        128,
+        64
+      ],
+      "sha256": "45fc9a34f8bad15512acb3924cde2dfdd757a66871d7452909c9d7b05d257663",
+      "replaces_v110_texture": true,
+      "opaque_pixels": 1280
+    }
+  ],
+  "note": "v1.1.2 changes only the held-spear texture orientation. All other prismatic artwork is unchanged and is NOT the final overview-matched redesign."
+}

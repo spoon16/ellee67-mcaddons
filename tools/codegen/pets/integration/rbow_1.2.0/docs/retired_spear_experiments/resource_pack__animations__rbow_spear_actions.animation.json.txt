@@ -1,0 +1,96 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.player.first_person.melee_spear_attack": {
+      "loop": true,
+      "override_previous_animation": false,
+      "bones": {
+        "rightitem": {
+          "position": [
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (-1.5) : (-1.5 + v.fp_melee_spear_attack_item_position_x)",
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (2.0) : (2.0 + v.fp_melee_spear_attack_item_position_y)",
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (3.5) : (3.5 + v.fp_melee_spear_attack_item_position_z)"
+          ],
+          "rotation": [
+            45.0,
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (55.0) : (55.0 + v.fp_melee_spear_attack_item_rotation_y)",
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (-12.5) : (-12.5 + v.fp_melee_spear_attack_item_rotation_z)"
+          ]
+        }
+      }
+    },
+    "animation.player.first_person.melee_spear_use": {
+      "loop": true,
+      "override_previous_animation": false,
+      "bones": {
+        "rightitem": {
+          "position": [
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (-1.5) : (-1.5 + v.fp_melee_spear_use_item_position_x)",
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (2.0) : (2.0 + v.fp_melee_spear_use_item_position_y)",
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (3.5) : (3.5 + v.fp_melee_spear_use_item_position_z)"
+          ],
+          "rotation": [
+            45.0,
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (55.0) : (55.0 + v.fp_melee_spear_use_item_rotation_y)",
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (-12.5) : (-12.5 + v.fp_melee_spear_use_item_rotation_z)"
+          ]
+        }
+      }
+    },
+    "animation.player.melee_spear_attack": {
+      "loop": true,
+      "bones": {
+        "body": {
+          "rotation": [
+            0.0,
+            "v.attack_body_rot_y",
+            0.0
+          ]
+        },
+        "rightarm": {
+          "rotation": [
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? ((v.tp_melee_spear_base_arm_rotation_x ?? 0.0) + q.target_x_rotation - q.is_sneaking * 27.0 - this - 35.0 * math.sin(math.pow(math.clamp((v.attack_time ?? 0.0), 0.0, 1.0), 0.55) * 180.0)) : (v.tp_melee_spear_base_arm_rotation_x + q.target_x_rotation - q.is_sneaking * 27.0 - this + v.tp_melee_spear_attack_arm_rotation_x)",
+            "math.clamp(q.target_y_rotation, -60.0, 45.0) - this - v.attack_body_rot_y",
+            0.0
+          ]
+        },
+        "rightitem": {
+          "position": [
+            0.0,
+            -1.5,
+            -1.5
+          ],
+          "rotation": [
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (-20.0 * math.sin(math.pow(math.clamp((v.attack_time ?? 0.0), 0.0, 1.0), 0.55) * 180.0)) : (v.tp_melee_spear_attack_item_rotation_x)",
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "animation.humanoid.melee_spear_use": {
+      "loop": true,
+      "bones": {
+        "rightarm": {
+          "rotation": [
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? ((v.tp_melee_spear_base_arm_rotation_x ?? 0.0) + q.target_x_rotation - q.is_sneaking * 27.0 - this - 45.0 * (math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0))))) : (v.tp_melee_spear_base_arm_rotation_x + q.target_x_rotation - q.is_sneaking * 27.0 - this + v.tp_melee_spear_use_arm_rotation_x)",
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (math.clamp(q.target_y_rotation, -60.0, 45.0) - this + 6.0 * (math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0))))) : (math.clamp(q.target_y_rotation, -60.0, 45.0) - this + v.tp_melee_spear_use_arm_rotation_y)",
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (1.5 * (math.sin(q.life_time * 150.0) * math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - q.kinetic_weapon_dismount_duration) / 20.0, 0.0, 1.0) * (math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0)))))) : (v.tp_melee_spear_use_arm_rotation_z)"
+          ]
+        },
+        "rightitem": {
+          "position": [
+            0.0,
+            -1.5,
+            -1.5
+          ],
+          "rotation": [
+            "(q.is_item_name_any('slot.weapon.mainhand', 'elleedog:rbow_spear')) ? (-20.0 * (math.clamp(math.max(0.0, q.main_hand_item_use_duration) / math.max(1.0, q.kinetic_weapon_delay), 0.0, 1.0) * (1.0 - (q.kinetic_weapon_damage_duration < 0.0 ? 0.0 : math.clamp((math.max(0.0, q.main_hand_item_use_duration) - math.max(1.0, q.kinetic_weapon_delay) - math.max(0.0, q.kinetic_weapon_damage_duration - 12.0)) / 12.0, 0.0, 1.0))))) : (v.tp_melee_spear_use_item_rotation_x)",
+            0.0,
+            0.0
+          ]
+        }
+      }
+    }
+  }
+}

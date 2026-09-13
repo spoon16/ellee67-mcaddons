@@ -1,0 +1,12 @@
+{
+  "installers_byte_identical": true,
+  "all_four_generated_pack_files_identical": true,
+  "files": {
+    "ElleeDog_67_Pets_v0.5.1_BP.mcpack": "f22e40c5a06b1679a4b83bc230d124c491eb639f7b1d3ceecddd5c874f157889",
+    "ElleeDog_67_Pets_v0.5.1_RP.mcpack": "bb23b7bdc1084ce3ac86c402528c8ca86abe113f72adc207d4590d9a1bf101f2",
+    "67_Rbow_Ore_Mod_v1.2.2_Pets_BP.mcpack": "559e53c8013ba5abf1ab599d0e43acaf099524b70b3788240befde52e154fb92",
+    "ElleeDog_67_Pets_v0.5.1.mcaddon": "97960aaa07e564f39fc71d5d0ff0866b7e55f894ab4df02078cc42d97568f95a",
+    "67_Rbow_Ore_Mod_v1.2.2_Pets_RP.mcpack": "1295ae8230af065f9a2f27622f1cc1814a5dae459b20db8fba933d82f88bd745"
+  },
+  "minecraft_tested": false
+}

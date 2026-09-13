@@ -1,0 +1,610 @@
+{
+  "rbow_axe.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_axe"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "II",
+        "IS",
+        " S"
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        },
+        "S": {
+          "item": "minecraft:stick"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_axe",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_block.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_block"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "III",
+        "III",
+        "III"
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_block",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_boots.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_boots"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "I I",
+        "I I"
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_boots",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_chestplate.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_chestplate"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "I I",
+        "III",
+        "III"
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_chestplate",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_helmet.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_helmet"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "III",
+        "I I"
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_helmet",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_hoe.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_hoe"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "II",
+        " S",
+        " S"
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        },
+        "S": {
+          "item": "minecraft:stick"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_hoe",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_ingot_from_nugs.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_ingot_from_nugs"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "NNN",
+        "NNN",
+        "NNN"
+      ],
+      "key": {
+        "N": {
+          "item": "elleedog:rbow_nug"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_ingot",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_nug"
+        }
+      ]
+    }
+  },
+  "rbow_ingots_from_block.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shapeless": {
+      "description": {
+        "identifier": "elleedog:rbow_ingots_from_block"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "ingredients": [
+        {
+          "item": "elleedog:rbow_block"
+        }
+      ],
+      "result": {
+        "item": "elleedog:rbow_ingot",
+        "count": 9
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_block"
+        }
+      ]
+    }
+  },
+  "rbow_leggings.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_leggings"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "III",
+        "I I",
+        "I I"
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_leggings",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_nugs_from_ingot.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shapeless": {
+      "description": {
+        "identifier": "elleedog:rbow_nugs_from_ingot"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "ingredients": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ],
+      "result": {
+        "item": "elleedog:rbow_nug",
+        "count": 9
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_pickaxe.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_pickaxe"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "III",
+        " S ",
+        " S "
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        },
+        "S": {
+          "item": "minecraft:stick"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_pickaxe",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_shovel.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_shovel"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "I",
+        "S",
+        "S"
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        },
+        "S": {
+          "item": "minecraft:stick"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_shovel",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_spear.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_spear"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "  I",
+        " S ",
+        "S  "
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        },
+        "S": {
+          "item": "minecraft:stick"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_spear",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "rbow_sword.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_shaped": {
+      "description": {
+        "identifier": "elleedog:rbow_sword"
+      },
+      "tags": [
+        "crafting_table"
+      ],
+      "pattern": [
+        "I",
+        "I",
+        "S"
+      ],
+      "key": {
+        "I": {
+          "item": "elleedog:rbow_ingot"
+        },
+        "S": {
+          "item": "minecraft:stick"
+        }
+      },
+      "result": {
+        "item": "elleedog:rbow_sword",
+        "count": 1
+      },
+      "unlock": [
+        {
+          "item": "elleedog:rbow_ingot"
+        }
+      ]
+    }
+  },
+  "recycle_rbow_axe.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_axe"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_axe",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "recycle_rbow_boots.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_boots"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_boots",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "recycle_rbow_chestplate.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_chestplate"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_chestplate",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "recycle_rbow_helmet.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_helmet"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_helmet",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "recycle_rbow_hoe.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_hoe"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_hoe",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "recycle_rbow_leggings.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_leggings"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_leggings",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "recycle_rbow_pickaxe.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_pickaxe"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_pickaxe",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "recycle_rbow_shovel.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_shovel"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_shovel",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "recycle_rbow_spear.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_spear"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_spear",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "recycle_rbow_sword.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:recycle_rbow_sword"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_sword",
+      "output": "elleedog:rbow_nug"
+    }
+  },
+  "smelt_deepslate_rbow_ore.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:smelt_deepslate_rbow_ore"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:deepslate_rbow_ore",
+      "output": "elleedog:rbow_ingot"
+    }
+  },
+  "smelt_raw_rbow_ore.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:smelt_raw_rbow_ore"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:raw_rbow_ore",
+      "output": "elleedog:rbow_ingot"
+    }
+  },
+  "smelt_rbow_ore.json": {
+    "format_version": "1.20.10",
+    "minecraft:recipe_furnace": {
+      "description": {
+        "identifier": "elleedog:smelt_rbow_ore"
+      },
+      "tags": [
+        "furnace",
+        "blast_furnace"
+      ],
+      "input": "elleedog:rbow_ore",
+      "output": "elleedog:rbow_ingot"
+    }
+  }
+}

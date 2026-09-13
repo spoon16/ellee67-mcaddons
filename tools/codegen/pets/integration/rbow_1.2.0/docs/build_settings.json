@@ -1,0 +1,97 @@
+{
+  "version": [
+    1,
+    2,
+    0
+  ],
+  "min_engine_version": [
+    1,
+    26,
+    40
+  ],
+  "api": "2.9.0",
+  "uuid": {
+    "bp": "ea58ca29-f4bb-4cc7-8d8c-3d7e0a39c867",
+    "data": "692bd627-d4b9-49cf-9d97-9a575f15a2a5",
+    "script": "1356e30e-56ec-41c1-9a26-1a0714464e43",
+    "rp": "898ad9f2-55bc-4347-aa25-9079c12c8cb9",
+    "resource": "6cae9868-30da-4771-865d-52fe0ef0687f"
+  },
+  "ore_y_range": [
+    -50,
+    10
+  ],
+  "generation_attempts_per_chunk": 4,
+  "rarity_status": "redstone-like target; not empirically calibrated",
+  "structure_counts": [
+    8,
+    16
+  ],
+  "item_names": {
+    "rbow_ore": "Rbow Ore",
+    "deepslate_rbow_ore": "Deepslate Rbow Ore",
+    "rbow_block": "Rbow Block",
+    "raw_rbow_ore": "Raw Rbow Ore",
+    "rbow_ingot": "Rbow Ingot",
+    "rbow_nug": "Rbow Nug",
+    "rbow_sword": "Rbow Sword",
+    "rbow_pickaxe": "Rbow Pickaxe",
+    "rbow_axe": "Rbow Axe",
+    "rbow_shovel": "Rbow Shovel",
+    "rbow_hoe": "Rbow Hoe",
+    "rbow_spear": "Rbow Spear",
+    "rbow_helmet": "Rbow Helmet",
+    "rbow_chestplate": "Rbow Chestplate",
+    "rbow_leggings": "Rbow Leggings",
+    "rbow_boots": "Rbow Boots"
+  },
+  "armor": {
+    "helmet": [
+      407,
+      3,
+      "head"
+    ],
+    "chestplate": [
+      592,
+      8,
+      "chest"
+    ],
+    "leggings": [
+      555,
+      6,
+      "legs"
+    ],
+    "boots": [
+      481,
+      3,
+      "feet"
+    ]
+  },
+  "tools": {
+    "sword": [
+      2032,
+      8,
+      "sword"
+    ],
+    "pickaxe": [
+      2032,
+      6,
+      "pickaxe"
+    ],
+    "axe": [
+      2032,
+      7,
+      "axe"
+    ],
+    "shovel": [
+      2032,
+      5,
+      "shovel"
+    ],
+    "hoe": [
+      2032,
+      0,
+      "hoe"
+    ]
+  }
+}

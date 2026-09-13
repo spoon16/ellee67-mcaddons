@@ -1,0 +1,55 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.pet.fp_swap": {
+      "loop": true,
+      "bones": {
+        "leftArm": {
+          "position": [
+            0,
+            "(query.get_equipped_item_name('off_hand') == 'filled_map' || query.get_equipped_item_name('off_hand') == 'shield') ? 0.0 : -10.0 * (1.0 - context.player_offhand_arm_height)",
+            0
+          ]
+        },
+        "rightArm": {
+          "position": [
+            0,
+            "(((((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) > 0.0) && variable.is_first_person && !variable.map_face_icon && !query.is_spectator) && (query.get_equipped_item_name(0, 1) == '')) ? 0.0 : -10.0 * (1.0 - variable.player_arm_height)",
+            0
+          ]
+        }
+      }
+    },
+    "animation.pet.fp_lift": {
+      "loop": true,
+      "bones": {
+        "rightArm": {
+          "position": [
+            0,
+            "(query.has_property('pet:hand_height') ? query.property('pet:hand_height') : 2.0)",
+            0
+          ]
+        }
+      }
+    },
+    "animation.pet.paw_flex": {
+      "loop": true,
+      "bones": {
+        "pet_fp_right_paw": {
+          "rotation": [
+            "-math.sin(math.clamp(variable.attack_time, 0.0, 1.0) * 180.0) * 9.0",
+            0,
+            0
+          ]
+        },
+        "pet_fp_left_paw": {
+          "rotation": [
+            "-math.sin(math.clamp(variable.attack_time, 0.0, 1.0) * 180.0) * 9.0",
+            0,
+            0
+          ]
+        }
+      }
+    }
+  }
+}

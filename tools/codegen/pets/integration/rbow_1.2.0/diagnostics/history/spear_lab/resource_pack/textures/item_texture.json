@@ -1,0 +1,9 @@
+{
+  "resource_pack_name": "67 Rbow Spear Lab",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "elleedog_spear_lab:icon": {
+      "textures": "textures/items/control_icon"
+    }
+  }
+}

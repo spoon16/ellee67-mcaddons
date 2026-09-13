@@ -1,0 +1,60 @@
+{
+  "product": "ElleeDog 67 Pets",
+  "build": "0.2.1-paw-grip-fix.1",
+  "manifest_version": [
+    0,
+    2,
+    1
+  ],
+  "command_namespace": "pet",
+  "forms": [
+    "human",
+    "carter"
+  ],
+  "pets": {
+    "carter": {
+      "display_name": "Carter",
+      "breed": "Cavalier King Charles Spaniel"
+    }
+  },
+  "native_sample_commit": "736072450c26a7c67f07b1661f29d9a5ebaa14b1",
+  "assistant_engine_tested": false,
+  "this_build_user_tested": false,
+  "realms_tested": false,
+  "legacy_support": {
+    "old_commands_registered": false,
+    "old_preference_retained": "Read-only compatibility source; new key always takes precedence.",
+    "old_token": "cav:paw_token opens the pet menu; new recipes create pet:paw_token.",
+    "old_probes": "cav:diag_cube and cav:diag_model retained for owner-scoped cleanup/expiry only."
+  },
+  "based_on": "0.2.0-motion-paws-alpha.1",
+  "previous_user_verified_build": "0.2.0 (movement only)",
+  "previous_user_evidence": "User confirms walking/running and ear/tail motion; reports missing FP hand and pickaxe above the rear.",
+  "changes": [
+    "Restore identical native hand skeleton topology/pivots in Carter and FP paws",
+    "Keep native root controller active and rebuild selected-geometry matrices",
+    "Mirror validated body/head channels onto native hand ancestors in the SAME clips",
+    "Move the actual native rightArm/rightItem frame to the mouth, not a dog-only helper",
+    "Prevent empty-handed Carter equip-height drop; add per-player /pet:handheight -8..12",
+    "Debug-only cyan native-grip marker; preserve anatomical-mouth marker"
+  ],
+  "unchanged": [
+    "All visible Carter dog cubes/coat and original movement channels",
+    "First-person paw texture and cubes",
+    "Previously validated Persona/cape visibility masks",
+    "Native gameplay, inventory, collision, camera and reach"
+  ],
+  "not_included": [
+    "Fitted armor",
+    "Rbow integration",
+    "Tuned third-person special-item adapters",
+    "Lower camera or smaller hitbox"
+  ],
+  "special_poses": "Swimming, crawling, riding and sleep get preliminary poses only, not complete mount/bed/elytra integrations",
+  "art_paths": [
+    "models/entity/carter.geo.json",
+    "textures/entity/carter/blenheim.png",
+    "models/entity/first_person_paws.geo.json",
+    "textures/entity/carter/first_person_paws.png"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "deleted_generated_outputs": true,
+  "script_tests": 199,
+  "python_tests": 243,
+  "identical_installables": {
+    "67_Rbow_Ore_Mod_v1.2.3_Pets_BP.mcpack": true,
+    "ElleeDog_67_Pets_v0.5.2_RP.mcpack": true,
+    "67_Rbow_Ore_Mod_v1.2.3_Pets_RP.mcpack": true,
+    "ElleeDog_67_Pets_v0.5.2_BP.mcpack": true,
+    "ElleeDog_67_Pets_v0.5.2.mcaddon": true
+  },
+  "minecraft_execution": false
+}

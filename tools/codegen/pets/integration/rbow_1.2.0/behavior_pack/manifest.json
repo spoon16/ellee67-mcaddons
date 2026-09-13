@@ -1,0 +1,60 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "67 Rbow Ore Mod — Behavior",
+    "description": "1.2.0: Rbow ores, tools, armor, crafting and world generation. Sulfur cubes accept Rbow blocks and ores. Ellee Schoonover | ellee@ellee.com.",
+    "uuid": "ea58ca29-f4bb-4cc7-8d8c-3d7e0a39c867",
+    "version": [
+      1,
+      2,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "692bd627-d4b9-49cf-9d97-9a575f15a2a5",
+      "version": [
+        1,
+        2,
+        0
+      ]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "1356e30e-56ec-41c1-9a26-1a0714464e43",
+      "version": [
+        1,
+        2,
+        0
+      ],
+      "entry": "scripts/bootstrap.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "898ad9f2-55bc-4347-aa25-9079c12c8cb9",
+      "version": [
+        1,
+        2,
+        0
+      ]
+    },
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.9.0"
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "Ellee Schoonover — ellee@ellee.com"
+    ],
+    "license": "See LICENSE and THIRD_PARTY_NOTICES.md"
+  }
+}

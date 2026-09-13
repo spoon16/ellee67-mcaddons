@@ -1,0 +1,8 @@
+{
+  "source_url": "https://github.com/Mojang/bedrock-samples/blob/736072450c26a7c67f07b1661f29d9a5ebaa14b1/resource_pack/render_controllers/cape.render_controllers.json",
+  "commit": "736072450c26a7c67f07b1661f29d9a5ebaa14b1",
+  "github_blob_sha": "e06b2b55ea3622d1b0764cb98839f6e6614dbc33",
+  "retrieved_using": "GitHub.fetch_file, 2026-09-12",
+  "normalization": "Complete fetched JSON object; whitespace normalized locally, not a byte-identical download.",
+  "sha256_normalized_file": "7156f0f3dde46166142d8602ec6faf8eed805f681792168932cbc3d34a9976d7"
+}

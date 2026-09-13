@@ -1,0 +1,228 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "elleedog:rbow_pickaxe",
+      "menu_category": {
+        "category": "equipment"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.elleedog:rbow_pickaxe.name"
+      },
+      "minecraft:fire_resistant": {
+        "value": true
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:icon": {
+        "textures": {
+          "default": "elleedog:rbow_pickaxe"
+        }
+      },
+      "minecraft:durability": {
+        "max_durability": 2032
+      },
+      "minecraft:repairable": {
+        "repair_items": [
+          {
+            "items": [
+              "elleedog:rbow_pickaxe"
+            ],
+            "repair_amount": "context.other->query.remaining_durability + 0.05 * query.max_durability"
+          },
+          {
+            "items": [
+              "elleedog:rbow_ingot"
+            ],
+            "repair_amount": "query.max_durability * 0.25"
+          }
+        ]
+      },
+      "minecraft:tags": {
+        "tags": [
+          "elleedog:rbow",
+          "minecraft:netherite_tier",
+          "minecraft:is_tool",
+          "minecraft:is_pickaxe"
+        ]
+      },
+      "minecraft:hand_equipped": true,
+      "minecraft:damage": {
+        "value": 6
+      },
+      "minecraft:enchantable": {
+        "slot": "pickaxe",
+        "value": 15
+      },
+      "elleedog:rbow_tool": {},
+      "minecraft:digger": {
+        "use_efficiency": true,
+        "destroy_speeds": [
+          {
+            "block": {
+              "tags": "q.any_tag('stone', 'metal', 'rail', 'minecraft:is_pickaxe_item_destructible')"
+            },
+            "speed": 9
+          },
+          {
+            "block": "minecraft:stone",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:deepslate",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:cobblestone",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:cobbled_deepslate",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:obsidian",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:crying_obsidian",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:andesite",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:granite",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:diorite",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:tuff",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:basalt",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:blackstone",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:calcite",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:end_stone",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:netherrack",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:coal_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:iron_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:copper_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:gold_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:diamond_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:emerald_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:lapis_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:redstone_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:lit_redstone_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:deepslate_coal_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:deepslate_iron_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:deepslate_copper_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:deepslate_gold_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:deepslate_diamond_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:deepslate_emerald_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:deepslate_lapis_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:deepslate_redstone_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:lit_deepslate_redstone_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:nether_gold_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:quartz_ore",
+            "speed": 9
+          },
+          {
+            "block": "minecraft:ancient_debris",
+            "speed": 9
+          },
+          {
+            "block": "elleedog:rbow_ore",
+            "speed": 9
+          },
+          {
+            "block": "elleedog:deepslate_rbow_ore",
+            "speed": 9
+          },
+          {
+            "block": "elleedog:rbow_block",
+            "speed": 9
+          }
+        ]
+      }
+    }
+  }
+}

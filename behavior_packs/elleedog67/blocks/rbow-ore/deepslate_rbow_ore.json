@@ -1,0 +1,33 @@
+{
+  "format_version": "1.26.40",
+  "minecraft:block": {
+    "description": {
+      "identifier": "elleedog:deepslate_rbow_ore"
+    },
+    "components": {
+      "minecraft:display_name": "tile.elleedog:deepslate_rbow_ore.name",
+      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "deepslate_rbow_ore",
+          "render_method": "opaque"
+        }
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 4.5
+      },
+      "minecraft:destructible_by_explosion": false,
+      "minecraft:flammable": false,
+      "minecraft:loot": "loot_tables/blocks/rbow_empty.json",
+      "minecraft:map_color": "#BB50DB",
+      "minecraft:tags": [
+        "minecraft:stone",
+        "minecraft:metal",
+        "minecraft:diamond_pick_diggable",
+        "minecraft:iron_pick_diggable",
+        "minecraft:netherite_pick_diggable",
+        "elleedog:rbow"
+      ]
+    }
+  }
+}

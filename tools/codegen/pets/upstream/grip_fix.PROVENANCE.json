@@ -1,0 +1,95 @@
+{
+  "commit": "736072450c26a7c67f07b1661f29d9a5ebaa14b1",
+  "geometry_source": "https://github.com/Mojang/bedrock-samples/blob/736072450c26a7c67f07b1661f29d9a5ebaa14b1/resource_pack/models/entity/humanoid.custom.geo.json",
+  "animation_source": "https://github.com/Mojang/bedrock-samples/blob/736072450c26a7c67f07b1661f29d9a5ebaa14b1/resource_pack/animations/player_firstperson.animation.json",
+  "extraction": "Semantic bone-only and swap-animation excerpts. No native skin pixels/meshes copied. Formatting is normalized.",
+  "mirrored_channels": {
+    "animation.pet.walk": [
+      [
+        "cav_body",
+        "waist"
+      ]
+    ],
+    "animation.pet.run": [
+      [
+        "cav_body",
+        "waist"
+      ]
+    ],
+    "animation.pet.sneak_walk": [
+      [
+        "cav_body",
+        "waist"
+      ]
+    ],
+    "animation.pet.crawl_walk": [
+      [
+        "cav_body",
+        "waist"
+      ]
+    ],
+    "animation.pet.idle": [
+      [
+        "cav_head",
+        "body"
+      ]
+    ],
+    "animation.pet.look": [
+      [
+        "cav_head",
+        "body"
+      ]
+    ],
+    "animation.pet.sneak": [
+      [
+        "cav_body",
+        "waist"
+      ],
+      [
+        "cav_head",
+        "body"
+      ]
+    ],
+    "animation.pet.air": [
+      [
+        "cav_body",
+        "waist"
+      ]
+    ],
+    "animation.pet.crawl": [
+      [
+        "cav_body",
+        "waist"
+      ]
+    ],
+    "animation.pet.ride": [
+      [
+        "cav_body",
+        "waist"
+      ]
+    ],
+    "animation.pet.rest": [
+      [
+        "cav_body",
+        "waist"
+      ],
+      [
+        "cav_head",
+        "body"
+      ]
+    ],
+    "animation.pet.attack": [
+      [
+        "cav_head",
+        "body"
+      ]
+    ],
+    "animation.pet.eat": [
+      [
+        "cav_head",
+        "body"
+      ]
+    ]
+  },
+  "bounds_note": "Handheight is a local model-unit adjustment, not a pixel or viewport measurement."
+}

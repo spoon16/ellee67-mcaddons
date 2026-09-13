@@ -1,0 +1,13 @@
+{
+  "format_version": "1.13.0",
+  "minecraft:aggregate_feature": {
+    "description": {
+      "identifier": "elleedog:rbow_vein_12_1"
+    },
+    "features": [
+      "elleedog:rbow_vein_stone_12_1",
+      "elleedog:rbow_vein_deepslate_12_1"
+    ],
+    "early_out": "first_success"
+  }
+}

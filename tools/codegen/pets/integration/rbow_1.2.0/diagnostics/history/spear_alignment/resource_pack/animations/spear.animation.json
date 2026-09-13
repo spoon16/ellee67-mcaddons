@@ -1,0 +1,209 @@
+{
+  "format_version": "1.10.0",
+  "animations": {
+    "animation.elleedog.spear_alignment.a_fp": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            24,
+            -27
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            "-20.0 + (c.owning_entity->v.fp_melee_spear_use_attachable_rotation_z ?? 0.0) + (c.owning_entity->v.fp_melee_spear_attack_attachable_rotation_z ?? 0.0)"
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.a_tp": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            24,
+            "-27.0 + (c.owning_entity->v.tp_melee_spear_attack_attachable_position_z ?? 0.0)"
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            "-(c.owning_entity->v.tp_melee_spear_use_attachable_rotation_z ?? 0.0)"
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.a_nonplayer": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            24,
+            -27
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.b_fp": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            0,
+            -27
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            "-20.0 + (c.owning_entity->v.fp_melee_spear_use_attachable_rotation_z ?? 0.0) + (c.owning_entity->v.fp_melee_spear_attack_attachable_rotation_z ?? 0.0)"
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.b_tp": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            0,
+            "-27.0 + (c.owning_entity->v.tp_melee_spear_attack_attachable_position_z ?? 0.0)"
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            "-(c.owning_entity->v.tp_melee_spear_use_attachable_rotation_z ?? 0.0)"
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.b_nonplayer": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            0,
+            -27
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.c_fp": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            24,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            "-20.0 + (c.owning_entity->v.fp_melee_spear_use_attachable_rotation_z ?? 0.0) + (c.owning_entity->v.fp_melee_spear_attack_attachable_rotation_z ?? 0.0)"
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.c_tp": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            24,
+            "0.0 + (c.owning_entity->v.tp_melee_spear_attack_attachable_position_z ?? 0.0)"
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            "-(c.owning_entity->v.tp_melee_spear_use_attachable_rotation_z ?? 0.0)"
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.c_nonplayer": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            24,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.d_fp": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            "-20.0 + (c.owning_entity->v.fp_melee_spear_use_attachable_rotation_z ?? 0.0) + (c.owning_entity->v.fp_melee_spear_attack_attachable_rotation_z ?? 0.0)"
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.d_tp": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            0,
+            "0.0 + (c.owning_entity->v.tp_melee_spear_attack_attachable_position_z ?? 0.0)"
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            "-(c.owning_entity->v.tp_melee_spear_use_attachable_rotation_z ?? 0.0)"
+          ]
+        }
+      }
+    },
+    "animation.elleedog.spear_alignment.d_nonplayer": {
+      "loop": true,
+      "bones": {
+        "spear": {
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "version": [
+    1,
+    1,
+    10
+  ],
+  "release": "Native Spear Pipeline Test",
+  "root_cause_confirmed": false,
+  "placement_result": "NOT RUN",
+  "brandishing_result": "NOT RUN",
+  "assistant_engine_tests_run": 0,
+  "assistant_client_tests_run": 0,
+  "realm_tests_run": 0,
+  "native_dependency_resolution": "Verified symbol names against Mojang v1.26.40.05 source; not a client resource-loader test.",
+  "historical_labs_built": false,
+  "runtime_pngs_preserved": 20,
+  "native_material_as_trim": false,
+  "custom_smithing_interactions": false,
+  "loose_item_blast_protection": false
+}

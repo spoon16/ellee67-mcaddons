@@ -1,0 +1,141 @@
+#!/usr/bin/env python3
+"""Isolated rendering experiments. NEVER modifies the recovery pack.
+
+Five Creative-only controls; no scripts, world generation, native overrides,
+recipes, or dependency on the Rbow gameplay pack. References are pinned offline.
+The native spear model, texture layout and native pose pair are a unit: no
+texture scaling, fitted Euler angles, guessed grip offsets or custom timers.
+"""
+from __future__ import annotations
+import copy, hashlib, json, shutil, uuid
+from pathlib import Path
+from PIL import Image, ImageDraw
+ROOT=Path(__file__).resolve().parents[1]
+OUT=ROOT/'diagnostics/spear_lab'
+REF=ROOT/'diagnostics/references'
+NS='elleedog_spear_lab:'
+VERSION=[0,1,0]
+KINDS=['sprite','trident_control','native_static','native_animated','rbow_animated']
+NAMES=[
+ 'Spear Lab 1 - Ordinary Sprite',
+ 'Spear Lab 2 - Trident Model Control',
+ 'Spear Lab 3 - Native Mesh, Fixed Local Pose',
+ 'Spear Lab 4 - Native Mesh, Native Animation',
+ 'Spear Lab 5 - Rbow Texture, Native Animation'
+]
+def write(p:Path,obj)->None:
+ p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(obj,indent=2)+'\n')
+def uid(label):return str(uuid.uuid5(uuid.NAMESPACE_URL,'elleedog/rbow/spear-render-lab/v1/'+label))
+def held_art():
+ """New diagnostic-only 32px native-layout texture, not the inventory sprite.
+ One-pixel continuous haft follows the native head-upper-left, tail-lower-right
+ layout. This intentionally avoids stretching/cropping a inventory sprite into
+ a mesh whose pixels determine geometry. No native color pixels/masks sampled.
+ """
+ im=Image.new('RGBA',(32,32));d=ImageDraw.Draw(im)
+ for t in range(6,32):
+  d.point((t,t),fill=([(129,76,41,255),(187,120,58,255),(104,57,30,255),(160,96,45,255)])[t%4])
+ d.point((31,31),fill=(183,134,218,255))
+ shape=[(0,0),(3,0),(4,1),(4,2),(6,2),(8,4),(7,5),(7,7),(5,7),(4,8),(2,6),(2,4),(1,4),(0,2)]
+ mask=Image.new('1',(32,32));ImageDraw.Draw(mask).polygon(shape,fill=1)
+ palette=[(255,70,118),(255,140,51),(255,223,75),(126,247,73),(24,225,197),(32,143,255),(112,59,247),(221,54,225)]
+ for y in range(9):
+  for x in range(9):
+   if not mask.getpixel((x,y)):continue
+   c=palette[min(7,(x+y)//2)]
+   edge=not all(0<=x+dx<32 and 0<=y+dy<32 and mask.getpixel((x+dx,y+dy)) for dx,dy in [(-1,0),(1,0),(0,-1),(0,1)])
+   if x==y:c=tuple(round(v*.6+255*.4) for v in c)
+   elif edge:c=tuple(round(v*.5) for v in c)
+   im.putpixel((x,y),c+(255,))
+ return im
+
+def build():
+ if OUT.exists():shutil.rmtree(OUT)
+ bp=OUT/'behavior_pack';rp=OUT/'resource_pack'
+ for path in [bp,rp]:path.mkdir(parents=True)
+ for label,path,typ in [('bp',bp,'data'),('rp',rp,'resources')]:
+  j={'format_version':2,'header':{'name':f'67 Rbow Spear Lab - {"Behavior" if label=="bp" else "Resources"}',
+   'description':'Standalone renderer diagnosis, not a gameplay update. Five numbered Creative controls. Ellee Schoonover | ellee@ellee.com.',
+   'uuid':uid(label),'version':VERSION,'min_engine_version':[1,26,40]},
+   'modules':[{'type':typ,'uuid':uid(label+'_module'),'version':VERSION}],
+   'metadata':{'authors':['Ellee Schoonover (ellee@ellee.com)']}}
+  if label=='bp':j['dependencies']=[{'uuid':uid('rp'),'version':VERSION}]
+  write(path/'manifest.json',j)
+  shutil.copyfile(ROOT/'resource_pack/pack_icon.png',path/'pack_icon.png')
+  (path/'THIRD_PARTY_NOTICES.md').write_text('Mojang Bedrock samples v1.26.40.05 native model, pose data and reference texture: (c) Mojang AB, subject to the Minecraft EULA; not relicensed as original project code. The diagnostic native texture is copied from the pinned sample. Existing Rbow icon and separate diagnostic Rbow held art follow the project attribution.\nhttps://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/LICENSE.md\n')
+ spear=json.loads((ROOT/'behavior_pack/items/rbow_spear.json').read_text())
+ for kind,name in zip(KINDS,NAMES):
+  ident=NS+kind;j=copy.deepcopy(spear);it=j['minecraft:item']
+  it['description']['identifier']=ident
+  it['components']['minecraft:display_name']['value']=name
+  it['components']['minecraft:icon']={'textures':{'default':NS+'icon'}}
+  it['components']['minecraft:tags']['tags']=[t for t in it['components']['minecraft:tags']['tags'] if t!='elleedog:rbow']
+  # No repair ingredients/recipe links to the production pack in an isolated test.
+  it['components'].pop('minecraft:repairable',None)
+  if kind=='trident_control':
+   # Pure held-model probe: do not combine trident visuals with the melee-spear
+   # tag's player-arm pose. It deliberately has no charge or attack mechanics.
+   it['components']={k:v for k,v in it['components'].items() if k in {
+    'minecraft:display_name','minecraft:icon','minecraft:max_stack_size','minecraft:hand_equipped'}}
+  write(bp/f'items/{kind}.json',j)
+ t=rp/'textures';(t/'items').mkdir(parents=True);(t/'entity').mkdir(parents=True)
+ shutil.copyfile(ROOT/'resource_pack/textures/items/rbow_spear.png',t/'items/control_icon.png')
+ shutil.copyfile(ROOT/'art/references/netherite_spear_entity.png',t/'entity/native_reference.png')
+ held_art().save(t/'entity/rbow_held.png')
+ write(t/'item_texture.json',{'resource_pack_name':'67 Rbow Spear Lab','texture_name':'atlas.items','texture_data':{NS+'icon':{'textures':'textures/items/control_icon'}}})
+ # Native model control copied from the published Trident attachable, with only
+ # the identifier changed. It tests a vanilla cuboid renderer under a custom ID.
+ trident=json.loads((REF/'trident.attachable.json').read_text())
+ trident['minecraft:attachable']['description']['identifier']=NS+'trident_control'
+ write(rp/'attachables/trident_control.json',trident)
+ g=json.loads((REF/'spear.geo.json').read_text())
+ g['minecraft:geometry'][0]['description']['identifier']='geometry.elleedog_spear_lab.spear'
+ write(rp/'models/entity/spear.geo.json',g)
+ # Namespaced, explicitly shipped render controller, rather than an assumed
+ # project-local controller. Vanilla material/glint names match the native sample.
+ render='controller.render.elleedog_spear_lab.spear'
+ write(rp/'render_controllers/spear.render_controllers.json',{'format_version':'1.8.0','render_controllers':{render:{
+  'geometry':'Geometry.default','materials':[{'*':'variable.is_enchanted ? Material.enchanted : Material.default'}],
+  'textures':['Texture.default','Texture.enchanted']}}})
+ ref=json.loads((REF/'spear.animation.json').read_text())['animations']
+ animations={}
+ for view in ['first_person','third_person']:
+  key='animation.spear.held_'+view
+  animated=copy.deepcopy(ref[key])
+  # Null fallback does not provide or fake missing animation state. It only
+  # keeps the fixed native pose defined if a public owner variable is absent.
+  bone=animated['bones']['spear']
+  for channel in ['position','rotation']:
+   for i,value in enumerate(bone[channel]):
+    if isinstance(value,str):
+     import re
+     bone[channel][i]=re.sub(r'c\.owning_entity->v\.[a-z_]+',lambda m:'('+m[0]+' ?? 0.0)',value)
+  animations['animation.elleedog_spear_lab.animated_'+view]=animated
+  fixed={'loop':True,'bones':{'spear':{'position':[0,24,-27],'rotation':[0,0,-20 if view=='first_person' else 0]}}}
+  animations['animation.elleedog_spear_lab.fixed_'+view]=fixed
+ write(rp/'animations/spear.animation.json',{'format_version':'1.10.0','animations':animations})
+ for kind in ['native_static','native_animated','rbow_animated']:
+  fixed=kind=='native_static';mode='fixed' if fixed else 'animated'
+  d={'identifier':NS+kind,
+   'materials':{'default':'entity_alphatest','enchanted':'entity_alphatest_glint'},
+   'textures':{'default':'textures/entity/rbow_held' if kind=='rbow_animated' else 'textures/entity/native_reference','enchanted':'textures/misc/enchanted_item_glint'},
+   'geometry':{'default':'geometry.elleedog_spear_lab.spear'},
+   'animations':{'fp':'animation.elleedog_spear_lab.'+mode+'_first_person','tp':'animation.elleedog_spear_lab.'+mode+'_third_person','nonplayer':'animation.elleedog_spear_lab.fixed_third_person'},
+   'scripts':{'pre_animation':['variable.is_enchanted = query.is_enchanted;'],
+    'animate':[{'fp':"q.is_owner_identifier_any('minecraft:player') && c.is_first_person"},
+               {'tp':"q.is_owner_identifier_any('minecraft:player') && !c.is_first_person"},
+               {'nonplayer':"!q.is_owner_identifier_any('minecraft:player')"}]},
+   'render_controllers':[render]}
+  write(rp/f'attachables/{kind}.json',{'format_version':'1.10.0','minecraft:attachable':{'description':d}})
+ write(OUT/'experiment.json',{'version':VERSION,'namespace':NS,'names':dict(zip(KINDS,NAMES)),
+  'user_confirmed_results':{},'engine_tests_run':0,'client_render_tests_run':0,'realm_tests_run':0,
+  'static_control_note':'Fixed local pose only. Native owner/player arm animation may still move the whole attachment.',
+  'pairs':{'3_vs_4':'Only fixed-vs-native attachment-local animation bindings change, aside from item identity/name.',
+          '4_vs_5':'Only held texture changes, aside from item identity/name.'},
+  'native_geometry_sha256':hashlib.sha256((REF/'spear.geo.json').read_bytes()).hexdigest(),
+  'native_reference_texture_sha256':hashlib.sha256((t/'entity/native_reference.png').read_bytes()).hexdigest(),
+  'native_dependencies':['geometry.trident','textures/entity/trident','textures/misc/enchanted_item_glint','controller.render.item_default','controller.animation.trident.wield','animation.trident.*','entity_alphatest','entity_alphatest_glint'],
+  'does_not_test':['production ore generation','damage parity','armor','multiplayer resource conflicts'],
+  'not_in_production_installer':True})
+ print('Built isolated five-control Spear Lab. Production pack not modified.')
+if __name__=='__main__':build()

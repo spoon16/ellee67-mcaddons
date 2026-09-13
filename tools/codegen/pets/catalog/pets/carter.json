@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "id": "carter",
+  "display_name": "Carter",
+  "description": "The softest and also laziest pet you ever met.",
+  "order": 10,
+  "rig": "spaniel_v1",
+  "model": "assets/pets/carter/model.geo.json",
+  "texture": "assets/pets/carter/coat.png",
+  "first_person": {
+    "model": "assets/pets/carter/paws.geo.json",
+    "texture": "assets/pets/carter/paws.png",
+    "default_hand_height": 2
+  },
+  "equipment": {
+    "mainhand": {
+      "mode": "mouth",
+      "position": [
+        0,
+        11.4,
+        -11.5
+      ],
+      "rotation": [
+        0,
+        0,
+        90
+      ]
+    },
+    "offhand": {
+      "mode": "side",
+      "position": [
+        4.2,
+        8,
+        -3.5
+      ]
+    },
+    "armor_fit": "assets/pets/carter/armor_fit.json",
+    "helmet_profile": "covered_crown_floppy_ears",
+    "mouth_sprite": {
+      "position": [
+        0,
+        11.05,
+        -11.65
+      ],
+      "pixel_scale": 0.65,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "thickness": 0.65,
+      "bake_pixel_rotation_z": -45,
+      "orientation_note": "Bake the horizontal handle in texel centers. Do not rely on a runtime bind-pose Z rotation; 0.3.1 rendered 90 degrees wrong on the client."
+    },
+    "shield": {
+      "side_position": [
+        4.15,
+        8.5,
+        0.5
+      ],
+      "front_position": [
+        0,
+        8.7,
+        -13.1
+      ],
+      "side_rotation": [
+        0,
+        -90,
+        0
+      ],
+      "front_rotation": [
+        0,
+        0,
+        0
+      ],
+      "width": 6.8,
+      "height": 9.6,
+      "depth": 0.42,
+      "transition_seconds": 0.16
+    },
+    "side_carry": {
+      "sprite_position": [
+        -4.95,
+        8.5,
+        0.5
+      ],
+      "cube_position": [
+        -6.65,
+        8.5,
+        0.5
+      ],
+      "pixel_scale": 0.46,
+      "cube_size": 4.2,
+      "sprite_thickness": 0.3,
+      "mainhand_side": "right",
+      "offhand_side": "left"
+    }
+  },
+  "validation": {
+    "appearance": "user-confirmed-0.3.0",
+    "ground_motion": "user-confirmed-0.3.0",
+    "hand_and_grip": "0.3.1 client reports duplicate native tool and 90-degree mouth error; 0.3.2 engine suppression and baked geometry await retest",
+    "armor_binding": "User confirmed 0.3.0 fit pipeline; individual material coverage unspecified",
+    "shield": "0.3.1 side/front positioning user-confirmed; geometry and pose retained; direct-render routing requires regression test"
+  },
+  "owner": "ElleeDog",
+  "pet_kind": "dog",
+  "species": "Cavalier King Charles Spaniel"
+}

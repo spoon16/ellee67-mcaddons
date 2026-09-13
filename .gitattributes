@@ -30,3 +30,5 @@ resource_packs/elleedog67/animation_controllers/** linguist-generated=true
 resource_packs/elleedog67/models/entity/pets/** linguist-generated=true
 resource_packs/elleedog67/models/entity/rbow-ore/** linguist-generated=true
 src/features/pets/*.generated.js linguist-generated=true
+tools/codegen/synced-files.json linguist-generated=true
+tools/codegen/pets/uv.lock linguist-generated=true

@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "id": "casper",
+  "display_name": "Casper",
+  "description": "Casper is an indoor cat, super cuddly and is always trying to sneak outside.",
+  "order": 30,
+  "rig": "feline_v1",
+  "model": "assets/pets/mochi/model.geo.json",
+  "texture": "assets/pets/casper/coat.png",
+  "first_person": {
+    "model": "assets/pets/mochi/paws.geo.json",
+    "texture": "assets/pets/casper/paws.png",
+    "default_hand_height": 2
+  },
+  "equipment": {
+    "mainhand": {
+      "mode": "mouth",
+      "position": [
+        0,
+        10.1,
+        -10.4
+      ],
+      "rotation": [
+        0,
+        0,
+        90
+      ]
+    },
+    "offhand": {
+      "mode": "side",
+      "position": [
+        3.1,
+        7,
+        -3.5
+      ]
+    },
+    "armor_fit": "assets/pets/mochi/armor_fit.json",
+    "helmet_profile": "upright_ear_openings",
+    "mouth_sprite": {
+      "position": [
+        0,
+        9.65,
+        -10.42
+      ],
+      "pixel_scale": 0.55,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "thickness": 0.65,
+      "bake_pixel_rotation_z": -45,
+      "orientation_note": "Bake the horizontal handle in texel centers. Do not rely on a runtime bind-pose Z rotation; 0.3.1 rendered 90 degrees wrong on the client."
+    },
+    "shield": {
+      "side_position": [
+        3.25,
+        7.5,
+        0.5
+      ],
+      "front_position": [
+        0,
+        7.55,
+        -11.9
+      ],
+      "side_rotation": [
+        0,
+        -90,
+        0
+      ],
+      "front_rotation": [
+        0,
+        0,
+        0
+      ],
+      "width": 5.7,
+      "height": 8.1,
+      "depth": 0.42,
+      "transition_seconds": 0.16
+    },
+    "side_carry": {
+      "sprite_position": [
+        -3.95,
+        7.5,
+        0.5
+      ],
+      "cube_position": [
+        -5.4,
+        7.5,
+        0.5
+      ],
+      "pixel_scale": 0.38,
+      "cube_size": 3.6,
+      "sprite_thickness": 0.3,
+      "mainhand_side": "right",
+      "offhand_side": "left"
+    }
+  },
+  "validation": {
+    "appearance": "new-Casper-variant-not-client-tested",
+    "ground_motion": "new-Casper-variant-not-client-tested",
+    "hand_and_grip": "new-Casper-variant-not-client-tested",
+    "armor_binding": "new-Casper-variant-not-client-tested",
+    "shield": "new-Casper-variant-not-client-tested"
+  },
+  "variant_of": "mochi",
+  "owner": "Casper201312",
+  "pet_kind": "cat",
+  "species": "White cat",
+  "coat_features": {
+    "fur": "all white",
+    "eyes": "blue",
+    "nose": "pink"
+  }
+}

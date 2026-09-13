@@ -1,0 +1,59 @@
+{
+  "format_version": "1.20.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "pet:diag_cube",
+      "is_spawnable": false,
+      "is_summonable": true
+    },
+    "components": {
+      "minecraft:type_family": {
+        "family": [
+          "cav_diag_probe"
+        ]
+      },
+      "minecraft:physics": {
+        "has_gravity": false,
+        "has_collision": false
+      },
+      "minecraft:collision_box": {
+        "width": 0.2,
+        "height": 0.2
+      },
+      "minecraft:health": {
+        "value": 1,
+        "max": 1
+      },
+      "minecraft:pushable": {
+        "is_pushable": false,
+        "is_pushable_by_piston": false
+      },
+      "minecraft:nameable": {
+        "always_show": true,
+        "allow_name_tag_renaming": false
+      },
+      "minecraft:timer": {
+        "looping": false,
+        "time": 120,
+        "time_down_event": {
+          "event": "pet:expire",
+          "target": "self"
+        }
+      }
+    },
+    "component_groups": {
+      "pet:expire": {
+        "minecraft:instant_despawn": {}
+      }
+    },
+    "events": {
+      "pet:expire": {
+        "add": {
+          "component_groups": [
+            "pet:expire"
+          ]
+        }
+      }
+    }
+  }
+}

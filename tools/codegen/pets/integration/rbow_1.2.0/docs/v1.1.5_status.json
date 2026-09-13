@@ -1,0 +1,29 @@
+{
+  "version": [
+    1,
+    1,
+    5
+  ],
+  "baseline": "1.1.4",
+  "target_engine": "Bedrock 26.45 (26.40+ API baseline)",
+  "min_engine_version": [
+    1,
+    26,
+    40
+  ],
+  "dropped_item_explosion_protection": false,
+  "native_placed_block_explosion_protection": true,
+  "native_item_drops": true,
+  "native_block_item_rendering": true,
+  "custom_spear_attachment": false,
+  "spear_rendering": "native hand_equipped item, not a full-length custom 3D mesh",
+  "rbow_as_trim_material": false,
+  "custom_smithing_interaction": false,
+  "native_trims_on_rbow_armor_configured": true,
+  "recipe_notifications": "native recipe unlock system; not forced when disabled or already unlocked",
+  "upgrade_recovery": "load-only conversion of old saved rbow_drop inventories; never creates carriers",
+  "runtime_textures_preserved": 19,
+  "engine_tests_run": 0,
+  "client_render_tests_run": 0,
+  "realm_tests_run": 0
+}

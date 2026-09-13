@@ -1,0 +1,34 @@
+{
+  "format_version": "1.20.60",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "elleedog:rbow_boots.player",
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/models/armor/rbow_1",
+        "enchanted": "textures/misc/enchanted_actor_glint"
+      },
+      "geometry": {
+        "default": "geometry.player.armor.boots"
+      },
+      "scripts": {
+        "parent_setup": "v.boot_layer_visible = 0.0;",
+        "animate": [
+          "offset"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.armor"
+      ],
+      "item": {
+        "elleedog:rbow_boots": "q.owner_identifier == 'minecraft:player'"
+      },
+      "animations": {
+        "offset": "animation.armor.boots.offset"
+      }
+    }
+  }
+}

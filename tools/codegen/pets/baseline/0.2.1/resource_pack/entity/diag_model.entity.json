@@ -1,0 +1,23 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "pet:diag_model",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/carter/blenheim"
+      },
+      "geometry": {
+        "default": "geometry.pet.carter"
+      },
+      "scripts": {
+        "scale": "0.9375"
+      },
+      "render_controllers": [
+        "controller.render.pet.diag_prop"
+      ]
+    }
+  }
+}

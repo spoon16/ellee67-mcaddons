@@ -1,0 +1,502 @@
+{
+  "schema_version": 1,
+  "texture_layout": "vanilla_64x32",
+  "validation": "revised-0.3.1-mesh-awaiting-client-test",
+  "slots": {
+    "helmet": [
+      {
+        "bone": "pet_head",
+        "origin": [
+          -3.22,
+          15.06,
+          -9.22
+        ],
+        "size": [
+          0.15000000000000036,
+          0.62,
+          1.1900000000000013
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          -3.22,
+          15.06,
+          -8.03
+        ],
+        "size": [
+          0.15000000000000036,
+          0.62,
+          2.3499999999999996
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          -3.22,
+          15.06,
+          -5.68
+        ],
+        "size": [
+          0.15000000000000036,
+          0.62,
+          1.9
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          -3.07,
+          15.06,
+          -9.22
+        ],
+        "size": [
+          1.7499999999999998,
+          0.62,
+          1.1900000000000013
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          -3.07,
+          15.06,
+          -5.68
+        ],
+        "size": [
+          1.7499999999999998,
+          0.62,
+          1.9
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          -1.32,
+          15.06,
+          -9.22
+        ],
+        "size": [
+          2.64,
+          0.62,
+          1.1900000000000013
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          -1.32,
+          15.06,
+          -8.03
+        ],
+        "size": [
+          2.64,
+          0.62,
+          2.3499999999999996
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          -1.32,
+          15.06,
+          -5.68
+        ],
+        "size": [
+          2.64,
+          0.62,
+          1.9
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          1.32,
+          15.06,
+          -9.22
+        ],
+        "size": [
+          1.7499999999999998,
+          0.62,
+          1.1900000000000013
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          1.32,
+          15.06,
+          -5.68
+        ],
+        "size": [
+          1.7499999999999998,
+          0.62,
+          1.9
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          3.07,
+          15.06,
+          -9.22
+        ],
+        "size": [
+          0.15000000000000036,
+          0.62,
+          1.1900000000000013
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          3.07,
+          15.06,
+          -8.03
+        ],
+        "size": [
+          0.15000000000000036,
+          0.62,
+          2.3499999999999996
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          3.07,
+          15.06,
+          -5.68
+        ],
+        "size": [
+          0.15000000000000036,
+          0.62,
+          1.9
+        ],
+        "uv_region": "head_crown",
+        "role": "crown",
+        "crown_uv": {
+          "bounds": [
+            -3.22,
+            3.22,
+            -9.22,
+            -3.78
+          ]
+        }
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          -3.22,
+          13.95,
+          -9.22
+        ],
+        "size": [
+          6.44,
+          1.11,
+          0.24
+        ],
+        "uv_region": "head_band",
+        "role": "front_rim"
+      },
+      {
+        "bone": "pet_head",
+        "origin": [
+          -3.22,
+          13.95,
+          -4.02
+        ],
+        "size": [
+          6.44,
+          1.11,
+          0.24
+        ],
+        "uv_region": "head_band",
+        "role": "rear_rim"
+      }
+    ],
+    "chestplate": [
+      {
+        "bone": "pet_body",
+        "origin": [
+          -2.81,
+          10.47,
+          -4.73
+        ],
+        "size": [
+          5.62,
+          0.6,
+          11.260000000000002
+        ],
+        "uv_region": "body_back",
+        "role": "dorsal_plate"
+      },
+      {
+        "bone": "pet_body",
+        "origin": [
+          -2.81,
+          5.12,
+          -4.73
+        ],
+        "size": [
+          0.29,
+          5.3500000000000005,
+          10.760000000000002
+        ],
+        "uv_region": "body",
+        "role": "left_flank"
+      },
+      {
+        "bone": "pet_body",
+        "origin": [
+          2.52,
+          5.12,
+          -4.73
+        ],
+        "size": [
+          0.29,
+          5.3500000000000005,
+          10.760000000000002
+        ],
+        "uv_region": "body",
+        "role": "right_flank"
+      }
+    ],
+    "leggings": [
+      {
+        "bone": "pet_body",
+        "origin": [
+          -2.73,
+          9.600000000000001,
+          3.1999999999999993
+        ],
+        "size": [
+          5.46,
+          0.9,
+          3.08
+        ],
+        "uv_region": "body"
+      },
+      {
+        "bone": "pet_rear_left",
+        "origin": [
+          0.89,
+          3.412,
+          3.54
+        ],
+        "size": [
+          1.9200000000000002,
+          2.2800000000000002,
+          2.12
+        ],
+        "uv_region": "leg_upper"
+      },
+      {
+        "bone": "pet_rear_right",
+        "origin": [
+          -2.8100000000000005,
+          3.412,
+          3.54
+        ],
+        "size": [
+          1.9200000000000002,
+          2.2800000000000002,
+          2.12
+        ],
+        "uv_region": "leg_upper"
+      }
+    ],
+    "boots": [
+      {
+        "bone": "pet_front_left_paw",
+        "origin": [
+          0.7300000000000001,
+          0.03,
+          -5.17
+        ],
+        "size": [
+          2.24,
+          1.6,
+          2.79
+        ],
+        "uv_region": "leg_lower"
+      },
+      {
+        "bone": "pet_front_right_paw",
+        "origin": [
+          -2.97,
+          0.03,
+          -5.17
+        ],
+        "size": [
+          2.24,
+          1.6,
+          2.79
+        ],
+        "uv_region": "leg_lower"
+      },
+      {
+        "bone": "pet_rear_left_paw",
+        "origin": [
+          0.7300000000000001,
+          0.03,
+          3.13
+        ],
+        "size": [
+          2.24,
+          1.6,
+          2.79
+        ],
+        "uv_region": "leg_lower"
+      },
+      {
+        "bone": "pet_rear_right_paw",
+        "origin": [
+          -2.97,
+          0.03,
+          3.13
+        ],
+        "size": [
+          2.24,
+          1.6,
+          2.79
+        ],
+        "uv_region": "leg_lower"
+      }
+    ]
+  },
+  "helmet_profile": "upright_ear_openings",
+  "ear_openings": [
+    [
+      -3.07,
+      -1.32,
+      -8.03,
+      -5.68
+    ],
+    [
+      1.32,
+      3.07,
+      -8.03,
+      -5.68
+    ]
+  ]
+}

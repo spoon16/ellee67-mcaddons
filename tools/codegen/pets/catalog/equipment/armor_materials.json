@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "materials": [
+    {
+      "id": "iron",
+      "item_template": "minecraft:iron_{slot}",
+      "attachable_template": "minecraft:iron_{slot}.player",
+      "texture_template": "textures/models/armor/iron_{layer}",
+      "material": "armor",
+      "enchanted_material": "armor_enchanted",
+      "status": "prototype-client-validation-required"
+    },
+    {
+      "id": "diamond",
+      "item_template": "minecraft:diamond_{slot}",
+      "attachable_template": "minecraft:diamond_{slot}.player",
+      "texture_template": "textures/models/armor/diamond_{layer}",
+      "material": "armor",
+      "enchanted_material": "armor_enchanted",
+      "status": "prototype-client-validation-required"
+    },
+    {
+      "id": "golden",
+      "item_template": "minecraft:golden_{slot}",
+      "attachable_template": "minecraft:golden_{slot}.player",
+      "texture_template": "textures/models/armor/gold_{layer}",
+      "material": "armor",
+      "enchanted_material": "armor_enchanted",
+      "status": "prototype-client-validation-required"
+    },
+    {
+      "id": "chainmail",
+      "item_template": "minecraft:chainmail_{slot}",
+      "attachable_template": "minecraft:chainmail_{slot}.player",
+      "texture_template": "textures/models/armor/chain_{layer}",
+      "material": "armor",
+      "enchanted_material": "armor_enchanted",
+      "status": "prototype-client-validation-required"
+    },
+    {
+      "id": "netherite",
+      "item_template": "minecraft:netherite_{slot}",
+      "attachable_template": "minecraft:netherite_{slot}.player",
+      "texture_template": "textures/models/armor/netherite_{layer}",
+      "material": "armor",
+      "enchanted_material": "armor_enchanted",
+      "status": "prototype-client-validation-required"
+    },
+    {
+      "id": "leather",
+      "item_template": "minecraft:leather_{slot}",
+      "attachable_template": "minecraft:leather_{slot}.player",
+      "texture_template": "textures/models/armor/leather_{layer}",
+      "material": "armor_leather",
+      "enchanted_material": "armor_leather_enchanted",
+      "status": "prototype-client-validation-required"
+    },
+    {
+      "id": "rbow",
+      "item_template": "elleedog:rbow_{slot}",
+      "attachable_template": "elleedog:rbow_{slot}.player",
+      "texture_template": "textures/models/armor/rbow_{layer}",
+      "material": "armor",
+      "enchanted_material": "armor_enchanted",
+      "status": "integration-1.2.0-client-validation-required"
+    }
+  ],
+  "unsupported": [
+    "copper armor",
+    "turtle helmet",
+    "other third-party armor without an explicit adapter"
+  ]
+}

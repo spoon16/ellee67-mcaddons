@@ -4,3 +4,47 @@ pack.description=Pets, stair sitting, creeper and ender mods, redstone guide, rb
 
 ## core
 item.elleedog67:feature_book.name=ElleeDog 67 Book
+
+## pets (keys the pets compiler emits; `npm run codegen` verifies this section)
+item.pet:paw_token.name=ElleeDog 67 Pets - Paw Menu
+pet.diag.rp_021=PET-RP-021: ElleeDog 67 Pets 0.2.1 PAW + GRIP FIX resources loaded.
+entity.pet:diag_cube.name=Pets R7 cube
+entity.pet:diag_model.name=Carter - static test model
+entity.cav:diag_cube.name=Pets R7 cube
+entity.cav:diag_model.name=Carter - static test model
+item.pet:morpher_book.name=ElleeDog 67 Pet Morpher
+pet.form.human=Player
+pet.form.player=Player
+pet.diag.rp_052=PET-RP-052: ElleeDog 67 Pets 0.5.2 NATIVE ARMOR resources loaded.
+pet.form.carter=Carter
+pet.form.mochi=Mochi
+pet.form.casper=Casper
+
+## rbow-ore (keys the rbow generator emits; `npm run codegen` verifies this section)
+item.elleedog:rbow_ore.name=Rbow Ore
+tile.elleedog:rbow_ore.name=Rbow Ore
+item.elleedog:deepslate_rbow_ore.name=Deepslate Rbow Ore
+tile.elleedog:deepslate_rbow_ore.name=Deepslate Rbow Ore
+item.elleedog:rbow_block.name=Rbow Block
+tile.elleedog:rbow_block.name=Rbow Block
+item.elleedog:raw_rbow_ore.name=Raw Rbow Ore
+item.elleedog:rbow_ingot.name=Rbow Ingot
+item.elleedog:rbow_nug.name=Rbow Nug
+item.elleedog:rbow_sword.name=Rbow Sword
+item.elleedog:rbow_pickaxe.name=Rbow Pickaxe
+item.elleedog:rbow_axe.name=Rbow Axe
+item.elleedog:rbow_shovel.name=Rbow Shovel
+item.elleedog:rbow_hoe.name=Rbow Hoe
+item.elleedog:rbow_spear.name=Rbow Spear
+item.elleedog:rbow_helmet.name=Rbow Helmet
+item.elleedog:rbow_chestplate.name=Rbow Chestplate
+item.elleedog:rbow_leggings.name=Rbow Leggings
+item.elleedog:rbow_boots.name=Rbow Boots
+
+## stair-sit
+entity.sit:seat.name=Stair seat
+entity.sit:target.name=Stair
+action.interact.sit67=Sit
+
+## redstone-guide
+item.elleedog_redstone:guide_book.name=Redstone Guide

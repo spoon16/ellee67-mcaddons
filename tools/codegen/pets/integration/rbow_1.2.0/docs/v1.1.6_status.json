@@ -1,0 +1,40 @@
+{
+  "version": [
+    1,
+    1,
+    6
+  ],
+  "baseline": "1.1.5",
+  "target_engine": "Bedrock 26.45 (26.40+ API baseline)",
+  "min_engine_version": [
+    1,
+    26,
+    40
+  ],
+  "dropped_item_explosion_protection": false,
+  "native_placed_block_explosion_protection": true,
+  "native_item_drops": true,
+  "native_block_item_rendering": true,
+  "custom_spear_attachment": false,
+  "spear_rendering": "native hand_equipped item, not a full-length custom 3D mesh",
+  "rbow_as_trim_material": false,
+  "custom_smithing_interaction": false,
+  "native_trims_on_rbow_armor_configured": true,
+  "recipe_notifications": "native recipe unlock system; not forced when disabled or already unlocked",
+  "upgrade_recovery": "load-only conversion of old saved rbow_drop inventories; never creates carriers",
+  "runtime_textures_preserved": 19,
+  "engine_tests_run": 0,
+  "client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "release_kind": "spear animation client-test candidate",
+  "user_confirmed_115_spear_placement": true,
+  "116_animations_client_confirmed": false,
+  "action_patch": "Four conditional native action-animation overrides; exact Rbow item only. No new player, controller, attachment or mesh.",
+  "idle_pose": "No idle/hold animation override; retain 1.1.5 renderer and sprite.",
+  "animation_timing": "Client evaluation and use-time query alignment need in-game verification.",
+  "known_risks": [
+    "Normal item first-person rendering may not consume these rightitem bone channels on every client. This patch is a hypothesis to test, not an engine-confirmed repair.",
+    "Other resource packs overriding the same four native action-animation identifiers can conflict. No general compatibility claim.",
+    "The retained native controller must activate the spear action paths from the item tag. No custom server input polling or extra attack is added."
+  ]
+}

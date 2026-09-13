@@ -1,0 +1,43 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "elleedog_spear_lab:native_animated",
+      "materials": {
+        "default": "entity_alphatest",
+        "enchanted": "entity_alphatest_glint"
+      },
+      "textures": {
+        "default": "textures/entity/native_reference",
+        "enchanted": "textures/misc/enchanted_item_glint"
+      },
+      "geometry": {
+        "default": "geometry.elleedog_spear_lab.spear"
+      },
+      "animations": {
+        "fp": "animation.elleedog_spear_lab.animated_first_person",
+        "tp": "animation.elleedog_spear_lab.animated_third_person",
+        "nonplayer": "animation.elleedog_spear_lab.fixed_third_person"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.is_enchanted = query.is_enchanted;"
+        ],
+        "animate": [
+          {
+            "fp": "q.is_owner_identifier_any('minecraft:player') && c.is_first_person"
+          },
+          {
+            "tp": "q.is_owner_identifier_any('minecraft:player') && !c.is_first_person"
+          },
+          {
+            "nonplayer": "!q.is_owner_identifier_any('minecraft:player')"
+          }
+        ]
+      },
+      "render_controllers": [
+        "controller.render.elleedog_spear_lab.spear"
+      ]
+    }
+  }
+}

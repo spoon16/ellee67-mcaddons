@@ -1,0 +1,55 @@
+{
+  "provenance": {
+    "repository": "Mojang/bedrock-samples",
+    "ref": "v1.26.40.05",
+    "behavior_source": "behavior_pack/entities/sulfur_cube.json",
+    "behavior_blob_sha": "8c77d574b7c45b57dd0ec3704a3e3f36488e75b6",
+    "resource_source": "resource_pack/entity/sulfur_cube.entity.json",
+    "resource_blob_sha": "6e6e14dd972f82edbc13112b0e573c23e565c827",
+    "kind": "Normalized selected excerpts, not complete entities or a runtime test."
+  },
+  "bouncy_tag": "minecraft:sulfur_cube_archetype_bouncy",
+  "feed_bouncy_filter": {
+    "test": "has_equipment_tag",
+    "subject": "other",
+    "domain": "main_hand",
+    "value": "minecraft:sulfur_cube_archetype_bouncy"
+  },
+  "feed_equip_slot": "slot.weapon.mainhand",
+  "shareable_bouncy_item": {
+    "item": "minecraft:sulfur_cube_archetype_bouncy",
+    "max_amount": 1
+  },
+  "shareables_singular_pickup": true,
+  "tempt_items": [
+    {
+      "tags": "q.any_tag('minecraft:sulfur_cube_archetype_bouncy', 'minecraft:sulfur_cube_archetype_regular', 'minecraft:sulfur_cube_archetype_slow_bouncy', 'minecraft:sulfur_cube_archetype_slow_flat', 'minecraft:sulfur_cube_archetype_fast_flat', 'minecraft:sulfur_cube_archetype_light', 'minecraft:sulfur_cube_archetype_fast_sliding', 'minecraft:sulfur_cube_archetype_slow_sliding', 'minecraft:sulfur_cube_archetype_sticky', 'minecraft:sulfur_cube_archetype_high_resistance', 'minecraft:sulfur_cube_archetype_explosive', 'minecraft:sulfur_cube_archetype_hot')"
+    }
+  ],
+  "on_equipment_changed": {
+    "slots": [
+      {
+        "slot": "slot.weapon.mainhand",
+        "on_equip": "minecraft:on_block_absorbed",
+        "on_unequip": "minecraft:on_block_ejected"
+      }
+    ]
+  },
+  "absorption_bouncy_branch": {
+    "filters": {
+      "test": "has_equipment_tag",
+      "domain": "main_hand",
+      "value": "minecraft:sulfur_cube_archetype_bouncy"
+    },
+    "trigger": "minecraft:become_bouncy"
+  },
+  "on_sheared": {
+    "drop_item": {
+      "slot": "slot.weapon.mainhand"
+    }
+  },
+  "client_has_absorbed_block": "variable.has_absorbed_block = query.property('minecraft:sulfur_cube_archetype') != 'none';",
+  "client_has_absorbed_tnt": "variable.has_absorbed_tnt = query.is_item_name_any('slot.weapon.mainhand', 'minecraft:tnt');",
+  "client_hide_held_items": "variable.has_absorbed_tnt",
+  "client_held_item_scale": 2.678
+}

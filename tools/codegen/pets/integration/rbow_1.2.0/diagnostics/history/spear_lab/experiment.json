@@ -1,0 +1,43 @@
+{
+  "version": [
+    0,
+    1,
+    0
+  ],
+  "namespace": "elleedog_spear_lab:",
+  "names": {
+    "sprite": "Spear Lab 1 - Ordinary Sprite",
+    "trident_control": "Spear Lab 2 - Trident Model Control",
+    "native_static": "Spear Lab 3 - Native Mesh, Fixed Local Pose",
+    "native_animated": "Spear Lab 4 - Native Mesh, Native Animation",
+    "rbow_animated": "Spear Lab 5 - Rbow Texture, Native Animation"
+  },
+  "user_confirmed_results": {},
+  "engine_tests_run": 0,
+  "client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "static_control_note": "Fixed local pose only. Native owner/player arm animation may still move the whole attachment.",
+  "pairs": {
+    "3_vs_4": "Only fixed-vs-native attachment-local animation bindings change, aside from item identity/name.",
+    "4_vs_5": "Only held texture changes, aside from item identity/name."
+  },
+  "native_geometry_sha256": "a428a61ae662c49e5b76cc73df57c24e480e837df5f34f7ff18c65c26baab242",
+  "native_reference_texture_sha256": "2935208bf11136bfc8c567d7c8be7869993f97fed293a285a6d81c7c3704fe43",
+  "native_dependencies": [
+    "geometry.trident",
+    "textures/entity/trident",
+    "textures/misc/enchanted_item_glint",
+    "controller.render.item_default",
+    "controller.animation.trident.wield",
+    "animation.trident.*",
+    "entity_alphatest",
+    "entity_alphatest_glint"
+  ],
+  "does_not_test": [
+    "production ore generation",
+    "damage parity",
+    "armor",
+    "multiplayer resource conflicts"
+  ],
+  "not_in_production_installer": true
+}

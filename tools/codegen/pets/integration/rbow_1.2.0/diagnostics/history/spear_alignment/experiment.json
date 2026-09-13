@@ -1,0 +1,64 @@
+{
+  "version": [
+    0,
+    2,
+    0
+  ],
+  "namespace": "elleedog_spear_alignment:",
+  "cases": {
+    "a": {
+      "label": "Spear Alignment A - Original Lab 5",
+      "position": [
+        0,
+        24,
+        -27
+      ]
+    },
+    "b": {
+      "label": "Spear Alignment B - Remove Y Offset",
+      "position": [
+        0,
+        0,
+        -27
+      ]
+    },
+    "c": {
+      "label": "Spear Alignment C - Remove Z Offset",
+      "position": [
+        0,
+        24,
+        0
+      ]
+    },
+    "d": {
+      "label": "Spear Alignment D - Remove Both Offsets",
+      "position": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "production_case": "d",
+  "only_experimental_variable": "Fixed XYZ translation in the same three Lab 5 view routes.",
+  "original_lab5_user_report": "Visible and brandishes, but too low in first person and displaced behind player in third person.",
+  "alignment_results": {
+    "a": "NOT RUN",
+    "b": "NOT RUN",
+    "c": "NOT RUN",
+    "d": "NOT RUN"
+  },
+  "assistant_engine_tests_run": 0,
+  "assistant_client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "not_in_production_installer": true,
+  "all_four_share": [
+    "mesh",
+    "held texture",
+    "scale",
+    "pivot",
+    "rotation expressions",
+    "native combat components"
+  ],
+  "limitations": "The screenshot pair cannot determine exact 3D offsets. Case D is a hypothesis, not calibrated or engine-verified placement."
+}

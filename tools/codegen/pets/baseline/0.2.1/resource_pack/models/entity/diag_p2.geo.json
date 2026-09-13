@@ -1,0 +1,105 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.pet.diag_p2",
+        "texture_width": 32,
+        "texture_height": 32,
+        "visible_bounds_width": 3,
+        "visible_bounds_height": 4,
+        "visible_bounds_offset": [
+          0,
+          1.4,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "cav_probe_root",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -3,
+                35,
+                -0.6
+              ],
+              "size": [
+                6,
+                5,
+                1.2
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

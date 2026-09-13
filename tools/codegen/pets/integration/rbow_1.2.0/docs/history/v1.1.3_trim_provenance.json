@@ -1,0 +1,146 @@
+{
+  "bolt.png": {
+    "sha256": "9ab0cc6be5a2a2062413de6612a61aebe2200a3e27410c7ea4fa9709ef870a05",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/bolt.png"
+  },
+  "bolt_leggings.png": {
+    "sha256": "7943e02d23b457fc673c265c332ff3fe661dd8a3aa05bc5d3951058b6c6964e7",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/bolt_leggings.png"
+  },
+  "coast.png": {
+    "sha256": "68c4986e3c57ce0e98aa26550e0b3a0774d096e15381130efe6d52b642256c41",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/coast.png"
+  },
+  "coast_leggings.png": {
+    "sha256": "58621b943d898573bb6b0173e7240a8a764ab8e21b5a2ef1c1973807222f40fa",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/coast_leggings.png"
+  },
+  "dune.png": {
+    "sha256": "7979ad65ecac8ea2a793ebcba730f622869cd0ec6087920f5d41a7f8622d6250",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/dune.png"
+  },
+  "dune_leggings.png": {
+    "sha256": "b02430575370f6ddd000df5d86c4a1069e1dc26b6e75fb41ae9702639bf053f4",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/dune_leggings.png"
+  },
+  "eye.png": {
+    "sha256": "bc69ace7d9258440c921e75c51bb70c49d2c2358a05aaa25ffba17b097dbf067",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/eye.png"
+  },
+  "eye_leggings.png": {
+    "sha256": "deecf47328a6bed420f107f2903a5c3f8bbac87d6c7ead96f1a8e8e490881961",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/eye_leggings.png"
+  },
+  "flow.png": {
+    "sha256": "7609d825a216ad46a8c50316614928e7ef60a05b8040436424a82b909c7b35ac",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/flow.png"
+  },
+  "flow_leggings.png": {
+    "sha256": "73cd57dd9fb8d720df661498ebf696ca8da20c54bf60ad6afa737eaaf6819fc1",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/flow_leggings.png"
+  },
+  "host.png": {
+    "sha256": "f71a4dee74c2a56c44645408cb6800956240d512b906d328abff6f4f9c77358e",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/host.png"
+  },
+  "host_leggings.png": {
+    "sha256": "c6dffe027a742116cca6f3699b8d3f782274603d4eb1538e3c99c33c716a0d9c",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/host_leggings.png"
+  },
+  "raiser.png": {
+    "sha256": "401ede96528e6492ff7827793d0d7ad3593d8c91c368dc117dec576a37d8265e",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/raiser.png"
+  },
+  "raiser_leggings.png": {
+    "sha256": "f9ba8fdecb4148724be94130edebd4e12bb5f7dd20f96161d29ed30df75b267f",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/raiser_leggings.png"
+  },
+  "rib.png": {
+    "sha256": "a8d145d393c4b3ed5d2f94fd0d3ee9e67e51eadfb88390bddd98221ac86c6fa4",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/rib.png"
+  },
+  "rib_leggings.png": {
+    "sha256": "4915fc9f8ccd47f6fe241ec3f8d05f293ccee399b50a7521fce8a04b70281ece",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/rib_leggings.png"
+  },
+  "sentry.png": {
+    "sha256": "5613446a969cd1a7f6dc097cb61a9290941c6d964fd0b341120169037c4ee252",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/sentry.png"
+  },
+  "sentry_leggings.png": {
+    "sha256": "fc93144b9f686c0dc1473291cdb30d3982d3819794bebb27dcaa7856d231a2af",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/sentry_leggings.png"
+  },
+  "shaper.png": {
+    "sha256": "a81cef173f8fcf2d46cf288acc2302987328afc3192776035db55cd3498ebe90",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/shaper.png"
+  },
+  "shaper_leggings.png": {
+    "sha256": "cd17a140f0faaf670e5cd4d0ec99103ed7bc5c0c9a2d2ad441c8954c739e346d",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/shaper_leggings.png"
+  },
+  "silence.png": {
+    "sha256": "324cefc8aa28b1d13579610a544070ead00eb4e59645c3e41caad6de917bbc41",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/silence.png"
+  },
+  "silence_leggings.png": {
+    "sha256": "20931a3f30bc476269ced0ab6f3fcb43972cf6774b67dd8a5ba5c1026b4764d2",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/silence_leggings.png"
+  },
+  "snout.png": {
+    "sha256": "2cd229b5f4be40875abb63de7c9701be70affc3827f3ea3d8289fce27fb48ce8",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/snout.png"
+  },
+  "snout_leggings.png": {
+    "sha256": "7e2dfde8e8f836ed4d3e92c731024dd4d3636e6191dc7007a4db82e516f7800f",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/snout_leggings.png"
+  },
+  "spire.png": {
+    "sha256": "0dbc10261c4c385756895a1c4d524616a83dc0cb97bc802f3756c71b887f03ae",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/spire.png"
+  },
+  "spire_leggings.png": {
+    "sha256": "cf63917b724473b14754ba20809a1410cf8dbdca3c46ed3d5a81b950fce81a91",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/spire_leggings.png"
+  },
+  "tide.png": {
+    "sha256": "3f78404e3be49d38e8f6621fd39891c041bb801f75e9ddc6c602f57d4b4b1499",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/tide.png"
+  },
+  "tide_leggings.png": {
+    "sha256": "0fd04cde21e29536712c918e009e7b4e81ae3180da90b9e5b8d2e948c04acec3",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/tide_leggings.png"
+  },
+  "vex.png": {
+    "sha256": "4471cc5b3a864b41496550502e36e39c69189413ac3e40f1df7c5fb3b757dea6",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/vex.png"
+  },
+  "vex_leggings.png": {
+    "sha256": "82df8e7b4ab40a8a498988b48cfed4798a6c6d85e9de603cc304acfd725120f6",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/vex_leggings.png"
+  },
+  "ward.png": {
+    "sha256": "150c1702b582a669abb5d6814fdf6fedf8d831967cc01ba5ef94a96d4e4c4f6f",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/ward.png"
+  },
+  "ward_leggings.png": {
+    "sha256": "f0332c69392b7d45b11c993291be28b0cbb762283e5c850f126a56507c7a65bf",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/ward_leggings.png"
+  },
+  "wayfinder.png": {
+    "sha256": "4beaf8482ec22d423cfd2573156463bda2c9357238a9b9dd2aaaaf6541911fcf",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/wayfinder.png"
+  },
+  "wayfinder_leggings.png": {
+    "sha256": "2a5421393e041c61d763c670da2d52b6de280a2fd81f85752a9a9e9050a89a1c",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/wayfinder_leggings.png"
+  },
+  "wild.png": {
+    "sha256": "725c868ae63d9e92234c216026945f6c14419da7b2248c03162d98301bc68bcd",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/wild.png"
+  },
+  "wild_leggings.png": {
+    "sha256": "e6e567951695fae207ef2288cbbb7849364bb66b9fdf5e4db913bfdcea1451f1",
+    "source": "https://github.com/Mojang/bedrock-samples/blob/v1.26.40.05/resource_pack/textures/trims/wild_leggings.png"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.pet.seat_align": {
+      "loop": true,
+      "bones": {
+        "pet_root": {
+          "position": [
+            0,
+            "query.is_riding ? (query.has_property('pet:seat_lift') ? query.property('pet:seat_lift') : 0.0) : 0.0",
+            0
+          ]
+        }
+      }
+    }
+  }
+}

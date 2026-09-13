@@ -1,0 +1,23 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "pet:diag_cube",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "default": "textures/entity/pets/markers/cube_052"
+      },
+      "geometry": {
+        "default": "geometry.pet.diag_cube"
+      },
+      "scripts": {
+        "scale": "0.9375"
+      },
+      "render_controllers": [
+        "controller.render.pet.probe_cube"
+      ]
+    }
+  }
+}

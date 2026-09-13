@@ -1,0 +1,29 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "pet:diag_model",
+      "materials": {
+        "default": "entity_alphatest"
+      },
+      "textures": {
+        "pet_carter": "textures/entity/pets/carter/coat",
+        "pet_mochi": "textures/entity/pets/mochi/coat",
+        "pet_casper": "textures/entity/pets/casper/coat"
+      },
+      "geometry": {
+        "pet_carter": "geometry.pet.carter",
+        "pet_mochi": "geometry.pet.mochi",
+        "pet_casper": "geometry.pet.casper"
+      },
+      "scripts": {
+        "pre_animation": [
+          "variable.pet_probe_index = math.max(0.0, ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) - 1.0);"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.pet.probe_model"
+      ]
+    }
+  }
+}

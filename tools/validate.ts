@@ -13,11 +13,42 @@ export interface ValidationReport {
 
 const SERVER_API = "2.9.0";
 const SERVER_UI_API = "2.0.0";
+const MIN_ENGINE = "1.26.40";
+
+// Texture folders the game itself ships (including their subfolders, such as textures/blocks/deepslate). References
+// into them point at vanilla art, so only references into folders vanilla does not have must exist in this pack.
+// Our own textures live in folders with a feature name in them (textures/entity/pets, textures/ui/pets).
+const VANILLA_TEXTURE_DIRS = new Set([
+  "textures/blocks",
+  "textures/items",
+  "textures/entity",
+  "textures/ui",
+  "textures/models/armor",
+  "textures/misc",
+  "textures/particle",
+  "textures/environment",
+  "textures/gui",
+  "textures/map",
+  "textures/painting",
+  "textures/trims",
+  "textures/colormap",
+]);
+
+// Folders that only this pack has; references into them must resolve even though they sit under a vanilla folder.
+const OWNED_TEXTURE_DIRS = ["textures/entity/pets", "textures/ui/pets"];
 
 type Json = Record<string, any>;
 
 function versionText(version: unknown): string {
   return Array.isArray(version) ? version.join(".") : String(version);
+}
+
+function isVanillaIdentifier(id: string): boolean {
+  return (
+    id.startsWith("minecraft:") ||
+    /^controller\.render\.(player|persona|cape)(\.|_|$)/.test(id) ||
+    id === "controller.render.item_default"
+  );
 }
 
 function identifiersIn(document: Json, file: string): Array<{ kind: string; id: string }> {
@@ -44,6 +75,18 @@ function identifiersIn(document: Json, file: string): Array<{ kind: string; id: 
     }
   }
   return found;
+}
+
+function ownsTextureDir(texture: string): boolean {
+  const dir = texture.slice(0, Math.max(0, texture.lastIndexOf("/")));
+  if (!dir.startsWith("textures/")) return false;
+  for (const owned of OWNED_TEXTURE_DIRS) {
+    if (dir === owned || dir.startsWith(`${owned}/`)) return true;
+  }
+  for (const vanilla of VANILLA_TEXTURE_DIRS) {
+    if (dir === vanilla || dir.startsWith(`${vanilla}/`)) return false;
+  }
+  return true;
 }
 
 export function validateBuild(bp = DIST_BP, rp = DIST_RP): ValidationReport {
@@ -89,8 +132,8 @@ export function validateBuild(bp = DIST_BP, rp = DIST_RP): ValidationReport {
         `${label}/manifest.json: header.version ${versionText(manifest.header?.version)} != package.json ${packageVersion}`,
       );
     }
-    if (versionText(manifest.header?.min_engine_version) !== "1.26.40") {
-      errors.push(`${label}/manifest.json: min_engine_version must be 1.26.40`);
+    if (versionText(manifest.header?.min_engine_version) !== MIN_ENGINE) {
+      errors.push(`${label}/manifest.json: min_engine_version must be ${MIN_ENGINE}`);
     }
     for (const module of manifest.modules ?? []) {
       if (versionText(module.version) !== packageVersion) {
@@ -138,25 +181,25 @@ export function validateBuild(bp = DIST_BP, rp = DIST_RP): ValidationReport {
     }
   }
 
-  // Identifiers: unique per kind, and vanilla overrides only under overrides/.
+  // Identifiers: unique per kind; vanilla replacements only under overrides/, and every overrides/ file replaces one.
   const seen = new Map<string, string>();
   for (const [file, document] of documents) {
     if (file.endsWith("manifest.json")) continue;
-    for (const { kind, id } of identifiersIn(document, file)) {
+    const identifiers = identifiersIn(document, file);
+    let vanillaInFile = 0;
+    for (const { kind, id } of identifiers) {
       const key = `${kind}:${id}`;
       const previous = seen.get(key);
       if (previous) errors.push(`duplicate ${kind} identifier ${id} in ${file} and ${previous}`);
       seen.set(key, file);
       counts[kind] = (counts[kind] ?? 0) + 1;
-      const vanilla =
-        id.startsWith("minecraft:") ||
-        /^controller\.render\.(player|persona|cape)\b/.test(id) ||
-        id === "controller.render.item_default";
-      if (vanilla && !file.includes("/overrides/"))
+      if (!isVanillaIdentifier(id)) continue;
+      vanillaInFile++;
+      if (!file.includes("/overrides/"))
         errors.push(`${file}: vanilla identifier ${id} must live under an overrides/ folder`);
-      if (!vanilla && file.includes("/overrides/") && kind !== "geometry" && kind !== "animation") {
-        errors.push(`${file}: ${id} is not a vanilla identifier but lives under overrides/`);
-      }
+    }
+    if (file.includes("/overrides/") && identifiers.length > 0 && vanillaInFile === 0) {
+      errors.push(`${file}: lives under overrides/ but replaces no vanilla identifier`);
     }
   }
 
@@ -193,7 +236,7 @@ export function validateBuild(bp = DIST_BP, rp = DIST_RP): ValidationReport {
     }
   }
 
-  // Textures referenced by atlases, client entities and attachables must exist.
+  // Textures referenced by atlases, client entities and attachables.
   const rpFiles = new Set(listFiles(rp));
   const textureExists = (texture: string) =>
     rpFiles.has(`${texture}.png`) || rpFiles.has(`${texture}.tga`) || rpFiles.has(`${texture}.jpg`);
@@ -217,12 +260,8 @@ export function validateBuild(bp = DIST_BP, rp = DIST_RP): ValidationReport {
       document["minecraft:client_entity"]?.description ?? document["minecraft:attachable"]?.description;
     if (!description) continue;
     for (const [name, texture] of Object.entries(description.textures ?? {})) {
-      if (
-        typeof texture === "string" &&
-        !texture.startsWith("textures/misc/") &&
-        !textureExists(texture) &&
-        !texture.includes("$")
-      ) {
+      if (typeof texture !== "string" || texture.includes("$")) continue;
+      if (ownsTextureDir(texture) && !textureExists(texture)) {
         errors.push(`${file}: texture ${name} points at missing ${texture}`);
       }
     }

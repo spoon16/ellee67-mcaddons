@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "family": "quadruped_v1",
+  "description": "Compact feline gait with restrained ears and long articulated tail",
+  "scales": {
+    "gait": 0.85,
+    "stride_clock": 1.15,
+    "ear_swing": 0.15,
+    "tail_swing": 0.5
+  },
+  "required_bones": [
+    "pet_root",
+    "pet_body",
+    "pet_head",
+    "pet_jaw",
+    "pet_ear_left",
+    "pet_ear_right",
+    "pet_tail_base",
+    "pet_tail_tip",
+    "pet_front_left",
+    "pet_front_right",
+    "pet_rear_left",
+    "pet_rear_right",
+    "pet_front_left_paw",
+    "pet_front_right_paw",
+    "pet_rear_left_paw",
+    "pet_rear_right_paw"
+  ],
+  "body_bone": "pet_body",
+  "head_bone": "pet_head",
+  "special_states": "preliminary, not bed/mount/elytra verified"
+}

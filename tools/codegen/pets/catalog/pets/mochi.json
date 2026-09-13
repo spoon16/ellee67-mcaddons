@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "id": "mochi",
+  "display_name": "Mochi",
+  "description": "A feisty street cat that will cuddle and purr and then bite.",
+  "order": 20,
+  "rig": "feline_v1",
+  "model": "assets/pets/mochi/model.geo.json",
+  "texture": "assets/pets/mochi/coat.png",
+  "first_person": {
+    "model": "assets/pets/mochi/paws.geo.json",
+    "texture": "assets/pets/mochi/paws.png",
+    "default_hand_height": 2
+  },
+  "equipment": {
+    "mainhand": {
+      "mode": "mouth",
+      "position": [
+        0,
+        10.1,
+        -10.4
+      ],
+      "rotation": [
+        0,
+        0,
+        90
+      ]
+    },
+    "offhand": {
+      "mode": "side",
+      "position": [
+        3.1,
+        7,
+        -3.5
+      ]
+    },
+    "armor_fit": "assets/pets/mochi/armor_fit.json",
+    "helmet_profile": "upright_ear_openings",
+    "mouth_sprite": {
+      "position": [
+        0,
+        9.65,
+        -10.42
+      ],
+      "pixel_scale": 0.55,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "thickness": 0.65,
+      "bake_pixel_rotation_z": -45,
+      "orientation_note": "Bake the horizontal handle in texel centers. Do not rely on a runtime bind-pose Z rotation; 0.3.1 rendered 90 degrees wrong on the client."
+    },
+    "shield": {
+      "side_position": [
+        3.25,
+        7.5,
+        0.5
+      ],
+      "front_position": [
+        0,
+        7.55,
+        -11.9
+      ],
+      "side_rotation": [
+        0,
+        -90,
+        0
+      ],
+      "front_rotation": [
+        0,
+        0,
+        0
+      ],
+      "width": 5.7,
+      "height": 8.1,
+      "depth": 0.42,
+      "transition_seconds": 0.16
+    },
+    "side_carry": {
+      "sprite_position": [
+        -3.95,
+        7.5,
+        0.5
+      ],
+      "cube_position": [
+        -5.4,
+        7.5,
+        0.5
+      ],
+      "pixel_scale": 0.38,
+      "cube_size": 3.6,
+      "sprite_thickness": 0.3,
+      "mainhand_side": "right",
+      "offhand_side": "left"
+    }
+  },
+  "validation": {
+    "appearance": "user-confirmed-0.3.0",
+    "ground_motion": "user-confirmed-0.3.0",
+    "hand_and_grip": "0.3.1 client reports duplicate native tool and 90-degree mouth error; 0.3.2 engine suppression and baked geometry await retest",
+    "armor_binding": "User confirmed 0.3.0 fit pipeline; individual material coverage unspecified",
+    "shield": "0.3.1 side/front positioning user-confirmed; geometry and pose retained; direct-render routing requires regression test"
+  },
+  "owner": "warspoon17",
+  "pet_kind": "cat",
+  "species": "Tuxedo cat"
+}

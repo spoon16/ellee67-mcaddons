@@ -1,0 +1,37 @@
+{
+  "release": "1.1.2 Spear Repair Test",
+  "engine_runs": 0,
+  "client_render_tests": 0,
+  "realm_runs": 0,
+  "features": {
+    "spear_binding": {
+      "status": "CANDIDATE_PATCH",
+      "changes": [
+        "Native binding-space held translations",
+        "Separate first-person, third-person, non-player poses",
+        "Held sprite mirrored to native texture-mesh diagonal"
+      ],
+      "client_validation": "NOT_RUN"
+    },
+    "standard_trims_on_rbow_armor": {
+      "status": "CONFIGURED_NOT_ENGINE_VERIFIED",
+      "changes_in_this_release": false
+    },
+    "rbow_ingot_trim_material": {
+      "status": "NOT_IMPLEMENTED",
+      "intended_result": "Only the chosen trim pattern is multicolored; the original armor remains its original material."
+    },
+    "art_redesign_to_overview": {
+      "status": "PENDING",
+      "runtime_change": "Only the held-spear orientation is changed; colors and other textures remain v1.1.1."
+    },
+    "dropped_item_blast_protection": {
+      "status": "UNRESOLVED",
+      "changes_in_this_release": false
+    },
+    "armor_equipping_and_block_placement": {
+      "status": "NOT_ENGINE_VERIFIED",
+      "changes_in_this_release": false
+    }
+  }
+}

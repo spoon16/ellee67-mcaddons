@@ -1,0 +1,336 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.pet.carter.carry.off.rbow_cube",
+        "texture_width": 64,
+        "texture_height": 32,
+        "visible_bounds_width": 5,
+        "visible_bounds_height": 4,
+        "visible_bounds_offset": [
+          0,
+          1,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "pet_root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "pet_body",
+          "pivot": [
+            0,
+            9,
+            1
+          ],
+          "parent": "pet_root"
+        },
+        {
+          "name": "pet_chest",
+          "pivot": [
+            0,
+            10,
+            -4.5
+          ],
+          "parent": "pet_body"
+        },
+        {
+          "name": "pet_neck",
+          "pivot": [
+            0,
+            11.5,
+            -4
+          ],
+          "parent": "pet_body"
+        },
+        {
+          "name": "pet_head",
+          "pivot": [
+            0,
+            13,
+            -5.5
+          ],
+          "parent": "pet_neck"
+        },
+        {
+          "name": "pet_jaw",
+          "pivot": [
+            0,
+            11.5,
+            -9
+          ],
+          "parent": "pet_head"
+        },
+        {
+          "name": "pet_ear_left",
+          "pivot": [
+            3.8,
+            16,
+            -5.8
+          ],
+          "parent": "pet_head"
+        },
+        {
+          "name": "pet_ear_left_tip",
+          "pivot": [
+            5,
+            8.8,
+            -6.6
+          ],
+          "parent": "pet_ear_left"
+        },
+        {
+          "name": "pet_ear_right",
+          "pivot": [
+            -3.8,
+            16,
+            -5.8
+          ],
+          "parent": "pet_head"
+        },
+        {
+          "name": "pet_ear_right_tip",
+          "pivot": [
+            -5,
+            8.8,
+            -6.6
+          ],
+          "parent": "pet_ear_right"
+        },
+        {
+          "name": "pet_front_left",
+          "pivot": [
+            2.5,
+            6.5,
+            -4
+          ],
+          "parent": "pet_body"
+        },
+        {
+          "name": "pet_front_left_paw",
+          "pivot": [
+            2.5,
+            1.5,
+            -4
+          ],
+          "parent": "pet_front_left"
+        },
+        {
+          "name": "pet_front_right",
+          "pivot": [
+            -2.5,
+            6.5,
+            -4
+          ],
+          "parent": "pet_body"
+        },
+        {
+          "name": "pet_front_right_paw",
+          "pivot": [
+            -2.5,
+            1.5,
+            -4
+          ],
+          "parent": "pet_front_right"
+        },
+        {
+          "name": "pet_rear_left",
+          "pivot": [
+            2.5,
+            6.5,
+            5
+          ],
+          "parent": "pet_body"
+        },
+        {
+          "name": "pet_rear_left_paw",
+          "pivot": [
+            2.5,
+            1.5,
+            5
+          ],
+          "parent": "pet_rear_left"
+        },
+        {
+          "name": "pet_rear_right",
+          "pivot": [
+            -2.5,
+            6.5,
+            5
+          ],
+          "parent": "pet_body"
+        },
+        {
+          "name": "pet_rear_right_paw",
+          "pivot": [
+            -2.5,
+            1.5,
+            5
+          ],
+          "parent": "pet_rear_right"
+        },
+        {
+          "name": "pet_tail_base",
+          "pivot": [
+            0,
+            10,
+            6.2
+          ],
+          "parent": "pet_body",
+          "rotation": [
+            -28,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "pet_tail_tip",
+          "pivot": [
+            0,
+            10.8,
+            9
+          ],
+          "parent": "pet_tail_base",
+          "rotation": [
+            -12,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "pet_debug_mouth",
+          "pivot": [
+            0,
+            11.4,
+            -11.5
+          ],
+          "parent": "pet_head"
+        },
+        {
+          "name": "pet_tool_mount",
+          "parent": "pet_head",
+          "pivot": [
+            0,
+            11.05,
+            -11.65
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "pet_shield_left",
+          "parent": "pet_body",
+          "pivot": [
+            4.15,
+            8.5,
+            0.5
+          ]
+        },
+        {
+          "name": "pet_shield_right",
+          "parent": "pet_body",
+          "pivot": [
+            -4.15,
+            8.5,
+            0.5
+          ]
+        },
+        {
+          "name": "pet_carry_off",
+          "parent": "pet_body",
+          "pivot": [
+            6.65,
+            8.5,
+            0.5
+          ],
+          "cubes": [
+            {
+              "origin": [
+                4.550000000000001,
+                6.4,
+                -1.6
+              ],
+              "size": [
+                4.2,
+                4.2,
+                4.2
+              ],
+              "uv": {
+                "north": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "south": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "east": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "west": {
+                  "uv": [
+                    0,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "up": {
+                  "uv": [
+                    32,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                },
+                "down": {
+                  "uv": [
+                    32,
+                    0
+                  ],
+                  "uv_size": [
+                    32,
+                    32
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

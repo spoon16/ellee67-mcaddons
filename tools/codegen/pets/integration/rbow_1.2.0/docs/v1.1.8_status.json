@@ -1,0 +1,34 @@
+{
+  "version": [
+    1,
+    1,
+    8
+  ],
+  "release_kind": "spear visibility recovery, not an animation fix",
+  "user_confirmed_baseline": "1.1.5 ordinary item spear rendered; brandishing absent",
+  "main_spear_renderer": "ordinary native hand_equipped item sprite, same resources as 1.1.5",
+  "brandishing_status": "unresolved; deliberately not claimed fixed",
+  "exact_117_disappearance_cause": "unconfirmed without client Content Log/render evidence",
+  "engine_tests_run": 0,
+  "client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "separate_lab": "diagnostics/spear_lab; explicit opt-in, never bundled into recovery mcaddon",
+  "retired_paths": [
+    "resource_pack/attachables/rbow_spear_compact.json",
+    "resource_pack/animations/rbow_spear_direct.animation.json",
+    "resource_pack/animations/rbow_spear_actions.animation.json",
+    "resource_pack/models/entity/rbow_spear_compact.geo.json",
+    "tools/build_spear_visual.py",
+    "tools/build_spear_actions.py",
+    "tests/test_116_spear_actions.py",
+    "tests/test_117_spear_visual.py"
+  ],
+  "preserved": [
+    "all 19 runtime PNGs",
+    "1.1.7 sleeve repair",
+    "spear gameplay values",
+    "recipes",
+    "normal drops",
+    "native trims on Rbow armor"
+  ]
+}

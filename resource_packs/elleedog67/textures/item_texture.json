@@ -2,6 +2,56 @@
   "resource_pack_name": "elleedog67",
   "texture_name": "atlas.items",
   "texture_data": {
-    "elleedog67_feature_book": { "textures": "textures/items/elleedog67_feature_book" }
+    "elleedog67_feature_book": {
+      "textures": "textures/items/elleedog67_feature_book"
+    },
+    "cav_paw_token": {
+      "textures": "textures/items/paw_token"
+    },
+    "pet_morpher_book": {
+      "textures": "textures/items/pet_morpher_book_043"
+    },
+    "elleedog:raw_rbow_ore": {
+      "textures": "textures/items/raw_rbow_ore"
+    },
+    "elleedog:rbow_ingot": {
+      "textures": "textures/items/rbow_ingot"
+    },
+    "elleedog:rbow_nug": {
+      "textures": "textures/items/rbow_nug"
+    },
+    "elleedog:rbow_sword": {
+      "textures": "textures/items/rbow_sword"
+    },
+    "elleedog:rbow_pickaxe": {
+      "textures": "textures/items/rbow_pickaxe"
+    },
+    "elleedog:rbow_axe": {
+      "textures": "textures/items/rbow_axe"
+    },
+    "elleedog:rbow_shovel": {
+      "textures": "textures/items/rbow_shovel"
+    },
+    "elleedog:rbow_hoe": {
+      "textures": "textures/items/rbow_hoe"
+    },
+    "elleedog:rbow_spear": {
+      "textures": "textures/items/rbow_spear"
+    },
+    "elleedog:rbow_helmet": {
+      "textures": "textures/items/rbow_helmet"
+    },
+    "elleedog:rbow_chestplate": {
+      "textures": "textures/items/rbow_chestplate"
+    },
+    "elleedog:rbow_leggings": {
+      "textures": "textures/items/rbow_leggings"
+    },
+    "elleedog:rbow_boots": {
+      "textures": "textures/items/rbow_boots"
+    },
+    "elleedog_redstone_guide_book": {
+      "textures": "textures/items/elleedog_redstone_guide_book"
+    }
   }
 }

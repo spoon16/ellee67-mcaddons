@@ -1,0 +1,59 @@
+{
+  "build": "67_Rbow_Ore_Mod_v1.1.10_Native_Spear_Test",
+  "version": [
+    1,
+    1,
+    10
+  ],
+  "status": "Client-test candidate; root cause and placement remain unconfirmed",
+  "checks": {
+    "python_passed": 88,
+    "node_passed": 77,
+    "total_passed": 165,
+    "failures": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "javascript_syntax_passed": true,
+    "zip_crc_passed": true,
+    "independent_regenerate_and_rebuild_identical": true
+  },
+  "assistant_engine_tests_run": 0,
+  "assistant_client_tests_run": 0,
+  "realm_tests_run": 0,
+  "sha256": {
+    "67_Rbow_Ore_Mod_v1.1.10_Native_Spear_Test.mcaddon": "11cfeb6cbfc9803d5c3849abce2c9f4f0bd22f12b82ab92c9a7abd948cf21286"
+  },
+  "source_archive_independent_rebuild_checked": true,
+  "scope": {
+    "runtime_added": [
+      "resource_pack/attachables/rbow_spear_native.json"
+    ],
+    "runtime_removed": [
+      "resource_pack/animations/rbow_spear_lab5.animation.json",
+      "resource_pack/attachables/rbow_spear_lab5.json",
+      "resource_pack/models/entity/rbow_spear_lab5.geo.json",
+      "resource_pack/render_controllers/rbow_spear_lab5.render_controllers.json"
+    ],
+    "runtime_changed": [
+      "behavior_pack/manifest.json",
+      "behavior_pack/scripts/main.js",
+      "resource_pack/manifest.json"
+    ],
+    "all_20_runtime_pngs_byte_identical": true,
+    "all_item_block_recipe_definitions_unchanged": true,
+    "old_lab_installers_not_produced_or_embedded": true
+  },
+  "native_references": [
+    "geometry.spear",
+    "controller.render.item_default",
+    "controller.animation.spear.held",
+    "controller.animation.spear.hit",
+    "animation.spear.held_first_person",
+    "animation.spear.held_third_person",
+    "animation.spear.hit"
+  ],
+  "test_meaning": "Contract fixtures and file checks only. Resolving symbols against Mojang sample JSON is not an engine resource-loader or animation-execution test.",
+  "latest_user_result": "All four old alignment variants fail and appear the same. No selected offset is accepted.",
+  "risk_found": "Both earlier lab RPs reused vanilla spear geometry/animation paths and each other paths. The active resource stack was not provided; this does not confirm runtime causality.",
+  "reference_sources": "docs/v1.1.10_sources.md"
+}

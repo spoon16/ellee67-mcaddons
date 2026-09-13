@@ -1,0 +1,14 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_furnace": {
+    "description": {
+      "identifier": "elleedog:recycle_rbow_shovel"
+    },
+    "tags": [
+      "furnace",
+      "blast_furnace"
+    ],
+    "input": "elleedog:rbow_shovel",
+    "output": "elleedog:rbow_nug"
+  }
+}

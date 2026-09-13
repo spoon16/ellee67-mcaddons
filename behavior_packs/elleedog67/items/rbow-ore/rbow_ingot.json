@@ -1,0 +1,25 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "elleedog:rbow_ingot",
+      "menu_category": {
+        "category": "items"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.elleedog:rbow_ingot.name"
+      },
+      "minecraft:fire_resistant": {
+        "value": true
+      },
+      "minecraft:max_stack_size": 64,
+      "minecraft:icon": {
+        "textures": {
+          "default": "elleedog:rbow_ingot"
+        }
+      }
+    }
+  }
+}

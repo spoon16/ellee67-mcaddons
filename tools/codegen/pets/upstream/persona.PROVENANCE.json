@@ -1,0 +1,13 @@
+{
+  "source_url": "https://raw.githubusercontent.com/Mojang/bedrock-samples/736072450c26a7c67f07b1661f29d9a5ebaa14b1/resource_pack/render_controllers/persona.render_controllers.json",
+  "commit": "736072450c26a7c67f07b1661f29d9a5ebaa14b1",
+  "retrieved_using": "GitHub connector, 2026-09-12",
+  "extraction": "Four third_person controller objects transcribed structurally from the returned official source; formatting normalized. Not the complete upstream file.",
+  "controllers": [
+    "controller.render.persona_animated_face.third_person",
+    "controller.render.persona_animated_32x32.third_person",
+    "controller.render.persona_animated_128x128.third_person",
+    "controller.render.persona_lod.third_person"
+  ],
+  "sha256_extracted_file": "422cdc41a544bde6461d154759315b69068c635fc59fbc7e033950241f27e0ca"
+}

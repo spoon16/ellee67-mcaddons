@@ -1,0 +1,608 @@
+67 Rbow Ore Mod — local build verification
+Scope: source/data/PNG/NBT checks and Node API mocks only. NOT an engine, Realm, or full schema validation.
+
+$ /opt/pyvenv/bin/python -m unittest discover -s tests -p test_*.py -v
+test_all_twenty_runtime_pngs_unchanged (test_1110_native_spear.NativeSpear1110.test_all_twenty_runtime_pngs_unchanged) ... ok
+test_animation_scripts_unconditionally_start_the_two_native_controllers (test_1110_native_spear.NativeSpear1110.test_animation_scripts_unconditionally_start_the_two_native_controllers) ... ok
+test_exact_runtime_diff_is_only_spear_wiring_and_release_metadata (test_1110_native_spear.NativeSpear1110.test_exact_runtime_diff_is_only_spear_wiring_and_release_metadata) ... ok
+test_historical_candidate_report_is_not_rewritten_as_a_client_pass (test_1110_native_spear.NativeSpear1110.test_historical_candidate_report_is_not_rewritten_as_a_client_pass) ... ok
+test_historical_labs_not_regenerated_or_built (test_1110_native_spear.NativeSpear1110.test_historical_labs_not_regenerated_or_built) ... ok
+test_latest_feedback_records_all_four_failures_not_success (test_1110_native_spear.NativeSpear1110.test_latest_feedback_records_all_four_failures_not_success) ... ok
+test_native_aliases_match_native_controller_contracts (test_1110_native_spear.NativeSpear1110.test_native_aliases_match_native_controller_contracts) ... ok
+test_native_bone_matches_the_reference_animation_channels (test_1110_native_spear.NativeSpear1110.test_native_bone_matches_the_reference_animation_channels) ... ok
+test_native_kinetic_hit_sound_alias_is_resolved (test_1110_native_spear.NativeSpear1110.test_native_kinetic_hit_sound_alias_is_resolved) ... ok
+test_native_reference_builder_is_deterministic (test_1110_native_spear.NativeSpear1110.test_native_reference_builder_is_deterministic) ... ok
+test_native_references_not_accidentally_packaged_under_vanilla_paths (test_1110_native_spear.NativeSpear1110.test_native_references_not_accidentally_packaged_under_vanilla_paths) ... ok
+test_no_custom_owner_query_gates_or_transform_arithmetic (test_1110_native_spear.NativeSpear1110.test_no_custom_owner_query_gates_or_transform_arithmetic) ... ok
+test_no_custom_spear_models_or_animation_definitions_shipped (test_1110_native_spear.NativeSpear1110.test_no_custom_spear_models_or_animation_definitions_shipped) ... ok
+test_no_new_scripts_for_animation_or_events (test_1110_native_spear.NativeSpear1110.test_no_new_scripts_for_animation_or_events) ... ok
+test_no_resource_player_override_or_player_animation_patch (test_1110_native_spear.NativeSpear1110.test_no_resource_player_override_or_player_animation_patch) ... ok
+test_only_custom_identity_and_held_texture (test_1110_native_spear.NativeSpear1110.test_only_custom_identity_and_held_texture) ... ok
+test_spear_gameplay_definition_unchanged (test_1110_native_spear.NativeSpear1110.test_spear_gameplay_definition_unchanged) ... ok
+test_uses_native_model_and_render_controller_by_id (test_1110_native_spear.NativeSpear1110.test_uses_native_model_and_render_controller_by_id) ... ok
+test_versions_and_ids_update_as_a_pair (test_1110_native_spear.NativeSpear1110.test_versions_and_ids_update_as_a_pair) ... ok
+test_all_three_blocks_use_native_cube_item_rendering (test_115.NativeCleanup115.test_all_three_blocks_use_native_cube_item_rendering) ... ok
+test_block_projection_is_solid_not_cut_out (test_115.NativeCleanup115.test_block_projection_is_solid_not_cut_out) ... ok
+test_current_status_does_not_claim_client_validation (test_115.NativeCleanup115.test_current_status_does_not_claim_client_validation) ... ok
+test_entry_point_and_runtime_graph_size (test_115.NativeCleanup115.test_entry_point_and_runtime_graph_size) ... ok
+test_legacy_type_is_recovery_only_not_a_living_pickup (test_115.NativeCleanup115.test_legacy_type_is_recovery_only_not_a_living_pickup) ... ok
+test_migration_is_load_driven_not_a_live_item_scan (test_115.NativeCleanup115.test_migration_is_load_driven_not_a_live_item_scan) ... ok
+test_native_trims_on_rbow_armor_kept (test_115.NativeCleanup115.test_native_trims_on_rbow_armor_kept) ... ok
+test_no_explosion_or_damage_interception (test_115.NativeCleanup115.test_no_explosion_or_damage_interception) ... ok
+test_no_return_of_workshop_or_material_support (test_115.NativeCleanup115.test_no_return_of_workshop_or_material_support) ... ok
+test_no_rule_writes_or_synthetic_toast_workaround (test_115.NativeCleanup115.test_no_rule_writes_or_synthetic_toast_workaround) ... ok
+test_placed_native_blast_resistance_is_preserved (test_115.NativeCleanup115.test_placed_native_blast_resistance_is_preserved) ... ok
+test_recipe_discovery_triggers_include_first_raw_ore_and_every_rbow_item (test_115.NativeCleanup115.test_recipe_discovery_triggers_include_first_raw_ore_and_every_rbow_item) ... ok
+test_recipe_ingredients_outputs_and_identifiers_not_changed (test_115.NativeCleanup115.test_recipe_ingredients_outputs_and_identifiers_not_changed) ... ok
+test_removed_pickup_modules_and_renderers_stay_removed (test_115.NativeCleanup115.test_removed_pickup_modules_and_renderers_stay_removed) ... ok
+test_retained_art_and_armor_definitions_preserved_except_sleeve_endcap (test_115.NativeCleanup115.test_retained_art_and_armor_definitions_preserved_except_sleeve_endcap) ... ok
+test_retired_mesh_paths_absent_and_native_reference_is_only_spear_attachable (test_115.NativeCleanup115.test_retired_mesh_paths_absent_and_native_reference_is_only_spear_attachable) ... ok
+test_runtime_drop_spawns_are_native (test_115.NativeCleanup115.test_runtime_drop_spawns_are_native) ... ok
+test_spear_stats_and_sprite_have_not_changed (test_115.NativeCleanup115.test_spear_stats_and_sprite_have_not_changed) ... ok
+test_all_surviving_colored_pixels_identical (test_117_sleeves.SleeveCleanup117.test_all_surviving_colored_pixels_identical) ... ok
+test_baseline_reproduces_disconnected_opaque_cap (test_117_sleeves.SleeveCleanup117.test_baseline_reproduces_disconnected_opaque_cap) ... ok
+test_before_fixture_matches_actual_116_runtime (test_117_sleeves.SleeveCleanup117.test_before_fixture_matches_actual_116_runtime) ... ok
+test_both_chestplate_routes_still_native_and_shared_texture (test_117_sleeves.SleeveCleanup117.test_both_chestplate_routes_still_native_and_shared_texture) ... ok
+test_bottom_rectangle_is_derived_from_native_box_uv (test_117_sleeves.SleeveCleanup117.test_bottom_rectangle_is_derived_from_native_box_uv) ... ok
+test_cap_is_fully_transparent_and_zero_rgb (test_117_sleeves.SleeveCleanup117.test_cap_is_fully_transparent_and_zero_rgb) ... ok
+test_cuff_sides_stay_open_no_sleeve_length_change (test_117_sleeves.SleeveCleanup117.test_cuff_sides_stay_open_no_sleeve_length_change) ... ok
+test_exactly_64_pixels_change_only_inside_bottom_cap (test_117_sleeves.SleeveCleanup117.test_exactly_64_pixels_change_only_inside_bottom_cap) ... ok
+test_exactly_one_legacy_runtime_png_changed (test_117_sleeves.SleeveCleanup117.test_exactly_one_legacy_runtime_png_changed) ... ok
+test_gameplay_identical_except_diagnostic_version (test_117_sleeves.SleeveCleanup117.test_gameplay_identical_except_diagnostic_version) ... ok
+test_pinned_source_and_runtime_same_new_atlas (test_117_sleeves.SleeveCleanup117.test_pinned_source_and_runtime_same_new_atlas) ... ok
+test_shoulder_caps_and_body_pixels_unchanged (test_117_sleeves.SleeveCleanup117.test_shoulder_caps_and_body_pixels_unchanged) ... ok
+test_spear_item_and_icon_unchanged (test_117_sleeves.SleeveCleanup117.test_spear_item_and_icon_unchanged) ... ok
+test_status_does_not_claim_client_test (test_117_sleeves.SleeveCleanup117.test_status_does_not_claim_client_test) ... ok
+test_all_72_structure_files_decode_and_have_exact_connected_counts (test_pack.PackTests.test_all_72_structure_files_decode_and_have_exact_connected_counts) ... ok
+test_all_item_ids_names_and_counts (test_pack.PackTests.test_all_item_ids_names_and_counts) ... ok
+test_all_json_parses_without_duplicate_keys (test_pack.PackTests.test_all_json_parses_without_duplicate_keys) ... ok
+test_all_sixteen_armor_states_have_exactly_one_sensor_result (test_pack.PackTests.test_all_sixteen_armor_states_have_exactly_one_sensor_result) ... ok
+test_armor_numbers_and_repair_enchant_slots (test_pack.PackTests.test_armor_numbers_and_repair_enchant_slots) ... ok
+test_atlas_paths_exist (test_pack.PackTests.test_atlas_paths_exist) ... ok
+test_attachables_reference_matching_ids_and_real_textures (test_pack.PackTests.test_attachables_reference_matching_ids_and_real_textures) ... ok
+test_custom_blocks_fire_blast_and_empty_native_loot (test_pack.PackTests.test_custom_blocks_fire_blast_and_empty_native_loot) ... ok
+test_feature_graph_has_no_missing_references (test_pack.PackTests.test_feature_graph_has_no_missing_references) ... ok
+test_item_fire_protection_and_block_item_replacement (test_pack.PackTests.test_item_fire_protection_and_block_item_replacement) ... ok
+test_item_icons_use_native_blocks_or_pinned_sprites (test_pack.PackTests.test_item_icons_use_native_blocks_or_pinned_sprites) ... ok
+test_literal_preview_atlas_has_sixteen_tiles (test_pack.PackTests.test_literal_preview_atlas_has_sixteen_tiles) ... ok
+test_localization_all_items_and_blocks_have_names (test_pack.PackTests.test_localization_all_items_and_blocks_have_names) ... ok
+test_locked_png_export_preserves_existing_icons (test_pack.PackTests.test_locked_png_export_preserves_existing_icons) ... ok
+test_manifests_ids_version_and_dependency (test_pack.PackTests.test_manifests_ids_version_and_dependency) ... ok
+test_modern_block_parser_tags (test_pack.PackTests.test_modern_block_parser_tags) ... ok
+test_native_style_spear_recipe_and_material_conversion (test_pack.PackTests.test_native_style_spear_recipe_and_material_conversion) ... ok
+test_no_automatic_cheats_or_global_gameplay_commands (test_pack.PackTests.test_no_automatic_cheats_or_global_gameplay_commands) ... ok
+test_only_declared_entities_are_overridden (test_pack.PackTests.test_only_declared_entities_are_overridden) ... ok
+test_pack_icons_use_uploaded_artwork (test_pack.PackTests.test_pack_icons_use_uploaded_artwork) ... ok
+test_player_override_preserves_reference_except_explicit_armor_additions (test_pack.PackTests.test_player_override_preserves_reference_except_explicit_armor_additions) ... ok
+test_png_assets_and_transparency (test_pack.PackTests.test_png_assets_and_transparency) ... ok
+test_recipe_references_unlocks_and_no_pattern_collision (test_pack.PackTests.test_recipe_references_unlocks_and_no_pattern_collision) ... ok
+test_spear_uses_native_components_not_throwable_or_custom_attack (test_pack.PackTests.test_spear_uses_native_components_not_throwable_or_custom_attack) ... ok
+test_sprite_edges_have_no_fringes_or_semitransparent_pixels (test_pack.PackTests.test_sprite_edges_have_no_fringes_or_semitransparent_pixels) ... ok
+test_standard_trims_enabled_without_overwriting_vanilla_materials (test_pack.PackTests.test_standard_trims_enabled_without_overwriting_vanilla_materials) ... ok
+test_tool_numbers_and_components (test_pack.PackTests.test_tool_numbers_and_components) ... ok
+test_world_generation_height_dimension_and_distribution (test_pack.PackTests.test_world_generation_height_dimension_and_distribution) ... ok
+test_all_seven_reported_visual_paths_resolve (test_prismatic_art.PrismaticArt.test_all_seven_reported_visual_paths_resolve) ... ok
+test_armor_dimensions_and_distinct_layers (test_prismatic_art.PrismaticArt.test_armor_dimensions_and_distinct_layers) ... ok
+test_atlas_is_composed_from_runtime_sprites_and_labeled_block_projections (test_prismatic_art.PrismaticArt.test_atlas_is_composed_from_runtime_sprites_and_labeled_block_projections) ... ok
+test_export_restores_exact_pinned_runtime_pixels (test_prismatic_art.PrismaticArt.test_export_restores_exact_pinned_runtime_pixels) ... ok
+test_exporter_does_not_repaint_existing_art (test_prismatic_art.PrismaticArt.test_exporter_does_not_repaint_existing_art) ... ok
+test_inventory_dimensions (test_prismatic_art.PrismaticArt.test_inventory_dimensions) ... ok
+test_rainbow_armor_not_monochrome_with_a_few_colored_pixels (test_prismatic_art.PrismaticArt.test_rainbow_armor_not_monochrome_with_a_few_colored_pixels) ... ok
+test_runtime_images_are_exactly_the_new_authored_files (test_prismatic_art.PrismaticArt.test_runtime_images_are_exactly_the_new_authored_files) ... ok
+test_silhouettes_have_no_floating_noise (test_prismatic_art.PrismaticArt.test_silhouettes_have_no_floating_noise) ... ok
+test_actual_blocks_use_native_cube_rendering_not_icons_or_attachable_surrogates (test_release_120.Release120.test_actual_blocks_use_native_cube_rendering_not_icons_or_attachable_surrogates) ... ok
+test_all_equipment_recipes_worldgen_and_sleeve_repair_are_preserved (test_release_120.Release120.test_all_equipment_recipes_worldgen_and_sleeve_repair_are_preserved) ... ok
+test_all_twenty_runtime_textures_and_branding_unchanged (test_release_120.Release120.test_all_twenty_runtime_textures_and_branding_unchanged) ... ok
+test_current_status_separates_user_feedback_from_unrun_sulfur_tests (test_release_120.Release120.test_current_status_separates_user_feedback_from_unrun_sulfur_tests) ... ok
+test_every_sulfur_block_item_diff_is_exactly_one_native_tag (test_release_120.Release120.test_every_sulfur_block_item_diff_is_exactly_one_native_tag) ... ok
+test_exact_runtime_delta_is_three_item_tags_and_release_metadata (test_release_120.Release120.test_exact_runtime_delta_is_three_item_tags_and_release_metadata) ... ok
+test_native_equip_and_eject_use_the_same_slot_without_replacement_ids (test_release_120.Release120.test_native_equip_and_eject_use_the_same_slot_without_replacement_ids) ... ok
+test_no_new_cube_override_scripts_or_runtime_resources (test_release_120.Release120.test_no_new_cube_override_scripts_or_runtime_resources) ... ok
+test_no_wood_recipe_tags_or_changes_to_placed_block_properties (test_release_120.Release120.test_no_wood_recipe_tags_or_changes_to_placed_block_properties) ... ok
+test_notices_are_synchronized_with_source (test_release_120.Release120.test_notices_are_synchronized_with_source) ... ok
+test_only_the_three_block_items_are_edible (test_release_120.Release120.test_only_the_three_block_items_are_edible) ... ok
+test_regeneration_preserves_the_complete_release (test_release_120.Release120.test_regeneration_preserves_the_complete_release) ... ok
+test_release_names_versions_ids_and_api_are_synchronized (test_release_120.Release120.test_release_names_versions_ids_and_api_are_synchronized) ... ok
+test_tags_match_native_feed_pickup_tempt_and_absorption_filters (test_release_120.Release120.test_tags_match_native_feed_pickup_tempt_and_absorption_filters) ... ok
+test_user_confirmed_spear_item_attachable_and_both_textures_unchanged (test_release_120.Release120.test_user_confirmed_spear_item_attachable_and_both_textures_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 103 tests in 6.047s
+
+OK
+
+$ node --experimental-vm-modules --test /mnt/data/rbow_release_work/67_Rbow_Ore_Mod/tests/legacy_drop_logic.test.mjs /mnt/data/rbow_release_work/67_Rbow_Ore_Mod/tests/rules.test.mjs /mnt/data/rbow_release_work/67_Rbow_Ore_Mod/tests/runtime.test.mjs /mnt/data/rbow_release_work/67_Rbow_Ore_Mod/tests/trim_cleanup.test.mjs
+TAP version 13
+# Subtest: does not inspect, mutate or rewrap ordinary dropped items
+ok 1 - does not inspect, mutate or rewrap ordinary dropped items
+  ---
+  duration_ms: 2.716595
+  type: 'test'
+  ...
+# Subtest: moves the full stack to a native drop before removing empty carrier
+ok 2 - moves the full stack to a native drop before removing empty carrier
+  ---
+  duration_ms: 0.631043
+  type: 'test'
+  ...
+# Subtest: preserves arbitrary cloneable item metadata, including native trim payload
+ok 3 - preserves arbitrary cloneable item metadata, including native trim payload
+  ---
+  duration_ms: 0.374492
+  type: 'test'
+  ...
+# Subtest: stack clone is independent of the original object
+ok 4 - stack clone is independent of the original object
+  ---
+  duration_ms: 0.162002
+  type: 'test'
+  ...
+# Subtest: failed native spawn leaves stored stack intact and does not remove carrier
+ok 5 - failed native spawn leaves stored stack intact and does not remove carrier
+  ---
+  duration_ms: 0.472096
+  type: 'test'
+  ...
+# Subtest: failed source clear removes spawned copy and retains original
+ok 6 - failed source clear removes spawned copy and retains original
+  ---
+  duration_ms: 0.22892
+  type: 'test'
+  ...
+# Subtest: double write/rollback failure is blocked from making repeated copies
+ok 7 - double write/rollback failure is blocked from making repeated copies
+  ---
+  duration_ms: 0.362421
+  type: 'test'
+  ...
+# Subtest: failed legacy removal after transfer leaves empty shell and no stored duplicate
+ok 8 - failed legacy removal after transfer leaves empty shell and no stored duplicate
+  ---
+  duration_ms: 0.281117
+  type: 'test'
+  ...
+# Subtest: empty old carrier is removed without spawning an item
+ok 9 - empty old carrier is removed without spawning an item
+  ---
+  duration_ms: 0.348778
+  type: 'test'
+  ...
+# Subtest: missing inventory is reported without destroying carrier
+ok 10 - missing inventory is reported without destroying carrier
+  ---
+  duration_ms: 0.596024
+  type: 'test'
+  ...
+# Subtest: repeated callbacks after successful transfer cannot duplicate the stored stack
+ok 11 - repeated callbacks after successful transfer cannot duplicate the stored stack
+  ---
+  duration_ms: 0.248625
+  type: 'test'
+  ...
+# Subtest: runtime allowlists contain exactly the registered material set
+ok 12 - runtime allowlists contain exactly the registered material set
+  ---
+  duration_ms: 1.670678
+  type: 'test'
+  ...
+# Subtest: iron pickaxe can harvest
+ok 13 - iron pickaxe can harvest
+  ---
+  duration_ms: 0.396726
+  type: 'test'
+  ...
+# Subtest: diamond pickaxe can harvest
+ok 14 - diamond pickaxe can harvest
+  ---
+  duration_ms: 0.157848
+  type: 'test'
+  ...
+# Subtest: netherite pickaxe can harvest
+ok 15 - netherite pickaxe can harvest
+  ---
+  duration_ms: 0.149631
+  type: 'test'
+  ...
+# Subtest: wooden pickaxe cannot harvest
+ok 16 - wooden pickaxe cannot harvest
+  ---
+  duration_ms: 0.258987
+  type: 'test'
+  ...
+# Subtest: stone pickaxe cannot harvest
+ok 17 - stone pickaxe cannot harvest
+  ---
+  duration_ms: 0.161818
+  type: 'test'
+  ...
+# Subtest: golden pickaxe cannot harvest
+ok 18 - golden pickaxe cannot harvest
+  ---
+  duration_ms: 0.132591
+  type: 'test'
+  ...
+# Subtest: copper pickaxe cannot harvest
+ok 19 - copper pickaxe cannot harvest
+  ---
+  duration_ms: 0.131221
+  type: 'test'
+  ...
+# Subtest: Rbow pickaxe and properly tier-tagged third-party pickaxes harvest
+ok 20 - Rbow pickaxe and properly tier-tagged third-party pickaxes harvest
+  ---
+  duration_ms: 0.630467
+  type: 'test'
+  ...
+# Subtest: rbow_ore ordinary drop is one raw ore
+ok 21 - rbow_ore ordinary drop is one raw ore
+  ---
+  duration_ms: 1.57098
+  type: 'test'
+  ...
+# Subtest: rbow_ore Silk Touch takes precedence over Fortune
+ok 22 - rbow_ore Silk Touch takes precedence over Fortune
+  ---
+  duration_ms: 0.292643
+  type: 'test'
+  ...
+# Subtest: rbow_ore Fortune III can give four raw
+ok 23 - rbow_ore Fortune III can give four raw
+  ---
+  duration_ms: 0.195518
+  type: 'test'
+  ...
+# Subtest: deepslate_rbow_ore ordinary drop is one raw ore
+ok 24 - deepslate_rbow_ore ordinary drop is one raw ore
+  ---
+  duration_ms: 0.14549
+  type: 'test'
+  ...
+# Subtest: deepslate_rbow_ore Silk Touch takes precedence over Fortune
+ok 25 - deepslate_rbow_ore Silk Touch takes precedence over Fortune
+  ---
+  duration_ms: 0.101204
+  type: 'test'
+  ...
+# Subtest: deepslate_rbow_ore Fortune III can give four raw
+ok 26 - deepslate_rbow_ore Fortune III can give four raw
+  ---
+  duration_ms: 0.095554
+  type: 'test'
+  ...
+# Subtest: storage block drops itself rather than multiplied ingots
+ok 27 - storage block drops itself rather than multiplied ingots
+  ---
+  duration_ms: 1.515456
+  type: 'test'
+  ...
+# Subtest: Creative, Spectator, wrong tool, unrelated block and disabled drops produce nothing
+ok 28 - Creative, Spectator, wrong tool, unrelated block and disabled drops produce nothing
+  ---
+  duration_ms: 0.241198
+  type: 'test'
+  ...
+# Subtest: survival casing and authorized Adventure block breaks preserve drops
+ok 29 - survival casing and authorized Adventure block breaks preserve drops
+  ---
+  duration_ms: 0.169224
+  type: 'test'
+  ...
+# Subtest: Fortune zero always one; Fortune three has expected 2:1:1:1 bucket weights
+ok 30 - Fortune zero always one; Fortune three has expected 2:1:1:1 bucket weights
+  ---
+  duration_ms: 0.369457
+  type: 'test'
+  ...
+# Subtest: Fortune and tool-wear random boundaries are clamped
+ok 31 - Fortune and tool-wear random boundaries are clamped
+  ---
+  duration_ms: 0.261434
+  type: 'test'
+  ...
+# Subtest: hoe tills dirt
+ok 32 - hoe tills dirt
+  ---
+  duration_ms: 0.258619
+  type: 'test'
+  ...
+# Subtest: hoe tills grass_block
+ok 33 - hoe tills grass_block
+  ---
+  duration_ms: 0.098047
+  type: 'test'
+  ...
+# Subtest: hoe tills grass_path
+ok 34 - hoe tills grass_path
+  ---
+  duration_ms: 0.087097
+  type: 'test'
+  ...
+# Subtest: hoe converts coarse and rooted dirt in stages
+ok 35 - hoe converts coarse and rooted dirt in stages
+  ---
+  duration_ms: 0.387262
+  type: 'test'
+  ...
+# Subtest: soil actions require clear space above and no underside click
+ok 36 - soil actions require clear space above and no underside click
+  ---
+  duration_ms: 0.169481
+  type: 'test'
+  ...
+# Subtest: shovel paths soil and extinguishes both campfire types
+ok 37 - shovel paths soil and extinguishes both campfire types
+  ---
+  duration_ms: 0.190518
+  type: 'test'
+  ...
+# Subtest: axe preserves state semantics while stripping recognized log families
+ok 38 - axe preserves state semantics while stripping recognized log families
+  ---
+  duration_ms: 0.299984
+  type: 'test'
+  ...
+# Subtest: tool actions never rewrite already stripped blocks or another add-on blocks
+ok 39 - tool actions never rewrite already stripped blocks or another add-on blocks
+  ---
+  duration_ms: 0.152044
+  type: 'test'
+  ...
+# (node:1972) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual entry point subscribes and registers its component without querying world state
+ok 40 - actual entry point subscribes and registers its component without querying world state
+  ---
+  duration_ms: 5.514287
+  type: 'test'
+  ...
+# Subtest: native explosions and dropped item damage have no script interception
+ok 41 - native explosions and dropped item damage have no script interception
+  ---
+  duration_ms: 2.190914
+  type: 'test'
+  ...
+# Subtest: mining uses the pre-break item and honors game rule
+ok 42 - mining uses the pre-break item and honors game rule
+  ---
+  duration_ms: 2.801864
+  type: 'test'
+  ...
+# Subtest: tool mining wear mutates the correct held stack and breaks at the configured maximum
+ok 43 - tool mining wear mutates the correct held stack and breaks at the configured maximum
+  ---
+  duration_ms: 2.50511
+  type: 'test'
+  ...
+# Subtest: creative, unbreakable, nonplayer and changed-tool mining events do not consume gear
+ok 44 - creative, unbreakable, nonplayer and changed-tool mining events do not consume gear
+  ---
+  duration_ms: 3.889825
+  type: 'test'
+  ...
+# Subtest: combat durability hook requests one for sword/hoe, two for other ordinary tools
+ok 45 - combat durability hook requests one for sword/hoe, two for other ordinary tools
+  ---
+  duration_ms: 1.952562
+  type: 'test'
+  ...
+# Subtest: hoe cancels native interaction and performs exactly one validated delayed edit
+ok 46 - hoe cancels native interaction and performs exactly one validated delayed edit
+  ---
+  duration_ms: 3.155082
+  type: 'test'
+  ...
+# Subtest: delayed interaction refuses stale slot
+ok 47 - delayed interaction refuses stale slot
+  ---
+  duration_ms: 2.472772
+  type: 'test'
+  ...
+# Subtest: delayed interaction refuses stale item
+ok 48 - delayed interaction refuses stale item
+  ---
+  duration_ms: 3.000333
+  type: 'test'
+  ...
+# Subtest: delayed interaction refuses stale block
+ok 49 - delayed interaction refuses stale block
+  ---
+  duration_ms: 5.573467
+  type: 'test'
+  ...
+# Subtest: delayed interaction refuses stale mode
+ok 50 - delayed interaction refuses stale mode
+  ---
+  duration_ms: 1.690652
+  type: 'test'
+  ...
+# Subtest: delayed interaction refuses stale space
+ok 51 - delayed interaction refuses stale space
+  ---
+  duration_ms: 2.154911
+  type: 'test'
+  ...
+# Subtest: delayed interaction refuses stale valid
+ok 52 - delayed interaction refuses stale valid
+  ---
+  duration_ms: 2.441239
+  type: 'test'
+  ...
+# Subtest: runtime errors are logged once, not silently swallowed or repeated indefinitely
+ok 53 - runtime errors are logged once, not silently swallowed or repeated indefinitely
+  ---
+  duration_ms: 2.787426
+  type: 'test'
+  ...
+# (node:1998) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: entire shipped script graph loads without server-ui or a trim module
+ok 54 - entire shipped script graph loads without server-ui or a trim module
+  ---
+  duration_ms: 4.087142
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_ingot, crouch=false
+ok 55 - smithing is not intercepted: rbow_ingot, crouch=false
+  ---
+  duration_ms: 4.218121
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_helmet, crouch=false
+ok 56 - smithing is not intercepted: rbow_helmet, crouch=false
+  ---
+  duration_ms: 3.272231
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_chestplate, crouch=false
+ok 57 - smithing is not intercepted: rbow_chestplate, crouch=false
+  ---
+  duration_ms: 2.211521
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_leggings, crouch=false
+ok 58 - smithing is not intercepted: rbow_leggings, crouch=false
+  ---
+  duration_ms: 1.94113
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_boots, crouch=false
+ok 59 - smithing is not intercepted: rbow_boots, crouch=false
+  ---
+  duration_ms: 2.800966
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_hoe, crouch=false
+ok 60 - smithing is not intercepted: rbow_hoe, crouch=false
+  ---
+  duration_ms: 2.767673
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_axe, crouch=false
+ok 61 - smithing is not intercepted: rbow_axe, crouch=false
+  ---
+  duration_ms: 3.285516
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_shovel, crouch=false
+ok 62 - smithing is not intercepted: rbow_shovel, crouch=false
+  ---
+  duration_ms: 2.194732
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_spear, crouch=false
+ok 63 - smithing is not intercepted: rbow_spear, crouch=false
+  ---
+  duration_ms: 2.150958
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_sword, crouch=false
+ok 64 - smithing is not intercepted: rbow_sword, crouch=false
+  ---
+  duration_ms: 2.033385
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_ingot, crouch=true
+ok 65 - smithing is not intercepted: rbow_ingot, crouch=true
+  ---
+  duration_ms: 1.796467
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_helmet, crouch=true
+ok 66 - smithing is not intercepted: rbow_helmet, crouch=true
+  ---
+  duration_ms: 2.050136
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_chestplate, crouch=true
+ok 67 - smithing is not intercepted: rbow_chestplate, crouch=true
+  ---
+  duration_ms: 1.56705
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_leggings, crouch=true
+ok 68 - smithing is not intercepted: rbow_leggings, crouch=true
+  ---
+  duration_ms: 1.991616
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_boots, crouch=true
+ok 69 - smithing is not intercepted: rbow_boots, crouch=true
+  ---
+  duration_ms: 1.885006
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_hoe, crouch=true
+ok 70 - smithing is not intercepted: rbow_hoe, crouch=true
+  ---
+  duration_ms: 1.915948
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_axe, crouch=true
+ok 71 - smithing is not intercepted: rbow_axe, crouch=true
+  ---
+  duration_ms: 1.752789
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_shovel, crouch=true
+ok 72 - smithing is not intercepted: rbow_shovel, crouch=true
+  ---
+  duration_ms: 1.716168
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_spear, crouch=true
+ok 73 - smithing is not intercepted: rbow_spear, crouch=true
+  ---
+  duration_ms: 2.734814
+  type: 'test'
+  ...
+# Subtest: smithing is not intercepted: rbow_sword, crouch=true
+ok 74 - smithing is not intercepted: rbow_sword, crouch=true
+  ---
+  duration_ms: 1.751141
+  type: 'test'
+  ...
+# Subtest: ordinary vanilla material and empty hand also retain native table interaction
+ok 75 - ordinary vanilla material and empty hand also retain native table interaction
+  ---
+  duration_ms: 1.637171
+  type: 'test'
+  ...
+# Subtest: does not undo a cancellation by another add-on
+ok 76 - does not undo a cancellation by another add-on
+  ---
+  duration_ms: 1.824802
+  type: 'test'
+  ...
+# Subtest: native item loads do not queue conversions or alter their stacks
+ok 77 - native item loads do not queue conversions or alter their stacks
+  ---
+  duration_ms: 1.923387
+  type: 'test'
+  ...
+1..77
+# tests 77
+# suites 0
+# pass 77
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 226.806065
+
+$ node --check behavior_pack/scripts/bootstrap.js
+
+$ node --check behavior_pack/scripts/legacy_drop_logic.js
+
+$ node --check behavior_pack/scripts/legacy_drops.js
+
+$ node --check behavior_pack/scripts/main.js
+
+$ node --check behavior_pack/scripts/rules.js
+
+PASS: JavaScript syntax, both root manifests, every ZIP CRC, nested pack bytes, and deterministic archive recreation.
+SHA-256:
+{
+  "67_Rbow_Ore_Mod_Behavior.mcpack": "313ea7e9f0ea2bdf4fe31ea61347bd5567cfb1a6e67c9334ba54636678f90ad3",
+  "67_Rbow_Ore_Mod_Resources.mcpack": "e84bd1f7439213c259c6c00606967d2de8e4a9e14a872dfc778c9a6a022b4f58",
+  "67_Rbow_Ore_Mod_v1.2.0.mcaddon": "6e15b5914b9c71943bab1ce3730bcfa32f2f26686d63b26c25e0b50827857284"
+}

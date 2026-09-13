@@ -1,0 +1,17 @@
+{
+  "repository": "Mojang/bedrock-samples",
+  "commit": "736072450c26a7c67f07b1661f29d9a5ebaa14b1",
+  "files": {
+    "armor.render_controller.json": {
+      "path": "resource_pack/render_controllers/armor.render_controllers.json",
+      "controller": "controller.render.armor",
+      "blob_sha": "fe6ca0033e531e17b6f08803fb95012ced3cee91"
+    },
+    "player.third_person.render_controller.json": {
+      "path": "resource_pack/render_controllers/player.render_controllers.json",
+      "controller": "controller.render.player.third_person",
+      "blob_sha": "a087d16f1ac2753d07f5505a2409edb8fb51969b"
+    }
+  },
+  "storage": "JSON objects extracted from official source, whitespace normalized. Not full-source byte copies."
+}

@@ -1,0 +1,29 @@
+{
+  "format_version": "1.26.30",
+  "minecraft:item": {
+    "description": {
+      "identifier": "elleedog:deepslate_rbow_ore",
+      "menu_category": {
+        "category": "items"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.elleedog:deepslate_rbow_ore.name"
+      },
+      "minecraft:fire_resistant": {
+        "value": true
+      },
+      "minecraft:max_stack_size": 64,
+      "minecraft:block_placer": {
+        "block": "elleedog:deepslate_rbow_ore",
+        "replace_block_item": true
+      },
+      "minecraft:tags": {
+        "tags": [
+          "minecraft:sulfur_cube_archetype_bouncy"
+        ]
+      }
+    }
+  }
+}

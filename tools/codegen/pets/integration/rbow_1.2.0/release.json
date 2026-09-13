@@ -1,0 +1,24 @@
+{
+  "name": "67 Rbow Ore Mod",
+  "version": [
+    1,
+    2,
+    0
+  ],
+  "channel": "release",
+  "archive_label": "67_Rbow_Ore_Mod_v1.2.0",
+  "min_engine_version": [
+    1,
+    26,
+    40
+  ],
+  "script_api": "2.9.0",
+  "author": "Ellee Schoonover",
+  "email": "ellee@ellee.com",
+  "sulfur_cube_item_tag": "minecraft:sulfur_cube_archetype_bouncy",
+  "sulfur_cube_items": [
+    "elleedog:rbow_block",
+    "elleedog:rbow_ore",
+    "elleedog:deepslate_rbow_ore"
+  ]
+}

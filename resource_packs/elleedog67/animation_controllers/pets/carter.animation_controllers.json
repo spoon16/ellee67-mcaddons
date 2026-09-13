@@ -1,0 +1,304 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.pet.carter.locomotion": {
+      "initial_state": "idle",
+      "states": {
+        "rest": {
+          "animations": [
+            "pet_carter_rest"
+          ],
+          "blend_transition": 0.12,
+          "transitions": [
+            {
+              "ride": "!query.is_sleeping && query.is_riding"
+            },
+            {
+              "swim": "!query.is_sleeping && !query.is_riding && query.is_in_water"
+            },
+            {
+              "crawl": "!query.is_sleeping && !query.is_riding && !query.is_in_water && query.is_crawling"
+            },
+            {
+              "air": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && !query.is_on_ground"
+            },
+            {
+              "sneak": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && query.is_sneaking"
+            },
+            {
+              "run": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && query.is_sprinting"
+            },
+            {
+              "walk": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && !query.is_sprinting"
+            },
+            {
+              "idle": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && !query.is_moving"
+            }
+          ]
+        },
+        "ride": {
+          "animations": [
+            "pet_carter_ride"
+          ],
+          "blend_transition": 0.12,
+          "transitions": [
+            {
+              "rest": "query.is_sleeping"
+            },
+            {
+              "swim": "!query.is_sleeping && !query.is_riding && query.is_in_water"
+            },
+            {
+              "crawl": "!query.is_sleeping && !query.is_riding && !query.is_in_water && query.is_crawling"
+            },
+            {
+              "air": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && !query.is_on_ground"
+            },
+            {
+              "sneak": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && query.is_sneaking"
+            },
+            {
+              "run": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && query.is_sprinting"
+            },
+            {
+              "walk": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && !query.is_sprinting"
+            },
+            {
+              "idle": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && !query.is_moving"
+            }
+          ]
+        },
+        "swim": {
+          "animations": [
+            "pet_carter_swim"
+          ],
+          "blend_transition": 0.12,
+          "transitions": [
+            {
+              "rest": "query.is_sleeping"
+            },
+            {
+              "ride": "!query.is_sleeping && query.is_riding"
+            },
+            {
+              "crawl": "!query.is_sleeping && !query.is_riding && !query.is_in_water && query.is_crawling"
+            },
+            {
+              "air": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && !query.is_on_ground"
+            },
+            {
+              "sneak": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && query.is_sneaking"
+            },
+            {
+              "run": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && query.is_sprinting"
+            },
+            {
+              "walk": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && !query.is_sprinting"
+            },
+            {
+              "idle": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && !query.is_moving"
+            }
+          ]
+        },
+        "crawl": {
+          "animations": [
+            "pet_carter_crawl",
+            {
+              "pet_carter_crawl_walk": "query.is_moving"
+            }
+          ],
+          "blend_transition": 0.12,
+          "transitions": [
+            {
+              "rest": "query.is_sleeping"
+            },
+            {
+              "ride": "!query.is_sleeping && query.is_riding"
+            },
+            {
+              "swim": "!query.is_sleeping && !query.is_riding && query.is_in_water"
+            },
+            {
+              "air": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && !query.is_on_ground"
+            },
+            {
+              "sneak": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && query.is_sneaking"
+            },
+            {
+              "run": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && query.is_sprinting"
+            },
+            {
+              "walk": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && !query.is_sprinting"
+            },
+            {
+              "idle": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && !query.is_moving"
+            }
+          ]
+        },
+        "air": {
+          "animations": [
+            "pet_carter_air"
+          ],
+          "blend_transition": 0.12,
+          "transitions": [
+            {
+              "rest": "query.is_sleeping"
+            },
+            {
+              "ride": "!query.is_sleeping && query.is_riding"
+            },
+            {
+              "swim": "!query.is_sleeping && !query.is_riding && query.is_in_water"
+            },
+            {
+              "crawl": "!query.is_sleeping && !query.is_riding && !query.is_in_water && query.is_crawling"
+            },
+            {
+              "sneak": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && query.is_sneaking"
+            },
+            {
+              "run": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && query.is_sprinting"
+            },
+            {
+              "walk": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && !query.is_sprinting"
+            },
+            {
+              "idle": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && !query.is_moving"
+            }
+          ]
+        },
+        "sneak": {
+          "animations": [
+            "pet_carter_sneak",
+            {
+              "pet_carter_sneak_walk": "query.is_moving"
+            }
+          ],
+          "blend_transition": 0.12,
+          "transitions": [
+            {
+              "rest": "query.is_sleeping"
+            },
+            {
+              "ride": "!query.is_sleeping && query.is_riding"
+            },
+            {
+              "swim": "!query.is_sleeping && !query.is_riding && query.is_in_water"
+            },
+            {
+              "crawl": "!query.is_sleeping && !query.is_riding && !query.is_in_water && query.is_crawling"
+            },
+            {
+              "air": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && !query.is_on_ground"
+            },
+            {
+              "run": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && query.is_sprinting"
+            },
+            {
+              "walk": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && !query.is_sprinting"
+            },
+            {
+              "idle": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && !query.is_moving"
+            }
+          ]
+        },
+        "run": {
+          "animations": [
+            "pet_carter_run"
+          ],
+          "blend_transition": 0.12,
+          "transitions": [
+            {
+              "rest": "query.is_sleeping"
+            },
+            {
+              "ride": "!query.is_sleeping && query.is_riding"
+            },
+            {
+              "swim": "!query.is_sleeping && !query.is_riding && query.is_in_water"
+            },
+            {
+              "crawl": "!query.is_sleeping && !query.is_riding && !query.is_in_water && query.is_crawling"
+            },
+            {
+              "air": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && !query.is_on_ground"
+            },
+            {
+              "sneak": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && query.is_sneaking"
+            },
+            {
+              "walk": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && !query.is_sprinting"
+            },
+            {
+              "idle": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && !query.is_moving"
+            }
+          ]
+        },
+        "walk": {
+          "animations": [
+            "pet_carter_walk"
+          ],
+          "blend_transition": 0.12,
+          "transitions": [
+            {
+              "rest": "query.is_sleeping"
+            },
+            {
+              "ride": "!query.is_sleeping && query.is_riding"
+            },
+            {
+              "swim": "!query.is_sleeping && !query.is_riding && query.is_in_water"
+            },
+            {
+              "crawl": "!query.is_sleeping && !query.is_riding && !query.is_in_water && query.is_crawling"
+            },
+            {
+              "air": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && !query.is_on_ground"
+            },
+            {
+              "sneak": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && query.is_sneaking"
+            },
+            {
+              "run": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && query.is_sprinting"
+            },
+            {
+              "idle": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && !query.is_moving"
+            }
+          ]
+        },
+        "idle": {
+          "animations": [
+            "pet_carter_idle"
+          ],
+          "blend_transition": 0.12,
+          "transitions": [
+            {
+              "rest": "query.is_sleeping"
+            },
+            {
+              "ride": "!query.is_sleeping && query.is_riding"
+            },
+            {
+              "swim": "!query.is_sleeping && !query.is_riding && query.is_in_water"
+            },
+            {
+              "crawl": "!query.is_sleeping && !query.is_riding && !query.is_in_water && query.is_crawling"
+            },
+            {
+              "air": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && !query.is_on_ground"
+            },
+            {
+              "sneak": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && query.is_sneaking"
+            },
+            {
+              "run": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && query.is_sprinting"
+            },
+            {
+              "walk": "!query.is_sleeping && !query.is_riding && !query.is_in_water && !query.is_crawling && query.is_on_ground && !query.is_sneaking && query.is_moving && !query.is_sprinting"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

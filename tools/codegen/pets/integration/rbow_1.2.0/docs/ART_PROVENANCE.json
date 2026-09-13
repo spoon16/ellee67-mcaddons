@@ -1,0 +1,38 @@
+{
+  "version": "1.1.7",
+  "source": "19 retained textures from 1.1.6. One 8 x 8 end-cap region cleared in layer 1; all other pixels preserved.",
+  "exporter": "tools/build_assets.py",
+  "new_art_authored_in_this_release": false,
+  "important_correction": "The 1.1.3 Art Aligned inventory sprites were extracted from a preferred preview in that release. They are not reproducible with the older procedural painter. 1.1.4 freezes the exported PNGs, not the obsolete from-scratch-generation claim.",
+  "worn_armor": "Removed the opaque sleeve end caps at the bottom of both arm cubes. The shared atlas region is 96 <= x < 104, 32 <= y < 40. Geometry, sleeve sides, torso, helmet and boots are unchanged.",
+  "concept_images": "art/concepts contains historical illustrative posters, not game screenshots or evidence of runtime pixels.",
+  "pixel_changes": 64,
+  "sha256": {
+    "blocks/deepslate_rbow_ore.png": "12fb5407d162311616aa9787c35d49fb09314e76e0b5d36ec9b20ba75ec95a15",
+    "blocks/rbow_block.png": "d22ba6836aecbe8f645a80575f90ac55369e0d1ed8f8e19252844f83bf696617",
+    "blocks/rbow_block_top.png": "2297abd4f1fb9b41f6360881705cdaf980e2e0e792d4c3fcb066e95812c1e2c0",
+    "blocks/rbow_ore.png": "b81f8a27a464eed5d66dbb06d1e2222644c7057d5eac09cb056d17b6eaef69bc",
+    "items/raw_rbow_ore.png": "a544e242da70881729b42413be0b84383b1ddfd4dab512dd7d47289da4d3bffe",
+    "items/rbow_axe.png": "b938daf2eb85ce9a57d4c6bc726e68400e079ad16b981ede54db093d2f44ca30",
+    "items/rbow_boots.png": "04c2b08adedd3e26ec01544dff472f3ccf01fa258caef65877bd68d609b8ee65",
+    "items/rbow_chestplate.png": "d3f38d1133e9fd40edb4ef8d91e32a8902e9ca57df170da22fe98135a46cd7eb",
+    "items/rbow_helmet.png": "ac0fc73894fda7b539ea0f365d4c4e569fd8d276a180b8a01c72183b730eb0ab",
+    "items/rbow_hoe.png": "1f449ac3e001f6bf70570da1b95897c300347fe8f03f9a944de5e1d5782eba4a",
+    "items/rbow_ingot.png": "8cd701fe5650c7d534db512c5ca161e934a8aa4bda5368df58e64b53123a86e8",
+    "items/rbow_leggings.png": "900c4386db1d1b24172cd9f083a83b9930333cd99cbfcd0d81af8bcab5762540",
+    "items/rbow_nug.png": "a742ec54f30279bcb29e5058e71d4d28e2282d35bf4fef654084fe83daf579fe",
+    "items/rbow_pickaxe.png": "a3196ae894a219c317659f6033354181ef2810aee9114700ff68a3e8216aa62a",
+    "items/rbow_shovel.png": "7219817af0a22bd092be9491c518baeda572458010f97cfb3185613fc05e1dde",
+    "items/rbow_spear.png": "2c10b511cd45d3dbddbc4aa08432b0097af0226ce2cb7cbdac09b133ff38755b",
+    "items/rbow_sword.png": "0cf5b758c62172a1727ff746c87d0a7f9f4dad27a77be0ee58f60792b41248b2",
+    "models/armor/rbow_1.png": "808279fb7f1d76c983b94bf267385b62345ace1ede863bc5761bde7fd656de49",
+    "models/armor/rbow_2.png": "cbd3f5e8abeaa75c4e7117ab567d074a5cd1ad212dfc29fbd5b6c701755736e1"
+  },
+  "removed_assets": [
+    "entity/rbow_spear.png",
+    "items/rbow_ore.png",
+    "items/deepslate_rbow_ore.png",
+    "items/rbow_block.png"
+  ],
+  "block_previews": "Software projections sampled from opaque runtime faces; native game rendering is not captured."
+}

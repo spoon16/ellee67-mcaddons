@@ -1,0 +1,63 @@
+{
+  "version": [
+    1,
+    1,
+    7
+  ],
+  "engine_tests_run": 0,
+  "client_render_tests_run": 0,
+  "realm_tests_run": 0,
+  "baseline_user_report": "1.1.5 size/placement worked; 1.1.6 first-person attack/use sounded but remained upright.",
+  "strategy": "Explicit compact sprite extrusion bound to the hand, with own FP action bone. No texture_meshes.",
+  "sprite_sha256": "2c10b511cd45d3dbddbc4aa08432b0097af0226ce2cb7cbdac09b133ff38755b",
+  "opaque_pixels": 126,
+  "model_units_per_source_pixel": 0.5,
+  "depth_model_units": 0.5,
+  "grip_pixel_center": [
+    10.5,
+    20.5
+  ],
+  "binding_anchor_model_units": [
+    0.0,
+    24.0,
+    0.0
+  ],
+  "fp_idle_euler_degrees": [
+    94.1796,
+    21.0682,
+    142.7284
+  ],
+  "fp_ready_pitch_delta_degrees": -57,
+  "fp_jab_pitch_delta_degrees": -72,
+  "max_shaft_slide_model_units": 1.5,
+  "charge_raise_seconds": 0.4,
+  "charge_finish_seconds": 9.15,
+  "pose_fit_assumptions": {
+    "player_arm_xyz": [
+      95,
+      -45,
+      115
+    ],
+    "player_rightitem_xyz": [
+      45,
+      55,
+      -12.5
+    ],
+    "target_camera_xyz": [
+      -8,
+      -20,
+      -12
+    ],
+    "rotation_order": "Rz * Ry * Rx; numeric fit, not a client-calibrated pose"
+  },
+  "known_risks": [
+    "Compact attachable replaces the held sprite only; actual POV/hand fit still needs client testing.",
+    "Other player-animation packs or nonstandard character geometries can change the assumed parent frame.",
+    "Visible motion depends on native public owner attack_time and item_use_normalized being supplied."
+  ],
+  "changed_features": [
+    "FP animation follows visible model bones; no dependency on engine-only sprite movement.",
+    "TP attack/use arm curves retained; item translation kept at native baseline.",
+    "Inventory sprite, dropped items and gameplay remain unchanged."
+  ]
+}

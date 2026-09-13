@@ -1,0 +1,44 @@
+{
+  "format_version": "1.13.0",
+  "minecraft:feature_rules": {
+    "description": {
+      "identifier": "elleedog:rbow_ore_distribution",
+      "places_feature": "elleedog:rbow_vein"
+    },
+    "conditions": {
+      "placement_pass": "underground_pass",
+      "minecraft:biome_filter": [
+        {
+          "test": "has_biome_tag",
+          "operator": "==",
+          "value": "overworld"
+        }
+      ]
+    },
+    "distribution": {
+      "iterations": 4,
+      "coordinate_eval_order": "xzy",
+      "x": {
+        "distribution": "uniform",
+        "extent": [
+          0,
+          15
+        ]
+      },
+      "z": {
+        "distribution": "uniform",
+        "extent": [
+          0,
+          15
+        ]
+      },
+      "y": {
+        "distribution": "uniform",
+        "extent": [
+          -50,
+          8
+        ]
+      }
+    }
+  }
+}

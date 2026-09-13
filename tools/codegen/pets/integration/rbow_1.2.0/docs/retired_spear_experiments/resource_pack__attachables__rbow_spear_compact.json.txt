@@ -1,0 +1,51 @@
+{
+  "format_version": "1.20.30",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "elleedog:rbow_spear",
+      "materials": {
+        "default": "entity_alphatest",
+        "enchanted": "entity_alphatest_glint"
+      },
+      "textures": {
+        "default": "textures/items/rbow_spear",
+        "enchanted": "textures/misc/enchanted_item_glint"
+      },
+      "geometry": {
+        "default": "geometry.elleedog.rbow_spear.compact"
+      },
+      "animations": {
+        "fp": "animation.elleedog.rbow_spear.first_person",
+        "tp": "animation.elleedog.rbow_spear.third_person"
+      },
+      "scripts": {
+        "initialize": [
+          "v.rb_use_seconds = 0.0;"
+        ],
+        "pre_animation": [
+          "v.rb_player = q.is_owner_identifier_any('minecraft:player');",
+          "v.rb_main = c.item_slot == 'main_hand';",
+          "v.rb_attack = (v.rb_player && v.rb_main) ? math.clamp((c.owning_entity->v.attack_time ?? 0.0), 0.0, 1.0) : 0.0;",
+          "v.rb_using = (v.rb_player && v.rb_main) ? ((c.owning_entity->v.item_use_normalized ?? 0.0) > 0.0) : 0.0;",
+          "v.rb_use_seconds = v.rb_using ? math.min(10.15, (v.rb_use_seconds ?? 0.0) + math.max(0.0, q.delta_time)) : 0.0;",
+          "v.rb_raise = math.clamp(v.rb_use_seconds / 0.4, 0.0, 1.0);",
+          "v.rb_lower = math.clamp((v.rb_use_seconds - 8.55) / 0.6, 0.0, 1.0);",
+          "v.rb_ready = v.rb_raise * (1.0 - v.rb_lower);",
+          "v.rb_sway = math.sin(q.life_time * 150.0) * math.clamp((v.rb_use_seconds - 2.9) / 1.0, 0.0, 1.0) * v.rb_ready;",
+          "v.rb_jab = v.rb_using ? 0.0 : math.sin(math.pow(v.rb_attack, 0.55) * 180.0);"
+        ],
+        "animate": [
+          {
+            "fp": "c.is_first_person"
+          },
+          {
+            "tp": "!c.is_first_person"
+          }
+        ]
+      },
+      "render_controllers": [
+        "controller.render.item_default"
+      ]
+    }
+  }
+}

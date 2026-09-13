@@ -1,0 +1,28 @@
+{
+  "repository": "Mojang/bedrock-samples",
+  "commit": "736072450c26a7c67f07b1661f29d9a5ebaa14b1",
+  "files": [
+    {
+      "path": "resource_pack/textures/items/diamond_pickaxe.png",
+      "git_blob_sha": "7181c989ddb76c8a1da2f95a4f14dbcd7173a1a3",
+      "sha256": "33937596b8e6c77af014757802ff58583c46b5975757fb48a6bac3b013f604e6",
+      "usage": "offline preview only; in-game material resolves the original resource path"
+    },
+    {
+      "path": "resource_pack/textures/items/diamond_sword.png",
+      "git_blob_sha": "da8556efe23b09e7a4537a77477a8fb96dfb15eb",
+      "sha256": "cf75a6e96b2d3e06bf078dbc28367febf01f03dcec177ceb64ca80608aa2ad94",
+      "usage": "offline preview only; in-game material resolves the original resource path"
+    },
+    {
+      "path": "resource_pack/attachables/shield.entity.json",
+      "git_blob_sha": "adb904ddbc13d10fe4d5eedf6eb3cd216dffb3f5",
+      "local_snapshot": "JSON reformatted; copied values, not a byte-identical source file"
+    },
+    {
+      "path": "resource_pack/models/entity/shield.geo.json",
+      "git_blob_sha": "d31fc0cb4430b0015b6b6f02d43eab8622e4fd86",
+      "local_snapshot": "JSON reformatted; copied values, not a byte-identical source file"
+    }
+  ]
+}

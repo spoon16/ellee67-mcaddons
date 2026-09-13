@@ -1,0 +1,117 @@
+"""Recovery/regression and experimental-control checks; NOT engine tests."""
+from __future__ import annotations
+import copy,hashlib,json,subprocess,sys,unittest,uuid
+from pathlib import Path
+from PIL import Image
+R=Path(__file__).resolve().parents[1];BP=R/'behavior_pack';RP=R/'resource_pack'
+LAB=R/'diagnostics/spear_lab';LB=LAB/'behavior_pack';LR=LAB/'resource_pack';REF=R/'diagnostics/references'
+KINDS=['sprite','trident_control','native_static','native_animated','rbow_animated']
+def read(p):return json.loads(p.read_text())
+def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def attachment(kind):return read(LR/f'attachables/{kind}.json')['minecraft:attachable']['description']
+# 1.1.8 recovery-only assertions are archived.
+# 1.1.9 baseline and placement invariants are tested in test_119_alignment.py.
+
+class StandaloneSpearLab(unittest.TestCase):
+ def test_no_scripts_recipes_worldgen_native_entities_or_native_overrides(self):
+  for folder in ['scripts','entities','features','feature_rules','recipes']:
+   self.assertFalse((LB/folder).exists())
+  for folder in ['entity','animation_controllers']:self.assertFalse((LR/folder).exists())
+  for p in (LR/'attachables').glob('*.json'):self.assertTrue(attachment(p.stem)['identifier'].startswith('elleedog_spear_lab:'))
+  for p in (LR/'animations').glob('*.json'):
+   for key in read(p)['animations']:self.assertTrue(key.startswith('animation.elleedog_spear_lab.'))
+ def test_manifests_have_independent_ids_and_exact_pair_dependency(self):
+  base=read(R/'docs/build_settings.json')['uuid'];ids=[]
+  b=read(LB/'manifest.json');r=read(LR/'manifest.json')
+  for m in [b,r]:
+   self.assertEqual(m['header']['version'],[0,1,0]);self.assertEqual(m['header']['min_engine_version'],[1,26,40]);self.assertNotIn('capabilities',m)
+   ids.append(m['header']['uuid']);ids.extend(x['uuid'] for x in m['modules'])
+  self.assertEqual(len(ids),len(set(ids)))
+  for ident in ids:uuid.UUID(ident);self.assertNotIn(ident,base.values())
+  self.assertEqual(b['dependencies'],[{'uuid':r['header']['uuid'],'version':[0,1,0]}])
+ def test_five_controls_and_four_explicit_attachables(self):
+  self.assertEqual({p.stem for p in (LB/'items').glob('*.json')},set(KINDS))
+  self.assertEqual({p.stem for p in (LR/'attachables').glob('*.json')},set(KINDS)-{'sprite'})
+  self.assertEqual(len({read(p)['minecraft:item']['description']['identifier'] for p in (LB/'items').glob('*.json')}),5)
+ def test_control_combat_components_match_production(self):
+  base=read(BP/'items/rbow_spear.json')['minecraft:item']['components']
+  for kind in [k for k in KINDS if k!='trident_control']:
+   c=read(LB/f'items/{kind}.json')['minecraft:item']['components']
+   for name in ['minecraft:kinetic_weapon','minecraft:piercing_weapon','minecraft:cooldown','minecraft:swing_duration','minecraft:use_modifiers','minecraft:swing_sounds','minecraft:durability','minecraft:damage','minecraft:hand_equipped']:
+    self.assertEqual(c[name],base[name],kind+' '+name)
+   self.assertIn('minecraft:is_spear',c['minecraft:tags']['tags'])
+   self.assertNotIn('minecraft:throwable',c);self.assertNotIn('minecraft:use_animation',c)
+ def test_trident_control_is_inert_and_has_no_conflicting_melee_spear_pose_tag(self):
+  c=read(LB/'items/trident_control.json')['minecraft:item']['components']
+  self.assertEqual(set(c),{'minecraft:display_name','minecraft:icon','minecraft:max_stack_size','minecraft:hand_equipped'})
+ def test_trident_reference_changes_only_item_identity(self):
+  native=read(REF/'trident.attachable.json');custom=read(LR/'attachables/trident_control.json')
+  custom['minecraft:attachable']['description']['identifier']='minecraft:trident'
+  self.assertEqual(custom,native)
+ def test_native_spear_geometry_matches_reference_except_identifier(self):
+  actual=read(LR/'models/entity/spear.geo.json');native=read(REF/'spear.geo.json')
+  actual['minecraft:geometry'][0]['description']['identifier']='geometry.spear'
+  self.assertEqual(actual,native)
+  bones=actual['minecraft:geometry'][0]['bones'];self.assertEqual(len(bones),1)
+  self.assertEqual(bones[0]['name'],'spear');self.assertNotIn('pivot',bones[0]);self.assertNotIn('parent',bones[0]);self.assertNotIn('cubes',bones[0])
+ def test_native_texture_is_a_byte_exact_control_not_repainted(self):
+  self.assertEqual((LR/'textures/entity/native_reference.png').read_bytes(),(R/'art/references/netherite_spear_entity.png').read_bytes())
+ def test_native_vs_rbow_controls_change_only_identifier_and_texture(self):
+  a=attachment('native_animated');b=attachment('rbow_animated')
+  a.pop('identifier');b.pop('identifier');a['textures'].pop('default');b['textures'].pop('default')
+  self.assertEqual(a,b)
+ def test_static_vs_animated_changes_only_identifier_and_animation_bindings(self):
+  a=attachment('native_static');b=attachment('native_animated')
+  a.pop('identifier');b.pop('identifier');a.pop('animations');b.pop('animations');self.assertEqual(a,b)
+ def test_fixed_pose_does_not_use_external_owner_animation_state(self):
+  animations=read(LR/'animations/spear.animation.json')['animations']
+  for view in ['first_person','third_person']:
+   a=animations['animation.elleedog_spear_lab.fixed_'+view]
+   self.assertNotIn('owning_entity',json.dumps(a));self.assertEqual(a['bones']['spear']['position'],[0,24,-27])
+ def test_animated_pose_is_native_with_only_null_guards(self):
+  import re
+  source=read(REF/'spear.animation.json')['animations'];out=read(LR/'animations/spear.animation.json')['animations']
+  for view in ['first_person','third_person']:
+   actual=copy.deepcopy(out['animation.elleedog_spear_lab.animated_'+view])
+   bone=actual['bones']['spear']
+   for channel in ['position','rotation']:
+    for i,value in enumerate(bone[channel]):
+     if isinstance(value,str):bone[channel][i]=re.sub(r'\((c\.owning_entity->v\.[a-z_]+) \?\? 0\.0\)',r'\1',value)
+   self.assertEqual(actual,source['animation.spear.held_'+view])
+ def test_spear_references_form_a_resolved_local_render_chain(self):
+  animations=read(LR/'animations/spear.animation.json')['animations']
+  geometry=read(LR/'models/entity/spear.geo.json')['minecraft:geometry'][0]
+  controllers=read(LR/'render_controllers/spear.render_controllers.json')['render_controllers']
+  for kind in KINDS[2:]:
+   d=attachment(kind);self.assertEqual(d['geometry']['default'],geometry['description']['identifier'])
+   for ref in d['animations'].values():self.assertIn(ref,animations)
+   for ref in d['render_controllers']:self.assertIn(ref,controllers)
+   self.assertTrue((LR/(d['textures']['default']+'.png')).is_file())
+   for animation in d['scripts']['animate']:self.assertIn(next(iter(animation)),d['animations'])
+ def test_no_independent_timers_guessed_grip_or_entity_alias(self):
+  text='\n'.join(p.read_text() for p in LR.rglob('*.json'))
+  for token in ['94.1796','142.7284','rbow_grip','rbow_pixels','rb_use_seconds','math.pow','query.delta_time','runtime_identifier']:
+   self.assertNotIn(token,text)
+ def test_dedicated_held_texture_uses_native_layout_not_a_flipped_inventory_icon(self):
+  im=Image.open(LR/'textures/entity/rbow_held.png').convert('RGBA');self.assertEqual(im.size,(32,32))
+  self.assertEqual(im.getbbox(),(0,0,32,32));self.assertEqual(im.getpixel((31,31))[3],255)
+  for p in range(9,32):self.assertEqual(im.getpixel((p,p))[3],255)
+  for y in range(9,32):
+   for x in range(32):
+    if x!=y:self.assertEqual(im.getpixel((x,y))[3],0)
+  icon=Image.open(LR/'textures/items/control_icon.png').convert('RGBA')
+  self.assertNotEqual(im.tobytes(),icon.tobytes());self.assertNotEqual(im.tobytes(),icon.transpose(Image.Transpose.FLIP_LEFT_RIGHT).tobytes())
+ def test_local_diagnostic_pngs_are_readable_and_alpha_is_binary(self):
+  for p in (LR/'textures').rglob('*.png'):
+   im=Image.open(p).convert('RGBA');self.assertEqual(im.size,(32,32));self.assertEqual(im.getchannel('A').getextrema(),(0,255))
+   self.assertTrue(set(im.getchannel('A').getdata())<={0,255})
+ def test_lab_regenerates_deterministically_without_changing_production(self):
+  snapshot=lambda folder:{p.relative_to(folder).as_posix():digest(p) for p in folder.rglob('*') if p.is_file()}
+  before=snapshot(LAB);production={**snapshot(BP),**{'RP/'+k:v for k,v in snapshot(RP).items()}}
+  subprocess.run([sys.executable,str(R/'tools/build_spear_lab.py')],check=True,cwd=R,stdout=subprocess.PIPE)
+  self.assertEqual(before,snapshot(LAB));self.assertEqual(production,{**snapshot(BP),**{'RP/'+k:v for k,v in snapshot(RP).items()}})
+ def test_experiment_has_no_claimed_client_results(self):
+  e=read(LAB/'experiment.json');self.assertEqual(e['user_confirmed_results'],{})
+  for k in ['engine_tests_run','client_render_tests_run','realm_tests_run']:self.assertEqual(e[k],0)
+  self.assertTrue(e['not_in_production_installer'])
+if __name__=='__main__':unittest.main()

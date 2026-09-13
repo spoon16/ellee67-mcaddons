@@ -1,0 +1,16 @@
+{
+  "repository": "Mojang/bedrock-samples",
+  "commit": "736072450c26a7c67f07b1661f29d9a5ebaa14b1",
+  "retrieved": "2026-09-12",
+  "method": "GitHub connector fetch_file; normalized JSON semantic snapshots",
+  "upstream_git_blob_sha1": {
+    "player.entity.json": "c5d368d1f32cce943ef4473fb1e75594c8bee222",
+    "player.behavior.json": "c46b9396518da4b89b2718cad24942b118c7c768",
+    "iron_chestplate.player.json": "b8435213f99b5d091340341bd7c853920cfab4ee"
+  },
+  "local_sha256": {
+    "player.entity.json": "af15b034670a5b3204f1d300b42c95d6f9a586225d08f33e3cb58dd69eb2fd18",
+    "player.behavior.json": "91d833706b33477293053921af7604c29c687b33e7064130342b37e3b6614434",
+    "iron_chestplate.player.json": "e022ddee3ddc50044bf4112dd7aa559e007cd151c742d0c55a1436946c9018ea"
+  }
+}

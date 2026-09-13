@@ -1,0 +1,19 @@
+{
+  "date": "2026-09-12",
+  "source": "User client tests and screenshots in this conversation",
+  "alignment_lab_v0.2.0": {
+    "A": "FAIL: user reports same incorrect placement as A",
+    "B": "FAIL: user reports same incorrect placement as A",
+    "C": "FAIL: user reports same incorrect placement as A",
+    "D": "FAIL: user reports same incorrect placement as A"
+  },
+  "render_lab_v0.1.0": {
+    "1": "Visible; no brandishing",
+    "2": "Visible trident; hold-only control",
+    "3": "Visible netherite-like object; brandishes",
+    "4": "Same as 3",
+    "5": "Visible and brandishes; too low in first person; detached behind player in third person"
+  },
+  "conclusion": "No tested offset is accepted. Whether custom local animations executed is unresolved. Parent bone motion can move an attached item.",
+  "engine_root_cause": "Unconfirmed. No Content Log or active resource-pack stack supplied."
+}

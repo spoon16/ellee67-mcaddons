@@ -11,3 +11,7 @@ First combined release. Not yet run in Minecraft; see [docs/TESTING.md](docs/TES
 - The Ender Mod's `minecraft:enderman` override is regenerated from the 1.26.40 vanilla definition
   (it was pinned to 1.21.100) and its command is now `/elleedog:ender_protect`.
 - All packs target Minecraft 1.26.40 with `@minecraft/server` 2.9.0 and `@minecraft/server-ui` 2.0.0.
+- Pets: the seated pose is generated in Bedrock's rotation sign, so a riding pet sits on its haunches
+  with its chest up and front legs straight instead of nose-down.
+- Pets: fitted armor meshes are pre-scaled by the player's render scale so they rest on the pet
+  instead of floating slightly above it.

@@ -5,6 +5,7 @@ from copy import deepcopy
 from catalog import read,write
 from handhelds import helpers
 from render_isolation import pet_world_bones
+from attachable_space import entity_scale,scale_bones
 # Explicit material records, rather than assumptions in runtime script.
 LAYERS={'helmet':'helmet','chestplate':'chest','leggings':'leg','boots':'boot'}
 
@@ -30,7 +31,7 @@ def uv_region(name):
     return out
 
 def generate(root,pets,rp):
-    catalog=[]
+    catalog=[];scale=entity_scale(root)
     for p in pets:
         source=read(root/p['model'])['minecraft:geometry'][0]
         fit=read(root/p['equipment']['armor_fit'])
@@ -47,7 +48,7 @@ def generate(root,pets,rp):
                 skeleton.append({'name':f'pet_armor_{slot}_{i}','parent':part['bone'],'pivot':next(b['pivot'] for b in skeleton if b['name']==part['bone']),
                     'cubes':[{'origin':part['origin'],'size':part['size'],'uv':uv}]})
             write(rp/f'models/entity/pets/{p["id"]}/armor_{slot}.geo.json',{'format_version':'1.12.0','minecraft:geometry':[{
-                'description':{'identifier':f'geometry.pet.{p["id"]}.armor.{slot}','texture_width':64,'texture_height':32,'visible_bounds_width':4,'visible_bounds_height':4,'visible_bounds_offset':[0,1,0]},'bones':skeleton}]})
+                'description':{'identifier':f'geometry.pet.{p["id"]}.armor.{slot}','texture_width':64,'texture_height':32,'visible_bounds_width':4,'visible_bounds_height':4,'visible_bounds_offset':[0,1,0]},'bones':scale_bones(skeleton,scale)}]})
     owner="query.owner_identifier == 'minecraft:player'"
     # Explicit owner context, not the local viewer. Short circuit before public variables on non-players.
     # Query actual wearer properties, not cached public render variables.

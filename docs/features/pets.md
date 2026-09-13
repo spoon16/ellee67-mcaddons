@@ -124,7 +124,15 @@ it until then.
 
 From the 0.5.2 release notes:
 
-- The reported backwards sitting pose is still open; the seat calculations were not changed.
+- Seated pose: the generated ride clip is emitted in Bedrock's rotation sign (negative X raises the
+  chest, as in vanilla `animation.cat.sit`). Pets sit on their rear with the body raised, front legs
+  vertical with paws on the seat plane, hind legs folded forward and paws flat, tail resting behind.
+  Earlier builds emitted right-handed signs and drew the pose nose-down.
+- Fitted armor meshes are pre-scaled by the player's render scale (0.9375) because the armor
+  attachables rebuild their bone matrices without it; the client showed pet-shaped armor that
+  followed the pet but floated evenly a little high. The shield attachable was left as it was
+  (its placement is locked as user-confirmed); if the armor now lands correctly, the shield should
+  get the same treatment.
 - Previously unsupported held items still use the unmodified native fallback and can appear at
   normal human-hand height in pet form.
 - Fitted dye, trims, glint, Persona and Character Creator outfits, simultaneous viewers and armor

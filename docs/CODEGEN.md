@@ -30,7 +30,9 @@ marks them `linguist-generated` so GitHub folds them in diffs.
    `elleedog:may_move_blocks` property and a `bool_property` filter on the take-block and
    place-block goals (wrapping any existing filter in `all_of`), and writes the override.
    `test/features/ender-mod/codegen.test.ts` fails if the committed file drifts.
-2. **Pets compiler.** `tools/codegen/pets/` is the Pets 0.5.2 compiler tree, vendored unmodified. The
+2. **Pets compiler.** `tools/codegen/pets/` is the Pets 0.5.2 compiler tree, vendored with two changes:
+   `tools/seating.py` emits Bedrock-sign rotations, and `tools/attachable_space.py` pre-scales armor
+   attachable meshes by the player render scale (both documented in the modules). The
    runner copies it to `.codegen-work/pets/`, adds the hand-written modules from `src/features/pets/`
    as its `src/`, runs `tools/build.py` in place, then runs the compiler's own 243 Python tests. The
    compiler verifies its baseline and Rbow input hashes itself and produces four packs.

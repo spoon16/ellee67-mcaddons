@@ -1,12 +1,13 @@
 // `npm run codegen`: regenerates every generated file in the repo.
 //   1. Enderman override from the pinned vanilla snapshot (tools/codegen/enderman).
-//   2. Pets and Rbow pack content: copies the vendored compiler into .codegen-work/pets, adds the hand-written
-//      pet scripts as its src/, runs it with the uv-managed Python, runs its own unit tests, and syncs the output
-//      into the pack tree (tools/codegen/sync.ts).
+//   2. Pets and Rbow pack content: copies the vendored compiler into .codegen-work/pets, transpiles the hand-written
+//      TypeScript pet scripts into its src/*.js (the compiler packages and unit-tests plain JavaScript), runs it with
+//      the uv-managed Python, runs its own unit tests, and syncs the output into the pack tree (tools/codegen/sync.ts).
 // CI runs this and fails if `git diff` is not empty afterwards.
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import ts from "typescript";
 import { REPO_ROOT } from "../lib/paths.ts";
 import { writeManifests } from "../manifests.ts";
 import { syncWorkspace } from "./sync.ts";
@@ -26,12 +27,43 @@ function prepareWorkspace(): void {
     recursive: true,
     filter: (source) => !/\/(\.venv|__pycache__)(\/|$)/.test(source) && !/\/(uv\.lock|pyproject\.toml)$/.test(source),
   });
-  const scripts = fs
-    .readdirSync(PETS_SCRIPTS)
-    .filter((name) => name.endsWith(".js") && !name.endsWith(".generated.js"));
-  if (scripts.length === 0) throw new Error(`no pet scripts found in ${PETS_SCRIPTS}`);
-  fs.mkdirSync(path.join(WORKSPACE, "src"), { recursive: true });
-  for (const name of scripts) fs.copyFileSync(path.join(PETS_SCRIPTS, name), path.join(WORKSPACE, "src", name));
+  transpilePetScripts(path.join(WORKSPACE, "src"));
+}
+
+// index.ts is the add-on's feature wrapper and the *.generated.ts files are the compiler's own output; everything else
+// in src/features/pets is a script the compiler expects to find as src/<name>.js. Some of its Python tests grep that
+// emitted JavaScript: test_quiet_startup_044 (main.js keeps `rememberFailure(player, error, system.currentTick,
+// "lifecycle"); fail(undefined, error);`, a `restore(<x>.player)` call and `reg("book"`, and no gamerule, chat or
+// onScreenDisplay tokens anywhere), test_property_diagnostics_045 (property_health.js has no property, equipment,
+// command or teleport write calls), test_gear (tool_effects.js never mutates inventories) and test_framework
+// (core.js references MODEL_BY_ID).
+const NOT_A_PET_SCRIPT = /^(index\.ts|.*\.generated\.ts|.*\.d\.ts|.*\.test\.ts)$/;
+
+/** Emits each pet script as ES2020 JavaScript, rewriting `./x.ts` imports to `./x.js`, without bundling. */
+export function transpilePetScripts(destination: string): string[] {
+  const names = fs.readdirSync(PETS_SCRIPTS).filter((name) => name.endsWith(".ts") && !NOT_A_PET_SCRIPT.test(name));
+  if (names.length === 0) throw new Error(`no pet scripts found in ${PETS_SCRIPTS}`);
+  fs.mkdirSync(destination, { recursive: true });
+  const written: string[] = [];
+  for (const name of names) {
+    const source = fs.readFileSync(path.join(PETS_SCRIPTS, name), "utf8");
+    const { outputText, diagnostics } = ts.transpileModule(source, {
+      fileName: name,
+      reportDiagnostics: true,
+      compilerOptions: {
+        target: ts.ScriptTarget.ES2020,
+        module: ts.ModuleKind.ESNext,
+        rewriteRelativeImportExtensions: true,
+        removeComments: false,
+      },
+    });
+    const problem = diagnostics?.[0];
+    if (problem) throw new Error(`${name}: ${ts.flattenDiagnosticMessageText(problem.messageText, "\n")}`);
+    const target = path.join(destination, name.replace(/\.ts$/, ".js"));
+    fs.writeFileSync(target, outputText);
+    written.push(target);
+  }
+  return written;
 }
 
 async function generateEnderman(): Promise<void> {

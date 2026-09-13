@@ -7,14 +7,13 @@
     "types": ["node"],
     "strict": true,
     "noEmit": true,
-    "allowJs": true,
-    "checkJs": false,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "isolatedModules": true
   },
   "include": ["src", "test", "tools", "vitest.config.ts"],
   "exclude": ["node_modules", "dist", "tools/codegen/pets"]

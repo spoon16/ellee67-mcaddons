@@ -1,18 +1,18 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { CONFIG } from "../../../src/features/stair-sit/config.js";
-import { readStair as readStairModule, SeatManager } from "../../../src/features/stair-sit/seats.js";
-import { InteractionTargets } from "../../../src/features/stair-sit/targets.js";
-import { reset } from "../../mocks/minecraft-server.ts";
+import { CONFIG } from "../../../src/features/stair-sit/config.ts";
+import { readStair as readStairModule, SeatManager } from "../../../src/features/stair-sit/seats.ts";
+import { InteractionTargets } from "../../../src/features/stair-sit/targets.ts";
+import { engine, reset } from "../../mocks/minecraft-server.ts";
 import { FakeDimension, FakePlayer, fixture } from "./fakes.ts";
 
-const readStair = (block: unknown): any => readStairModule(block);
+const readStair = (block: unknown): any => readStairModule(engine(block));
 
 function setup() {
   const f = fixture();
   const players = [f.player];
   f.world.getAllPlayers = () => players;
-  const m: any = new SeatManager(f.world, f.system);
-  const targets: any = new InteractionTargets(f.world, f.system, m);
+  const m: any = new SeatManager(engine(f.world), engine(f.system));
+  const targets: any = new InteractionTargets(engine(f.world), engine(f.system), m);
   return { ...f, players, m, targets };
 }
 

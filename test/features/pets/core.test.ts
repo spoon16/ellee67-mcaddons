@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { MODEL_BY_ID, MODEL_BY_WIRE, PETS } from "../../../src/features/pets/catalog.generated.js";
+import { MODEL_BY_ID, MODEL_BY_WIRE, PETS } from "../../../src/features/pets/catalog.generated.ts";
 import {
   applyForm,
   captureInventory,
@@ -12,7 +12,7 @@ import {
   preferredForm,
   validateForm,
   wireId,
-} from "../../../src/features/pets/core.js";
+} from "../../../src/features/pets/core.ts";
 import {
   applyArmor,
   applyHandHeight,
@@ -22,7 +22,7 @@ import {
   preferredHandHeight,
   resetHandHeight,
   restoreSettings,
-} from "../../../src/features/pets/settings.js";
+} from "../../../src/features/pets/settings.ts";
 import { reset, ticks } from "../../mocks/minecraft-server.ts";
 import { ui } from "../../mocks/minecraft-server-ui.ts";
 import { petPlayer, testItem } from "./helpers.ts";

@@ -9,7 +9,7 @@ import {
   miningDrop,
   NS,
   toolAction,
-} from "../../../src/features/rbow-ore/rules.js";
+} from "../../../src/features/rbow-ore/rules.ts";
 
 function item(typeId: string, levels: Record<string, number> = {}, tags: string[] = []) {
   return {

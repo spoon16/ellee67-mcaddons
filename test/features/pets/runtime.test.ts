@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PETS } from "../../../src/features/pets/catalog.generated.js";
-import { cleanupProbes, spawnProbes } from "../../../src/features/pets/probes.js";
+import { PETS } from "../../../src/features/pets/catalog.generated.ts";
+import type { Pet } from "../../../src/features/pets/core.ts";
+import { cleanupProbes, spawnProbes } from "../../../src/features/pets/probes.ts";
 import {
   CustomCommandStatus,
   dimensions,
@@ -242,7 +243,7 @@ describe("diagnostics and menus", () => {
 describe("test props", () => {
   it("Probes use the chosen model ID without changing the player", async () => {
     const p = petPlayer("probe");
-    spawnProbes(world, p, PETS[1]);
+    spawnProbes(world, p, PETS[1] as Pet);
     await ticks();
     expect(dimensions.overworld.entities[1]?.props["pet:model_id"]).toBe(2);
     expect(p.props["pet:model_id"]).toBe(0);
@@ -251,8 +252,8 @@ describe("test props", () => {
   it("Probe cleanup respects ownership", () => {
     const a = petPlayer("a");
     const b = petPlayer("b");
-    spawnProbes(world, a, PETS[0]);
-    spawnProbes(world, b, PETS[1]);
+    spawnProbes(world, a, PETS[0] as Pet);
+    spawnProbes(world, b, PETS[1] as Pet);
     expect(cleanupProbes(world, a.id).removed).toBe(2);
     expect(dimensions.overworld.entities.filter((e) => e.isValid)).toHaveLength(2);
   });
@@ -260,14 +261,14 @@ describe("test props", () => {
   it("Probe blocked terrain fails without spawning", () => {
     const p = petPlayer("p");
     blockProbeArea();
-    expect(() => spawnProbes(world, p, PETS[0])).toThrow(/not clear/);
+    expect(() => spawnProbes(world, p, PETS[0] as Pet)).toThrow(/not clear/);
     expect(dimensions.overworld.spawnCount).toBe(0);
   });
 
   it("Partial probe failure removes already-created props", () => {
     const p = petPlayer("p");
     dimensions.overworld.spawnFailAt = 2;
-    expect(() => spawnProbes(world, p, PETS[0])).toThrow();
+    expect(() => spawnProbes(world, p, PETS[0] as Pet)).toThrow();
     expect(dimensions.overworld.entities.filter((e) => e.isValid)).toHaveLength(0);
   });
 });

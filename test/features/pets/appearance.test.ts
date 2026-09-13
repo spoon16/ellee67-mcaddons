@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { appearanceFor, restoreAppearance, transitionForm } from "../../../src/features/pets/appearance.js";
-import { captureInventory, compareInventory } from "../../../src/features/pets/core.js";
+import { appearanceFor, restoreAppearance, transitionForm } from "../../../src/features/pets/appearance.ts";
+import { captureInventory, compareInventory } from "../../../src/features/pets/core.ts";
 import { EquipmentSlot, reset, ticks } from "../../mocks/minecraft-server.ts";
 import { ui } from "../../mocks/minecraft-server-ui.ts";
 import { type PetPlayer, petPlayer, testItem } from "./helpers.ts";

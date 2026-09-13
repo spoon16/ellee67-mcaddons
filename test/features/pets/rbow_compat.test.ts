@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { transitionForm } from "../../../src/features/pets/appearance.js";
-import { RBOW_COUNT, RBOW_GEAR, rbowReport } from "../../../src/features/pets/rbow_compat.js";
-import { classifyHand, toolGlintState } from "../../../src/features/pets/tool_effects.js";
+import { transitionForm } from "../../../src/features/pets/appearance.ts";
+import { RBOW_COUNT, RBOW_GEAR, rbowReport } from "../../../src/features/pets/rbow_compat.ts";
+import { classifyHand, toolGlintState } from "../../../src/features/pets/tool_effects.ts";
 import { EquipmentSlot, registry, reset, ticks } from "../../mocks/minecraft-server.ts";
 import { ui } from "../../mocks/minecraft-server-ui.ts";
 import { command, petPlayer, start, testItem } from "./helpers.ts";

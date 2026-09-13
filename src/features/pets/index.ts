@@ -1,6 +1,6 @@
 import { EntityTypes } from "@minecraft/server";
 import type { FeatureDefinition } from "../../core/features.ts";
-import { registerPetCommands, registerPetItems, startPets } from "./main.js";
+import { registerPetCommands, registerPetItems, startPets } from "./main.ts";
 
 /**
  * Lets players become Carter, Mochi or Casper through the Pet Morpher book or `/pet:form`. The chosen form,

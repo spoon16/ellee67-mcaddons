@@ -11,23 +11,15 @@ import {
   world,
 } from "@minecraft/server";
 import type { FeatureDefinition } from "../../core/features.ts";
-import { registerProtectionCommands } from "./commands.js";
-import { GATE_PROPERTY, shouldAllowMovement } from "./gate.js";
-import { ProtectionStore } from "./store.js";
+import { type ProtectionSelection, registerProtectionCommands } from "./commands.ts";
+import { GATE_PROPERTY, type Sighting, shouldAllowMovement } from "./gate.ts";
+import { ProtectionStore } from "./store.ts";
 
 const ENDERMAN = "minecraft:enderman";
 const DIMENSIONS = ["overworld", "nether", "the_end"];
 
-interface Sighting {
-  x: number;
-  y: number;
-  z: number;
-  dimension: string;
-  holdUntil: number;
-}
-
 let store: ProtectionStore | undefined;
-const selections = new Map<string, any>();
+const selections = new Map<string, ProtectionSelection>();
 const previous = new Map<string, Sighting>();
 let lastWarning = -10000;
 

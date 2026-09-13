@@ -1,7 +1,7 @@
 import path from "node:path";
 import { bootstrap } from "../../../src/core/bootstrap.ts";
 import { BOOK_ID, COMPONENT_ID, redstoneGuide } from "../../../src/features/redstone-guide/index.ts";
-import type { GuideEntry } from "../../../src/features/redstone-guide/reader.js";
+import type { GuideEntry } from "../../../src/features/redstone-guide/reader.ts";
 import { readStrictJson } from "../../../tools/lib/json.ts";
 import { packDir } from "../../../tools/lib/packs.ts";
 import { REPO_ROOT } from "../../../tools/lib/paths.ts";

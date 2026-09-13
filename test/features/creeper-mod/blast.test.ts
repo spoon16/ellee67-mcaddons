@@ -1,8 +1,8 @@
 // Ports the upstream 67 Creeper Mod handler tests. The handler takes its engine objects by injection, so these
 // tests build their own tiny fixtures instead of the shared engine mock; the assertions are the upstream ones.
 import { beforeEach, describe, expect, it } from "vitest";
-import { blastDamage, createCreeperHandler, exposureAt } from "../../../src/features/creeper-mod/blast.js";
-import { reset } from "../../mocks/minecraft-server.ts";
+import { blastDamage, createCreeperHandler, exposureAt } from "../../../src/features/creeper-mod/blast.ts";
+import { engine, reset } from "../../mocks/minecraft-server.ts";
 
 const GameMode = { Survival: "Survival", Adventure: "Adventure", Creative: "Creative", Spectator: "Spectator" };
 const EntityDamageCause = { entityExplosion: "entityExplosion" };
@@ -59,13 +59,9 @@ function fixture({ charged = false, difficulty = "Normal", blocked = false } = {
   const system = { currentTick: 1, run: (callback: () => void) => queue.push(callback) };
   const world = { getDifficulty: () => difficulty };
   const event: { source: unknown; cancel: boolean } = { source, cancel: false };
-  const handler = createCreeperHandler({
-    world,
-    system,
-    GameMode,
-    EntityDamageCause,
-    warn: (message: string) => warnings.push(message),
-  });
+  const handler = createCreeperHandler(
+    engine({ world, system, GameMode, EntityDamageCause, warn: (message: string) => warnings.push(message) }),
+  ) as (event: unknown) => void;
   function addPlayer(mode = GameMode.Survival, x = 1): FakePlayer {
     const hits: FakePlayer["hits"] = [];
     const knocks: FakePlayer["knocks"] = [];
@@ -289,7 +285,7 @@ describe("exposureAt", () => {
   it("exposure samples all twelve body rays", () => {
     let n = 0;
     const dimension = { getBlockFromRay: () => (++n <= 6 ? undefined : { block: {} }) };
-    expect(exposureAt(dimension, { x: 0, y: 65, z: 0 }, { x: 2, y: 65, z: 0 }, 66.62)).toBe(0.5);
+    expect(exposureAt(engine(dimension), { x: 0, y: 65, z: 0 }, { x: 2, y: 65, z: 0 }, 66.62)).toBe(0.5);
     expect(n).toBe(12);
   });
 
@@ -299,6 +295,6 @@ describe("exposureAt", () => {
         throw Error("unloaded");
       },
     };
-    expect(exposureAt(dimension, { x: 0, y: 65, z: 0 }, { x: 2, y: 65, z: 0 }, 66.62)).toBe(0);
+    expect(exposureAt(engine(dimension), { x: 0, y: 65, z: 0 }, { x: 2, y: 65, z: 0 }, 66.62)).toBe(0);
   });
 });

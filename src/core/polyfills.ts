@@ -1,6 +1,12 @@
-// The bundle targets ES2020 because Bedrock's script engine lags current JavaScript. One vendored Pets module
-// (property_health.js, byte-identical to the compiler's copy) calls Object.hasOwn (ES2022); this guard adds it when
-// the engine lacks it and is a no-op otherwise. Import this module first so it runs before any feature code.
+// The bundle targets ES2020 because Bedrock's script engine lags current JavaScript. Feature code calls
+// Object.hasOwn (ES2022): the declaration below lets TypeScript accept it at ES2020, and the guard adds it when the
+// engine lacks it (a no-op otherwise). Import this module first so it runs before any feature code.
+declare global {
+  interface ObjectConstructor {
+    hasOwn(target: object, key: PropertyKey): boolean;
+  }
+}
+
 const objectConstructor = Object as unknown as Record<string, unknown>;
 const ownProperty = Object.prototype.hasOwnProperty;
 if (typeof objectConstructor.hasOwn !== "function") {
@@ -10,3 +16,5 @@ if (typeof objectConstructor.hasOwn !== "function") {
     writable: true,
   });
 }
+
+export {};

@@ -5,15 +5,15 @@ import {
   readStair as readStairModule,
   SeatManager,
   safeExit,
-} from "../../../src/features/stair-sit/seats.js";
-import { reset } from "../../mocks/minecraft-server.ts";
+} from "../../../src/features/stair-sit/seats.ts";
+import { engine, reset } from "../../mocks/minecraft-server.ts";
 import { FakeDimension, FakePlayer, fixture } from "./fakes.ts";
 
-const readStair = (block: unknown): any => readStairModule(block);
+const readStair = (block: unknown): any => readStairModule(engine(block));
 
 function setup() {
   const f = fixture();
-  const m: any = new SeatManager(f.world, f.system);
+  const m: any = new SeatManager(engine(f.world), engine(f.system));
   return { ...f, m };
 }
 
@@ -54,7 +54,7 @@ describe("seat manager", () => {
   it("holding an item does not hijack block placement; commands can intentionally sit", () => {
     const { m, player, stair } = setup();
     player.mainHand = { typeId: "minecraft:stone" };
-    expect(emptyHands(player)).toBe(false);
+    expect(emptyHands(engine(player))).toBe(false);
     expect(m.sit(player, stair).ok).toBe(false);
     expect(m.sit(player, stair, false).ok).toBe(true);
   });
@@ -99,7 +99,7 @@ describe("seat manager", () => {
   it("blocked headroom rejects a chair and never changes the obstructing block", () => {
     const { m, player, stair, dimension } = setup();
     dimension.put({ x: 0, y: 65, z: 0 }, "minecraft:stone");
-    expect(hasHeadroom(dimension, readStair(stair))).toBe(false);
+    expect(hasHeadroom(engine(dimension), readStair(stair))).toBe(false);
     expect(m.sit(player, stair).ok).toBe(false);
     expect(dimension.getBlock({ x: 0, y: 65, z: 0 }).typeId).toBe("minecraft:stone");
   });
@@ -234,13 +234,13 @@ describe("seat manager", () => {
   it("safe exit avoids hazard, blocked body space and missing support", () => {
     const { dimension, stair } = setup();
     const desc = readStair(stair);
-    expect(safeExit(dimension, desc)).toBeTruthy();
+    expect(safeExit(engine(dimension), desc)).toBeTruthy();
     dimension.put(stair.location, "minecraft:magma");
-    expect(safeExit(dimension, desc)).toBeUndefined();
+    expect(safeExit(engine(dimension), desc)).toBeUndefined();
     dimension.put(stair.location, "minecraft:stone");
     dimension.put({ x: 0, y: 65, z: 0 }, "minecraft:stone");
-    expect(safeExit(dimension, desc)).toBeUndefined();
+    expect(safeExit(engine(dimension), desc)).toBeUndefined();
     dimension.put(stair.location, "minecraft:air");
-    expect(safeExit(dimension, desc)).toBeUndefined();
+    expect(safeExit(engine(dimension), desc)).toBeUndefined();
   });
 });

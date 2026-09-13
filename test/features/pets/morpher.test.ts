@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PETS } from "../../../src/features/pets/catalog.generated.js";
-import { BOOK_ID, BOOK_TITLE, giveMorpher, morpherChoices, petBiography } from "../../../src/features/pets/morpher.js";
-import { classifyHand } from "../../../src/features/pets/tool_effects.js";
+import { PETS } from "../../../src/features/pets/catalog.generated.ts";
+import type { Pet } from "../../../src/features/pets/core.ts";
+import { BOOK_ID, BOOK_TITLE, giveMorpher, morpherChoices, petBiography } from "../../../src/features/pets/morpher.ts";
+import { classifyHand } from "../../../src/features/pets/tool_effects.ts";
 import { leavePlayer, players, registry, reset, ticks, world } from "../../mocks/minecraft-server.ts";
 import { type QueuedResponse, ui } from "../../mocks/minecraft-server-ui.ts";
 import { command, petPlayer, shownForm, start, testItem, text } from "./helpers.ts";
@@ -18,11 +19,11 @@ describe("book contents", () => {
   });
 
   it("Biographies contain the supplied owners and sentences", () => {
-    expect(petBiography(PETS[0])).toBe("Owner: ElleeDog\nThe softest and also laziest pet you ever met.");
-    expect(petBiography(PETS[1])).toBe(
+    expect(petBiography(PETS[0] as Pet)).toBe("Owner: ElleeDog\nThe softest and also laziest pet you ever met.");
+    expect(petBiography(PETS[1] as Pet)).toBe(
       "Owner: warspoon17\nA feisty street cat that will cuddle and purr and then bite.",
     );
-    expect(petBiography(PETS[2])).toBe(
+    expect(petBiography(PETS[2] as Pet)).toBe(
       "Owner: Casper201312\nCasper is an indoor cat, super cuddly and is always trying to sneak outside.",
     );
   });

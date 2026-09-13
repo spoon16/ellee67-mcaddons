@@ -16,7 +16,7 @@
       "!tools/codegen/pets",
       "!tools/codegen/synced-files.json",
       "!tools/codegen/enderman/upstream",
-      "!src/features/**/*.generated.js",
+      "!src/features/**/*.generated.ts",
       "!src/features/redstone-guide/guide_content.json"
     ]
   },
@@ -40,19 +40,5 @@
       "quoteStyle": "double",
       "semicolons": "always"
     }
-  },
-  "overrides": [
-    {
-      "includes": ["src/features/**/*.js"],
-      "formatter": {
-        "enabled": false
-      },
-      "linter": {
-        "enabled": false
-      },
-      "assist": {
-        "enabled": false
-      }
-    }
-  ]
+  }
 }

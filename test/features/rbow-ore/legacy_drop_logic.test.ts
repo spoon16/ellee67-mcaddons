@@ -1,7 +1,7 @@
 // Upgrade transaction unit tests. Opaque metadata models retained stack data; nothing here asserts that
 // Minecraft serializes a specific component correctly.
 import { describe, expect, it } from "vitest";
-import { LEGACY_TYPE, releaseLegacyDrop } from "../../../src/features/rbow-ore/legacy_drop_logic.js";
+import { LEGACY_TYPE, releaseLegacyDrop } from "../../../src/features/rbow-ore/legacy_drop_logic.ts";
 
 class Stack {
   typeId: string;

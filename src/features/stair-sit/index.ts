@@ -11,10 +11,10 @@ import {
 import type { FeatureRegistries } from "../../core/commands.ts";
 import type { FeatureDefinition } from "../../core/features.ts";
 import type { FeatureContext } from "../../core/subscriptions.ts";
-import { CONFIG } from "./config.js";
-import { aimedBlock, emptyHands, readStair, ridingEntity, SeatManager, valid } from "./seats.js";
-import { gestureComplete } from "./stairs.js";
-import { InteractionTargets } from "./targets.js";
+import { CONFIG } from "./config.ts";
+import { aimedBlock, emptyHands, readStair, ridingEntity, SeatManager, valid } from "./seats.ts";
+import { gestureComplete } from "./stairs.ts";
+import { InteractionTargets } from "./targets.ts";
 
 interface GestureState {
   crouching: boolean;

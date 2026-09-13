@@ -1,13 +1,13 @@
 // Mocked API regression tests. No assertions of Bedrock pack loading or rendering.
 import { beforeEach, describe, expect, it } from "vitest";
-import { transitionForm } from "../../../src/features/pets/appearance.js";
+import { transitionForm } from "../../../src/features/pets/appearance.ts";
 import {
   checkLines,
   inspectProperties,
   lastFailure,
   PROPERTY_KEYS,
   requireProperties,
-} from "../../../src/features/pets/property_health.js";
+} from "../../../src/features/pets/property_health.ts";
 import { leavePlayer, registry, reset, ticks, world } from "../../mocks/minecraft-server.ts";
 import { ui } from "../../mocks/minecraft-server-ui.ts";
 import { command, type PetPlayer, petPlayer, silent, start, thrown } from "./helpers.ts";

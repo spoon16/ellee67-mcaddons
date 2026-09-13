@@ -1,6 +1,6 @@
 import { bootstrap } from "../../../src/core/bootstrap.ts";
 import { rbowOre } from "../../../src/features/rbow-ore/index.ts";
-import { LEGACY_TYPE } from "../../../src/features/rbow-ore/legacy_drop_logic.js";
+import { LEGACY_TYPE } from "../../../src/features/rbow-ore/legacy_drop_logic.ts";
 import {
   addPlayer,
   type Block,

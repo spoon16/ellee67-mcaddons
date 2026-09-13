@@ -454,6 +454,6 @@
   "resource_packs/elleedog67_rbow_ore/textures/models/armor/rbow_1.png",
   "resource_packs/elleedog67_rbow_ore/textures/models/armor/rbow_2.png",
   "resource_packs/elleedog67_rbow_ore/textures/terrain_texture.json",
-  "src/features/pets/catalog.generated.js",
-  "src/features/pets/property_schema.generated.js"
+  "src/features/pets/catalog.generated.ts",
+  "src/features/pets/property_schema.generated.ts"
 ]

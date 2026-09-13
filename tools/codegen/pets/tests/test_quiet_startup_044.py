@@ -16,11 +16,12 @@ class QuietStartupScope(unittest.TestCase):
             with zipfile.ZipFile(BytesIO(addon.read(f'ElleeDog_67_Pets_v{VERSION}_BP.mcpack'))) as bp:
                 script=bp.read('scripts/main.js')
                 self.assertEqual(script,(ROOT/'src/main.js').read_bytes())
-                self.assertNotIn(b'if(e.initialSpawn)safeMessage',script)
-                self.assertNotIn(b'log(`Registered',script)
-                self.assertIn(b"rememberFailure(player,error,system.currentTick,'lifecycle');fail(undefined,error);",script)
-                self.assertIn(b'restore(e.player)',script)
-                self.assertIn(b"reg('book'",script)
+                text=script.decode()
+                self.assertNotRegex(text,r'initialSpawn\)\s*safeMessage')
+                self.assertNotIn('log(`Registered',text)
+                self.assertRegex(text,r'rememberFailure\(player,\s*error,\s*system\.currentTick,\s*["\']lifecycle["\']\);\s*fail\(undefined,\s*error\);')
+                self.assertRegex(text,r'restore\(\w+\.player\)')
+                self.assertRegex(text,r'reg\(["\']book["\']')
 
     def test_no_global_chat_or_game_rule_changes(self):
         text='\n'.join(p.read_text() for p in (ROOT/'src').glob('*.js'))

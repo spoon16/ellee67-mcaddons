@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { bootstrap } from "../../../src/core/bootstrap.ts";
 import { isRunning } from "../../../src/core/features.ts";
 import { rbowOre } from "../../../src/features/rbow-ore/index.ts";
-import { resetState } from "../../../src/features/rbow-ore/main.js";
+import { resetState } from "../../../src/features/rbow-ore/main.ts";
 import {
   addPlayer,
   BlockPermutation,

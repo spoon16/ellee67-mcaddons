@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { transitionForm } from "../../../src/features/pets/appearance.js";
+import { transitionForm } from "../../../src/features/pets/appearance.ts";
 import {
   calculateLift,
   refreshSeat,
@@ -7,7 +7,7 @@ import {
   seatInfo,
   setSeatTrim,
   supportFor,
-} from "../../../src/features/pets/seating.js";
+} from "../../../src/features/pets/seating.ts";
 import { engine, reset, ticks } from "../../mocks/minecraft-server.ts";
 import { ui } from "../../mocks/minecraft-server-ui.ts";
 import { command, petPlayer, start, text } from "./helpers.ts";
@@ -40,7 +40,8 @@ function mounted(kind = "minecraft:pig", y = 20, playerY = 20.3) {
   };
 }
 
-const support = (player: unknown, mount: unknown): Record<string, any> => supportFor(player, mount) ?? {};
+const support = (player: unknown, mount: unknown): Record<string, any> =>
+  supportFor(engine(player), engine(mount)) ?? {};
 
 beforeEach(() => {
   reset();

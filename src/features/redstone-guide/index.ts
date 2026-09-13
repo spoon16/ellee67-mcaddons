@@ -2,7 +2,7 @@ import { type Entity, ItemTypes, type Player, system, world } from "@minecraft/s
 import { ActionFormData, FormCancelationReason } from "@minecraft/server-ui";
 import type { FeatureDefinition } from "../../core/features.ts";
 import { log } from "../../core/log.ts";
-import { type Bookmark, HOME, normalizeBookmark, type Route, type Screen, screenFor } from "./reader.js";
+import { type Bookmark, HOME, normalizeBookmark, type Route, type Screen, screenFor } from "./reader.ts";
 
 export const BOOK_ID = "elleedog_redstone:guide_book";
 export const COMPONENT_ID = "elleedog_redstone:open_guide";

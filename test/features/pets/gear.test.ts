@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { HANDHELD_INDEX } from "../../../src/features/pets/catalog.generated.js";
+import { HANDHELD_INDEX } from "../../../src/features/pets/catalog.generated.ts";
 import {
   applyGear,
   preferredArmor,
@@ -7,8 +7,8 @@ import {
   resetArmor,
   resetGear,
   restoreSettings,
-} from "../../../src/features/pets/settings.js";
-import { refreshToolGlint, toolGlintState } from "../../../src/features/pets/tool_effects.js";
+} from "../../../src/features/pets/settings.ts";
+import { refreshToolGlint, toolGlintState } from "../../../src/features/pets/tool_effects.ts";
 import { reset, ticks } from "../../mocks/minecraft-server.ts";
 import { ui } from "../../mocks/minecraft-server-ui.ts";
 import { petPlayer, testItem } from "./helpers.ts";

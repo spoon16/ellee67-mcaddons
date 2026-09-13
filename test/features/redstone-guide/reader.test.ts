@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { ENTRIES } from "../../../src/features/redstone-guide/content.js";
+import { ENTRIES } from "../../../src/features/redstone-guide/content.ts";
 import { BOOK_ID, COMPONENT_ID } from "../../../src/features/redstone-guide/index.ts";
 import {
   BOOK_ICON,
@@ -14,7 +14,7 @@ import {
   readingRoute,
   screenFor,
   TOTAL_PAGES,
-} from "../../../src/features/redstone-guide/reader.js";
+} from "../../../src/features/redstone-guide/reader.ts";
 import { readStrictJson } from "../../../tools/lib/json.ts";
 import { BP, must, RP, readGuide } from "./helpers.ts";
 

@@ -152,7 +152,8 @@ export function syncWorkspace(workspace: string): SyncReport {
     }
   }
   for (const name of fs.readdirSync(path.join(workspace, "src"))) {
-    if (name.endsWith(".generated.js")) add(path.join(workspace, "src", name), path.join(PETS_SCRIPTS, name));
+    if (name.endsWith(".generated.js"))
+      add(path.join(workspace, "src", name), path.join(PETS_SCRIPTS, name.replace(/\.js$/, ".ts")));
   }
 
   const previous: string[] = fs.existsSync(SYNC_MANIFEST) ? (readStrictJson(SYNC_MANIFEST) as string[]) : [];

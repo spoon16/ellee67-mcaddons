@@ -1,13 +1,13 @@
 import { EntityTypes, system, world } from "@minecraft/server";
 import type { FeatureDefinition } from "../../core/features.ts";
-import { scanLoadedDrops, scheduleRecovery } from "./legacy_drops.js";
+import { scanLoadedDrops, scheduleRecovery } from "./legacy_drops.ts";
 import {
   onPlayerBreakBlock,
   onPlayerInteractWithBlock,
   onScriptEvent,
   registerToolComponent,
   resetState,
-} from "./main.js";
+} from "./main.ts";
 
 /**
  * The 67 Rbow Ore Mod runtime: scripted ore drops, mining wear for Rbow tools, hoe, shovel and axe actions,

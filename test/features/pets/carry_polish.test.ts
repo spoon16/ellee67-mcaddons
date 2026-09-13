@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { SIDE_CARRY_INDEX } from "../../../src/features/pets/catalog.generated.js";
-import { carryState, classifyHand, gearRoute, refreshToolGlint } from "../../../src/features/pets/tool_effects.js";
+import { SIDE_CARRY_INDEX } from "../../../src/features/pets/catalog.generated.ts";
+import { carryState, classifyHand, gearRoute, refreshToolGlint } from "../../../src/features/pets/tool_effects.ts";
 import { EquipmentSlot, engine, reset, ticks } from "../../mocks/minecraft-server.ts";
 import { ui } from "../../mocks/minecraft-server-ui.ts";
 import { petPlayer, testItem } from "./helpers.ts";

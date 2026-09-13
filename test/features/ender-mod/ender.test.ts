@@ -7,17 +7,17 @@ import {
   COMMAND_NAME,
   executeProtectionCommand,
   registerProtectionCommands,
-} from "../../../src/features/ender-mod/commands.js";
-import { shouldAllowMovement } from "../../../src/features/ender-mod/gate.js";
+} from "../../../src/features/ender-mod/commands.ts";
+import { shouldAllowMovement } from "../../../src/features/ender-mod/gate.ts";
 import {
   blockPosition,
   protectionBox,
   regionFromCorners,
   regionIntersects,
   sectionAddress,
-} from "../../../src/features/ender-mod/geometry.js";
-import { ProtectionStore } from "../../../src/features/ender-mod/store.js";
-import { reset } from "../../mocks/minecraft-server.ts";
+} from "../../../src/features/ender-mod/geometry.ts";
+import { ProtectionStore } from "../../../src/features/ender-mod/store.ts";
+import { engine, reset } from "../../mocks/minecraft-server.ts";
 
 const D = "minecraft:overworld";
 const REGION_KEY = "elleedog:ender_regions_v1";
@@ -161,7 +161,7 @@ describe("protection store", () => {
     const a = new ProtectionStore(backend);
     a.saveRegion("House", pos(-2, -2), pos(2, 2));
     const b = new ProtectionStore(backend);
-    expect(b.regions[0].name).toBe("House");
+    expect(b.regions[0]?.name).toBe("House");
     expect(b.intersects(D, protectionBox(pos(0, 0, 250)))).toBe(true);
   });
 
@@ -169,7 +169,7 @@ describe("protection store", () => {
     const a = new ProtectionStore(storage());
     a.saveRegion("House", pos(), pos());
     expect(() => a.saveRegion("house", pos(99, 99), pos(100, 100))).toThrow(/already exists/);
-    expect(a.regions[0].minX).toBe(0);
+    expect(a.regions[0]?.minX).toBe(0);
   });
 
   it("preserves individually placed blocks when an area is removed", () => {
@@ -288,7 +288,7 @@ describe("protection command", () => {
     const selections = new Map<string, any>();
     registerProtectionCommands(
       registry,
-      api,
+      engine(api),
       () => a,
       selections,
       () => {},

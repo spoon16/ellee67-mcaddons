@@ -17,6 +17,6 @@ behavior_packs/elleedog67_pets/pack_icon.png -linguist-generated
 behavior_packs/elleedog67_rbow_ore/pack_icon.png -linguist-generated
 resource_packs/elleedog67_pets/pack_icon.png -linguist-generated
 resource_packs/elleedog67_rbow_ore/pack_icon.png -linguist-generated
-src/features/pets/*.generated.js linguist-generated=true
+src/features/pets/*.generated.ts linguist-generated=true
 tools/codegen/synced-files.json linguist-generated=true
 tools/codegen/pets/uv.lock linguist-generated=true

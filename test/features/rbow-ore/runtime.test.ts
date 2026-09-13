@@ -1,7 +1,7 @@
 // Exercises the runtime handlers through the real bootstrap against the shared engine mock. Nothing here runs
 // Minecraft or establishes engine event ordering.
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from "vitest";
-import { resetState } from "../../../src/features/rbow-ore/main.js";
+import { resetState } from "../../../src/features/rbow-ore/main.ts";
 import {
   addPlayer,
   BlockPermutation,

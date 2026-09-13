@@ -1,19 +1,19 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { CONFIG } from "../../../src/features/stair-sit/config.js";
+import { CONFIG } from "../../../src/features/stair-sit/config.ts";
 import {
   clearTransferPath,
   nearbyStair,
   readStair as readStairModule,
   SeatManager,
-} from "../../../src/features/stair-sit/seats.js";
-import { reset } from "../../mocks/minecraft-server.ts";
+} from "../../../src/features/stair-sit/seats.ts";
+import { engine, reset } from "../../mocks/minecraft-server.ts";
 import { FakeDimension, FakePlayer, fixture } from "./fakes.ts";
 
-const readStair = (block: unknown): any => readStairModule(block);
+const readStair = (block: unknown): any => readStairModule(engine(block));
 
 function setup() {
   const f = fixture();
-  const m: any = new SeatManager(f.world, f.system);
+  const m: any = new SeatManager(engine(f.world), engine(f.system));
   const next = f.dimension.stair({ x: 0, y: 64, z: 1 });
   expect(m.sit(f.player, f.stair).ok).toBe(true);
   return { ...f, m, next, carrier: f.player.mount };
@@ -54,7 +54,7 @@ describe("seated transfer", () => {
 
   it("successful transfer preserves height calibration and look pitch, aligns to destination yaw", () => {
     const f = fixture();
-    const m: any = new SeatManager(f.world, f.system);
+    const m: any = new SeatManager(engine(f.world), engine(f.system));
     f.player.setDynamicProperty(CONFIG.heightProperty, 0.125);
     m.sit(f.player, f.stair);
     f.player.setRotation({ x: 27, y: -30 });
@@ -225,7 +225,7 @@ describe("seated transfer", () => {
     const f = setup();
     const target = f.dimension.stair({ x: 0, y: 64, z: 2 });
     f.dimension.put({ x: 0, y: 65, z: 1 }, "minecraft:stone");
-    expect(clearTransferPath(f.dimension, readStair(f.stair), readStair(target))).toBe(false);
+    expect(clearTransferPath(engine(f.dimension), readStair(f.stair), readStair(target))).toBe(false);
     expect(f.m.sit(f.player, target).ok).toBe(false);
     remains(f);
   });

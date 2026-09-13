@@ -1,6 +1,6 @@
 import { EntityDamageCause, GameMode, system, world } from "@minecraft/server";
 import type { FeatureDefinition } from "../../core/features.ts";
-import { createCreeperHandler } from "./blast.js";
+import { createCreeperHandler } from "./blast.ts";
 
 /**
  * Cancels every vanilla creeper explosion and replaces it with a cosmetic blast that damages and knocks back

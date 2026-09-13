@@ -2,7 +2,7 @@
 // smithing-table use, never loads server-ui and never scans or converts ordinary entities.
 import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from "vitest";
-import { resetState } from "../../../src/features/rbow-ore/main.js";
+import { resetState } from "../../../src/features/rbow-ore/main.ts";
 import {
   addPlayer,
   dimensions,
@@ -16,7 +16,7 @@ import {
 import { boot } from "./helpers.ts";
 
 const featureDir = new URL("../../../src/features/rbow-ore/", import.meta.url);
-const featureSources = ["index.ts", "main.js", "rules.js", "legacy_drops.js", "legacy_drop_logic.js"];
+const featureSources = ["index.ts", "main.ts", "rules.ts", "legacy_drops.ts", "legacy_drop_logic.ts"];
 
 let warn: MockInstance<typeof console.warn>;
 

@@ -80,12 +80,12 @@ class MorpherAssets(unittest.TestCase):
    with Image.open(RP/f'textures/ui/pets/{name}.png') as im:self.assertEqual(im.width,im.height)
  def test_book_and_settings_commands_are_distinct(self):
   s=(BP/'scripts/main.js').read_text()
-  self.assertIn("reg('book'",s);self.assertIn("reg('settings'",s);self.assertIn("p=>morpher.open(p)",s)
+  self.assertRegex(s,r'reg\(["\']book["\']');self.assertRegex(s,r'reg\(["\']settings["\']');self.assertRegex(s,r'\(?p\)?\s*=>\s*morpher\.open\(p\)')
  def test_core_transform_module_never_edits_inventory_or_camera(self):
   s=(BP/'scripts/appearance.js').read_text()
   for method in ['.setEquipment(','.setItem(','.addItem(','.teleport(','.setCamera(','.addEffect(','.spawnEntity(']:self.assertNotIn(method,s)
  def test_legacy_human_remains_a_compatibility_alias_not_a_button(self):
-  s=(BP/'scripts/morpher.js').read_text();self.assertIn("label:'Player'",s);self.assertNotIn("label:'Human'",s)
+  s=(BP/'scripts/morpher.js').read_text();self.assertRegex(s,r'label:\s*["\']Player["\']');self.assertNotRegex(s,r'label:\s*["\']Human["\']')
  def test_all_current_pack_ids_are_retained(self):
   previous=ROOT/'baseline/0.2.1'
   for folder in ['behavior_pack','resource_pack']:

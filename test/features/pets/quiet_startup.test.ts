@@ -1,7 +1,7 @@
 // Quiet lifecycle regression tests. Mocks exercise callbacks, not a Realm or client.
 import { beforeEach, describe, expect, it } from "vitest";
-import { PETS } from "../../../src/features/pets/catalog.generated.js";
-import { registerPetCommands, registerPetItems } from "../../../src/features/pets/main.js";
+import { PETS } from "../../../src/features/pets/catalog.generated.ts";
+import { registerPetCommands, registerPetItems } from "../../../src/features/pets/main.ts";
 import { leavePlayer, players, reset, system, ticks, world } from "../../mocks/minecraft-server.ts";
 import { ui } from "../../mocks/minecraft-server-ui.ts";
 import { command, petPlayer, start, text, withLogs } from "./helpers.ts";

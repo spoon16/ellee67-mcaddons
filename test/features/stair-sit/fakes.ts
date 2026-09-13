@@ -1,6 +1,7 @@
 // Small deterministic test doubles ported from the upstream stair-sitting tests. They are NOT the Minecraft
 // engine: blocks are a map, rays only look straight down at full-block surfaces, and seats record what the
-// scripts asked of them. The seats and targets modules are untyped JavaScript, so these doubles stay loose too.
+// scripts asked of them. The seats and targets modules take the engine types, so tests hand these doubles over
+// through the mock's `engine()` cast.
 
 export interface Vector3 {
   x: number;

@@ -5,7 +5,7 @@ import {
   FRONT,
   gestureComplete,
   highTreadPoint,
-} from "../../../src/features/stair-sit/stairs.js";
+} from "../../../src/features/stair-sit/stairs.ts";
 import { reset } from "../../mocks/minecraft-server.ts";
 
 const p = { x: 10, y: 64, z: -12 };

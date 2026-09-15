@@ -1,13 +1,14 @@
-"""Draws the pack icons for the packs that have no artwork of their own (Stair Sitting, Creeper Mod) as 32x32
-pixel art and saves them at 256x256:
+"""Writes the pack icons that npm run codegen does not: Stair Sitting is 32x32 pixel art drawn here (an oak stair
+in profile on a grass strip under a sky), Creeper Mod is the ElleeDog artwork in tools/art/sources/ resized. Both
+are saved at 256x256:
 
     uv run --project tools/codegen/pets --frozen python tools/art/pack_icons.py
-
-Stair Sitting: an oak stair in profile on a grass strip under a sky. Creeper Mod: a blast star over green ground.
 """
 from pathlib import Path
 
 from PIL import Image
+
+SOURCES = Path("tools/art/sources")
 
 GRID = 32
 ICONS = {
@@ -76,31 +77,15 @@ def stair_sit():
 
 
 def creeper_mod():
-    img = canvas()
-    ground(img, 26)
-    # A blast star: eight rays around a bright core, edged in orange, with a little smoke.
-    cx, cy = 15, 13
-    for d in range(1, 11):
-        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-            x, y = cx + dx * d, cy + dy * d
-            name = "blast_edge" if d > 8 else "blast"
-            rect(img, x, y, x, y, name)
-        if d <= 7:
-            for dx, dy in [(1, 1), (-1, 1), (1, -1), (-1, -1)]:
-                x, y = cx + dx * d, cy + dy * d
-                name = "blast_edge" if d > 5 else "blast"
-                rect(img, x, y, x, y, name)
-    rect(img, cx - 3, cy - 3, cx + 3, cy + 3, "blast")
-    rect(img, cx - 2, cy - 2, cx + 2, cy + 2, "blast_core")
-    rect(img, cx - 1, cy - 1, cx + 1, cy + 1, "blast_core")
-    for x, y in [(4, 4), (5, 4), (4, 5), (26, 5), (27, 5), (27, 6)]:
-        rect(img, x, y, x, y, "smoke")
-    return img
+    # The supplied artwork, kept at its original size next to this script; only the resize is generated.
+    return Image.open(SOURCES / "creeper_mod.webp").convert("RGBA")
 
 
 for name, targets in ICONS.items():
     image = globals()[name]()
+    # Pixel art is scaled with nearest neighbour so its edges stay crisp; artwork is resampled.
+    resample = Image.NEAREST if image.width == GRID else Image.LANCZOS
     for target in targets:
         target.parent.mkdir(parents=True, exist_ok=True)
-        image.resize((256, 256), Image.NEAREST).save(target)
+        image.resize((256, 256), resample).save(target)
         print(f"wrote {target}")

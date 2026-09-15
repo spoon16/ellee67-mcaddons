@@ -75,8 +75,9 @@ marks them and the manifests `linguist-generated` so GitHub folds them in diffs.
    change cannot churn the repo.
 4. **Manifests.** `tools/manifests.ts` rewrites all nine manifests from `packs.json`.
 
-Not part of `npm run codegen`: the Stair Sitting and Creeper Mod pack icons are 32x32 pixel art drawn
-by `tools/art/pack_icons.py` and saved at 256x256. Rerun it by hand after changing the drawing:
+Not part of `npm run codegen`: `tools/art/pack_icons.py` writes the Stair Sitting icon (32x32 pixel art
+drawn in the script) and the Creeper Mod icon (the artwork in `tools/art/sources/creeper_mod.webp`,
+resized), both at 256x256. Rerun it by hand after changing the drawing or the source file:
 
 ```bash
 uv run --project tools/codegen/pets --frozen python tools/art/pack_icons.py

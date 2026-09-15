@@ -2,6 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { unzipSync } from "fflate";
+import { PNG } from "pngjs";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { buildPacks } from "../../tools/build.ts";
 import { readStrictJson } from "../../tools/lib/json.ts";
@@ -112,6 +113,28 @@ describe("built packs", () => {
       const bundle = bundleOf(pack.id);
       expect(bundle, pack.id).not.toContain("elleedog67:");
       for (const name of foreign[pack.id] ?? []) expect(bundle, `${pack.id} carries ${name}`).not.toContain(name);
+    }
+  });
+
+  it("ship a pack icon that is opaque and visibly drawn, not a blank square", () => {
+    // The game shows icons at about 48 px, where a pale drawing reads as no icon at all; the Creeper Mod icon
+    // was exactly that. Require some contrast from every icon and full artwork from the ones that have it.
+    for (const pack of loadPacks()) {
+      const png = PNG.sync.read(fs.readFileSync(path.join(distDir(pack.id), "pack_icon.png")));
+      const luminance: number[] = [];
+      const colors = new Set<number>();
+      for (let i = 0; i < png.data.length; i += 4) {
+        const r = png.data[i] as number;
+        const g = png.data[i + 1] as number;
+        const b = png.data[i + 2] as number;
+        expect(png.data[i + 3], `${pack.id} has a transparent pixel`).toBe(255);
+        luminance.push(0.299 * r + 0.587 * g + 0.114 * b);
+        colors.add((r << 16) | (g << 8) | b);
+      }
+      const mean = luminance.reduce((sum, value) => sum + value, 0) / luminance.length;
+      const spread = Math.sqrt(luminance.reduce((sum, value) => sum + (value - mean) ** 2, 0) / luminance.length);
+      expect(spread, `${pack.id} icon is nearly uniform`).toBeGreaterThan(30);
+      if (pack.feature !== "stair-sit") expect(colors.size, `${pack.id} icon is not artwork`).toBeGreaterThan(1000);
     }
   });
 

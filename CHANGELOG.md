@@ -1,8 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.3.1
 
-Quieter in the game, cheaper per tick, and a few real bugs closed.
+Quieter in the game, cheaper per tick, a few real bugs closed, and a Creeper Mod icon you can see.
+
+- Creeper Mod's pack icon is the ElleeDog artwork (`tools/art/sources/creeper_mod.webp`, resized by
+  `tools/art/pack_icons.py`). The drawn blast star looked blank at the size the pack list shows.
+  A pack icon is cached per version, which is why this ships as a release rather than a patch on
+  `main`.
 
 - Chat: no feature speaks unprompted any more. Stair Sitting's join hint and its two action-bar
   texts are gone, a Sit button press or crouch gesture that is refused says nothing (the reason is

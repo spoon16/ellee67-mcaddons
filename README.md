@@ -25,15 +25,21 @@ Do this on the iPad. Use a **copy** of your world, not the real one.
 1. **Back up first.** Settings → Game → **Export** the world.
 2. Get the file **ElleeDog67_x.x.x.mcaddon** from the newest GitHub Release.
 3. **Tap the file.** Minecraft opens and says **Import Complete**.
-4. Open the world's settings. Tap **Behavior Packs**.
-5. Turn on the packs you want. **Do it in this order:**
-   1. 🌈 **ElleeDog 67 Rbow Ore**
-   2. 🐾 **ElleeDog 67 Pets** (always after Rbow Ore)
-   3. 👁️ **Ender Mod**, 📕 **Redstone Guide**, 🪑 **Stair Sitting**, 💥 **Creeper Mod** (any order)
-6. Tap **Resource Packs**. Check that **Pets Resources** is **above** **Rbow Ore Resources**.
-   If not, move it up.
-7. Turn **off** any other pack that changes the player or Endermen. Two packs cannot both do that.
-8. **Play** the world. Leave and come back once if a pack seems missing.
+4. Open the world's settings. Tap **Behavior Packs**. Turn on all six ElleeDog 67 packs.
+   **Any order is fine.** Their order never matters.
+5. Tap **Resource Packs**. Four ElleeDog 67 packs turned on by themselves. **One rule:**
+   **Pets Resources must be above Rbow Ore Resources.** Drag it up if it is not.
+
+   A good list, top to bottom:
+   1. 🐾 ElleeDog 67 Pets Resources
+   2. 🪑 ElleeDog 67 Stair Sitting Resources
+   3. 📕 ElleeDog 67 Redstone Guide Resources
+   4. 🌈 ElleeDog 67 Rbow Ore Resources
+
+   Why: Pets and Rbow Ore both draw the Rbow armor. The higher pack wins. Pets must win, or a pet
+   wears armor wrong.
+6. Turn **off** any other pack that changes the player or Endermen. Two packs cannot both do that.
+7. **Play** the world. Leave and come back once if a pack seems missing.
 
 You do not need cheats. Any packs can be on at the same time. You can skip any you do not want.
 

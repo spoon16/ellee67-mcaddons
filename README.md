@@ -70,7 +70,7 @@ src/core/                     feature registry, pack probes, commands, the book 
 src/features/<id>/            each feature's scripts; index.ts is its entry point
 test/                         vitest suites and the engine mock
 tools/                        build, validate, package, manifests, version bump, codegen
-docs/                         architecture, feature pages, testing, releasing, codegen
+docs/                         architecture, feature pages, testing, releasing, codegen, cloud environment
 ```
 
 Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) first, then
@@ -78,6 +78,11 @@ Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) first, then
 Rbow Ore packs and the Enderman override are generated; they are committed and regenerated with
 `npm run codegen`, which needs [uv](https://docs.astral.sh/uv/). See
 [docs/CODEGEN.md](docs/CODEGEN.md).
+
+Sessions in [Claude Code on the web](https://code.claude.com/docs/en/claude-code-on-the-web) get
+this toolchain from a `SessionStart` hook in `.claude/`, which installs Node 24, the npm packages
+and the pinned Python side before the session starts. What that hook does, and the network settings
+the environment needs, are in [docs/CLOUD_ENVIRONMENT.md](docs/CLOUD_ENVIRONMENT.md).
 
 ## Not in this version
 

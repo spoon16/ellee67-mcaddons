@@ -38,11 +38,22 @@ old one otherwise. Add a `CHANGELOG.md` entry before bumping.
    | Stair Sitting | ElleeDog 67 Stair Sitting | ElleeDog 67 Stair Sitting Resources |
    | Creeper Mod | ElleeDog 67 Creeper Mod | nothing (scripts only) |
 
-5. Check the order. The game orders dependencies itself, so there are only two rules:
-   - "ElleeDog 67 Pets Resources" stays above "ElleeDog 67 Rbow Ore Resources" (both define the
-     Rbow armor and spear attachables; the pet-aware versions must win).
-   - Any other pack that replaces the player or Endermen goes below the ElleeDog packs, or is
-     removed. Two packs cannot both replace `minecraft:player` or `minecraft:enderman`.
+5. Check the order. Drag the lists to read, top to bottom:
+
+   | Behavior Packs | Resource Packs |
+   |---|---|
+   | ElleeDog 67 Pets | ElleeDog 67 Pets Resources |
+   | ElleeDog 67 Rbow Ore | ElleeDog 67 Rbow Ore Resources |
+   | ElleeDog 67 Ender Mod | ElleeDog 67 Redstone Guide Resources |
+   | ElleeDog 67 Redstone Guide | ElleeDog 67 Stair Sitting Resources |
+   | ElleeDog 67 Stair Sitting | |
+   | ElleeDog 67 Creeper Mod | |
+
+   Behavior pack order never matters (Pets and Rbow Ore ship an identical player override). On the
+   resource side one line matters: "ElleeDog 67 Pets Resources" stays above "ElleeDog 67 Rbow Ore
+   Resources" (both define the Rbow armor and spear attachables; the pet-aware versions must win).
+   Any other pack that replaces the player or Endermen goes below the ElleeDog packs, or is
+   removed: two packs cannot both replace `minecraft:player` or `minecraft:enderman`.
 6. Leave and reopen the world. Each active feature announces itself in the Content Log
    (`[ElleeDog 67] <id> loaded`) and its commands exist: `/pet:book`, `/sit:help`,
    `/elleedog:ender_protect list`.

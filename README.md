@@ -1,95 +1,127 @@
 # ElleeDog 67
 
-One Minecraft Bedrock add-on: six features, ten packs, one `.mcaddon`. Every feature is its own
-behavior pack (plus a resource pack where it needs client files) with its own scripts. Activating a
-pack in the world settings is what turns the feature on; deactivating it turns the feature off.
-There is no central pack, no controller and no in-game switch.
+Your Minecraft add-on. Six features. Each one is its own pack.
+Turn a pack **on** in your world to get the feature. Turn it **off** to remove it.
 
-| Pack | What it turns on | Type | Comes with |
+Claude Code does the coding. You tell it what to build, then you test it in the game.
+
+## The six packs
+
+| | Pack | What it does | Turns on with it |
 |---|---|---|---|
-| ElleeDog 67 Pets | Pets: become Carter, Mochi or Casper with the Pet Morpher book, with fitted armor and mouth-carried tools | behavior | ElleeDog 67 Pets Resources |
-| ElleeDog 67 Pets Resources | pet models, animations and fitted armor | resource | |
-| ElleeDog 67 Rbow Ore | Rbow Ore: rainbow ore, ingots, tools, armor and a spear | behavior | ElleeDog 67 Rbow Ore Resources |
-| ElleeDog 67 Rbow Ore Resources | Rbow ore, item and armor art | resource | |
-| ElleeDog 67 Ender Mod | Ender Mod: Endermen cannot move blocks in protected builds (`/elleedog:ender_protect`) | behavior | |
-| ElleeDog 67 Redstone Guide | Redstone Guide: craft a book (1 redstone + 1 leather) that explains redstone components, recipes and builds | behavior | ElleeDog 67 Redstone Guide Resources |
-| ElleeDog 67 Redstone Guide Resources | the guide book art | resource | |
-| ElleeDog 67 Stair Sitting | Stair Sitting: sit on stairs with the Sit button, a crouch gesture or `/sit:down` | behavior | ElleeDog 67 Stair Sitting Resources |
-| ElleeDog 67 Stair Sitting Resources | the invisible seat and Sit prompt | resource | |
-| ElleeDog 67 Creeper Mod | Creeper Mod: creeper blasts hurt players only; blocks and other mobs are safe | behavior | |
+| 🐾 | **ElleeDog 67 Pets** | Become Carter, Mochi or Casper. Use the Pet Morpher book. | ElleeDog 67 Pets Resources |
+| 🌈 | **ElleeDog 67 Rbow Ore** | Rainbow ore underground. Smelt it. Make tools, armor and a spear. | ElleeDog 67 Rbow Ore Resources |
+| 👁️ | **ElleeDog 67 Ender Mod** | Endermen cannot steal blocks from your builds. | nothing else |
+| 📕 | **ElleeDog 67 Redstone Guide** | Craft a book that teaches redstone. | ElleeDog 67 Redstone Guide Resources |
+| 🪑 | **ElleeDog 67 Stair Sitting** | Sit on any stair. | ElleeDog 67 Stair Sitting Resources |
+| 💥 | **ElleeDog 67 Creeper Mod** | Creeper blasts hurt players only. Blocks and animals are safe. | nothing else |
 
-**Status: the packs boot cleanly in Bedrock Dedicated Server (`npm run test:engine`) but have not
-been played on a real device yet.** Everything else is checked by tests against an engine mock and
-by pack validation. The manual checklist is in [docs/TESTING.md](docs/TESTING.md).
+A "Resources" pack holds the pictures and models. It turns on by itself. You never pick it.
 
-## Play it
+## Put it in a world
 
-1. Download `ElleeDog67_<version>.mcaddon` from the latest GitHub Release (or the CI artifact) and
-   open it with Minecraft. One import brings in all ten packs.
-2. Edit a copy of your world. Under Behavior Packs, activate the features you want: "ElleeDog 67
-   Pets", "ElleeDog 67 Rbow Ore", "ElleeDog 67 Ender Mod", "ElleeDog 67 Redstone Guide",
-   "ElleeDog 67 Stair Sitting", "ElleeDog 67 Creeper Mod". A pack that has a resource pack pulls it
-   in on its own.
-3. Two ordering rules: keep "ElleeDog 67 Pets Resources" above "ElleeDog 67 Rbow Ore Resources",
-   and put any other pack that replaces the player or Endermen below the ElleeDog packs, or remove
-   it. Everything else can be in any order.
-4. In game, each feature brings its own commands: `/pet:book` gives you the Pet Morpher, `/sit:help`
-   lists the sitting controls, `/elleedog:ender_protect` protects a build. None of them needs
-   cheats.
+Do this on the iPad. Use a **copy** of your world, not the real one.
 
-Import, activation and how to move a world from earlier versions:
-[docs/RELEASING.md](docs/RELEASING.md). What each feature does and its commands:
-[docs/FEATURES.md](docs/FEATURES.md).
+1. **Back up first.** Settings → Game → **Export** the world.
+2. Get the file **ElleeDog67_x.x.x.mcaddon** from the newest GitHub Release.
+3. **Tap the file.** Minecraft opens and says **Import Complete**.
+4. Open the world's settings. Tap **Behavior Packs**.
+5. Turn on the packs you want. **Do it in this order:**
+   1. 🌈 **ElleeDog 67 Rbow Ore**
+   2. 🐾 **ElleeDog 67 Pets** (always after Rbow Ore)
+   3. 👁️ **Ender Mod**, 📕 **Redstone Guide**, 🪑 **Stair Sitting**, 💥 **Creeper Mod** (any order)
+6. Tap **Resource Packs**. Check that **Pets Resources** is **above** **Rbow Ore Resources**.
+   If not, move it up.
+7. Turn **off** any other pack that changes the player or Endermen. Two packs cannot both do that.
+8. **Play** the world. Leave and come back once if a pack seems missing.
 
-## Develop it
+You do not need cheats. Any packs can be on at the same time. You can skip any you do not want.
 
-You need [Node.js](https://nodejs.org) 24 or newer. Open the folder in VS Code and accept the
-recommended extensions; `.vscode/settings.json` points every pack JSON file at Mojang's schemas
-(`@minecraft/bedrock-schemas`) for validation and completion, and Blockception's extension adds
-Molang and lang support. `CLAUDE.md` is the short guide for Claude Code sessions.
+## Commands
 
-```bash
-npm install
-npm run build       # dist/<pack>/ for all ten packs, one script bundle per behavior pack, validation
-npm run package     # dist/ElleeDog67_<version>.mcaddon and SHA256SUMS.txt
-npm test            # unit tests plus a real build of the packs
-npm run check       # types and lint
-npm run test:engine # boots the packs in Bedrock Dedicated Server (downloads it once into .bds/)
-npm run test:gametest # GameTests with simulated players inside that server
-npm run manifests   # rewrite every manifest.json from packs.json
-```
+Type these in chat. Start with `/`.
 
-Where things are:
+### 🐾 Pets
 
-```
-packs.json                    the ten packs: ids, titles, uuids, script modules, dependencies (manifests are generated from it)
-behavior_packs/elleedog67_*/  one behavior pack per feature (pets, rbow_ore, ender_mod, redstone_guide, stair_sit, creeper_mod)
-resource_packs/elleedog67_*/  one resource pack per feature that needs one
-src/packs/<id>.ts             each behavior pack's script entry: runs its feature
-src/core/                     the tiny shared runtime bundled into every pack: runFeature, FeatureContext, log
-src/features/<id>/            each feature's scripts; index.ts exports its definition
-test/                         vitest suites and the engine mock
-tools/                        build, validate, package, manifests, version bump, codegen, the headless server harness
-docs/                         architecture, feature pages, testing, releasing, codegen, cloud environment, ecosystem
-```
+| Type this | What happens |
+|---|---|
+| `/pet:book` | You get the **Pet Morpher** book. Hold it and use it to pick a pet. |
+| `/pet:form carter` | Become Carter. Also `mochi`, `casper`, or `player` to be you again. |
+| `/pet:menu` | Open the pet menu without the book. |
+| `/pet:armor fitted` | Armor fits your pet. `native` shows normal armor. `auto` goes back to normal. |
+| `/pet:gear fitted` | Tools go in your pet's mouth. `native` holds them the normal way. |
+| `/pet:view paws` | See paws in first person. `native` shows hands. |
 
-Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) first, then
-[docs/ADDING_A_FEATURE.md](docs/ADDING_A_FEATURE.md) when you want to add something. The Pets and
-Rbow Ore packs and the Enderman override are generated; they are committed and regenerated with
-`npm run codegen`, which needs [uv](https://docs.astral.sh/uv/). See
-[docs/CODEGEN.md](docs/CODEGEN.md).
+Your pet comes back when you rejoin. No command needed.
 
-Sessions in [Claude Code on the web](https://code.claude.com/docs/en/claude-code-on-the-web) get
-this toolchain from a `SessionStart` hook in `.claude/`, which installs Node 24, the npm packages
-and the pinned Python side before the session starts. What that hook does, and the network settings
-the environment needs, are in [docs/CLOUD_ENVIRONMENT.md](docs/CLOUD_ENVIRONMENT.md).
-[docs/ECOSYSTEM.md](docs/ECOSYSTEM.md) evaluates the community and Mojang tooling against this
-repository's own, and records the headless Bedrock Dedicated Server runs that led to
-`npm run test:engine`.
+### 🪑 Stair Sitting
 
-## Not in this version
+| Type this | What happens |
+|---|---|
+| `/sit:down` | Sit on the stair you are looking at. |
+| `/sit:stand` | Stand up. |
+| `/sit:help` | Shows all the sitting controls. |
 
-- No local "deploy to my PC's Minecraft folder" script; the `.mcaddon` is the delivery path.
+You can also sit with **empty hands**: look at a stair and press **Sit**.
+Or crouch, then stop crouching, while looking at the stair.
+
+### 👁️ Ender Mod
+
+You must be an **operator** for these.
+
+| Type this | What happens |
+|---|---|
+| `/elleedog:ender_protect pos1` | Marks corner 1. Stand at one corner of your build. |
+| `/elleedog:ender_protect pos2` | Marks corner 2. Stand at the far corner. |
+| `/elleedog:ender_protect name "My House"` | Saves the area. Endermen cannot take blocks inside it. |
+| `/elleedog:ender_protect list` | Shows your saved areas. |
+| `/elleedog:ender_protect remove "My House"` | Deletes an area. |
+
+Blocks you place are protected too, even outside a named area.
+
+### 🌈 Rbow Ore, 📕 Redstone Guide, 💥 Creeper Mod
+
+No commands. They just work.
+
+- **Rbow Ore**: dig down in **new** chunks. Smelt the ore. Craft with the ingots.
+- **Redstone Guide**: craft it with **1 redstone + 1 leather**. Use it to read.
+- **Creeper Mod**: creepers still go bang, but only players get hurt.
+
+## Change the add-on
+
+Claude Code writes the code for you. Here is how to work with it.
+
+1. Go to **claude.ai/code**. Open the repo **spoon16/ellee67-mcaddons**.
+2. Start a new session. It sets itself up. Wait for it to say it is ready.
+3. **Say what you want.** Be specific. Good examples:
+   - "Add a `/sit:wave` command that makes the player wave."
+   - "Make Mochi's paws bigger."
+   - "The creeper blast is too strong. Make it half as strong."
+4. Ask it to **check its work**. Say: **"Run the full check and the engine tests."**
+   That runs the tests and starts a real Minecraft server to try the packs.
+5. When it says everything passed, say: **"Merge to main."**
+6. Ask for a release: **"Make release 0.3.0."** It bumps the version and makes the file.
+   A new file only replaces the old one in your world if the number is **higher**.
+7. Download the new **.mcaddon** from GitHub Releases. Import it. Play.
+
+If something looks wrong in the game:
+
+- Turn on the **Content Log** (Settings → Creator).
+- Take a screenshot of the red lines.
+- Show Claude the screenshot and say what you did.
+
+## If you get stuck
+
+- **A pack is missing in the game**: leave the world and open it again.
+- **Two packs fight**: turn off other player or Enderman packs.
+- **A pet command does nothing**: the Pets pack is off. Turn it on.
+- **Nothing helps**: ask Claude and paste the Content Log.
+
+## More reading
+
+- What each pack does in detail: [docs/FEATURES.md](docs/FEATURES.md)
+- Install, update and move old worlds: [docs/RELEASING.md](docs/RELEASING.md)
+- For coders and for Claude: [docs/DEVELOPING.md](docs/DEVELOPING.md) and [CLAUDE.md](CLAUDE.md)
 
 ## License
 

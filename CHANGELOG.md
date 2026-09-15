@@ -25,6 +25,8 @@ scripts, and activating the pack is the only switch.
   unit tests too.
 - The manual artwork script `tools/art/manual_book.py` went with the book; `tools/art/pack_icons.py`
   draws the Stair Sitting and Creeper Mod pack icons.
+- The README is now the owner's guide (packs, order, commands, working through Claude Code);
+  the developer reference moved to `docs/DEVELOPING.md`.
 - `npm run test:gametest` runs GameTests with simulated players inside the server: `/pet:book`
   gives the Morpher, `/sit:down` seats a player on a stair, a creeper blast hurts only the player.
   The test pack lives in `tools/bds/gametest/` and is never shipped.

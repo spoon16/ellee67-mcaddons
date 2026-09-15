@@ -2,7 +2,7 @@
 # Provisions a Claude Code on the web container so it matches CI: Node from .nvmrc,
 # the npm dependencies, and the Python toolchain the Pets/Rbow compiler needs.
 #
-# Local checkouts are left alone: set up those by hand, as README.md describes.
+# Local checkouts are left alone: set up those by hand, as docs/DEVELOPING.md describes.
 # Every step is idempotent, so re-running on resume, clear or compact is cheap.
 set -euo pipefail
 

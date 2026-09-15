@@ -8,7 +8,7 @@ repository provisions for itself, and the few settings that have to be chosen in
 the environment is created.
 
 Nothing here changes a local checkout. On your own machine you install the toolchain once, the way
-[README.md](../README.md) describes; the setup below only runs in the cloud.
+[DEVELOPING.md](DEVELOPING.md) describes; the setup below only runs in the cloud.
 
 ## What the base image gives you, and what this project needs
 

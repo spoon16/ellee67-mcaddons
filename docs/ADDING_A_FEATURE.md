@@ -123,7 +123,7 @@ runtime toggle and no shared core. Two engine rules follow from that and shape t
 ## 6. Docs and release notes
 
 - Add a row to the tables in [FEATURES.md](FEATURES.md), to the packs table in
-  [ARCHITECTURE.md](ARCHITECTURE.md) and in the README, and to the install table in
+  [ARCHITECTURE.md](ARCHITECTURE.md), [DEVELOPING.md](DEVELOPING.md) and the README, and to the install table in
   [RELEASING.md](RELEASING.md).
 - Write `docs/features/<id>.md` (packs, commands, identifiers, what deactivating means, known
   limits, manual checks) and add its activation step to [TESTING.md](TESTING.md).

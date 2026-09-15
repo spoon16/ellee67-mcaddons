@@ -86,6 +86,7 @@ Both rules are enforced by `test/mocks/minecraft-server.ts` and proven by `npm r
 
 | Question | Read |
 |---|---|
+| Toolchain, commands and the folder layout | `docs/DEVELOPING.md` |
 | How the packs, scripts and build fit together | `docs/ARCHITECTURE.md` |
 | Adding a feature or a pack | `docs/ADDING_A_FEATURE.md` |
 | What a feature does and its commands | `docs/FEATURES.md`, `docs/features/<id>.md` |

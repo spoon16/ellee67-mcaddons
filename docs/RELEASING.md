@@ -8,13 +8,19 @@ on an iPad.
 
 ```bash
 npm run bump -- 0.3.0     # updates package.json and all ten manifests, commits, tags v0.3.0
-git push --follow-tags
+git push --follow-tags     # from your own machine
 ```
 
 `npm run bump` runs `npm version`, whose `version` hook regenerates every `manifest.json` from
 `packs.json` with the new version (header, modules and dependency versions) and stages the pack
 directories. The Release workflow checks that the tag matches `package.json`, builds, tests,
 packages and uploads the `.mcaddon` and `SHA256SUMS.txt`.
+
+From Claude Code the tag cannot be pushed (its git access allows branches only), so the release
+is: `npm run bump -- 0.3.0`, `git push origin main`, then **run the Release workflow on `main`**
+(Actions, Release, "Run workflow"; a session can start it with its Actions tool). The manual run
+tags the commit at the `package.json` version itself and publishes. It refuses if that tag already
+exists, so a rerun needs a new bump.
 
 Every build that ships must carry a higher version than the last one anyone imported: Minecraft
 replaces an already imported pack only when the incoming version is higher, and silently keeps the

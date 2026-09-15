@@ -1,8 +1,12 @@
 name: Release
 
+# Two ways in: push a v* tag, or run the workflow by hand on main. A manual run tags the commit it was started on at
+# the package.json version, with the workflow's own token, and publishes in the same job: a tag pushed by
+# GITHUB_TOKEN never starts another workflow, and Claude Code sessions may push branches but not tags.
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,12 +26,28 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run package
+      - name: Version from package.json
+        id: version
+        run: echo "tag=v$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
       - name: Tag matches package.json version
+        if: github.event_name == 'push'
         run: |
-          version="$(node -p "require('./package.json').version")"
-          test "v$version" = "${GITHUB_REF_NAME}" || { echo "tag ${GITHUB_REF_NAME} does not match package.json $version"; exit 1; }
+          test "${{ steps.version.outputs.tag }}" = "${GITHUB_REF_NAME}" || {
+            echo "tag ${GITHUB_REF_NAME} does not match package.json ${{ steps.version.outputs.tag }}"; exit 1; }
+      - name: Tag this commit
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          tag="${{ steps.version.outputs.tag }}"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null; then
+            echo "$tag already exists; bump package.json first (npm run bump -- x.y.z)"; exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "$tag"
+          git push origin "refs/tags/$tag"
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version.outputs.tag }}
           files: |
             dist/*.mcaddon
             dist/SHA256SUMS.txt

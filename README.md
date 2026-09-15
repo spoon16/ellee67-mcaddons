@@ -109,8 +109,9 @@ Claude Code writes the code for you. Here is how to work with it.
 4. Ask it to **check its work**. Say: **"Run the full check and the engine tests."**
    That runs the tests and starts a real Minecraft server to try the packs.
 5. When it says everything passed, say: **"Merge to main."**
-6. Ask for a release: **"Make release 0.3.0."** It bumps the version and makes the file.
-   A new file only replaces the old one in your world if the number is **higher**.
+6. Ask for a release: **"Make release 0.3.0."** It bumps the version, pushes, and starts the
+   **Release** job on GitHub, which makes the file. A new file only replaces the old one in your
+   world if the number is **higher**.
 7. Download the new **.mcaddon** from GitHub Releases. Import it. Play.
 
 If something looks wrong in the game:

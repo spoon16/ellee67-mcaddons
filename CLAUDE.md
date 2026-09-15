@@ -78,7 +78,9 @@ Both rules are enforced by `test/mocks/minecraft-server.ts` and proven by `npm r
   scripts: a simulated player is invisible to every other script module, so a test can only drive
   the feature it is bundled with.
 - Commit messages explain why; `CHANGELOG.md` gets a line under the next version; a release is
-  `npm run bump -- x.y.z` (bumps every manifest and tags), never a hand-edited version.
+  `npm run bump -- x.y.z` (bumps every manifest and tags), never a hand-edited version. A cloud
+  session cannot push the tag (branches only), so after `git push origin main` start the Release
+  workflow on `main` (workflow_dispatch); it tags and publishes itself.
 - Docs live next to the code they describe: `docs/features/<id>.md` per feature, `docs/TESTING.md`
   for the manual checklist, `docs/RELEASING.md` for install and migration.
 

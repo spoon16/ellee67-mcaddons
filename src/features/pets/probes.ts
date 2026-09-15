@@ -1,4 +1,7 @@
 /** Explicitly requested stationary test props. Not substitutes for the player. */
+// `/pet:probe` spawns two still entities in front of the player, a plain cube and the selected pet model, so the
+// model can be looked at from every side without a second player. `/pet:cleanup` removes them; they also expire
+// on their own. Each prop remembers who spawned it, so players only ever clean up their own.
 import type { Entity, Player, Vector3 } from "@minecraft/server";
 import type { DimensionLike, Pet, PlayerLike } from "./core.ts";
 
@@ -31,14 +34,17 @@ export interface ProbeRecord {
   location: Vector3;
 }
 
+/** Two spots 3.5 blocks ahead of the player, one block to the left and right of where they are looking. */
 export function positionsFor(player: ProbeSubject): [Vector3, Vector3] {
   const p = player.location;
   const v = player.getViewDirection();
+  // Only the horizontal part of the view direction matters; looking straight up or down gives no "ahead".
   const length = Math.hypot(v.x, v.z);
   if (!Number.isFinite(length) || length < 0.05) {
     throw new Error("Look horizontally across open, level ground, then retry /pet:probe.");
   }
   const forward = { x: v.x / length, z: v.z / length };
+  // A quarter turn of "forward" gives "right".
   const right = { x: -forward.z, z: forward.x };
   const beside = (side: number): Vector3 => ({
     x: p.x + forward.x * 3.5 + right.x * 1.0 * side,
@@ -48,6 +54,7 @@ export function positionsFor(player: ProbeSubject): [Vector3, Vector3] {
   return [beside(-1), beside(1)];
 }
 
+/** Removes this player's props, current and legacy types, from every dimension; errors are collected, not thrown. */
 export function cleanupProbes(world: ProbeWorld, playerId: string): { removed: number; errors: string[] } {
   let removed = 0;
   const errors: string[] = [];
@@ -98,6 +105,7 @@ export function spawnProbes(world: ProbeWorld, player: ProbeSubject, pet: Pet): 
       }
     }
   }
+  // One pair per player: the previous pair goes before the new one appears.
   const clean = cleanupProbes(world, player.id);
   if (clean.errors.length) throw new Error(`Could not safely clear the old probe pair: ${clean.errors.join("; ")}`);
   const plan: Array<[string, Vector3]> = [
@@ -113,11 +121,13 @@ export function spawnProbes(world: ProbeWorld, player: ProbeSubject, pet: Pet): 
       entity.setDynamicProperty(OWNER_KEY, player.id);
       entity.nameTag = i === 0 ? "Pets R8 cube" : `${pet.display_name} - static test model`;
       if (i === 1) entity.setProperty("pet:model_id", pet.wire_id);
+      // Face the player: their yaw plus a half turn.
       entity.setRotation({ x: 0, y: player.getRotation().y + 180 });
       records.push({ id: entity.id, type, location });
     });
     return records;
   } catch (error) {
+    // Either both props exist or neither does.
     for (const e of made) {
       try {
         e.remove();

@@ -1,3 +1,7 @@
+// Pets: the engine glue. At startup it registers every `pet:` command and the Pet Morpher item component; after
+// world load it restores each player's saved form (on join, respawn and dimension change) and runs a small loop
+// that keeps seat alignment and tool glint in step with what the player is doing. The rules live in the other
+// modules; this file turns commands and events into calls to them and reports the outcome in chat.
 import {
   CommandPermissionLevel,
   type CustomCommandParameter,
@@ -76,7 +80,9 @@ interface MenuAction {
 
 /** One generation per player session; a deferred check for a stale generation does nothing. */
 const sessions = createSessionGuard();
+/** Players with the settings menu open, so a second `/pet:settings` cannot stack a form on top of the first. */
 const menus = new Set<string>();
+/** The equipment slots the inventory snapshot captures, by the names it reports them under. */
 const slots: Readonly<Record<string, EquipmentSlot>> = {
   head: EquipmentSlot.Head,
   chest: EquipmentSlot.Chest,
@@ -84,7 +90,9 @@ const slots: Readonly<Record<string, EquipmentSlot>> = {
   feet: EquipmentSlot.Feet,
   offhand: EquipmentSlot.Offhand,
 };
+// The pets modules log on their own rather than through featureLog: the Pets compiler packages them without src/core.
 const log = (text: string): void => console.warn(`[ElleeDog 67 Pets ${BUILD}] ${text}`);
+/** Every error ends here: logged, remembered for `/pet:check`, and shown to the player when there is one. */
 function fail(player: Player | undefined, error: unknown): void {
   const text = error instanceof Error ? error.message : String(error);
   log(text);
@@ -93,6 +101,10 @@ function fail(player: Player | undefined, error: unknown): void {
     safeMessage(player, `ERROR: ${text}`);
   }
 }
+/**
+ * Two lines: the first is a translation key that only turns into words when the matching resource pack is active,
+ * so what the player sees on screen tells them whether their packs match.
+ */
 function clientcheck(player: Player): void {
   player.sendMessage({ translate: "pet.diag.rp_052" });
   safeMessage(
@@ -105,6 +117,10 @@ const morpher = createMorpherMenu({
   reportError: fail,
   wait: (t) => new Promise((resolve) => system.runTimeout(resolve, t)),
 });
+/**
+ * Changes the player's form. Property writes are deferred by the engine, so the result is read back two ticks
+ * later: if the values did not stick, the packs are probably mismatched and the player is told so.
+ */
 function select(player: Player, form: string): void {
   morpher.close(player.id);
   const generation = sessions.next(player.id);
@@ -137,6 +153,7 @@ function select(player: Player, form: string): void {
     }
   }, 2);
 }
+/** The same read-back check for a single setting: confirm in chat two ticks later, or report the failure. */
 function verify(player: Player, key: string, value: PropertyValue, message: string): void {
   const generation = sessions.peek(player.id);
   system.runTimeout(() => {
@@ -149,9 +166,12 @@ function verify(player: Player, key: string, value: PropertyValue, message: stri
     }
   }, 2);
 }
+/** In the human form every pet toggle must show as off; re-applying the appearance enforces that. */
 function playerDefaults(player: Player): void {
   if (preferredForm(player) === "human") restoreAppearance(player);
 }
+// The setting commands below all follow one shape: save the choice, keep a human player neutral, then verify.
+// The expected value depends on the form, because a human player always renders native whatever is saved.
 function view(player: Player, value: string): void {
   applyView(player, value);
   playerDefaults(player);
@@ -241,6 +261,7 @@ function listForms(player: Player): void {
     `Available forms: player; ${PETS.map((p) => `${p.id} (${p.display_name}, rig ${p.rig})`).join("; ")}`,
   );
 }
+/** Runs one part of a diagnostic and records its error instead of throwing, so one bad read cannot hide the rest. */
 function checkedSection<T>(
   read: () => T,
 ): { status: "ok"; value: T } | { status: "read_error"; value: null; error: string } {
@@ -254,6 +275,7 @@ function check(player: Player): void {
   const { lines } = checkLines(player, system.currentTick);
   safeMessage(player, lines.join("\n"));
 }
+/** `/pet:diagnose`: everything the server knows about this player's pet state, as one JSON report. */
 function diagnose(player: Player): void {
   // Missing properties and read exceptions are retained, not discarded by JSON.stringify.
   const health = inspectProperties(player);
@@ -304,8 +326,10 @@ async function settingsMenu(player: Player): Promise<void> {
   const id = player.id;
   menus.add(id);
   try {
+    // Up to three tries: the engine answers UserBusy while another screen is still closing.
     for (let attempt = 0; attempt < 3; attempt++) {
       if (!isPlayer(player)) return;
+      // Labels show the current value, so the list is rebuilt on every attempt rather than once.
       const actions: MenuAction[] = [
         { label: "Client resources: V52 / 0.5.2", icon: "textures/ui/pet_diag_052", run: () => clientcheck(player) },
         { label: "Player", run: () => select(player, "human") },
@@ -347,6 +371,7 @@ async function settingsMenu(player: Player): Promise<void> {
         }
         return;
       }
+      // The button index is the index into `actions`, which is why the two are built as one list.
       const action = response.selection === undefined ? undefined : actions[response.selection];
       action?.run();
       return;
@@ -357,6 +382,10 @@ async function settingsMenu(player: Player): Promise<void> {
     menus.delete(id);
   }
 }
+/**
+ * Restores the saved form for a player who just joined, respawned or changed dimension. A player can still be
+ * loading at that moment, so a failure is retried a few times half a second apart before it is given up on.
+ */
 function restore(player: Player, attempt = 0, generation?: number): void {
   if (!isPlayer(player)) return;
   const id = player.id;
@@ -375,6 +404,7 @@ function restore(player: Player, attempt = 0, generation?: number): void {
     fail(undefined, error);
   }
 }
+/** `/pet:snapshot` and `/pet:compare`: a way to prove in the game that changing form touches no items. */
 function snapshot(player: Player): void {
   const text = JSON.stringify(captureInventory(player, slots));
   if (text.length > 12000) throw new Error("Test inventory too large for snapshot.");
@@ -397,6 +427,10 @@ function cleanup(player: Player): void {
   safeMessage(player, `Removed ${r.removed} of your loaded test props.`);
   if (r.errors.length) throw new Error(r.errors.join("; "));
 }
+/**
+ * Wraps a handler as a command callback: players only, run `delay` ticks later (a command callback itself is
+ * read-only), and any error goes through `fail` so the player hears about it.
+ */
 function selfCommand(handler: CommandAction, delay = 1): CommandCallback {
   return (origin, ...args) => {
     const player = origin.sourceEntity;
@@ -421,6 +455,7 @@ interface PetCommand {
   /** Ticks before the handler runs; menus wait longer so the command UI has closed. */
   delay?: number;
 }
+// Two small builders for the parameter lists: an enum parameter (a fixed word list) and an integer.
 const en = (name: string): CustomCommandParameter => ({ name: `pet:${name}`, type: CustomCommandParamType.Enum });
 const integer = (name: string): CustomCommandParameter => ({ name, type: CustomCommandParamType.Integer });
 /** Every `pet:` command. Data rather than calls so one bad entry cannot take the rest down. */
@@ -514,6 +549,7 @@ const COMMANDS: readonly PetCommand[] = [
     name: "probe",
     description: "Spawn a temporary stationary version of your selected pet",
     handler: (p) => {
+      // A human player gets the first pet in the catalog, so the command always has something to show.
       const form = preferredForm(p) === "human" ? (PETS[0]?.id ?? "human") : preferredForm(p);
       const pet = MODEL_BY_ID[form];
       if (!pet) throw new Error(`No pet model is registered for ${form}.`);
@@ -541,7 +577,11 @@ const COMMANDS: readonly PetCommand[] = [
     },
   },
 ];
-/** Runs during `system.beforeEvents.startup` with the engine's command registry. */
+/**
+ * Runs during `system.beforeEvents.startup` with the engine's command registry.
+ * Enums go first because commands refer to them; each registration sits in its own try so one bad entry is logged
+ * and the rest still register.
+ */
 export function registerPetCommands(r: CommandRegistry): void {
   const enums: Array<[string, string[]]> = [
     ["pet:form_choice", ["player", ...PETS.map((p) => p.id), "human"]],
@@ -576,6 +616,7 @@ export function registerPetCommands(r: CommandRegistry): void {
 /** Runs during `system.beforeEvents.startup` with the engine's item component registry. */
 export function registerPetItems(itemRegistry: ItemRegistry): void {
   try {
+    // Using the book in the air or on a block both open the menu, on the next tick since item callbacks are read-only.
     const open = (e: ItemComponentUseEvent | ItemComponentUseOnEvent) => system.run(() => morpher.open(e.source));
     itemRegistry.registerCustomComponent(MORPHER_COMPONENT, { onUse: open, onUseOn: open });
   } catch (error) {
@@ -590,6 +631,7 @@ export function restoreAll(): void {
     fail(undefined, error);
   }
 }
+/** Forgets everything remembered about a player who left. */
 function closeSessions(id: string): void {
   sessions.remove(id);
   menus.delete(id);
@@ -604,6 +646,7 @@ function refreshQuietly(player: Player, key: string, refresh: (player: Player) =
   const warning = `${key}:${player.id}`;
   try {
     refresh(player);
+    // A pass that works again clears the memory, so the next failure is reported afresh.
     loopWarnings.delete(warning);
   } catch (error) {
     if (loopWarnings.has(warning)) return;
@@ -637,6 +680,7 @@ function resetState(): void {
 
 export function startPets(ctx: FeatureContext): void {
   resetState();
+  // Each of these events is read-only or too early to write, so the restore is scheduled for the next tick.
   ctx.on(world.afterEvents.playerSpawn, (e) =>
     system.run(() => {
       morpher.close(e.player.id);
@@ -653,6 +697,7 @@ export function startPets(ctx: FeatureContext): void {
       restore(e.player);
     }),
   );
+  // One second after load the players already in the world are restored; the delay lets their data finish loading.
   ctx.after(20, restoreAll);
   ctx.every(LOOP_TICKS, refreshLoop);
 }

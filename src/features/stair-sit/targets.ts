@@ -1,3 +1,8 @@
+// The Sit button. On touch screens and controllers Minecraft shows a "Sit" prompt when the player looks at a
+// rideable entity, but the seat entity only exists once someone is sitting. So this module parks a second
+// invisible entity, `sit:target`, on every free stair near a player. Tapping one is caught in index.ts and turned
+// into a real sit; the target itself cannot be ridden. Targets are shared between nearby players, capped in
+// number, re-checked against their stair every pass, and removed as soon as nobody could use them.
 import type { Dimension, Entity, Player, Vector3 } from "@minecraft/server";
 import { loadedDimensions } from "../../core/dimensions.ts";
 import { CONFIG } from "./config.ts";
@@ -29,9 +34,17 @@ for (let x = -RADIUS; x <= RADIUS; x++)
     for (let z = -RADIUS; z <= RADIUS; z++) {
       if (Math.hypot(x, y, z) <= MAX_OFFSET_DISTANCE) OFFSETS.push({ x, y, z });
     }
+// Nearest first, so the per-player cap keeps the closest stairs when a room has more than it allows.
 OFFSETS.sort((a, b) => a.x * a.x + a.y * a.y + a.z * a.z - b.x * b.x - b.y * b.y - b.z * b.z);
 
-/** Prefer the chair just vacated, then discover nearest-first as before. */
+/** 0.1 blocks, squared: a target nudged further than this off its stair's centre is stale and gets replaced. */
+const MAX_TARGET_DRIFT_SQUARED = 0.01;
+
+/**
+ * Prefer the chair just vacated, then discover nearest-first as before.
+ * A generator (`function*`) hands out one position at a time with `yield`, so the caller can stop early once it
+ * has enough candidates instead of building the whole list.
+ */
 function* discoveryPositions(center: Vector3, preferred: Vector3 | undefined): Generator<Vector3> {
   if (preferred) yield preferred;
   for (const offset of OFFSETS) {
@@ -72,7 +85,9 @@ export class InteractionTargets {
   readonly seats: SeatManager;
   byBlock = new Map<string, TargetRecord>();
   byEntity = new Map<string, TargetRecord>();
+  /** Stair key -> the tick until which that stair gets no target (after a click that was not a sit). */
   suppressed = new Map<string, number>();
+  /** After `/sit:clear`, no target is made until this tick. */
   pausedUntil = -1;
   /** Bumped whenever the world around a standing player may have changed: a block placed or broken, a seat taken. */
   generation = 0;
@@ -124,6 +139,7 @@ export class InteractionTargets {
     this.pausedUntil = -1;
     this.generation = 0;
   }
+  /** Could this player sit right now? If not, no target near them is worth having. */
   canRequest(player: Player): boolean {
     try {
       const seat = this.seats.get(player.id);
@@ -145,13 +161,16 @@ export class InteractionTargets {
     removeSeat(record.entity);
     return true;
   }
+  /** Removes a stair's target and keeps it away for a while, so a target cannot keep stealing a player's clicks. */
   suppress(key: string, ticks = CONFIG.targetSuppressTicks): void {
     this.suppressed.set(key, this.system.currentTick + ticks);
     this.remove(key);
   }
+  /** A stair someone just sat on needs no prompt. */
   pruneOccupied(): void {
     for (const [key] of this.byBlock) if (this.seats.byBlock.has(key)) this.remove(key);
   }
+  /** The free, reachable stairs around one player, nearest first, up to the per-player cap. */
   candidates(player: Player, preferredStair?: StairDescription): TargetCandidate[] {
     const origin = player.location;
     const center = { x: Math.floor(origin.x), y: Math.floor(origin.y), z: Math.floor(origin.z) };
@@ -168,6 +187,7 @@ export class InteractionTargets {
         (this.suppressed.get(stair.key) ?? -1) > this.system.currentTick
       )
         continue;
+      // A seated player only gets prompts for stairs they could actually move to.
       if (own && !nearbyStair(own.stair, stair)) continue;
       if (!hasHeadroom(player.dimension, stair)) continue;
       candidates.push({ stair, dimension: player.dimension });
@@ -175,6 +195,10 @@ export class InteractionTargets {
     }
     return candidates;
   }
+  /**
+   * The periodic pass: drop stale targets, work out which stairs anyone online could sit on, remove targets that
+   * nobody wants any more and create or renew the rest.
+   */
   refresh(): void {
     const tick = this.system.currentTick;
     for (const [key, until] of this.suppressed) if (until <= tick) this.suppressed.delete(key);
@@ -209,11 +233,6 @@ export class InteractionTargets {
     for (const candidate of wanted.values()) this.ensureTarget(candidate, tick);
   }
   /**
-   * Update only the acting player's neighborhood immediately after a sit/move.
-   * In particular, restore the vacated chair's button without waiting for the
-   * five-tick global discovery pass. Do NOT scan every player on every click.
-   */
-  /**
    * Whether a spawned target still stands where it should for the stair it stands for. The stair itself is
    * re-read every pass: a cached discovery can be a few ticks old, and a chair broken by a piston or flooded by
    * water must lose its prompt at once, not when the cache expires.
@@ -222,7 +241,7 @@ export class InteractionTargets {
     if (
       !valid(record.entity) ||
       record.entity.dimension.id !== record.dimension.id ||
-      distanceSquared(record.entity.location, record.anchor) > 0.01
+      distanceSquared(record.entity.location, record.anchor) > MAX_TARGET_DRIFT_SQUARED
     )
       return false;
     const actual = readStair(getBlock(record.dimension, record.stair.location));
@@ -235,6 +254,7 @@ export class InteractionTargets {
   private cachedCandidates(player: Player, tick: number): TargetCandidate[] {
     const origin = player.location;
     const own = this.seats.get(player.id);
+    // The signature is everything the scan's result depends on, joined into one string for a cheap comparison.
     const signature = [
       player.dimension.id,
       Math.floor(origin.x),
@@ -253,6 +273,11 @@ export class InteractionTargets {
     this.discovery.set(player.id, { signature, tick, candidates });
     return candidates;
   }
+  /**
+   * Update only the acting player's neighborhood immediately after a sit/move.
+   * In particular, restore the vacated chair's button without waiting for the
+   * five-tick global discovery pass. Do NOT scan every player on every click.
+   */
   refreshForPlayer(player: Player, vacatedStair?: StairDescription): void {
     this.discovery.delete(player.id);
     this.pruneOccupied();
@@ -269,11 +294,12 @@ export class InteractionTargets {
     if (tick < this.pausedUntil || this.seats.byBlock.has(key) || (this.suppressed.get(key) ?? -1) > tick) return;
     let record = this.byBlock.get(key);
     try {
+      // An existing target that no longer matches its stair is replaced rather than trusted.
       if (
         record &&
         (!valid(record.entity) ||
           record.entity.dimension.id !== dimension.id ||
-          distanceSquared(record.entity.location, record.anchor) > 0.01 ||
+          distanceSquared(record.entity.location, record.anchor) > MAX_TARGET_DRIFT_SQUARED ||
           record.stair.fingerprint !== stair.fingerprint)
       ) {
         this.remove(key);
@@ -295,6 +321,7 @@ export class InteractionTargets {
         this.byEntity.set(entity.id, record);
         entity.triggerEvent("sit:heartbeat");
       } else if (tick - record.lastHeartbeat >= CONFIG.heartbeatInterval) {
+        // Keep a wanted target alive; without heartbeats its own timer despawns it.
         record.entity.triggerEvent("sit:heartbeat");
         record.lastHeartbeat = tick;
       }
@@ -311,6 +338,7 @@ export class InteractionTargets {
       for (const key of [...this.byBlock.keys()]) if (this.remove(key)) count++;
       this.suppressed.clear();
     }
+    // Any target entity not in the records is an orphan from a crash or reload.
     for (const dimension of loadedDimensions(this.world).values()) {
       try {
         for (const entity of dimension.getEntities({ type: CONFIG.targetEntityId })) {

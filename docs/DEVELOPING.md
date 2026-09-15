@@ -39,9 +39,11 @@ tools/bds/                    Bedrock Dedicated Server harness: smoke test, Game
 docs/                         architecture, feature pages, testing, releasing, codegen, cloud environment, ecosystem
 ```
 
-Read [ARCHITECTURE.md](ARCHITECTURE.md) first, then [ADDING_A_FEATURE.md](ADDING_A_FEATURE.md)
-when you want to add something. The Pets and Rbow Ore packs and the Enderman override are
-generated; they are committed and regenerated with `npm run codegen`. See [CODEGEN.md](CODEGEN.md).
+New to programming, or to Minecraft scripting? Start with [READING_THE_CODE.md](READING_THE_CODE.md):
+the vocabulary, a reading order and the patterns every file uses. Then read
+[ARCHITECTURE.md](ARCHITECTURE.md), and [ADDING_A_FEATURE.md](ADDING_A_FEATURE.md) when you want to
+add something. The Pets and Rbow Ore packs and the Enderman override are generated; they are
+committed and regenerated with `npm run codegen`. See [CODEGEN.md](CODEGEN.md).
 
 ## Working through Claude Code
 

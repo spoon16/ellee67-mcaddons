@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Readability: every script module opens with a note on what it is for and how it connects to its
+  neighbours, the less obvious lines carry a why comment, and a few repeated distance limits are
+  named constants (`blast.ts`, `seats.ts`, `targets.ts`). Behaviour is unchanged.
+  `docs/READING_THE_CODE.md` gives a new programmer the vocabulary, a reading order and the patterns
+  the code repeats.
+
 ## 0.3.1
 
 Quieter in the game, cheaper per tick, a few real bugs closed, and a Creeper Mod icon you can see.

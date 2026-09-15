@@ -1,18 +1,27 @@
 /** Per-player preferences. No item, camera or physical entity state is changed. */
+// Each setting has two names: the entity property the renderer reads right now (`*_PROPERTY`) and the dynamic
+// property that remembers the choice across sessions (`*_PREFERENCE`). `apply` writes both; the `preferred*`
+// readers return the remembered choice with a sensible default when nothing was ever saved.
 import { DEFAULT_HAND_HEIGHT, MODEL_BY_ID } from "./catalog.generated.ts";
 import { isPlayer, type PlayerLike, preferredForm, readJsonObject } from "./core.ts";
 import { type PropertyValue, requireProperties } from "./property_health.ts";
 
+/** First-person view: the pet's paws or the ordinary player hands. */
 export const VIEW_PROPERTY = "pet:view";
 export const VIEW_PREFERENCE = "pet:first_person_view";
+/** Whether the pet animates its walk, or holds still while the player moves. */
 export const MOTION_PROPERTY = "pet:motion";
 export const MOTION_PREFERENCE = "pet:motion_enabled";
+/** How high the empty-hand paws sit in first person, in model pixels. */
 export const HAND_HEIGHT_PROPERTY = "pet:hand_height";
 export const HAND_HEIGHT_PREFERENCE = "pet:hand_height_preference";
+/** Whether held items are drawn in the pet's mouth and on its side (fitted) or as on a human (native). */
 export const GEAR_PROPERTY = "pet:gear_fit";
 export const GEAR_PREFERENCE = "pet:fitted_gear_preference";
+/** Whether armor is drawn shaped to the pet (fitted) or as on a human (native). */
 export const ARMOR_PROPERTY = "pet:armor_fit";
 export const ARMOR_PREFERENCE = "pet:fitted_armor_preference";
+/** Live nudges to fitted armor: pixels up or down, and a size factor; saved per pet in `ARMOR_FIT_TRIMS`. */
 export const ARMOR_LIFT_PROPERTY = "pet:armor_lift";
 export const ARMOR_SCALE_PROPERTY = "pet:armor_scale";
 export const ARMOR_FIT_TRIMS = "pet:armor_fit_trims";
@@ -26,6 +35,7 @@ type StoredArmorTrims = Record<string, Partial<Record<keyof ArmorFit, unknown>> 
 
 const NEUTRAL_ARMOR_FIT: ArmorFit = Object.freeze({ lift: 0, scale: 1 });
 
+/** Each pet's catalog default for the paw height, since a spaniel and a larger dog hold their paws differently. */
 export function defaultHandHeight(player: PlayerLike): number {
   return MODEL_BY_ID[preferredForm(player)]?.first_person.default_hand_height ?? DEFAULT_HAND_HEIGHT;
 }
@@ -44,6 +54,7 @@ export function preferredHandHeight(player: PlayerLike): number {
 export function preferredView(player: PlayerLike): "paws" | "native" {
   return player.getDynamicProperty(VIEW_PREFERENCE) === "native" ? "native" : "paws";
 }
+// The three booleans default to on: `!== false` treats "never saved" the same as "saved true".
 export function preferredMotion(player: PlayerLike): boolean {
   return player.getDynamicProperty(MOTION_PREFERENCE) !== false;
 }
@@ -53,6 +64,7 @@ export function preferredGear(player: PlayerLike): boolean {
 export function preferredArmor(player: PlayerLike): boolean {
   return player.getDynamicProperty(ARMOR_PREFERENCE) !== false;
 }
+/** Writes the live property and, with `persist`, the remembered one; a failed save puts the live value back. */
 function apply(player: PlayerLike, property: string, key: string, value: PropertyValue, persist: boolean): void {
   if (!isPlayer(player)) throw new Error("The player is no longer connected.");
   const before = requireProperties(player, [property])[property];
@@ -85,6 +97,7 @@ export function applyArmor(player: PlayerLike, value: unknown, persist = true): 
 export function applyHandHeight(player: PlayerLike, value: unknown, persist = true): void {
   apply(player, HAND_HEIGHT_PROPERTY, HAND_HEIGHT_PREFERENCE, validateHandHeight(value), persist);
 }
+/** Back to the pet's default: the saved preference is removed (undefined clears a dynamic property). */
 export function resetHandHeight(player: PlayerLike): void {
   const old = player.getProperty(HAND_HEIGHT_PROPERTY);
   applyHandHeight(player, defaultHandHeight(player), false);
@@ -99,6 +112,7 @@ export function resetHandHeight(player: PlayerLike): void {
     throw error;
   }
 }
+/** Puts every remembered setting back onto the live properties, for a player who has just joined. */
 export function restoreSettings(player: PlayerLike): void {
   applyView(player, preferredView(player), false);
   applyMotion(player, preferredMotion(player), false);
@@ -125,6 +139,7 @@ export function applyArmorFit(player: PlayerLike, form = preferredForm(player)):
   player.setProperty(ARMOR_SCALE_PROPERTY, fit.scale);
   return fit;
 }
+/** Changes the current pet's saved trims through `change`, applies them, and restores the old trims on failure. */
 function writeArmorFit(player: PlayerLike, change: (fit: ArmorFit) => ArmorFit | undefined): ArmorFit {
   const form = preferredForm(player);
   if (form === "human") throw new Error("Choose a pet first; armor calibration is saved per pet.");

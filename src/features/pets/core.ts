@@ -1,16 +1,29 @@
 /** Pure form/state helpers. No global entity transforms or inventory mutations. */
+// How Pets works: the vanilla player entity is replaced by one that declares extra entity properties
+// (pet:model_id, pet:view and so on). The client's render controllers read those properties and draw the chosen
+// pet instead of the player. Changing form is therefore just writing properties; the player's items, health and
+// body stay exactly as they were.
+//
+// Two kinds of property appear throughout the pets modules:
+//   entity property    written with setProperty. Declared in the player's JSON, synced to every client, and what
+//                      the renderer reads: the live look.
+//   dynamic property   written with setDynamicProperty. Free-form storage saved with the player and invisible to
+//                      the renderer: the remembered preference, restored on every join.
 import type { Dimension, Entity, EquipmentSlot, ItemStack, Player, Vector3 } from "@minecraft/server";
 import { BUILD, MAX_WIRE_ID, MODEL_BY_ID, MODEL_BY_WIRE, PETS } from "./catalog.generated.ts";
 import { type PropertyValue, requireProperties } from "./property_health.ts";
 
 export { BUILD, MAX_WIRE_ID };
+/** The entity property that picks the model: 0 is the ordinary player, otherwise a pet's `wire_id`. */
 export const FORM_PROPERTY = "pet:model_id";
+/** The saved choice, as a form name such as "carter" or "human". */
 export const PREFERENCE = "pet:preferred_form";
 export const DEBUG_PROPERTY = "pet:debug";
 export const SNAPSHOT = "pet:inventory_snapshot";
 // Read-only compatibility keys from 0.1.0-0.1.2. The pack header UUID is unchanged.
 export const LEGACY_PREFERENCE = "cav:preferred_form";
 export const LEGACY_SNAPSHOT = "cav:inventory_snapshot";
+/** Every valid form name: "human" plus each pet id from the catalog. */
 export const FORMS: readonly string[] = Object.freeze(["human", ...PETS.map((p) => p.id)]);
 
 /** One catalog entry, as the generated module declares it. */
@@ -73,6 +86,7 @@ export interface SessionGuard {
   clear(): void;
 }
 
+/** The renderer wants a number, not a name: the catalog's `wire_id` for a pet, 0 for the ordinary player. */
 export function wireId(form: string): number {
   const pet = MODEL_BY_ID[validateForm(form)];
   return pet ? pet.wire_id : 0;
@@ -80,6 +94,7 @@ export function wireId(form: string): number {
 export function formFromWire(id: unknown): string {
   return MODEL_BY_WIRE[String(id)]?.id ?? "human";
 }
+/** The name shown to players: "Player" for the human form, otherwise the pet's display name. */
 export function formLabel(form: string): string {
   return form === "human" || form === "player" ? "Player" : (MODEL_BY_ID[form]?.display_name ?? "Player");
 }
@@ -88,6 +103,7 @@ export function validateForm(value: unknown): string {
   if (typeof value !== "string" || !FORMS.includes(value)) throw new Error(`Expected one of: ${FORMS.join(", ")}.`);
   return value;
 }
+/** Versions 0.1.x saved the choice under a `cav:` key and called Carter "cavalier"; still read, never written. */
 function legacyPreferredForm(player: PlayerLike): string | undefined {
   const value = player.getDynamicProperty(LEGACY_PREFERENCE);
   if (value === "cavalier") return "carter";
@@ -106,6 +122,7 @@ export function preferredForm(player: PlayerLike): string {
 export function needsPreferenceMigration(player: PlayerLike): boolean {
   return player.getDynamicProperty(PREFERENCE) === undefined && legacyPreferredForm(player) !== undefined;
 }
+/** A live player: the right type and still in the world (a player who left mid-callback reads `isValid` false). */
 export function isPlayer(entity: Pick<Entity, "typeId" | "isValid"> | undefined): entity is Player {
   try {
     return entity?.typeId === "minecraft:player" && entity.isValid !== false;
@@ -132,6 +149,7 @@ export function applyForm(player: PlayerLike, form: string, persist = true): str
     try {
       player.setDynamicProperty(PREFERENCE, form);
     } catch (error) {
+      // Saving failed: put the live look back, so what is shown and what is remembered never disagree.
       try {
         if (previous !== undefined) player.setProperty(FORM_PROPERTY, previous);
       } catch {
@@ -143,10 +161,12 @@ export function applyForm(player: PlayerLike, form: string, persist = true): str
   return form;
 }
 
+/** Everything about one item that a form change could conceivably disturb, as plain data for comparison. */
 export function itemSummary(item: ItemLike | undefined): ItemSummary | null {
   if (!item) return null;
   const durability = item.getComponent("minecraft:durability");
   const enchantable = item.getComponent("minecraft:enchantable");
+  // Sorted so two captures of the same item compare equal whatever order the engine listed things in.
   const enchantments = (enchantable?.getEnchantments() ?? [])
     .map((e): [string, number] => [e.type.id, e.level])
     .sort((a, b) => a[0].localeCompare(b[0]));
@@ -165,7 +185,10 @@ export function itemSummary(item: ItemLike | undefined): ItemSummary | null {
   };
 }
 
-/** A read-only diagnostic comparison, not a full serialization of all native item data. */
+/**
+ * A read-only diagnostic comparison, not a full serialization of all native item data.
+ * `/pet:snapshot` captures this before a form change and `/pet:compare` proves nothing in it moved.
+ */
 export function captureInventory(
   player: PlayerLike,
   equipmentSlots: Readonly<Record<string, string>>,
@@ -182,8 +205,10 @@ export function captureInventory(
   }
   return { items, equipment };
 }
+/** The names of every slot that differs between two captures; empty means nothing changed. */
 export function compareInventory(before: InventoryCapture, after: InventoryCapture): string[] {
   const changed: string[] = [];
+  // Comparing JSON text is a cheap deep-equality check for plain data like this.
   const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
   const count = Math.max(before.items.length, after.items.length);
   for (let i = 0; i < count; i++) if (!same(before.items[i], after.items[i])) changed.push(`inventory:${i}`);
@@ -193,7 +218,12 @@ export function compareInventory(before: InventoryCapture, after: InventoryCaptu
   return changed;
 }
 
-/** Keeps deferred callbacks for a disconnected player from touching a new session. */
+/**
+ * Keeps deferred callbacks for a disconnected player from touching a new session.
+ * The problem: a check scheduled two ticks after a form change must not act on a player who left and rejoined,
+ * or who chose another form meanwhile. Each new session gets a bigger number; a deferred check remembers the
+ * number it saw and does nothing if the player's number has moved on.
+ */
 export function createSessionGuard(): SessionGuard {
   const generation = new Map<string, number>();
   let sequence = 0; // Never reuse an ID after disconnect/reconnect (ABA protection).

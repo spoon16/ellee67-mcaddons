@@ -1,3 +1,7 @@
+// Redstone Guide: a craftable book that opens in-game menus (Minecraft calls them action forms) to read from.
+// This file is the engine side: when the book is used, start a reading session for that player and walk through
+// the screens that reader.ts describes. reader.ts knows nothing about the engine; it turns a "route" (where the
+// reader is in the book) into a screen (title, body and buttons), so it can be tested without Minecraft.
 import { type Entity, type Player, system, world } from "@minecraft/server";
 import { ActionFormData, FormCancelationReason } from "@minecraft/server-ui";
 import type { FeatureDefinition } from "../../core/feature.ts";
@@ -6,8 +10,10 @@ import { entityId } from "../../core/vanilla.ts";
 import { type Bookmark, HOME, normalizeBookmark, type Route, type Screen, screenFor } from "./reader.ts";
 
 const log = featureLog("Redstone Guide");
+/** The item id from the pack's JSON, and the custom component that JSON attaches to it (registered below). */
 export const BOOK_ID = "elleedog_redstone:guide_book";
 export const COMPONENT_ID = "elleedog_redstone:open_guide";
+/** The player dynamic property that remembers the last page read, as JSON. */
 export const BOOKMARK_KEY = "elleedog_redstone:bookmark_v1";
 /** A busy UI is retried this many times, `BUSY_RETRY_TICKS` apart; a deliberate close is never retried. */
 export const BUSY_ATTEMPTS = 10;
@@ -15,11 +21,16 @@ export const BUSY_RETRY_TICKS = 4;
 /** Use events within this many ticks of an accepted one are ignored (touch double-activation, fallback duplicates). */
 export const USE_COOLDOWN_TICKS = 6;
 
-/** Open reading sessions by player id; the token tells a reader whether it still owns the session. Exported for tests. */
+/**
+ * Open reading sessions by player id; the token tells a reader whether it still owns the session. Exported for tests.
+ * The token is a fresh `{}` per session: an async reader compares it with `===` to learn whether the player has
+ * since left or started a new session, in which case it quietly stops.
+ */
 export const sessions = new Map<string, object>();
 /** Tick of each player's last accepted use. Exported for tests. */
 export const lastUse = new Map<string, number>();
 
+/** A Promise that settles after `ticks` ticks, so an async function can `await wait(1)` to pause for one tick. */
 const wait = (ticks: number) => new Promise<void>((resolve) => system.runTimeout(resolve, ticks));
 
 function isPlayer(entity: Entity | undefined): entity is Player {
@@ -37,6 +48,7 @@ function message(player: Player, text: string): void {
 function loadBookmark(player: Player): Bookmark | null {
   try {
     const raw = player.getDynamicProperty(BOOKMARK_KEY);
+    // Stored JSON is untrusted: an entry renamed since the bookmark was saved must not break the book.
     return typeof raw === "string" ? normalizeBookmark(JSON.parse(raw)) : null;
   } catch {
     return null;
@@ -51,7 +63,11 @@ function saveBookmark(player: Player, bookmark: Bookmark): void {
   }
 }
 
-/** Shows one screen and resolves to the chosen button index, or null when the player closed it or gave up. */
+/**
+ * Shows one screen and resolves to the chosen button index, or null when the player closed it or gave up.
+ * The engine answers UserBusy when another screen (the chat, say) is still open, so the form is retried a few
+ * times, a few ticks apart, before giving up with a hint.
+ */
 async function showScreen(
   player: Player,
   screen: Screen,
@@ -65,6 +81,7 @@ async function showScreen(
       if (button.icon) form.button(button.label, button.icon);
       else form.button(button.label);
     }
+    // `await` here pauses until the player taps a button or closes the form; ticks keep passing meanwhile.
     const result = await form.show(player);
     if (sessions.get(player.id) !== token) return null;
     // UserBusy means the form was never displayed; do not persist an unseen page.
@@ -80,6 +97,7 @@ async function showScreen(
   return null;
 }
 
+/** The reading loop: show the screen for the current route, follow the tapped button, repeat until Close. */
 async function readBook(player: Player, token: object): Promise<void> {
   let route: Route | null = HOME;
   let bookmark = loadBookmark(player);
@@ -94,12 +112,14 @@ async function readBook(player: Player, token: object): Promise<void> {
     });
     const button = selection === null ? undefined : screen.buttons[selection];
     if (!button) return;
+    // A button's route is where it leads; the Close button carries null, which ends the loop.
     route = button.route;
     // Yield one tick between forms so touch releases do not double-activate a page.
     if (route) await wait(1);
   }
 }
 
+/** Called for every use of the book; opens the reader unless one is already open or the use is a duplicate. */
 function requestOpen(source: Entity | undefined): void {
   if (!isPlayer(source)) return;
   const player = source;
@@ -119,6 +139,7 @@ function requestOpen(source: Entity | undefined): void {
         message(player, "Could not open the guide. Close other screens and try again.");
       })
       .finally(() => {
+        // Only the session that owns the token may end it; a newer one is left alone.
         if (sessions.get(id) === token) sessions.delete(id);
       });
   });
@@ -133,6 +154,8 @@ export const redstoneGuide: FeatureDefinition = {
   id: "redstone-guide",
   title: "Redstone Guide",
   register({ items }) {
+    // The book's JSON names this component; the engine calls these callbacks when the item is used in the air
+    // (onUse) or against a block (onUseOn, which touch controls trigger far more often).
     items.registerCustomComponent(COMPONENT_ID, {
       onUse: (event) => requestOpen(event.source),
       onUseOn: (event) => requestOpen(event.source),

@@ -1,3 +1,7 @@
+// The seat itself. A seated player is really riding an invisible `sit:seat` entity parked on the stair, so this
+// module is mostly about keeping that arrangement honest: creating and mounting it, moving it to another stair
+// while the player stays on, standing the player up somewhere safe, and checking every tick that the seat is
+// still where it should be and the stair is still a stair.
 import {
   type Block,
   type Dimension,
@@ -16,6 +20,7 @@ import { CONFIG } from "./config.ts";
 import { log } from "./log.ts";
 import { describeStair, distanceSquared, highTreadPoint, type StairDescription } from "./stairs.ts";
 
+/** Blocks a player must never be put down on when standing up: they hurt, burn, drown or trap. */
 const BAD_SUPPORT: ReadonlySet<string> = new Set<string>([
   blockId("minecraft:magma"),
   blockId("minecraft:cactus"),
@@ -33,6 +38,14 @@ const BAD_SUPPORT: ReadonlySet<string> = new Set<string>([
   blockId("minecraft:pointed_dripstone"),
 ]);
 
+// Distances are compared squared (see `distanceSquared`), so these limits are squared too.
+/** 4 blocks: a player further than this from their seat has left it, whatever the riding component says. */
+const MAX_PLAYER_DRIFT_SQUARED = 16;
+/** 0.3 blocks: a seat pushed further than this off its stair (a piston, water) is no longer that chair. */
+const MAX_SEAT_DRIFT_SQUARED = 0.09;
+/** 6 blocks: the spot a player sat down from is only reused as an exit when it is still close by. */
+const MAX_ENTRY_RETURN_SQUARED = 36;
+
 /** One seated player: the invisible carrier entity, the stair it sits on and where the player came from. */
 export interface SeatRecord {
   seat: Entity;
@@ -40,7 +53,9 @@ export interface SeatRecord {
   playerId: string;
   dimension: Dimension;
   stair: StairDescription;
+  /** Where the seat entity should be; the tick check compares against it. */
   anchor: Vector3;
+  /** Where the player stood before sitting, the preferred place to put them back. */
   entry: Vector3;
   born: number;
   transfers: number;
@@ -49,10 +64,13 @@ export interface SeatRecord {
   lastInputDelayTicks?: number;
 }
 
+/** A sit either worked (with details) or failed with a sentence fit to show the player. */
 export type SitResult =
   | { ok: true; alreadyThere?: boolean; transferred?: boolean; vacatedStair?: StairDescription }
   | { ok: false; error: string };
 
+// The helpers below all swallow engine errors and answer "no" instead: an entity that unloaded mid-call throws,
+// and a seat check must not crash the whole tick because of it.
 export function valid(entity: Entity | undefined): boolean {
   try {
     return !!entity?.isValid;
@@ -76,6 +94,7 @@ export function emptyHands(player: Player): boolean {
     return false;
   }
 }
+/** The stair description of a block, or undefined when it is not a dry, upright vanilla stair. */
 export function readStair(block: Block | undefined): StairDescription | undefined {
   try {
     if (!block || block.isWaterlogged) return undefined;
@@ -84,6 +103,7 @@ export function readStair(block: Block | undefined): StairDescription | undefine
     return undefined;
   }
 }
+/** The block under the player's crosshair, within reach. */
 export function aimedBlock(player: Player): Block | undefined {
   try {
     return player.getBlockFromViewDirection({
@@ -115,6 +135,7 @@ export function hasHeadroom(dimension: Dimension, stair: StairDescription): bool
     isAir(dimension, { x: p.x + stair.front.x, y: p.y + 1, z: p.z + stair.front.z })
   );
 }
+/** Why this player cannot sit right now, or undefined when they can. The text is shown for explicit commands. */
 export function eligible(player: Player, ownSeat?: Entity): string | undefined {
   try {
     if (!valid(player)) return "Player is not ready yet.";
@@ -123,6 +144,7 @@ export function eligible(player: Player, ownSeat?: Entity): string | undefined {
     if (player.isFlying || player.isGliding || player.isSwimming || player.isSleeping) {
       return "Land and leave swimming, flying, gliding, or sleeping before sitting.";
     }
+    // Riding their own seat is fine (that is a transfer); riding a horse or boat is not.
     const mount = ridingEntity(player);
     if (mount && mount.id !== ownSeat?.id) return "Dismount your current vehicle first.";
     if (player.isSneaking) return "Release crouch first, then use /sit:down.";
@@ -131,6 +153,7 @@ export function eligible(player: Player, ownSeat?: Entity): string | undefined {
     return "Player is not ready yet.";
   }
 }
+/** Removes a helper entity; if the engine refuses, the entity's own `sit:expire` event despawns it instead. */
 export function removeSeat(entity: Entity | undefined): void {
   if (!valid(entity) || !entity) return;
   try {
@@ -147,7 +170,11 @@ function safeSupport(block: Block | undefined): boolean {
   return !!block && !block.isAir && !block.isLiquid && !block.isWaterlogged && !BAD_SUPPORT.has(block.typeId);
 }
 
-/** Only choose integer-height, empty-body-space exits; let the engine handle the rest. */
+/**
+ * Only choose integer-height, empty-body-space exits; let the engine handle the rest.
+ * Candidates are tried in order of preference: the top of the stair, then the four sides at three heights,
+ * then where the player came from. The first one with solid ground and two clear blocks of air wins.
+ */
 export function safeExit(dimension: Dimension, stair: StairDescription, entry?: Vector3): Vector3 | undefined {
   const candidates: Vector3[] = [highTreadPoint(stair)];
   const f = stair.front;
@@ -165,7 +192,7 @@ export function safeExit(dimension: Dimension, stair: StairDescription, entry?: 
       });
     }
   }
-  if (entry && distanceSquared(entry, stair.location) < 36) candidates.push(entry);
+  if (entry && distanceSquared(entry, stair.location) < MAX_ENTRY_RETURN_SQUARED) candidates.push(entry);
   for (const candidate of candidates) {
     try {
       // Raycasting detects actual support, including stair quarters. It avoids
@@ -181,6 +208,7 @@ export function safeExit(dimension: Dimension, stair: StairDescription, entry?: 
       // claiming exact AABB support for arbitrary custom collision geometry.
       if (Math.abs(surface - Math.round(surface)) > 0.005) continue;
       const p = { x: candidate.x, y: surface + 0.01, z: candidate.z };
+      // A player is about 0.6 wide and 1.8 tall: check the four corners of that box at three heights.
       let clear = true;
       for (const dx of [-0.3, 0.3])
         for (const dz of [-0.3, 0.3]) {
@@ -215,6 +243,7 @@ export function clearTransferPath(dimension: Dimension, from: StairDescription, 
   const a = { x: from.location.x + from.local.x, z: from.location.z + from.local.z };
   const b = { x: to.location.x + to.local.x, z: to.location.z + to.local.z };
   const y = Math.max(from.location.y, to.location.y) + 1;
+  // Walk the straight line between the two seats in quarter-block steps and check the air at each step.
   const steps = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.z - a.z) * 4));
   for (let i = 0; i <= steps; i++) {
     const t = i / steps;
@@ -232,11 +261,13 @@ export function clearTransferPath(dimension: Dimension, from: StairDescription, 
 export type SeatWorld = Pick<World, "getAllPlayers" | "getDimension">;
 export type SeatClock = Pick<System, "currentTick">;
 
+/** Owns every seat. Two maps index the same records: by player (who sits) and by stair (which chairs are taken). */
 export class SeatManager {
   readonly world: SeatWorld;
   readonly system: SeatClock;
   byPlayer = new Map<string, SeatRecord>();
   byBlock = new Map<string, SeatRecord>();
+  /** Player id -> the tick until which that player may not sit again. */
   cooldowns = new Map<string, number>();
   constructor(world: SeatWorld, system: SeatClock) {
     this.world = world;
@@ -255,12 +286,17 @@ export class SeatManager {
   get(playerId: string): SeatRecord | undefined {
     return this.byPlayer.get(playerId);
   }
+  /** The player's `/sit:height` adjustment, clamped to the allowed range; anything odd reads as 0. */
   height(player: Player): number {
     const value = player.getDynamicProperty(CONFIG.heightProperty);
     return typeof value === "number" && Number.isFinite(value)
       ? Math.max(CONFIG.minHeightOffset, Math.min(CONFIG.maxHeightOffset, value))
       : 0;
   }
+  /**
+   * Seats the player on `block`. Every reason to refuse is checked first, so nothing is spawned for a request
+   * that cannot succeed; then the seat is created, the player mounted, and the record stored.
+   */
   sit(player: Player, block: Block | undefined, requireEmpty = true): SitResult {
     const failure = (error: string): SitResult => ({ ok: false, error });
     if (this.byPlayer.has(player.id)) return this.transfer(player, block, requireEmpty);
@@ -314,6 +350,7 @@ export class SeatManager {
       this.byBlock.set(stair.key, record);
       return { ok: true };
     } catch (error) {
+      // Undo whatever got done: dismount, remove the half-made seat and turn the player back the way they faced.
       try {
         seat?.getComponent("minecraft:rideable")?.ejectRiders();
       } catch {
@@ -341,13 +378,14 @@ export class SeatManager {
     const record = this.get(player.id);
     if (!record) return failure("Sit on a stair first.");
     const { seat, dimension } = record;
+    // The old seat must still be a real seat: player on it, both where the record says they are.
     if (
       !valid(player) ||
       !valid(seat) ||
       player.dimension.id !== dimension.id ||
       ridingEntity(player)?.id !== seat.id ||
-      distanceSquared(player.location, record.anchor) > 16 ||
-      distanceSquared(seat.location, record.anchor) > 0.09
+      distanceSquared(player.location, record.anchor) > MAX_PLAYER_DRIFT_SQUARED ||
+      distanceSquared(seat.location, record.anchor) > MAX_SEAT_DRIFT_SQUARED
     ) {
       return failure("Your original seat is no longer active.");
     }
@@ -379,9 +417,11 @@ export class SeatManager {
       y: stair.location.y + (record.anchor.y - record.stair.location.y),
       z: stair.location.z + stair.local.z,
     };
+    // Claim the new chair before moving, so nobody else can take it during the teleport.
     this.byBlock.set(stair.key, record);
     try {
       seat.teleport(anchor, { checkForBlocks: false, keepVelocity: false, rotation: { x: 0, y: stair.front.yaw } });
+      // Prove the move worked before believing it: the rider must still be on and the seat where it was sent.
       const riders = seat.getComponent("minecraft:rideable")?.getRiders() ?? [];
       if (!riders.some((rider) => rider.id === player.id) || distanceSquared(seat.location, anchor) > 0.01) {
         throw new Error("Carrier teleport did not preserve the rider and destination");
@@ -426,7 +466,7 @@ export class SeatManager {
         !valid(player) ||
         !valid(seat) ||
         player.dimension.id !== dimension.id ||
-        distanceSquared(player.location, attempted) > 16 ||
+        distanceSquared(player.location, attempted) > MAX_PLAYER_DRIFT_SQUARED ||
         (mount && mount.id !== seat.id)
       )
         return;
@@ -441,6 +481,10 @@ export class SeatManager {
       /* Normal tick cleanup handles an irrecoverable helper. */
     }
   }
+  /**
+   * Stands a player up: forgets the record, starts the cooldown, removes the seat and, with `reposition`, moves
+   * the player to a safe spot. Returns false when the player was not seated.
+   */
   release(playerId: string, reposition = false): boolean {
     const record = this.byPlayer.get(playerId);
     if (!record) return false;
@@ -453,7 +497,9 @@ export class SeatManager {
     const ownMount = currentMount?.id === seat.id;
     // Never pull someone back from another dimension, a teleport, or a new vehicle.
     const nearby =
-      valid(player) && player.dimension.id === dimension.id && distanceSquared(player.location, record.anchor) < 16;
+      valid(player) &&
+      player.dimension.id === dimension.id &&
+      distanceSquared(player.location, record.anchor) < MAX_PLAYER_DRIFT_SQUARED;
     if (reposition && nearby && (!currentMount || ownMount)) destination = safeExit(dimension, stair, entry);
     try {
       if (valid(seat)) seat.getComponent("minecraft:rideable")?.ejectRiders();
@@ -470,6 +516,7 @@ export class SeatManager {
     }
     return true;
   }
+  /** Every tick: stand up anyone whose seat is no longer sound, and keep the sound ones alive. */
   tick(): void {
     for (const [id, record] of this.byPlayer) {
       try {
@@ -478,10 +525,11 @@ export class SeatManager {
           this.release(id);
           continue;
         }
+        // Player or seat moved away: the player dismounted natively or something pushed the seat.
         if (
           player.dimension.id !== dimension.id ||
-          distanceSquared(seat.location, record.anchor) > 0.09 ||
-          distanceSquared(player.location, record.anchor) > 16
+          distanceSquared(seat.location, record.anchor) > MAX_SEAT_DRIFT_SQUARED ||
+          distanceSquared(player.location, record.anchor) > MAX_PLAYER_DRIFT_SQUARED
         ) {
           this.release(id);
           continue;
@@ -491,6 +539,7 @@ export class SeatManager {
           this.release(id);
           continue;
         }
+        // The chair itself changed (broken, rotated, flooded, something built above it): stand up safely.
         const actual = readStair(getBlock(dimension, stair.location));
         if (!actual || actual.fingerprint !== stair.fingerprint || !hasHeadroom(dimension, actual)) {
           this.release(id, true);
@@ -530,6 +579,7 @@ export class SeatManager {
     if (clearAll) {
       for (const id of [...this.byPlayer.keys()]) if (this.release(id, true)) removed++;
     }
+    // Any seat entity not in the records is an orphan (a crash, a reload) and goes.
     const active = new Set([...this.byPlayer.values()].map((record) => record.seat.id));
     for (const dimension of dimensions.values()) {
       try {

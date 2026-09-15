@@ -1,4 +1,6 @@
 /** Explicit, read-only integration diagnostics; no startup announcements. */
+// `/pet:rbowcheck`: are the Rbow Ore packs present, and how would the equipped items be drawn on a pet? The two
+// add-ons share nothing at runtime, so this is the only place Pets even looks for Rbow's ids.
 import { EquipmentSlot, ItemStack } from "@minecraft/server";
 import type { PlayerLike } from "./core.ts";
 import { inspectProperties, type Observation, observeProperty, type PropertyValue } from "./property_health.ts";
@@ -34,6 +36,7 @@ export function rbowReport(player: PlayerLike): RbowReport {
     Number.isInteger(count.value) &&
     count.value >= 0 &&
     count.value <= 4;
+  // Creating an ItemStack of an id proves the item exists; an unknown id throws, which reads as "not registered".
   const registrations = Object.fromEntries(
     RBOW_GEAR.map((id): [string, boolean] => {
       try {

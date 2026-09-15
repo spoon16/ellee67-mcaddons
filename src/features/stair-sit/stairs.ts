@@ -1,4 +1,8 @@
 /** Pure stair geometry helpers. No Minecraft runtime or dependency required. */
+// A stair block is described by its states: `weirdo_direction` (Bedrock's odd name for which way it faces, 0..3),
+// `upside_down_bit` (a stair on a ceiling) and `minecraft:corner` (the shape two stairs make where they meet).
+// This module turns those into something the rest of the feature can use: where to seat a player, which way
+// they should face, and where they can safely be put down when they stand up.
 import type { Vector3 } from "@minecraft/server";
 import { CONFIG } from "./config.ts";
 
@@ -6,6 +10,7 @@ import { CONFIG } from "./config.ts";
 export interface StairFront {
   readonly x: number;
   readonly z: number;
+  /** A yaw is a turn about the vertical axis, in degrees; it is what `setRotation` takes. */
   readonly yaw: number;
 }
 
@@ -30,6 +35,7 @@ export interface ArmedGesture {
   tick: number;
 }
 
+/** One entry per `weirdo_direction` value: the unit vector pointing at the tall side, and the matching yaw. */
 export const FRONT: readonly StairFront[] = Object.freeze([
   Object.freeze({ x: -1, z: 0, yaw: 90 }), // Full-height side east: face west.
   Object.freeze({ x: 1, z: 0, yaw: -90 }), // Full-height side west: face east.
@@ -38,9 +44,11 @@ export const FRONT: readonly StairFront[] = Object.freeze([
 ]);
 const CORNERS: ReadonlySet<string> = new Set(["none", "inner_left", "inner_right", "outer_left", "outer_right"]);
 
+/** One string per block position, used as a Map key: two stairs are the same chair exactly when their keys match. */
 export function blockKey(dimensionId: string, location: Vector3): string {
   return `${dimensionId}|${location.x},${location.y},${location.z}`;
 }
+/** Distance squared, which is cheaper than a distance (no square root) and compares the same way against a limit. */
 export function distanceSquared(a: Vector3, b: Vector3): number {
   return (a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2;
 }
@@ -56,14 +64,17 @@ export function describeStair(
   const direction = states.weirdo_direction;
   const upsideDown = states.upside_down_bit;
   if (typeof direction !== "number" || !Number.isInteger(direction) || direction < 0 || direction > 3) return undefined;
+  // An upside-down stair is a ceiling; nobody sits on it.
   if (upsideDown !== false && upsideDown !== 0) return undefined;
   const corner = states["minecraft:corner"] ?? "none";
   if (typeof corner !== "string" || !CORNERS.has(corner)) return undefined;
   const front = FRONT[direction];
   if (!front) return undefined;
+  // "Left" is the tall side's direction turned a quarter turn, used to shift the seat sideways for corners.
   const left = { x: front.z, z: -front.x };
   // An inner corner has only one low quadrant. Move into that quadrant.
   const lateral = corner === "inner_left" ? 0.25 : corner === "inner_right" ? -0.25 : 0;
+  // The seat sits a quarter block from the block's centre towards the tall side, on the low step.
   const local = {
     x: 0.5 + front.x * 0.25 + left.x * lateral,
     z: 0.5 + front.z * 0.25 + left.z * lateral,
@@ -95,6 +106,8 @@ export function highTreadPoint(stair: StairDescription): Vector3 {
 
 /** Deliberate crouch press/release; mounting on release avoids immediate dismount. */
 export function gestureComplete(armed: ArmedGesture | undefined, tick: number, targetKey: string | undefined): boolean {
+  // The player must still be looking at the same stair they crouched on, and the crouch must be a deliberate
+  // length: a tap is too short and a long crouch is probably sneaking about, not a request to sit.
   if (!armed || targetKey !== armed.key) return false;
   const held = tick - armed.tick;
   return held >= CONFIG.gestureMinTicks && held <= CONFIG.gestureMaxTicks;

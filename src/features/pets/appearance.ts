@@ -1,6 +1,10 @@
 /** Coordinated form transitions. Presentation only: no inventory, armor-stack or camera writes.
  * Minecraft defers setProperty. Compute the entire target from the requested form,
  * not from same-tick getProperty(model_id), and queue it in one writable callback.
+ *
+ * A form change touches a dozen properties at once (the model, the first-person view, motion, armor, gear, hand
+ * height, seat lift and the glint flags). `appearanceFor` works out all of them from the requested form and the
+ * player's saved preferences; `transitionForm` writes them together and can undo the lot if a write fails.
  */
 import { system } from "@minecraft/server";
 import { DEFAULT_HAND_HEIGHT, MODEL_BY_ID } from "./catalog.generated.ts";
@@ -43,12 +47,20 @@ export interface AppearanceTarget extends Record<string, PropertyValue> {
 }
 
 export interface TransitionOptions {
+  /** Save the form as the player's preference (a deliberate choice) or not (a restore on join). */
   persist?: boolean;
+  /** Reset the view, motion, armor and gear toggles to their defaults, as a fresh choice from the book does. */
   defaults?: boolean;
 }
 
 const RESETTABLE: readonly string[] = [VIEW_PREFERENCE, MOTION_PREFERENCE, ARMOR_PREFERENCE, GEAR_PREFERENCE];
+/**
+ * The target written for each player this tick. A property read in the same tick still returns the old value, so
+ * a second transition in one tick must roll back to what was just queued, not to what the engine reports.
+ * A WeakMap lets the engine forget the entry with the player object.
+ */
 const pending = new WeakMap<PlayerLike, { tick: number; target: AppearanceTarget }>();
+/** Players say "player"; the code says "human". */
 export function normalizeForm(form: string): string {
   return validateForm(form === "player" ? "human" : form);
 }
@@ -56,6 +68,7 @@ export function publicForm(form: string): string {
   return form === "human" ? "player" : form;
 }
 
+/** The complete set of properties for `form`, from the catalog and the player's saved preferences. */
 export function appearanceFor(player: PlayerLike, form: string, defaults = false): AppearanceTarget {
   const normalized = normalizeForm(form);
   const pet = normalized !== "human";
@@ -65,6 +78,7 @@ export function appearanceFor(player: PlayerLike, form: string, defaults = false
       ? calibrated
       : (MODEL_BY_ID[normalized]?.first_person.default_hand_height ?? DEFAULT_HAND_HEIGHT);
   const fit = armorFitFor(player, normalized);
+  // For the human form every pet-only property goes back to neutral, whatever the preferences say.
   const target: AppearanceTarget = {
     [FORM_PROPERTY]: wireId(normalized),
     [VIEW_PROPERTY]: pet ? (defaults ? "paws" : preferredView(player)) : "native",
@@ -100,6 +114,7 @@ export function transitionForm(
   if (!isPlayer(player)) throw new Error("The player is no longer connected.");
   const normalized = normalizeForm(form);
   const desired = appearanceFor(player, normalized, defaults);
+  // Reading every property first proves the player definition is the right one before anything is written.
   const current = requireProperties(player, Object.keys(desired));
   const model = current[FORM_PROPERTY];
   if (typeof model !== "number" || !Number.isInteger(model) || model < 0 || model > MAX_WIRE_ID) {
@@ -119,6 +134,7 @@ export function transitionForm(
     }
     pending.set(player, { tick: system.currentTick, target: desired });
   } catch (error) {
+    // Put back every property and preference that was captured above, then let the caller see the error.
     for (const [key, value] of Object.entries(before)) {
       try {
         player.setProperty(key, value);
@@ -137,6 +153,7 @@ export function transitionForm(
   }
   return { form: normalized, properties: desired };
 }
+/** Re-applies the saved form, for a join, respawn or dimension change; it never resets the player's toggles. */
 export function restoreAppearance(
   player: PlayerLike,
   persistMigration = false,

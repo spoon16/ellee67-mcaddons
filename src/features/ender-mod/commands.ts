@@ -1,3 +1,8 @@
+// The `/elleedog:ender_protect` command: how operators name the areas endermen must leave alone.
+// In the game: run `pos1` and `pos2` while standing on two corners, then `name "My House"`; `list` shows the saved
+// areas and `remove "My House"` deletes one. Blocks players place are protected on their own, without a command.
+// `executeProtectionCommand` is the pure part (given the store and a selection, what changes and what to say back);
+// `registerProtectionCommands` is the engine glue around it.
 import type {
   CommandPermissionLevel,
   CustomCommandOrigin,
@@ -40,6 +45,7 @@ export interface ProtectionCommandApi {
 
 /** Exact requested syntax, with one additional remove action for undoing a selection.
  * Commands execute in restricted context, so the caller must defer this function.
+ * Returns the sentence to show the player; when something is wrong it throws, and that message is shown instead.
  */
 export function executeProtectionCommand(
   store: ProtectionStore,
@@ -56,6 +62,7 @@ export function executeProtectionCommand(
   switch (action) {
     case "pos1":
     case "pos2": {
+      // Each corner is remembered per player until `name` uses both of them.
       const p: RegionCorner = { ...blockPosition(position.location), dimension: position.dimension };
       const selection = selections.get(player.id) ?? {};
       selection[action] = p;
@@ -89,11 +96,13 @@ export function registerProtectionCommands(
   selections: Map<string, ProtectionSelection>,
   onChanged: () => void,
 ): void {
+  // An enum parameter gives the player a fixed list of words that the game can auto-complete.
   registry.registerEnum(ACTION_ENUM, ACTIONS);
   registry.registerCommand(
     {
       name: COMMAND_NAME,
       description: 'Protect builds: pos1, pos2, name "name", list; remove "name" to undo.',
+      // Operators only: this command changes what is saved in the world.
       permissionLevel: api.CommandPermissionLevel.Admin,
       cheatsRequired: false,
       mandatoryParameters: [{ name: ACTION_ENUM, type: api.CustomCommandParamType.Enum }],
@@ -111,11 +120,13 @@ export function registerProtectionCommands(
       const player = entity as Player;
       // Take a snapshot now rather than selecting where the player moves next tick.
       const position: CommandPosition = { location: { ...player.location }, dimension: player.dimension.id };
+      // Command callbacks are read-only, so the real work is scheduled for the next writable moment.
       api.system.run(() => {
         try {
           const store = getStore();
           if (!store) throw new Error("Protection is not initialized; check the content log and reload the world.");
           const message = executeProtectionCommand(store, selections, player, action, name, position);
+          // A new or removed area changes the answer for every enderman, so re-run the scan right away.
           if (action === "name" || action === "remove") onChanged();
           player.sendMessage(`[67 Ender Mod] ${message}`);
         } catch (error) {

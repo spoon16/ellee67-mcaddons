@@ -1,3 +1,17 @@
+// Stair Sitting: the engine glue. Minecraft has no "sit" for players, so the feature borrows riding: it spawns an
+// invisible, tiny, rideable entity (`sit:seat`) at the stair and puts the player on it, as if on a boat.
+//
+// The pieces:
+//   seats.ts    SeatManager: creates the seat entity, mounts the player, moves a seated player between stairs,
+//               stands them up, and checks every tick that the seat is still sound.
+//   targets.ts  InteractionTargets: the Sit button on touch and controllers only appears for a rideable entity,
+//               and the seat does not exist until the player sits. So a second invisible entity (`sit:target`) is
+//               placed on each free stair near a player, purely to show the prompt. Tapping it becomes a sit.
+//   stairs.ts   Pure geometry: is this block a stair, where is its seat, which way does a sitter face.
+//   this file   Three ways to sit (Sit button, crouch-release gesture, `/sit:down`), the `/sit:*` commands, and
+//               the events that stand a player up.
+// Both helper entities expire on their own unless the script keeps sending them `sit:heartbeat`, so a crash or a
+// removed pack leaves nothing behind.
 import {
   CommandPermissionLevel,
   type CustomCommandOrigin,
@@ -17,11 +31,13 @@ import { aimedBlock, emptyHands, readStair, ridingEntity, SeatManager, type SitR
 import { gestureComplete, type StairDescription } from "./stairs.ts";
 import { InteractionTargets } from "./targets.ts";
 
+/** One player's crouch gesture: whether they were crouching last tick, and the stair they aimed at when it began. */
 interface GestureState {
   crouching: boolean;
   armed?: { key: string; tick: number };
 }
 
+/** A sit that has been asked for but not yet done, as plain values that stay valid after the event ends. */
 interface StairRequest {
   position: { x: number; y: number; z: number };
   dimensionId: string;
@@ -29,6 +45,7 @@ interface StairRequest {
   requestedTick: number;
 }
 
+/** A pending sit for one player; `sourceSeat` is the seat they were on when asked, so a stale request is ignored. */
 interface PendingToken {
   sourceSeat: string | undefined;
   request: StairRequest;
@@ -70,6 +87,7 @@ function showResult(player: Player, result: SitResult, explicit: boolean): void 
   if (!result.alreadyThere) targets.refreshForPlayer(player, result.vacatedStair);
 }
 
+/** Runs a command's action on the next tick, since a command callback itself may not change the world. */
 function deferred(player: Player, action: () => void): void {
   // World mutations are illegal inside before-event and command callbacks.
   // Capture values before scheduling; never retain mutable event objects.
@@ -88,6 +106,9 @@ function deferred(player: Player, action: () => void): void {
  * Coalesce an input burst to its LATEST selected stair, without a time cooldown.
  * Exactly one non-recursive ASAP callback per pending player/session. Mutations
  * still happen outside before-events' restricted execution, never inline.
+ *
+ * In plain words: a touch screen can send several taps in one tick. Rather than sit, stand and sit again, the
+ * first tap schedules the work and every later tap in the same burst just replaces which stair it will use.
  */
 function queueStair(player: Player, stair: StairDescription): void {
   const playerId = player.id;
@@ -108,6 +129,7 @@ function queueStair(player: Player, stair: StairDescription): void {
   // 0 = current tick / earliest available writable callback, not a timed wait.
   // Do not self-schedule here: zero-delay recursive callbacks can starve a tick.
   system.runTimeout(() => {
+    // A newer token means this request was superseded; the newer callback will handle it.
     if (pending.get(playerId) !== token) return;
     pending.delete(playerId);
     const { position, dimensionId, fingerprint, requestedTick } = token.request;
@@ -129,6 +151,11 @@ function queueStair(player: Player, stair: StairDescription): void {
   }, 0);
 }
 
+/**
+ * Runs every tick. Drives the seat checks and the crouch-release gesture, which is a small state machine per
+ * player: crouch starts while aiming at a stair -> "armed"; crouch ends while still aiming at the same stair,
+ * after a deliberate hold -> sit. Anything else disarms it.
+ */
 function tickGestures(): void {
   manager.tick();
   const online = new Set<string>();
@@ -140,6 +167,7 @@ function tickGestures(): void {
       const previous = gestures.get(player.id);
       const state: GestureState = { crouching, armed: previous?.armed };
       gestures.set(player.id, state);
+      // Gesture turned off, already seated, just stood up, or riding something else: nothing to arm.
       if (
         player.getDynamicProperty(CONFIG.gestureProperty) === false ||
         manager.get(player.id) ||
@@ -150,9 +178,11 @@ function tickGestures(): void {
         continue;
       }
       if (crouching && !previous?.crouching) {
+        // Crouch just began: remember the stair being looked at, if any.
         const stair = emptyHands(player) ? readStair(aimedBlock(player)) : undefined;
         state.armed = stair ? { key: stair.key, tick } : undefined;
       } else if (!crouching && previous?.crouching) {
+        // Crouch just ended: sit if it was the gesture, then disarm either way.
         const block = aimedBlock(player);
         const stair = emptyHands(player) ? readStair(block) : undefined;
         if (gestureComplete(previous.armed, tick, stair?.key))
@@ -172,6 +202,7 @@ function tickGestures(): void {
   for (const id of gestures.keys()) if (!online.has(id)) gestures.delete(id);
 }
 
+/** Drops everything remembered about a player who left, died or respawned. */
 function forgetPlayer(playerId: string): void {
   manager.forget(playerId);
   targets.forget(playerId);
@@ -181,6 +212,7 @@ function forgetPlayer(playerId: string): void {
 }
 
 function registerCommands({ commands }: FeatureRegistries): void {
+  // A small helper so each command below is one call: it checks the sender is a player and defers the action.
   function register(
     name: string,
     description: string,
@@ -229,6 +261,7 @@ function registerCommands({ commands }: FeatureRegistries): void {
       ].join("\n"),
     );
   });
+  // Per-player settings are dynamic properties on the player, so they survive leaving and rejoining.
   register(
     "sit:gesture",
     "Enable or disable crouch-release sitting for yourself",
@@ -304,13 +337,16 @@ function registerCommands({ commands }: FeatureRegistries): void {
 }
 
 function subscribe(ctx: FeatureContext): void {
+  // Using a stair block directly: the Use button on a computer, or a tap on touch when no target is present.
   ctx.on(world.beforeEvents.playerInteractWithBlock, (event) => {
     try {
+      // `isFirstEvent`: one click can fire for both hands; only the first counts.
       if (event.cancel || !event.isFirstEvent || event.itemStack) return;
       const player = event.player;
       if (player.isSneaking || !emptyHands(player) || manager.onCooldown(player.id)) return;
       const stair = readStair(event.block);
       if (!stair) return;
+      // Cancel so the engine does not also treat the click as, say, opening a door behind the stair.
       event.cancel = true;
       queueStair(player, stair);
     } catch (error) {
@@ -318,6 +354,7 @@ function subscribe(ctx: FeatureContext): void {
     }
   });
 
+  // Using one of the helper entities: the Sit button lands here.
   ctx.on(world.beforeEvents.playerInteractWithEntity, (event) => {
     try {
       if (event.cancel) return;
@@ -350,6 +387,7 @@ function subscribe(ctx: FeatureContext): void {
     }
   });
 
+  // Hitting a target (mining or attacking through it) means the player wants the block, not a seat.
   ctx.on(world.afterEvents.entityHitEntity, ({ hitEntity }) => {
     try {
       if (hitEntity.typeId !== CONFIG.targetEntityId) return;
@@ -364,6 +402,8 @@ function subscribe(ctx: FeatureContext): void {
   ctx.on(world.afterEvents.playerPlaceBlock, () => targets.blocksChanged());
   ctx.on(world.afterEvents.playerBreakBlock, () => targets.blocksChanged());
 
+  // Three timers at three speeds: every tick for gestures and seat checks, often for target discovery, and
+  // rarely for the sweep that removes orphaned helpers.
   ctx.every(CONFIG.tickInterval, tickGestures);
   ctx.every(CONFIG.targetScanInterval, () => targets.refresh());
   ctx.every(CONFIG.sweepInterval, () => {
@@ -373,6 +413,7 @@ function subscribe(ctx: FeatureContext): void {
 
   ctx.on(world.afterEvents.playerLeave, ({ playerId }) => forgetPlayer(playerId));
   ctx.on(world.afterEvents.playerSpawn, ({ player }) => forgetPlayer(player.id));
+  // Dying or taking damage stands the player up, so a seated player is never stuck in a fight.
   ctx.on(world.afterEvents.entityDie, ({ deadEntity }) => {
     if (deadEntity.typeId === entityId("minecraft:player")) {
       pending.delete(deadEntity.id);
@@ -402,6 +443,7 @@ export const stairSit: FeatureDefinition = {
   start(ctx) {
     resetState();
     subscribe(ctx);
+    // Helpers left over from before the reload are removed once the world is writable.
     system.run(() => {
       manager.sweep();
       targets.sweep();

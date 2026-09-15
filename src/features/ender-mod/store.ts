@@ -1,3 +1,6 @@
+// Ender Mod's memory: which blocks players placed and which areas operators named, saved in the world's dynamic
+// properties so they survive leaving and rejoining. Everything is checked on the way in, and any storage error
+// sets `faulted`, after which the gate denies every enderman: a broken memory must never mean "nothing protected".
 import type { Vector3 } from "@minecraft/server";
 import {
   type ProtectionBox,
@@ -12,11 +15,13 @@ import {
 
 const REGION_KEY = "elleedog:ender_regions_v1";
 const MAX_REGIONS = 64;
+/** How many sections stay decoded in memory; past this the least recently used one is dropped. */
 const CACHE_LIMIT = 512;
 
 /** The inclusive world-coordinate box around a section's placed blocks, or null for an empty section. */
 type SectionBounds = { minX: number; maxX: number; minY: number; maxY: number; minZ: number; maxZ: number } | null;
 
+/** The reverse of `sectionAddress`: unpacks n = y * 256 + z * 16 + x back into world coordinates. */
 function decodeLocal(n: number, sx: number, sy: number, sz: number): { x: number; y: number; z: number } {
   return { x: sx * 16 + (n % 16), y: sy * 16 + Math.floor(n / 256), z: sz * 16 + (Math.floor(n / 16) % 16) };
 }
@@ -44,20 +49,23 @@ export interface ProtectionStorage {
   setDynamicProperty(identifier: string, value: string | undefined): void;
 }
 
-/** World-backed storage. One JSON integer set per 16×16×16 section, under 21 KB
+/** World-backed storage. One JSON integer set per 16x16x16 section, under 21 KB
  * even when every block is tracked. Writes are immediate; cache eviction loses no data.
  */
 export class ProtectionStore {
   readonly storage: ProtectionStorage;
+  /** Section key -> its decoded placed-block set, kept in least-recently-used order (see `loadSection`). */
   cache = new Map<string, Set<number>>();
   /** Per-section bounds, computed once per loaded section and dropped when the section changes. */
   private bounds = new Map<string, SectionBounds>();
   regions: Region[] = [];
+  /** Set the first time storage misbehaves; every later read and write refuses until the world is reloaded. */
   faulted = false;
   /** Moves on with every placement, removal and region change, so readers can tell a stale answer from a fresh one. */
   generation = 0;
   constructor(storage: ProtectionStorage) {
     this.storage = storage;
+    // Regions load once, here. A damaged record is refused as a whole rather than partly trusted.
     try {
       const raw = storage.getDynamicProperty(REGION_KEY);
       if (raw !== undefined) {
@@ -115,6 +123,7 @@ export class ProtectionStore {
       this.faulted = true;
       throw error;
     }
+    // Memory is updated only after the write succeeded, so the two can never disagree.
     this.regions = next;
     this.generation++;
   }
@@ -124,10 +133,13 @@ export class ProtectionStore {
       throw new Error("Protection storage needs attention; stealing is suspended. See the content log.");
   }
 
+  /** The placed-block set for one section, decoded from storage the first time and cached afterwards. */
   loadSection(key: string): Set<number> {
     this.ensureHealthy();
     const cached = this.cache.get(key);
     if (cached) {
+      // A Map remembers insertion order. Deleting and re-adding moves this key to the end, so the first key is
+      // always the least recently used one and the eviction below can simply drop it.
       this.cache.delete(key);
       this.cache.set(key, cached);
       return cached;
@@ -159,9 +171,11 @@ export class ProtectionStore {
     const { key, local } = sectionAddress(dimension, position);
     const set = this.loadSection(key);
     if (set.has(local) === placed) return;
+    // Change a copy, write it, then swap it in: a failed write leaves the cache still matching storage.
     const next = new Set(set);
     if (placed) next.add(local);
     else next.delete(local);
+    // An empty section is removed from storage entirely (undefined clears a dynamic property).
     const encoded = next.size ? JSON.stringify([...next].sort((a, b) => a - b)) : undefined;
     try {
       this.storage.setDynamicProperty(key, encoded);
@@ -179,9 +193,11 @@ export class ProtectionStore {
     return this.loadSection(key).has(local);
   }
 
+  /** Does anything protected, a named area or a placed block, lie inside `box`? */
   intersects(dimension: string, box: ProtectionBox): boolean {
     this.ensureHealthy();
     if (this.regions.some((r) => regionIntersects(r, dimension, box))) return true;
+    // Visit only the sections the box overlaps; a 9x8x9 box touches at most eight of them.
     for (let sx = Math.floor(box.minX / 16); sx <= Math.floor(box.maxX / 16); sx++) {
       for (let sy = Math.floor(box.minY / 16); sy <= Math.floor(box.maxY / 16); sy++) {
         for (let sz = Math.floor(box.minZ / 16); sz <= Math.floor(box.maxZ / 16); sz++) {

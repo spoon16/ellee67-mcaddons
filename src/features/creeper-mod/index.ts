@@ -1,3 +1,5 @@
+// Creeper Mod: the feature definition. It needs exactly one event, the explosion before-event. The handler and
+// the damage maths live in blast.ts, built so they can be unit-tested without Minecraft.
 import { EntityDamageCause, GameMode, system, world } from "@minecraft/server";
 import type { FeatureDefinition } from "../../core/feature.ts";
 import { featureLog } from "../../core/log.ts";
@@ -13,6 +15,7 @@ export const creeperMod: FeatureDefinition = {
   id: "creeper-mod",
   title: "Creeper Mod",
   start(ctx) {
+    // The real engine objects go in here; the tests hand createCreeperHandler fakes instead.
     ctx.on(
       world.beforeEvents.explosion,
       createCreeperHandler({ world, system, GameMode, EntityDamageCause, warn: (text) => log.warn(text) }),

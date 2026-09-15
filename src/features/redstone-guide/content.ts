@@ -1,6 +1,8 @@
 // Guide data for reader.ts, read straight from guide_content.json; esbuild inlines the JSON into the bundle.
+// To change what the book says, edit guide_content.json; no TypeScript needs to change for new text.
 import guide from "./guide_content.json";
 
+/** The four chapters of the book. */
 export type Section = "basics" | "components" | "recipes" | "builds";
 
 export interface CraftingMatrix {
@@ -11,6 +13,7 @@ export interface CraftingMatrix {
   output: number;
 }
 
+/** One topic in the book: a title, the chapter and group it belongs to, and one string per reading page. */
 export interface GuideEntry {
   id: string;
   title: string;

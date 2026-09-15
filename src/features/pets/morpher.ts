@@ -1,5 +1,9 @@
 /** Reusable book item and touch-friendly, four-option menu. No writable-book UI.
  * The only inventory mutation in this module is an explicit /pet:book grant.
+ *
+ * The book is an item with a custom component (`pet:open_morpher`); using it opens a two-step menu: pick a
+ * form, read the pet's short biography, then confirm with "Become". The menu is built here; what happens when a
+ * form is picked is handed in through `select`, so this module never touches properties itself.
  */
 import { type Entity, ItemStack, type Player } from "@minecraft/server";
 import { ActionFormData, type ActionFormResponse, FormCancelationReason } from "@minecraft/server-ui";
@@ -24,6 +28,7 @@ export interface PetChoice {
 }
 export type MorpherChoice = PlayerChoice | PetChoice;
 
+/** What the menu needs from the outside: what to do on a choice, how to report an error, and how to wait. */
 export interface MorpherMenuOptions {
   select(player: Player, form: string): void;
   reportError(player: Player, error: unknown): void;
@@ -34,6 +39,7 @@ export interface MorpherMenu {
   close(id: string): void;
 }
 
+/** `/pet:book`: puts one Pet Morpher in the player's inventory, or explains why it cannot. */
 export function giveMorpher(player: PlayerLike): ItemStack {
   if (!isPlayer(player)) throw new Error("The player is no longer connected.");
   const container = player.getComponent("minecraft:inventory")?.container;
@@ -51,6 +57,7 @@ export function giveMorpher(player: PlayerLike): ItemStack {
 export function petBiography(pet: Pick<Pet, "owner" | "description">): string {
   return `Owner: ${pet.owner}\n${pet.description}`;
 }
+/** The first menu's buttons, in order: Player first, then every pet from the catalog. */
 export function morpherChoices(): MorpherChoice[] {
   return [
     { id: "human", label: "Player", icon: "textures/ui/pets/player" },
@@ -65,6 +72,7 @@ function isPlayerChoice(choice: MorpherChoice): choice is PlayerChoice {
  * leaving, changing dimensions, respawning, or choosing a form by another route.
  */
 export function createMorpherMenu({ select, reportError, wait }: MorpherMenuOptions): MorpherMenu {
+  /** Player id -> the ticket of the menu they have open; `close` drops it and any late answer is ignored. */
   const active = new Map<string, { player: Player }>();
   function close(id: string): void {
     active.delete(id);
@@ -74,7 +82,9 @@ export function createMorpherMenu({ select, reportError, wait }: MorpherMenuOpti
     const id = player.id;
     const token = { player };
     active.set(id, token);
+    // "Still valid" means the player is here and nothing has closed this menu since it opened.
     const valid = () => isPlayer(player) && active.get(id) === token;
+    // Shows a form, retrying a few times when the engine says the player is busy with another screen.
     const show = async (form: ActionFormData): Promise<ActionFormResponse | null> => {
       for (let attempt = 0; attempt < 3; attempt++) {
         if (!valid()) return null;
@@ -105,6 +115,7 @@ export function createMorpherMenu({ select, reportError, wait }: MorpherMenuOpti
           select(player, "human");
           return true;
         }
+        // Second step: the pet's biography with "Become" (button 0) and "Back" (button 1).
         const detail = new ActionFormData()
           .title(choice.label)
           .body(petBiography(choice.pet))

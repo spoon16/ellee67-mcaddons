@@ -100,6 +100,7 @@ and proven by `npm run test:engine`.
 
 | Question | Read |
 |---|---|
+| New to the code: the vocabulary, a reading order, the recurring patterns | `docs/READING_THE_CODE.md` |
 | Toolchain, commands and the folder layout | `docs/DEVELOPING.md` |
 | How the packs, scripts and build fit together | `docs/ARCHITECTURE.md` |
 | Adding a feature or a pack | `docs/ADDING_A_FEATURE.md` |

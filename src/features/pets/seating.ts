@@ -1,6 +1,10 @@
 /** Read-only mount measurement; only visual entity properties are written.
  * Never teleports/ejects riders, edits blocks, replaces gear, or changes cameras.
  * Native mount skins and third-party seat implementations still require client tests.
+ *
+ * The problem: a dog-shaped player riding a boat, a pig or a stair seat is drawn at human hip height and floats
+ * above the seat. `pet:seat_lift` tells the renderer how many model pixels to move the pet down (or up) so it
+ * sits on the surface, and `pet:seat_kind` which kind of seat it is. This module measures where that surface is.
  */
 import { type Entity, type Seat, system, type Vector3 } from "@minecraft/server";
 import { MODEL_BY_WIRE } from "./catalog.generated.ts";
@@ -43,14 +47,19 @@ interface StairCandidate {
   score: number;
 }
 
+/** The pet models are drawn at 0.9375 scale, so one block is 16 / 0.9375 model pixels rather than 16. */
 const SCALE = 0.9375;
 const PIXELS = 16 / SCALE;
+/** Per-seat-kind adjustments the player made with `/pet:seatheight`, as JSON on the player. */
 const TRIM_KEY = "pet:seat_height_trims";
+/** Player id -> the last measurement, so a still mount is not re-measured every pass. */
 const cache = new Map<string, SeatReport>();
+/** The renderer gets the kind as a number; the property is an int. */
 const KINDS: Readonly<Record<"none" | SeatKind, number>> = { none: 0, boat: 1, pig: 2, stairs: 3, other: 4 };
 const clamp = (x: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, x));
 const round = (x: number): number => Math.round(x * 10000) / 10000;
 const trims = (player: PlayerLike): Record<string, unknown> => readJsonObject(player, TRIM_KEY);
+/** The entity the player is riding, or undefined. */
 function ride(player: PlayerLike): Entity | undefined {
   try {
     return player.getComponent("minecraft:riding")?.entityRidingOn;
@@ -65,6 +74,7 @@ function seats(mount: Entity): Seat[] {
     return [];
   }
 }
+/** Finds the stair block under a custom seat entity (Stair Sitting's, say), since the entity itself has no height. */
 function stairSurface(player: PlayerLike, mount: Entity): StairCandidate | undefined {
   // Local column search only for non-native seats. Checking a nearby stair does
   // not make a standing pet sit: a live riding component is always required.
@@ -92,6 +102,7 @@ function stairSurface(player: PlayerLike, mount: Entity): StairCandidate | undef
           } catch {
             /* Unreadable state reads as a normal stair. */
           }
+          // The low step of an upright stair is half a block up; an upside-down stair's is a full block.
           const y = pos.y + (upside ? 1 : 0.5);
           const distance = Math.hypot(mount.location.x - (pos.x + 0.5), mount.location.z - (pos.z + 0.5));
           if (distance > 0.85) continue;
@@ -105,9 +116,11 @@ function stairSurface(player: PlayerLike, mount: Entity): StairCandidate | undef
       }
     }
   }
+  // The best candidate is the closest one, with a small penalty for being far above or below the mount.
   candidates.sort((a, b) => a.score - b.score);
   return candidates[0];
 }
+/** Where the surface of this mount is, by a profile per mount kind; measured by hand for boats and pigs. */
 export function supportFor(player: PlayerLike, mount: Entity | undefined): SeatSupport | null {
   if (!mount || mount.isValid === false) return null;
   const id = mount.typeId;
@@ -148,6 +161,7 @@ export function supportFor(player: PlayerLike, mount: Entity | undefined): SeatS
       };
     }
   }
+  // Anything else: trust the mount's own seat position, or its origin when it declares none.
   const seat = ss.find((s) => Number.isFinite(s.position?.y));
   return {
     ...result,
@@ -156,6 +170,7 @@ export function supportFor(player: PlayerLike, mount: Entity | undefined): SeatS
     source: seat ? "rideable seat anchor (unprofiled mount)" : "mount origin fallback",
   };
 }
+/** Surface height minus the player's height, in model pixels, plus the player's trim; clamped and rounded to 1/64. */
 export function calculateLift(surfaceY: number, playerY: number, trim = 0): number {
   if (![surfaceY, playerY, trim].every(Number.isFinite)) throw new Error("Seat measurement is not finite.");
   return Math.round(clamp((surfaceY - playerY) * PIXELS + trim, -64, 64) * 64) / 64;
@@ -182,8 +197,10 @@ export function initialSeatProperties(player: PlayerLike): { "pet:seat_lift": nu
     return empty;
   }
 }
+/** Called every other tick from main.ts: measures the seat under a mounted pet and updates the two properties. */
 export function refreshSeat(player: PlayerLike): boolean {
   if (!isPlayer(player)) return false;
+  // Only a pet form needs a lift; a human-shaped player sits correctly on their own.
   const mount = MODEL_BY_WIRE[String(player.getProperty(FORM_PROPERTY))] ? ride(player) : undefined;
   if (!mount) {
     if (player.getProperty("pet:seat_lift") !== undefined) setIfChanged(player, "pet:seat_lift", 0);
@@ -206,6 +223,7 @@ export function refreshSeat(player: PlayerLike): boolean {
     if (!support) throw new Error("Seat measurement is not finite.");
     measurement = { ...support, mountId: mount.id, positionKey, tick: system.currentTick };
   } else if (measurement.kind !== "stairs") {
+    // A boat or pig that moved carries its surface with it; a stair does not move.
     measurement = { ...measurement, surfaceY: measurement.surfaceY + (mount.location.y - measurement.mountY) };
   }
   const trim = trims(player)[measurement.kind] ?? 0;
@@ -228,6 +246,7 @@ export function seatInfo(player: PlayerLike): SeatInfo {
     ? { ...r, note: "Measured support/profile calculation; actual client pixels require checking." }
     : { kind: "none", mount: ride(player)?.typeId ?? null, liftPixels: player.getProperty("pet:seat_lift") ?? 0 };
 }
+/** `/pet:seatheight`: saves a per-kind nudge (boats, pigs and stairs each remember their own). */
 export function setSeatTrim(player: PlayerLike, pixels: number): void {
   if (!Number.isInteger(pixels) || pixels < -16 || pixels > 32) {
     throw new Error("Seat adjustment must be an integer from -16 to 32.");

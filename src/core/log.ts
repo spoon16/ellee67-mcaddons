@@ -1,3 +1,5 @@
+// Writing to the Content Log, the in-game log a player can open from Settings > Creator. Every line starts with
+// `[ElleeDog 67]` so the add-on's lines stand out from the game's own. Nothing here is shown in chat.
 export const LOG_PREFIX = "[ElleeDog 67]";
 
 /**
@@ -17,14 +19,16 @@ export interface FeatureLog {
   describe(error: unknown): string;
 }
 
+/** Turns anything that was thrown into one line of text; non-Error throws (strings, objects) happen in the engine. */
 export function describeError(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
 export function featureLog(title: string): FeatureLog {
   const prefix = `${LOG_PREFIX} ${title}:`;
-  const warned = new Set<string>();
-  const lastWarning = new Map<string, number>();
+  // Both collections live inside this function call, so each feature has its own memory of what it already said.
+  const warned = new Set<string>(); // keys that warnOnce has reported
+  const lastWarning = new Map<string, number>(); // key -> the tick throttled last reported it
   return {
     info(text) {
       console.info(`${prefix} ${text}`);

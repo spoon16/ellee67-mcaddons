@@ -131,6 +131,7 @@ If something looks wrong in the game:
 
 - What each pack does in detail: [docs/FEATURES.md](docs/FEATURES.md)
 - Install, update and move old worlds: [docs/RELEASING.md](docs/RELEASING.md)
+- Curious how the code works: [docs/READING_THE_CODE.md](docs/READING_THE_CODE.md) starts from zero
 - For coders and for Claude: [docs/DEVELOPING.md](docs/DEVELOPING.md) and [CLAUDE.md](CLAUDE.md)
 
 ## License

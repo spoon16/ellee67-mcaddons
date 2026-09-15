@@ -1,3 +1,6 @@
+// A dimension is one of Minecraft's separate worlds: the Overworld, the Nether and the End. Every entity lives in
+// exactly one, and searches such as `getEntities` are per dimension, so a feature that looks for its own helper
+// entities has to ask each dimension in turn. This helper gathers the dimensions worth asking.
 import type { Dimension, World } from "@minecraft/server";
 
 /** The three dimensions every world has; `world.getDimension` accepts these short names. */

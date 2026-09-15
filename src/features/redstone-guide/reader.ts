@@ -1,4 +1,9 @@
-/** Pure screen/route model. No Minecraft dependency; covered by Node tests. */
+// Pure screen/route model. No Minecraft dependency; covered by Node tests.
+//
+// Think of the book as a tiny website. A Route is an address ("the recipes list, second page" or "entry X, page 3")
+// and a Screen is the page rendered for that address: a title, body text and buttons, each button carrying the
+// Route it leads to (or null for Close). `screenFor(route)` is the only entry point; index.ts calls it in a loop,
+// showing each Screen and following whichever button the player taps.
 import { ENTRIES, type GuideEntry, type Section } from "./content.ts";
 
 export type { CraftingMatrix, GuideEntry, Section } from "./content.ts";
@@ -16,7 +21,9 @@ export interface Route {
   section?: string;
   group?: string;
   offset?: number;
+  /** For a reading page: the list it was opened from, so "Chapter index" and next/previous topic stay in it. */
   origin?: Route;
+  /** For a recipe opened from a component page: the page to return to. */
   back?: Route;
 }
 
@@ -35,6 +42,7 @@ export interface Screen {
 }
 
 export const BOOK_ICON = "textures/items/elleedog_redstone_guide_book";
+/** Topics per list screen; a form with too many buttons needs scrolling on a phone. */
 export const PAGE_SIZE = 10;
 export const BY_ID = new Map<string, GuideEntry>(ENTRIES.map((e) => [e.id, e]));
 export const SECTION_TITLES: Record<Section, string> = {
@@ -44,6 +52,7 @@ export const SECTION_TITLES: Record<Section, string> = {
   builds: "Three builds",
 };
 export const HOME: Route = Object.freeze({ kind: "home" });
+// Each entry's first page number counted across the whole book, for the "Guide page 12/57" line.
 const GLOBAL_PAGES = new Map<string, number>();
 let total = 0;
 for (const entry of ENTRIES) {
@@ -51,6 +60,7 @@ for (const entry of ENTRIES) {
   total += entry.pages.length;
 }
 export const TOTAL_PAGES = total;
+/** The component categories, in the order they first appear in the content file. */
 export const GROUPS = [...new Set(ENTRIES.filter((e) => e.section === "components").map((e) => e.group))];
 const counts = (section: Section) => ENTRIES.filter((e) => e.section === section).length;
 const action = (label: string, route: Route | null, icon?: string): Button => ({
@@ -59,10 +69,12 @@ const action = (label: string, route: Route | null, icon?: string): Button => ({
   ...(icon ? { icon } : {}),
 });
 const close = () => action("Close book", null);
+// Clamps anything (a saved bookmark, a stale route) to a whole number between 0 and `max`.
 const integer = (value: unknown, max: number) =>
   Math.max(0, Math.min(max, typeof value === "number" && Number.isFinite(value) ? Math.trunc(value) : 0));
 // Untrusted ids may be missing or not strings; those never match an entry.
 const entryFor = (id: unknown): GuideEntry | undefined => (typeof id === "string" ? BY_ID.get(id) : undefined);
+// The list an entry naturally belongs to: its chapter, narrowed to its category for components.
 const listOrigin = (entry: GuideEntry): Route => ({
   kind: "list",
   section: entry.section,
@@ -70,6 +82,7 @@ const listOrigin = (entry: GuideEntry): Route => ({
   offset: 0,
 });
 
+/** Turns whatever was saved into a usable bookmark, or null when it points at an entry that no longer exists. */
 export function normalizeBookmark(value: unknown): Bookmark | null {
   if (!value || typeof value !== "object") return null;
   const { id, page } = value as { id?: unknown; page?: unknown };
@@ -89,6 +102,7 @@ function homeScreen(bookmark: unknown): Screen {
   const saved = normalizeBookmark(bookmark);
   const resume = saved ? BY_ID.get(saved.id) : undefined;
   const buttons: Button[] = [];
+  // "Resume reading" comes first, and only once there is something to resume.
   if (saved && resume)
     buttons.push(action(`Resume reading\n${resume.title}`, readingRoute(saved.id, saved.page), BOOK_ICON));
   buttons.push(
@@ -130,6 +144,7 @@ function listScreen(route: Route): Screen | null {
   const section = route.section as Section;
   if (!SECTION_TITLES[section]) return null;
   const all = matchingEntries(route);
+  // Snap the offset to a page boundary so a stale or odd offset still shows a whole page.
   const offset = Math.floor(integer(route.offset, Math.max(0, all.length - 1)) / PAGE_SIZE) * PAGE_SIZE;
   const normalized = { ...route, offset };
   const buttons = all.slice(offset, offset + PAGE_SIZE).map((e) => action(e.title, readingRoute(e.id, 0, normalized)));
@@ -165,12 +180,14 @@ function readScreen(route: Route): Screen | null {
   const prev = list[i - 1];
   const buttons: Button[] = [];
   // Cross-entry navigation remains within the current chapter/category.
+  // "Next" turns the page while the entry has more, then moves on to the next topic in the same list.
   if (p + 1 < entry.pages.length) buttons.push(action("Next page >", readingRoute(entry.id, p + 1, origin)));
   else if (i >= 0 && next) buttons.push(action("Next topic >", readingRoute(next.id, 0, origin)));
   if (p > 0) buttons.push(action("< Previous page", readingRoute(entry.id, p - 1, origin)));
   else if (i > 0 && prev)
     buttons.push(action("< Previous topic", readingRoute(prev.id, prev.pages.length - 1, origin)));
   if (entry.recipe && BY_ID.has(entry.recipe)) {
+    // The recipe page gets a `back` route so "Back to component" returns to exactly this page.
     const destination = readingRoute(entry.recipe);
     destination.back = { ...route, page: p };
     buttons.push(action("Show crafting recipe", destination));
@@ -194,7 +211,10 @@ function aboutScreen(): Screen {
   };
 }
 
-/** One builder per route kind; a builder answers null when its route points at nothing, and home takes over. */
+/**
+ * One builder per route kind; a builder answers null when its route points at nothing, and home takes over.
+ * A lookup table like this replaces a chain of if/else and makes adding a screen a one-line change.
+ */
 const SCREENS: Record<Route["kind"], (route: Route, bookmark: unknown) => Screen | null> = {
   home: (_route, bookmark) => homeScreen(bookmark),
   groups: () => groupsScreen(),
@@ -207,6 +227,7 @@ const SCREENS: Record<Route["kind"], (route: Route, bookmark: unknown) => Screen
 export function screenFor(untrusted: unknown = HOME, bookmark: unknown = null): Screen {
   // Any object is read as a route; unknown kinds, ids and sections fall back to the home screen.
   const route = (untrusted && typeof untrusted === "object" ? untrusted : HOME) as Route;
+  // Object.hasOwn, not `in`: a kind such as "constructor" must not reach a builtin on Object's prototype.
   const build = Object.hasOwn(SCREENS, route.kind) ? SCREENS[route.kind] : undefined;
   return build?.(route, bookmark) ?? homeScreen(bookmark);
 }

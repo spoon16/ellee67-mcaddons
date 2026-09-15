@@ -1,3 +1,6 @@
+// Pets: the feature definition. Everything happens in main.ts and the modules it imports; this file only wires
+// them into the runner. The other pets modules never import from src/core, because the Pets compiler under
+// tools/codegen packages them on their own as well (see docs/CODEGEN.md).
 import type { FeatureDefinition } from "../../core/feature.ts";
 import { registerPetCommands, registerPetItems, startPets } from "./main.ts";
 

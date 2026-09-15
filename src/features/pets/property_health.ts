@@ -1,6 +1,10 @@
 /** Read-only inspection of the properties actually exposed by the current entity.
  * Does not infer active packs, manufacture defaults, repair schemas or change preferences.
  * Missing reads remain explicit nulls with status=missing, never a false Player success.
+ *
+ * Why this exists: if another pack also replaces the player, or the Pets packs are out of date, the pet
+ * properties are simply not there and every write would throw. `requireProperties` checks first and produces a
+ * report that `/pet:check` and `/pet:diagnose` can show, so a player can tell "wrong packs" from "a bug".
  */
 import { BUILD, MODEL_BY_WIRE } from "./catalog.generated.ts";
 import type { PlayerLike } from "./core.ts";
@@ -10,6 +14,7 @@ const MODEL = "pet:model_id";
 
 export type PropertyValue = boolean | number | string;
 
+/** One property as the player JSON declares it; the generated schema is copied from that JSON. */
 export interface PropertyDefinition {
   type: string;
   values?: readonly string[];
@@ -18,6 +23,7 @@ export interface PropertyDefinition {
   client_sync: boolean;
 }
 
+/** What one read found: the value, or why there is none. */
 export interface Observation {
   status: "ok" | "missing" | "invalid" | "read_error";
   value: PropertyValue | null;
@@ -64,6 +70,7 @@ export class PetPropertyStateError extends Error {
 const schema: Readonly<Record<string, PropertyDefinition>> = PROPERTY_SCHEMA;
 export const PROPERTY_KEYS: readonly string[] = Object.freeze(Object.keys(PROPERTY_SCHEMA));
 
+/** Does the value fit the declared type: a boolean, one of the enum's words, or a number inside the range? */
 function validValue(value: PropertyValue, definition: PropertyDefinition | undefined): boolean {
   if (!definition) return true;
   if (definition.type === "bool") return typeof value === "boolean";
@@ -97,6 +104,10 @@ function registeredForm(value: PropertyValue | null): string | null {
   const pet = MODEL_BY_WIRE[String(value)];
   return pet && Object.hasOwn(MODEL_BY_WIRE, String(value)) ? pet.id : null;
 }
+/**
+ * Reads every key and grades the whole set with one status word, worst first: READ_ERROR, INVALID_VALUES,
+ * MISSING_DEFINITION (nothing there at all), PARTIAL_DEFINITION (some there), UNREGISTERED_MODEL, then READY.
+ */
 export function inspectProperties(player: PlayerLike, keys: readonly string[] = PROPERTY_KEYS): PropertyReport {
   const properties: Record<string, Observation> = Object.fromEntries(keys.map((k) => [k, observeProperty(player, k)]));
   const missing = keys.filter((k) => properties[k]?.status === "missing");
@@ -129,6 +140,7 @@ export function inspectProperties(player: PlayerLike, keys: readonly string[] = 
     schema: PROPERTY_SCHEMA_SHA256,
   };
 }
+/** The values of `keys`, or a PetPropertyStateError naming the first problem; callers use it before writing. */
 export function requireProperties(
   player: PlayerLike,
   keys: readonly string[] = PROPERTY_KEYS,
@@ -155,6 +167,7 @@ export function requireProperties(
   }
   return values;
 }
+/** The most recent failure per player, kept so `/pet:check` can show what went wrong and when. */
 const failures = new Map<string, FailureRecord>();
 export function rememberFailure(
   player: PlayerLike | undefined,
@@ -183,6 +196,7 @@ export function lastFailure(player: Pick<PlayerLike, "id">): FailureRecord | nul
 export function forgetFailure(id: string): void {
   failures.delete(id);
 }
+/** The lines `/pet:check` prints: the report in a few human sentences. */
 export function checkLines(player: PlayerLike, tick: number): { report: PropertyReport; lines: string[] } {
   const report = inspectProperties(player);
   const failure = lastFailure(player);

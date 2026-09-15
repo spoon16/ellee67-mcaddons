@@ -50,6 +50,10 @@ runtime toggle and no shared core. Two engine rules follow from that and shape t
 - Chat and log text: plain sentences, no em-dashes, prefix log lines with the feature name.
 - Do not hand-write `@minecraft/server` API calls you have not seen in the typings; run
   `npm run check`.
+- Write vanilla ids as `entityId("minecraft:creeper")`, `blockId("minecraft:dirt")` and
+  `itemId("minecraft:iron_pickaxe")` from `src/core/vanilla.ts`: a typo is a compile error
+  (checked against `@minecraft/vanilla-data`) and the runtime cost is nothing. Component, tag and
+  block-state ids stay plain literals.
 - There is no `stop()`. Deactivating the pack reloads the world without it, so nothing has to be
   undone at runtime; but per-player settings should be player properties so they survive.
 
@@ -105,7 +109,8 @@ runtime toggle and no shared core. Two engine rules follow from that and shape t
 - The mock enforces the two engine rules: a second command namespace throws, and a second argument
   to a one-argument signal throws. A feature that passes the mock still has to pass
   `npm run test:engine`, which boots the real server with every pack and probes one command per
-  namespace; add your command to `PROBES` in `tools/bds/smoke.ts`.
+  namespace; add your command to `PROBES` in `tools/bds/smoke.ts`. For behaviour a simulated player
+  can drive, add a GameTest to `tools/bds/gametest/scripts/main.js` (`npm run test:gametest`).
 - When a `src/` function expects an engine `Player`, pass `engine(mockPlayer)`.
 - Assert on behaviour the game would show (messages, properties, entities, drops), not on how
   many lines of code ran.

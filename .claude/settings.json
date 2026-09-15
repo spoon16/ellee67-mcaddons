@@ -12,5 +12,35 @@
         ]
       }
     ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run check)",
+      "Bash(npm test)",
+      "Bash(npm run test:*)",
+      "Bash(npm run build)",
+      "Bash(npm run package)",
+      "Bash(npm run codegen)",
+      "Bash(npm run codegen:*)",
+      "Bash(npm run manifests)",
+      "Bash(npm run format)",
+      "Bash(npm run lint)",
+      "Bash(npm run bds:setup)",
+      "Bash(npx vitest run:*)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(npx biome:*)",
+      "Bash(tsx tools/:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(find:*)",
+      "Bash(uv run:*)"
+    ]
   }
 }

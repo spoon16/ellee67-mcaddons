@@ -10,6 +10,7 @@ import type {
   Vector3,
 } from "@minecraft/server";
 import type { CommandRegistry } from "../../core/feature.ts";
+import { entityId } from "../../core/vanilla.ts";
 import { blockPosition, type RegionCorner } from "./geometry.ts";
 import type { ProtectionStore } from "./store.ts";
 
@@ -100,7 +101,7 @@ export function registerProtectionCommands(
     },
     (origin: CustomCommandOrigin, action: string, name?: string): CustomCommandResult => {
       const entity = origin.sourceEntity;
-      if (entity?.typeId !== "minecraft:player") {
+      if (entity?.typeId !== entityId("minecraft:player")) {
         return {
           status: api.CustomCommandStatus.Failure,
           message: "Run this command as a player with Operator permission.",

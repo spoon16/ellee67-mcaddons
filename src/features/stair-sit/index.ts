@@ -10,6 +10,7 @@ import {
 } from "@minecraft/server";
 import type { FeatureDefinition, FeatureRegistries } from "../../core/feature.ts";
 import type { FeatureContext } from "../../core/subscriptions.ts";
+import { entityId } from "../../core/vanilla.ts";
 import { CONFIG } from "./config.ts";
 import { aimedBlock, emptyHands, readStair, ridingEntity, SeatManager, valid } from "./seats.ts";
 import { gestureComplete } from "./stairs.ts";
@@ -38,8 +39,24 @@ const manager = new SeatManager(world, system);
 const targets = new InteractionTargets(world, system, manager);
 const gestures = new Map<string, GestureState>();
 const pending = new Map<string, PendingToken>();
+/** The outcome of each player's latest sit attempt, for diagnostics; refusals otherwise only reach chat. */
+const lastResults = new Map<string, { ok: boolean; error?: string }>();
+
+/** What the scripts know about one player's sitting state. Read by the GameTests and free for `/sit:status`. */
+export function stairSitDiagnostics(playerId: string): {
+  seated: boolean;
+  onCooldown: boolean;
+  lastResult?: { ok: boolean; error?: string };
+} {
+  return {
+    seated: manager.get(playerId) !== undefined,
+    onCooldown: manager.onCooldown(playerId),
+    lastResult: lastResults.get(playerId),
+  };
+}
 
 function showResult(player: Player, result: any): void {
+  lastResults.set(player.id, { ok: !!result.ok, error: result.error });
   if (!result.ok && !result.silent) manager.message(player, result.error);
   if (result.ok && !result.alreadyThere) targets.refreshForPlayer(player, result.vacatedStair);
 }
@@ -157,6 +174,7 @@ function forgetPlayer(playerId: string): void {
   manager.forget(playerId);
   gestures.delete(playerId);
   pending.delete(playerId);
+  lastResults.delete(playerId);
 }
 
 function registerCommands({ commands }: FeatureRegistries): void {
@@ -177,7 +195,7 @@ function registerCommands({ commands }: FeatureRegistries): void {
       },
       (origin: CustomCommandOrigin, ...args: any[]) => {
         const player = origin.sourceEntity;
-        if (player?.typeId !== "minecraft:player") {
+        if (player?.typeId !== entityId("minecraft:player")) {
           return { status: CustomCommandStatus.Failure, message: "Run this command as a player in the world." };
         }
         deferred(player as Player, () => action(player as Player, ...args));
@@ -365,13 +383,13 @@ function subscribe(ctx: FeatureContext): void {
     }
   });
   ctx.on(world.afterEvents.entityDie, ({ deadEntity }) => {
-    if (deadEntity.typeId === "minecraft:player") {
+    if (deadEntity.typeId === entityId("minecraft:player")) {
       pending.delete(deadEntity.id);
       manager.release(deadEntity.id);
     }
   });
   ctx.on(world.afterEvents.entityHurt, ({ hurtEntity, damage }) => {
-    if (damage > 0 && hurtEntity.typeId === "minecraft:player") {
+    if (damage > 0 && hurtEntity.typeId === entityId("minecraft:player")) {
       pending.delete(hurtEntity.id);
       manager.release(hurtEntity.id, true);
     }
@@ -406,4 +424,5 @@ export function shutdownStairSit(): void {
   targets.pausedUntil = -1;
   gestures.clear();
   pending.clear();
+  lastResults.clear();
 }

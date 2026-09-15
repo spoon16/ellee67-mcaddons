@@ -15,6 +15,8 @@ export const BDS_VERSION = "1.26.45.1";
 export const BDS_ROOT = path.join(REPO_ROOT, ".bds");
 export const SERVER_DIR = path.join(BDS_ROOT, "server");
 export const WORLD_NAME = "elleedog67";
+/** The GameTest runner's world: it turns the Beta APIs experiment on, which is never done to the smoke world. */
+export const GAMETEST_WORLD_NAME = "elleedog67-gametest";
 
 const DOWNLOAD_URL = `https://www.minecraft.net/bedrockdedicatedserver/bin-linux/bedrock-server-${BDS_VERSION}.zip`;
 // Mojang's CDN answers curl's default user agent with an HTTP/2 stream error; a browser agent over HTTP/1.1 works.
@@ -24,7 +26,6 @@ const PROPERTIES: Record<string, string> = {
   "allow-cheats": "true", // the console runs the add-on's commands
   "online-mode": "false", // no Xbox Live sign-in for a server nobody joins
   "allow-list": "false",
-  "level-name": WORLD_NAME,
   "content-log-file-enabled": "true",
   "content-log-console-output-enabled": "true",
   "content-log-level": "info",
@@ -56,10 +57,10 @@ export function ensureServer(): string {
   return SERVER_DIR;
 }
 
-/** Writes server.properties for a headless run, keeping every other key at the shipped default. */
-export function configureServer(serverDir = SERVER_DIR): void {
+/** Writes server.properties for a headless run of `worldName`, keeping every other key at the shipped default. */
+export function configureServer(serverDir = SERVER_DIR, worldName = WORLD_NAME): void {
   const file = path.join(serverDir, "server.properties");
-  const pending = new Map(Object.entries(PROPERTIES));
+  const pending = new Map(Object.entries({ ...PROPERTIES, "level-name": worldName }));
   const lines = fs
     .readFileSync(file, "utf8")
     .split(/\r?\n/)
@@ -76,19 +77,46 @@ export function configureServer(serverDir = SERVER_DIR): void {
   fs.writeFileSync(file, lines.join("\n"));
 }
 
+/** A behavior pack installed next to the built ones: its folder name in the server and its manifest identity. */
+export interface ExtraPack {
+  archiveDir: string;
+  uuid: string;
+  version: number[];
+}
+
+export interface InstallOptions {
+  /** Copy the packs without their script bundles (and without the script module and engine dependencies in the
+   * manifest copy), for a world whose scripts come from a test bundle instead. */
+  scripts?: boolean;
+  /** Recreate the world (default) or keep it and only rewrite its pack lists. */
+  freshWorld?: boolean;
+  /** Install only these pack ids (default: every pack in packs.json). */
+  packIds?: string[];
+}
+
 /**
- * Copies dist/ into the server's pack folders and creates a fresh world with every pack in its stack. The world is
- * recreated on each call so a run never inherits state from the last one.
+ * Copies dist/ (and any extra behavior packs, already placed in the server's behavior_packs folder) into the
+ * server's pack folders and creates a fresh world with every pack in its stack. The world is recreated on each
+ * call so a run never inherits state from the last one, unless `freshWorld` is false.
  */
-export function installPacks(serverDir = SERVER_DIR): void {
-  const packs = loadPacks();
+export function installPacks(
+  serverDir = SERVER_DIR,
+  worldName = WORLD_NAME,
+  extras: ExtraPack[] = [],
+  options: InstallOptions = {},
+): string {
+  const { scripts = true, freshWorld = true, packIds } = options;
+  const packs = loadPacks().filter((pack) => !packIds || packIds.includes(pack.id));
+  for (const id of packIds ?? [])
+    if (!packs.some((pack) => pack.id === id)) throw new Error(`packs.json has no pack ${id}`);
   const version = (readStrictJson(path.join(REPO_ROOT, "package.json")) as { version: string }).version
     .split(".")
     .map(Number);
   for (const kind of ["behavior_packs", "resource_packs"]) {
     const folder = path.join(serverDir, kind);
     for (const name of fs.readdirSync(folder)) {
-      if (name.startsWith("ElleeDog67_")) fs.rmSync(path.join(folder, name), { recursive: true, force: true });
+      if (name.startsWith("ElleeDog67_") && !extras.some((extra) => extra.archiveDir === name))
+        fs.rmSync(path.join(folder, name), { recursive: true, force: true });
     }
   }
   for (const pack of packs) {
@@ -96,15 +124,31 @@ export function installPacks(serverDir = SERVER_DIR): void {
     if (!fs.existsSync(path.join(source, "manifest.json")))
       throw new Error(`${pack.archiveDir} is not built; run \`npm run build\` first`);
     const folder = pack.kind === "behavior" ? "behavior_packs" : "resource_packs";
-    fs.cpSync(source, path.join(serverDir, folder, pack.archiveDir), { recursive: true });
+    const target = path.join(serverDir, folder, pack.archiveDir);
+    fs.cpSync(source, target, {
+      recursive: true,
+      filter: (file) => scripts || path.relative(source, file).split(path.sep)[0] !== "scripts",
+    });
+    if (!scripts && pack.modules.script) {
+      const manifestFile = path.join(target, "manifest.json");
+      const manifest = JSON.parse(fs.readFileSync(manifestFile, "utf8")) as {
+        modules: Array<{ type: string }>;
+        dependencies: Array<{ module_name?: string }>;
+      };
+      manifest.modules = manifest.modules.filter((module) => module.type !== "script");
+      manifest.dependencies = manifest.dependencies.filter((dependency) => !dependency.module_name);
+      fs.writeFileSync(manifestFile, `${JSON.stringify(manifest, null, 2)}\n`);
+    }
   }
-  const world = path.join(serverDir, "worlds", WORLD_NAME);
-  fs.rmSync(world, { recursive: true, force: true });
+  const world = path.join(serverDir, "worlds", worldName);
+  if (freshWorld) fs.rmSync(world, { recursive: true, force: true });
   fs.mkdirSync(world, { recursive: true });
   const stack = (kind: "behavior" | "resources") =>
     packs.filter((pack) => pack.kind === kind).map((pack) => ({ pack_id: pack.uuid, version }));
-  fs.writeFileSync(path.join(world, "world_behavior_packs.json"), `${JSON.stringify(stack("behavior"), null, 2)}\n`);
+  const behavior = [...stack("behavior"), ...extras.map((extra) => ({ pack_id: extra.uuid, version: extra.version }))];
+  fs.writeFileSync(path.join(world, "world_behavior_packs.json"), `${JSON.stringify(behavior, null, 2)}\n`);
   fs.writeFileSync(path.join(world, "world_resource_packs.json"), `${JSON.stringify(stack("resources"), null, 2)}\n`);
+  return world;
 }
 
 /** Environment additions the server needs here: its own libraries, and the IPv6 stand-in where IPv6 is absent. */

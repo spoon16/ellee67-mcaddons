@@ -25,6 +25,13 @@ scripts, and activating the pack is the only switch.
   unit tests too.
 - The manual artwork script `tools/art/manual_book.py` went with the book; `tools/art/pack_icons.py`
   draws the Stair Sitting and Creeper Mod pack icons.
+- `npm run test:gametest` runs GameTests with simulated players inside the server: `/pet:book`
+  gives the Morpher, `/sit:down` seats a player on a stair, a creeper blast hurts only the player.
+  The test pack lives in `tools/bds/gametest/` and is never shipped.
+- Vanilla entity, block and item ids in every feature but Pets are checked against
+  `@minecraft/vanilla-data` at compile time (`entityId`, `blockId`, `itemId` in `src/core/vanilla.ts`,
+  no runtime cost); `@minecraft/bedrock-schemas` validates the pack JSON in VS Code; `CLAUDE.md`
+  guides Claude Code sessions and `.claude/settings.json` pre-approves the verification commands.
 
 ## 0.2.3
 

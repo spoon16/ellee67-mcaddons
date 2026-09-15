@@ -12,6 +12,7 @@ import {
   world,
 } from "@minecraft/server";
 import type { ItemRegistry } from "../../core/feature.ts";
+import { entityId } from "../../core/vanilla.ts";
 import { BLOCKS, durabilityLoss, enchantment, GEAR, miningDrop, NS, toolAction } from "./rules.ts";
 
 /** The state methods as the engine accepts them; the API types them against vanilla state names only. */
@@ -28,7 +29,7 @@ function warnOnce(label: string, error: unknown): void {
 }
 // Engine callbacks hand over live entities, so validity is not re-checked here.
 function isPlayer(entity: Entity | undefined): entity is Player {
-  return entity?.typeId === "minecraft:player";
+  return entity?.typeId === entityId("minecraft:player");
 }
 function survivalMode(player: Player): boolean {
   return [GameMode.Survival, GameMode.Adventure].includes(player.getGameMode());

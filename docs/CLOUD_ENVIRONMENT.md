@@ -62,6 +62,7 @@ npm run build
 npm run package
 npm run codegen    # the Pets/Rbow compiler and its 244 Python tests
 npm run test:engine  # boots the packs in Bedrock Dedicated Server (no IPv6 here; the harness preloads its shim)
+npm run test:gametest  # GameTests with simulated players in that server
 ```
 
 ## Settings to choose in the web UI

@@ -65,11 +65,13 @@ jobs:
           path: .bds/bedrock-server-*.zip
           key: bds-${{ hashFiles('tools/bds/setup.ts') }}
       - run: npm run test:engine
+      - run: npm run test:gametest
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: bds-logs
           path: |
             .bds/last-run.log
+            .bds/last-gametest.log
             .bds/server/ContentLog*.txt
           if-no-files-found: ignore

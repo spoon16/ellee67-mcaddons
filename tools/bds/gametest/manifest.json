@@ -1,0 +1,24 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ElleeDog 67 GameTests",
+    "description": "Test-only pack for npm run test:gametest: one feature's scripts plus its GameTests. Never shipped.",
+    "uuid": "9e3f4c66-2f4d-4e8b-9c3a-3b4c5d6e7f80",
+    "version": [0, 0, 1],
+    "min_engine_version": [1, 26, 40]
+  },
+  "modules": [
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "af4a5d77-3a5e-4f9c-8d4b-4c5d6e7f8091",
+      "version": [0, 0, 1],
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    { "module_name": "@minecraft/server", "version": "2.9.0" },
+    { "module_name": "@minecraft/server-ui", "version": "2.0.0" },
+    { "module_name": "@minecraft/server-gametest", "version": "1.0.0-beta" }
+  ]
+}

@@ -2,6 +2,7 @@ import { type Entity, type Player, system, world } from "@minecraft/server";
 import { ActionFormData, FormCancelationReason } from "@minecraft/server-ui";
 import type { FeatureDefinition } from "../../core/feature.ts";
 import { log } from "../../core/log.ts";
+import { entityId } from "../../core/vanilla.ts";
 import { type Bookmark, HOME, normalizeBookmark, type Route, type Screen, screenFor } from "./reader.ts";
 
 export const BOOK_ID = "elleedog_redstone:guide_book";
@@ -21,7 +22,7 @@ export const lastUse = new Map<string, number>();
 const wait = (ticks: number) => new Promise<void>((resolve) => system.runTimeout(resolve, ticks));
 
 function isPlayer(entity: Entity | undefined): entity is Player {
-  return entity !== undefined && entity.typeId === "minecraft:player";
+  return entity !== undefined && entity.typeId === entityId("minecraft:player");
 }
 
 function message(player: Player, text: string): void {

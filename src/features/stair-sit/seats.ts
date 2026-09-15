@@ -10,24 +10,25 @@ import {
   type Vector3,
   type World,
 } from "@minecraft/server";
+import { blockId } from "../../core/vanilla.ts";
 import { CONFIG } from "./config.ts";
 import { describeStair, distanceSquared, highTreadPoint, type StairDescription } from "./stairs.ts";
 
-const BAD_SUPPORT = new Set([
-  "minecraft:magma",
-  "minecraft:cactus",
-  "minecraft:campfire",
-  "minecraft:soul_campfire",
-  "minecraft:fire",
-  "minecraft:soul_fire",
-  "minecraft:lava",
-  "minecraft:flowing_lava",
-  "minecraft:water",
-  "minecraft:flowing_water",
-  "minecraft:powder_snow",
-  "minecraft:sweet_berry_bush",
-  "minecraft:wither_rose",
-  "minecraft:pointed_dripstone",
+const BAD_SUPPORT: ReadonlySet<string> = new Set<string>([
+  blockId("minecraft:magma"),
+  blockId("minecraft:cactus"),
+  blockId("minecraft:campfire"),
+  blockId("minecraft:soul_campfire"),
+  blockId("minecraft:fire"),
+  blockId("minecraft:soul_fire"),
+  blockId("minecraft:lava"),
+  blockId("minecraft:flowing_lava"),
+  blockId("minecraft:water"),
+  blockId("minecraft:flowing_water"),
+  blockId("minecraft:powder_snow"),
+  blockId("minecraft:sweet_berry_bush"),
+  blockId("minecraft:wither_rose"),
+  blockId("minecraft:pointed_dripstone"),
 ]);
 
 /** One seated player: the invisible carrier entity, the stair it sits on and where the player came from. */

@@ -9,6 +9,7 @@ import type {
   VectorXZ,
   World,
 } from "@minecraft/server";
+import { entityId } from "../../core/vanilla.ts";
 
 /** Pure damage tuning for the player-only replacement blast. Health points, not hearts.
  * This deliberately approximates, rather than promises parity with, vanilla explosions.
@@ -91,7 +92,7 @@ export function createCreeperHandler({
   const processed = new Map<string, number>();
   return function onExplosion(event: ExplosionBeforeEvent): void {
     const source = event.source;
-    if (source?.typeId !== "minecraft:creeper") return;
+    if (source?.typeId !== entityId("minecraft:creeper")) return;
 
     // Cancel first. Emptying the block list alone DOES NOT protect items and mobs.
     event.cancel = true;

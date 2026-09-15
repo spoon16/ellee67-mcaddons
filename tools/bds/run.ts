@@ -14,6 +14,8 @@ export interface RunOptions {
   commandGapMs?: number;
   /** Hard limit for the whole run; the server is stopped when it passes. */
   timeoutMs?: number;
+  /** After the last command, stop as soon as this returns true for the log so far (checked on every line). */
+  stopWhen?: (lines: string[]) => boolean;
   onLine?: (line: string) => void;
 }
 
@@ -36,6 +38,7 @@ export function runServer(serverDir = SERVER_DIR, options: RunOptions = {}): Pro
     });
     const result: RunResult = { lines: [], started: false, exitCode: null, timedOut: false };
     let stopping = false;
+    let commandsSent = false;
     let buffered = "";
     const stop = () => {
       if (stopping) return;
@@ -47,6 +50,7 @@ export function runServer(serverDir = SERVER_DIR, options: RunOptions = {}): Pro
       await sleep(warmUpMs);
       for (const command of commands) {
         child.stdin.write(`${command}\n`);
+        if (command === commands[commands.length - 1]) commandsSent = true;
         await sleep(commandGapMs);
       }
       stop();
@@ -58,6 +62,7 @@ export function runServer(serverDir = SERVER_DIR, options: RunOptions = {}): Pro
       for (const line of parts) {
         result.lines.push(line);
         options.onLine?.(line);
+        if (commandsSent && options.stopWhen?.(result.lines)) stop();
         if (!result.started && STARTED.test(line)) {
           result.started = true;
           void drive();

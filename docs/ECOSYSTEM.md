@@ -24,8 +24,9 @@ The short version:
 ## 1. What the headless engine run found
 
 > Status: both bugs below were fixed in 0.3.0, which also split the scripts per pack (one namespace
-> each) and landed the harness as `tools/bds/` behind `npm run test:engine`. The quotes are from the
-> 0.2.3 runs that found them.
+> each) and landed the harness as `tools/bds/`: `npm run test:engine` (boot smoke and console
+> probes) and `npm run test:gametest` (GameTests with simulated players). `@minecraft/vanilla-data`
+> and `@minecraft/bedrock-schemas` are in too. The quotes are from the 0.2.3 runs that found them.
 
 `README.md` says "Nothing in this repository has been run in Minecraft yet." Thirty seconds of BDS
 answered what a mock never could:

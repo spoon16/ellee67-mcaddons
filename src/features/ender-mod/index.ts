@@ -10,11 +10,12 @@ import {
   world,
 } from "@minecraft/server";
 import type { FeatureDefinition } from "../../core/feature.ts";
+import { entityId } from "../../core/vanilla.ts";
 import { type ProtectionSelection, registerProtectionCommands } from "./commands.ts";
 import { GATE_PROPERTY, type Sighting, shouldAllowMovement } from "./gate.ts";
 import { ProtectionStore } from "./store.ts";
 
-const ENDERMAN = "minecraft:enderman";
+const ENDERMAN = entityId("minecraft:enderman");
 const DIMENSIONS = ["overworld", "nether", "the_end"];
 
 let store: ProtectionStore | undefined;

@@ -7,6 +7,7 @@ npm test          # vitest: the runtime, every feature, and a real build of the 
 npm run check     # TypeScript and Biome
 npm run codegen   # regenerates generated files; CI fails if that changes anything
 npm run test:engine   # boots every pack in Bedrock Dedicated Server; CI runs it on every push
+npm run test:gametest # GameTests with simulated players inside the server; CI runs it too
 ```
 
 `@minecraft/server` and `@minecraft/server-ui` are replaced by `test/mocks/` during tests. The mock
@@ -22,6 +23,11 @@ networking, chunk generation or Bedrock's real command parser.
 `test/core` covers `runFeature` (register at startup, start at world load, errors isolated and
 logged) and `FeatureContext` (subscriptions, intervals and cleanups all undone by `dispose()`,
 options forwarded only when given), plus the two engine rules above.
+
+The engine mock enforces two rules the real engine enforces (one command namespace per script
+module; one argument to a one-argument `subscribe`), and `src/core/vanilla.ts` checks vanilla
+entity, block and item ids against `@minecraft/vanilla-data` at compile time in every feature
+except Pets (see `CLAUDE.md`).
 
 `test/pack/build.test.ts` builds `dist/` for real and validates it: ten manifests that match
 `packs.json` with every behavior pack depending only on its own resource pack, one script bundle
@@ -55,8 +61,50 @@ pack's JSON loads. Bedrock Dedicated Server can, and it runs headlessly on Linux
   `.bds/last-run.log`.
 
 The server is never committed: the Minecraft EULA lets you run it, not redistribute it. CI
-downloads it too (cached by version). The next rung, GameTests with simulated players on a
-Beta-APIs world, is described in [ECOSYSTEM.md](ECOSYSTEM.md).
+downloads it too (cached by version).
+
+### In the engine, with players: `npm run test:gametest`
+
+GameTests are the engine's own test framework: a script registers a test, the engine builds its
+structure, runs the function and prints `onTestPassed: ed67:<name>` or `onTestFailed: ed67:<name>
+- <message>`. `tools/bds/gametest/` is a test-only behavior pack (never in the `.mcaddon`) whose
+bundle holds one feature's scripts plus the `ed67` tests in `src/<feature>.test.ts`, each with a
+simulated player driving the add-on's own commands:
+
+| Test | What it proves |
+|---|---|
+| `ed67:pets_book` | `/pet:book` puts the Pet Morpher in a Survival player's inventory |
+| `ed67:sit_down` | an empty-handed player looking at an oak stair who runs `/sit:down` ends up riding a `sit:seat` |
+| `ed67:creeper_blast` | a forced creeper explosion hurts the player next to it and leaves the stone floor intact |
+
+Why one feature per bundle: a `SimulatedPlayer` exists only in the script module that spawned
+it. Other packs' modules see it as `undefined` in `world.getAllPlayers()` and in events (the first
+run of this rung against the shipped bundles produced 300 `TypeError`s a minute and no passing
+test), so the feature under test must run inside the test module. `tools/bds/gametest.ts` therefore
+installs the shipped packs data-only (script bundles and script modules stripped from the server
+copies) and, per `src/<feature>.test.ts`, bundles `runFeature(<feature>)` together with the tests
+into the test pack.
+
+The run: build the packs, write the test pack with two generated structures (`ed67:floor`, a 7x5x7
+stone floor; `ed67:stair`, the same with an oak stair at 3,1,3; both written by `tools/bds/nbt.ts`),
+create the world `elleedog67-gametest`, boot once so the server writes its `level.dat`, set
+`experiments/gametest = 1` in it (the Beta APIs experiment, which `@minecraft/server-gametest`
+needs and which disables achievements, so it is never done to the smoke world) and switch it to
+the flat generator (a random world put the test area in a lake often enough, and structure air does
+not displace water, so `/sit:down` refused at random for lack of headroom), then for each
+feature bundle boot, run `gametest runset ed67` and read the verdicts. About a minute for three
+features; a failure leaves the output in `.bds/last-gametest.log`.
+
+Each suite's world holds only that feature's packs (data-only) plus the test pack, so no other
+pack's custom item components go unregistered; a suite that needs another feature's data adds a
+`// packs: rbow-ore, rbow-ore-resources` line at the top of its file.
+
+To add a test: `defineTest("<name>", FLOOR | STAIR, maxTicks, (test) => ...)` in
+`tools/bds/gametest/src/<feature>.test.ts` (a new file for a feature without one); the runner reads
+the names back from the file. Coordinates are relative to the structure; a new structure shape is a
+few lines in `installTestPack`. `src/server-gametest.d.ts` declares the slice of the beta module
+the tests use, because its published typings track the beta `@minecraft/server`, not the stable
+2.9.0 this repository checks against.
 
 ## Manual, in Minecraft
 

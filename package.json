@@ -13,6 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:engine": "tsx tools/bds/smoke.ts",
+    "test:gametest": "tsx tools/bds/gametest.ts",
     "bds:setup": "tsx tools/bds/setup.ts",
     "check": "tsc --noEmit && biome check .",
     "lint": "biome lint .",
@@ -25,8 +26,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.13",
+    "@minecraft/bedrock-schemas": "^1.26.20-beta.21",
     "@minecraft/server": "^2.9.0",
     "@minecraft/server-ui": "^2.0.0",
+    "@minecraft/vanilla-data": "^1.26.44",
     "@types/node": "^24.13.4",
     "@types/pngjs": "^6.0.5",
     "esbuild": "^0.28.2",

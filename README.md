@@ -44,8 +44,9 @@ Import, activation and how to move a world from earlier versions:
 ## Develop it
 
 You need [Node.js](https://nodejs.org) 24 or newer. Open the folder in VS Code and accept the
-recommended extensions (Blockception's Bedrock extension gives you JSON validation and completion
-for every pack file).
+recommended extensions; `.vscode/settings.json` points every pack JSON file at Mojang's schemas
+(`@minecraft/bedrock-schemas`) for validation and completion, and Blockception's extension adds
+Molang and lang support. `CLAUDE.md` is the short guide for Claude Code sessions.
 
 ```bash
 npm install
@@ -54,6 +55,7 @@ npm run package     # dist/ElleeDog67_<version>.mcaddon and SHA256SUMS.txt
 npm test            # unit tests plus a real build of the packs
 npm run check       # types and lint
 npm run test:engine # boots the packs in Bedrock Dedicated Server (downloads it once into .bds/)
+npm run test:gametest # GameTests with simulated players inside that server
 npm run manifests   # rewrite every manifest.json from packs.json
 ```
 

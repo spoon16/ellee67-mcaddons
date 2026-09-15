@@ -1,3 +1,4 @@
+import { blockId, itemId } from "../../core/vanilla.ts";
 // Ported from Rbow Ore 1.2.0 behavior_pack/scripts/rules.js (sha256 eb0a2d569ff887e9deffe73b122fa6cd37f2b11769fbcbb83f2671824ee0f777); test/features/rbow-ore/pinned_sources.test.ts checks the upstream copy still matches.
 /** Pure gameplay decisions; imported unchanged by the runtime and Node tests. */
 export const NS = "elleedog:";
@@ -10,9 +11,9 @@ export const GEAR = new Set(
 );
 export const ITEMS = new Set([...BLOCKS, ...GEAR, `${NS}raw_rbow_ore`, `${NS}rbow_ingot`, `${NS}rbow_nug`]);
 const PICKAXES = new Set([
-  "minecraft:iron_pickaxe",
-  "minecraft:diamond_pickaxe",
-  "minecraft:netherite_pickaxe",
+  itemId("minecraft:iron_pickaxe"),
+  itemId("minecraft:diamond_pickaxe"),
+  itemId("minecraft:netherite_pickaxe"),
   `${NS}rbow_pickaxe`,
 ]);
 
@@ -93,28 +94,36 @@ export function durabilityLoss(amount: number, unbreaking: number, random: () =>
 export function toolAction(tool: string, type: string, aboveAir: boolean, face: string): ToolAction | undefined {
   const down = String(face).toLowerCase() === "down";
   if (tool === `${NS}rbow_hoe` && !down && aboveAir) {
-    if (["minecraft:dirt", "minecraft:grass_block", "minecraft:grass", "minecraft:grass_path"].includes(type))
-      return { block: "minecraft:farmland", sound: "use.gravel" };
-    if (type === "minecraft:coarse_dirt") return { block: "minecraft:dirt", sound: "use.gravel" };
-    if (type === "minecraft:dirt_with_roots")
-      return { block: "minecraft:dirt", sound: "use.gravel", extra: "minecraft:hanging_roots" };
+    // "minecraft:grass" is the pre-1.20.50 grass block id, kept so older worlds still till; vanilla-data has no member for it.
+    if (
+      [
+        blockId("minecraft:dirt"),
+        blockId("minecraft:grass_block"),
+        "minecraft:grass",
+        blockId("minecraft:grass_path"),
+      ].includes(type)
+    )
+      return { block: blockId("minecraft:farmland"), sound: "use.gravel" };
+    if (type === blockId("minecraft:coarse_dirt")) return { block: blockId("minecraft:dirt"), sound: "use.gravel" };
+    if (type === blockId("minecraft:dirt_with_roots"))
+      return { block: blockId("minecraft:dirt"), sound: "use.gravel", extra: blockId("minecraft:hanging_roots") };
   }
   if (tool === `${NS}rbow_shovel`) {
     if (
       !down &&
       aboveAir &&
       [
-        "minecraft:dirt",
-        "minecraft:grass_block",
+        blockId("minecraft:dirt"),
+        blockId("minecraft:grass_block"),
         "minecraft:grass",
-        "minecraft:coarse_dirt",
-        "minecraft:podzol",
-        "minecraft:mycelium",
-        "minecraft:dirt_with_roots",
+        blockId("minecraft:coarse_dirt"),
+        blockId("minecraft:podzol"),
+        blockId("minecraft:mycelium"),
+        blockId("minecraft:dirt_with_roots"),
       ].includes(type)
     )
-      return { block: "minecraft:grass_path", sound: "use.gravel" };
-    if (["minecraft:campfire", "minecraft:soul_campfire"].includes(type))
+      return { block: blockId("minecraft:grass_path"), sound: "use.gravel" };
+    if (([blockId("minecraft:campfire"), blockId("minecraft:soul_campfire")] as string[]).includes(type))
       return { state: "extinguished", value: true, sound: "random.fizz" };
   }
   if (tool === `${NS}rbow_axe`) {

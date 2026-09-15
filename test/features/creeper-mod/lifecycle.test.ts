@@ -1,10 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { bootstrap } from "../../../src/core/bootstrap.ts";
-import { isRunning, setEnabled } from "../../../src/core/features.ts";
+import { runFeature } from "../../../src/core/feature.ts";
 import { creeperMod } from "../../../src/features/creeper-mod/index.ts";
 import {
   addPlayer,
-  CustomCommandStatus,
   dimensions,
   type Entity,
   EntityDamageCause,
@@ -13,7 +11,6 @@ import {
   loadWorld,
   type Player,
   reset,
-  runCommand,
   startup,
   step,
   system,
@@ -44,7 +41,7 @@ function detonate(source: Entity): { source: Entity; cancel: boolean } {
 }
 
 function boot(): void {
-  bootstrap([creeperMod]);
+  runFeature(creeperMod);
   startup();
   loadWorld();
 }
@@ -52,18 +49,13 @@ function boot(): void {
 beforeEach(() => reset());
 
 describe("creeper-mod lifecycle", () => {
-  it("subscribes to the explosion before-event on start and leaves nothing behind on stop", () => {
-    bootstrap([creeperMod]);
+  it("subscribes to the explosion before-event on world load and runs no interval", () => {
+    runFeature(creeperMod);
     startup();
     const explosionsBefore = world.beforeEvents.explosion.size;
     const intervalsBefore = system.intervalCount;
     loadWorld();
-    expect(isRunning("creeper-mod")).toBe(true);
     expect(world.beforeEvents.explosion.size).toBe(explosionsBefore + 1);
-    expect(system.intervalCount).toBe(intervalsBefore);
-    expect(setEnabled("creeper-mod", false)).toEqual({ changed: true });
-    expect(isRunning("creeper-mod")).toBe(false);
-    expect(world.beforeEvents.explosion.size).toBe(explosionsBefore);
     expect(system.intervalCount).toBe(intervalsBefore);
   });
 
@@ -94,30 +86,5 @@ describe("creeper-mod lifecycle", () => {
     expect(event.cancel).toBe(false);
     expect(hits).toEqual([]);
     expect(tnt.isValid).toBe(true);
-  });
-
-  it("lets creeper explosions through once disabled and takes them over again when re-enabled", () => {
-    boot();
-    setEnabled("creeper-mod", false);
-    const first = dimensions.overworld.spawnEntity("minecraft:creeper", { x: 0, y: 65, z: 0 });
-    const { hits } = bystander();
-    const vanilla = detonate(first);
-    step(1);
-    expect(vanilla.cancel).toBe(false);
-    expect(hits).toEqual([]);
-    expect(first.isValid).toBe(true);
-
-    const operator = addPlayer("Op");
-    expect(runCommand("elleedog67:enable", { sourceEntity: operator }, "creeper-mod").status).toBe(
-      CustomCommandStatus.Success,
-    );
-    step(1);
-    expect(operator.chat).toEqual(["Creeper Mod enabled."]);
-    const second = dimensions.overworld.spawnEntity("minecraft:creeper", { x: 0, y: 65, z: 0 });
-    const scripted = detonate(second);
-    step(1);
-    expect(scripted.cancel).toBe(true);
-    expect(hits.length).toBe(1);
-    expect(second.isValid).toBe(false);
   });
 });

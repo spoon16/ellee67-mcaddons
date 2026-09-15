@@ -2,7 +2,7 @@
   "format_version": 2,
   "header": {
     "name": "ElleeDog 67 Ender Mod",
-    "description": "Optional: Endermen cannot take blocks from protected builds (/elleedog:ender_protect). Replaces the Enderman definition. Needs ElleeDog 67 (Behavior).",
+    "description": "Endermen cannot take blocks from protected builds (/elleedog:ender_protect). Replaces the Enderman definition.",
     "uuid": "0eb16393-b3a6-4b73-9919-f46199178662",
     "version": [
       0,
@@ -24,16 +24,23 @@
         2,
         3
       ]
-    }
-  ],
-  "dependencies": [
+    },
     {
-      "uuid": "c73542a6-b84a-4a5c-a0b7-53f5ac8d18ee",
+      "type": "script",
+      "language": "javascript",
+      "uuid": "eb10147f-f314-4672-9a26-f1a665cf254e",
       "version": [
         0,
         2,
         3
-      ]
+      ],
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.9.0"
     }
   ],
   "metadata": {

@@ -6,3 +6,4 @@ dist/
 tools/codegen/pets/.venv/
 __pycache__/
 *.pyc
+.bds/

@@ -1,0 +1,44 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ElleeDog 67 Creeper Mod",
+    "description": "Creeper blasts hurt players only; blocks and other mobs are safe. Script only, no resource pack.",
+    "uuid": "2f55ab67-31ad-4d21-9420-44ce6fbf9ccf",
+    "version": [
+      0,
+      2,
+      3
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "6ffc592e-548c-4d4c-911c-fe870a492974",
+      "version": [
+        0,
+        2,
+        3
+      ],
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.9.0"
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "ElleeDog 67"
+    ],
+    "license": "MIT for original code; see LICENSE and THIRD_PARTY_NOTICES.md",
+    "product_type": "addon"
+  }
+}

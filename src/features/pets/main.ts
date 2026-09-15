@@ -11,7 +11,7 @@ import {
   world,
 } from "@minecraft/server";
 import { ActionFormData, FormCancelationReason } from "@minecraft/server-ui";
-import type { CommandCallback, GatedCommandRegistry, GatedItemComponentRegistry } from "../../core/commands.ts";
+import type { CommandCallback, CommandRegistry, ItemRegistry } from "../../core/feature.ts";
 import type { FeatureContext } from "../../core/subscriptions.ts";
 import { restoreAppearance, transitionForm } from "./appearance.ts";
 import { CATALOG_HASH, MODEL_BY_ID, PETS, RELEASE_VERSION } from "./catalog.generated.ts";
@@ -416,8 +416,8 @@ function selfCommand(handler: CommandAction, delay = 1): CommandCallback {
     return { status: CustomCommandStatus.Success };
   };
 }
-/** Runs during `system.beforeEvents.startup`; the add-on core hands in its gated command registry. */
-export function registerPetCommands(r: GatedCommandRegistry): void {
+/** Runs during `system.beforeEvents.startup` with the engine's command registry. */
+export function registerPetCommands(r: CommandRegistry): void {
   try {
     r.registerEnum("pet:form_choice", ["player", ...PETS.map((p) => p.id), "human"]);
     r.registerEnum("pet:debug_choice", ["on", "off"]);
@@ -508,11 +508,10 @@ export function registerPetCommands(r: GatedCommandRegistry): void {
     fail(undefined, error);
   }
 }
-/** Runs during `system.beforeEvents.startup`; the add-on core hands in its gated item component registry. */
-export function registerPetItems(itemRegistry: GatedItemComponentRegistry): void {
+/** Runs during `system.beforeEvents.startup` with the engine's item component registry. */
+export function registerPetItems(itemRegistry: ItemRegistry): void {
   try {
     const open = (e: ItemComponentUseEvent | ItemComponentUseOnEvent) => system.run(() => morpher.open(e.source));
-    itemRegistry.registerCustomComponent("pet:open_form_menu", { onUse: open, onUseOn: open });
     itemRegistry.registerCustomComponent(MORPHER_COMPONENT, { onUse: open, onUseOn: open });
   } catch (error) {
     fail(undefined, error);

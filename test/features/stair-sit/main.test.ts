@@ -1,10 +1,8 @@
 // Ports the upstream entry-point tests. Upstream rewrote main.js's imports to point at its own runtime double;
-// here the feature is booted through the real core against the shared engine mock, so the same events, commands
-// and deferred callbacks run through `bootstrap`, the gated command registry and the mock scheduler.
+// here the feature runs through `runFeature` against the shared engine mock, so the same events, commands and
+// deferred callbacks go through the engine's command registry and the mock scheduler.
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { bootstrap } from "../../../src/core/bootstrap.ts";
-import { disabledMessage } from "../../../src/core/commands.ts";
-import { setEnabled } from "../../../src/core/features.ts";
+import { runFeature } from "../../../src/core/feature.ts";
 import { stairSit } from "../../../src/features/stair-sit/index.ts";
 import {
   CommandPermissionLevel,
@@ -522,9 +520,9 @@ describe("stair-sit entry point", () => {
 });
 
 describe("stair-sit lifecycle", () => {
-  it("disabling stands everyone up, removes helpers and refuses commands; enabling brings sitting back", () => {
+  it("subscribes the interaction handlers and three loops on world load", () => {
     installDimension();
-    bootstrap([stairSit]);
+    runFeature(stairSit);
     startup();
     const before = {
       block: world.beforeEvents.playerInteractWithBlock.size,
@@ -540,38 +538,7 @@ describe("stair-sit lifecycle", () => {
     const p = runtime.makePlayer();
     const next = runtime.dimension.stair({ x: 0, y: 64, z: 1 });
     mountNow(p);
-    const carrier = p.mount;
     expect(nativeTargetAt(next)).toBeTruthy();
-
-    expect(setEnabled("stair-sit", false)).toEqual({ changed: true });
-    expect(p.mount).toBeUndefined();
-    expect(carrier.isValid).toBe(false);
-    expect(p.teleported).toBe(true);
-    expect(p.location).toEqual({ x: 0.75, y: expect.closeTo(65.01, 6), z: 0.5 });
-    expect(runtime.dimension.getEntities({ type: "sit:seat" })).toEqual([]);
-    expect(runtime.dimension.getEntities({ type: "sit:target" })).toEqual([]);
-    expect(sitCommand("sit:down").callback({ sourceEntity: p })).toEqual({
-      status: CustomCommandStatus.Failure,
-      message: disabledMessage(stairSit),
-    });
-    expect(disabledMessage(stairSit)).toBe(
-      "Stair Sitting is disabled. An operator can run /elleedog67:enable stair-sit.",
-    );
-    expect(world.beforeEvents.playerInteractWithBlock.size).toBe(before.block);
-    expect(world.beforeEvents.playerInteractWithEntity.size).toBe(before.entity);
-    expect(system.intervalCount).toBe(before.intervals);
-    expect(interactBlock(p, p.target).cancel).toBe(false);
-    p.isSneaking = true;
-    step(3);
-    p.isSneaking = false;
-    step();
-    expect(p.mount).toBeUndefined();
-
-    expect(setEnabled("stair-sit", true)).toEqual({ changed: true });
-    // Standing up applied the usual remount cooldown; sitting works again once it has passed.
-    step(31);
-    mountNow(p);
     expect(runtime.dimension.getEntities({ type: "sit:seat" }).length).toBe(1);
-    expect(nativeTargetAt(next)).toBeTruthy();
   });
 });

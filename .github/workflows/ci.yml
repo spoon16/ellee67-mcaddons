@@ -48,3 +48,28 @@ jobs:
           git status --porcelain
           git diff --stat --exit-code
           test -z "$(git status --porcelain)"
+
+  engine:
+    name: Boot in Bedrock Dedicated Server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Cache the server download
+        uses: actions/cache@v4
+        with:
+          path: .bds/bedrock-server-*.zip
+          key: bds-${{ hashFiles('tools/bds/setup.ts') }}
+      - run: npm run test:engine
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: bds-logs
+          path: |
+            .bds/last-run.log
+            .bds/server/ContentLog*.txt
+          if-no-files-found: ignore

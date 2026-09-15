@@ -3,10 +3,9 @@
 Feature id `redstone-guide`. Ported from Redstone Guide 1.0.3; the item, recipe, texture, reader and guide
 text are the 1.0.3 files.
 
-Kind and packs: pack feature. It is active when "ElleeDog 67 Redstone Guide" (Behavior Packs) and
-"ElleeDog 67 Redstone Guide Resources" (Resource Packs) are active in Edit World; activating the behavior
-pack adds the resource pack and the core. There is no runtime switch. The scripts probe
-`ItemTypes.get("elleedog_redstone:guide_book")` after world load to know whether the packs are there.
+Packs: "ElleeDog 67 Redstone Guide" (Behavior Packs, carries the scripts) and "ElleeDog 67 Redstone
+Guide Resources" (Resource Packs); activating the behavior pack adds the resource pack. The feature is
+on exactly when the packs are active. It registers no commands, only the book's item component.
 
 ## What it does
 
@@ -32,7 +31,7 @@ None.
 | --- | --- | --- |
 | Item | `elleedog_redstone:guide_book` | `behavior_packs/elleedog67_redstone_guide/items/guide_book.json` |
 | Recipe | `elleedog_redstone:guide_book` (shapeless, `crafting_table`) | `behavior_packs/elleedog67_redstone_guide/recipes/guide_book.json` |
-| Item component | `elleedog_redstone:open_guide` | registered by `register()`, gated by the core |
+| Item component | `elleedog_redstone:open_guide` | registered by `register()` at startup |
 | Item texture | atlas key `elleedog_redstone_guide_book` | `resource_packs/elleedog67_redstone_guide/textures/items/elleedog_redstone_guide_book.png`, listed in that pack's `textures/item_texture.json` |
 | Display name | `item.elleedog_redstone:guide_book.name` | `resource_packs/elleedog67_redstone_guide/texts/en_US.lang`, `en_GB.lang` |
 | Item cooldown | category `elleedog_redstone_guide`, 0.25 s | item JSON |
@@ -67,9 +66,6 @@ Behaviour details:
 
 ## What off means
 
-Redstone Guide is active exactly when its two packs are active; `/elleedog67:disable redstone-guide` replies with
-the packs to deactivate and changes nothing.
-
 When "ElleeDog 67 Redstone Guide" and "ElleeDog 67 Redstone Guide Resources" are deactivated: the guide cannot be
 crafted and existing guides turn into unknown items until the packs are active again. Bookmarks are player
 dynamic properties, so they are kept and work again once the packs are active.
@@ -101,11 +97,11 @@ Use a copy of the world with "ElleeDog 67 Redstone Guide" active.
 4. From a component page use "Show crafting recipe", then "Back to component".
 5. Read to the second page of a build and close the book. Use it again: "Resume reading" is the first button and
    opens that page. Leave and rejoin the world and check Resume reading again.
-6. Use the book with the ElleeDog 67 Manual's manual still open. The guide should open once that menu is closed; if
+6. Use the book with the Pet Morpher menu still open (Pets active). The guide should open once that menu is closed; if
    it reports "Close the other screen, then use Read Guide again.", close every menu and use it again.
 7. Two players read at the same time. Each sees their own pages and their own bookmark.
 8. Close the book deliberately. It must not reopen by itself.
 9. Deactivate "ElleeDog 67 Redstone Guide" and its resource pack in Edit World and reopen the world: the recipe
-   is gone, a guide already in the inventory shows as an unknown item and `/elleedog67:features` reads
-   `redstone-guide: packs off`. Reactivate both packs and reopen: crafting, reading and the earlier bookmark
+   is gone and a guide already in the inventory shows as an unknown item. Reactivate both packs and reopen:
+   crafting, reading and the earlier bookmark
    work again.

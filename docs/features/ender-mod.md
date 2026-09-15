@@ -2,10 +2,9 @@
 
 Feature id: `ender-mod`.
 
-Kind and packs: pack feature. It is active when "ElleeDog 67 Ender Mod" (Behavior Packs) is active
-in Edit World; activating it adds the core. It has no resource pack and no runtime switch. The
-scripts probe `EntityTypes.get("elleedog:ender_mod_marker")` after world load to know whether the
-pack is there.
+Packs: "ElleeDog 67 Ender Mod" (Behavior Packs, carries the scripts). It has no resource pack. The
+feature is on exactly when the pack is active. Its command and enum are registered under
+`elleedog:`.
 
 ## What it does
 
@@ -69,15 +68,11 @@ Enderman pack below the ElleeDog packs or remove it.
 
 ## What off means
 
-Ender Mod is active exactly when its pack is active; `/elleedog67:disable ender-mod` replies with the
-pack to deactivate and changes nothing.
-
 When "ElleeDog 67 Ender Mod" is deactivated in Edit World: Endermen behave like vanilla. Saved
 regions are remembered and apply again when the pack is active; they and the placement records live
-in the world's dynamic properties, which the pack does not own. `/elleedog:ender_protect` refuses
-with "Ender Mod is not active. Ender Mod is turned on by activating "ElleeDog 67 Ender Mod"
-(Behavior Packs) in Edit World." Blocks placed while the pack is not active are not recorded; put
-older builds inside a named area.
+in the world's dynamic properties, which the pack does not own. `/elleedog:ender_protect` no longer
+exists. Blocks placed while the pack is not active are not recorded; put older builds inside a
+named area.
 
 ## Known limits
 
@@ -102,7 +97,7 @@ Quoted from the upstream source README:
 Use a copy of the world with "ElleeDog 67 Ender Mod" active, the Content Log enabled and no other
 behavior packs that touch Endermen. Confirm `/elleedog:ender_protect` appears for an Operator with
 cheats OFF and that a non-Operator cannot run it. An import notification alone is not evidence that
-the script initialised; `/elleedog67:features` must read `ender-mod: active`.
+the script initialised; the Content Log must show `[ElleeDog 67] ender-mod loaded`.
 
 1. Stand at two opposite corners of an existing build and run `pos1`, `pos2`, then
    `name "Old House"`. Run `list` and check the inclusive X/Z range and dimension.
@@ -126,8 +121,8 @@ the script initialised; `/elleedog67:features` must read `ender-mod: active`.
 8. Run `remove "Old House"`; separate placement records must remain protected. Recreate the area and
    restart the Realm to confirm persistence.
 9. Deactivate "ElleeDog 67 Ender Mod" in Edit World and reopen the world: Endermen move blocks like
-   vanilla, including inside the area, `/elleedog:ender_protect` refuses with the pack hint and
-   `/elleedog67:features` reads `ender-mod: packs off`. Reactivate the pack and reopen: gating
+   vanilla, including inside the area, and `/elleedog:ender_protect` is an unknown command.
+   Reactivate the pack and reopen: gating
    resumes and `list` still shows "Old House".
 10. Test piston and falling-block builds only inside explicitly named areas; individual block lineage
     through those mechanics is not tracked.

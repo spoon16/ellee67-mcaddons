@@ -9,7 +9,7 @@ import type {
   System,
   Vector3,
 } from "@minecraft/server";
-import type { GatedCommandRegistry } from "../../core/commands.ts";
+import type { CommandRegistry } from "../../core/feature.ts";
 import { blockPosition, type RegionCorner } from "./geometry.ts";
 import type { ProtectionStore } from "./store.ts";
 
@@ -82,7 +82,7 @@ export function executeProtectionCommand(
 }
 
 export function registerProtectionCommands(
-  registry: GatedCommandRegistry,
+  registry: CommandRegistry,
   api: ProtectionCommandApi,
   getStore: () => ProtectionStore | undefined,
   selections: Map<string, ProtectionSelection>,

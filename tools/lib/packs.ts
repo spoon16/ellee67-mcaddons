@@ -1,7 +1,8 @@
 // The pack registry behind every tool: which packs exist, where they live, and how they depend on each other.
+import fs from "node:fs";
 import path from "node:path";
 import { readStrictJson } from "./json.ts";
-import { DIST, PACKS_FILE, REPO_ROOT } from "./paths.ts";
+import { DIST, PACK_ENTRIES, PACKS_FILE, REPO_ROOT } from "./paths.ts";
 
 export type PackKind = "behavior" | "resources";
 
@@ -16,8 +17,10 @@ export interface PackSpec {
   description: string;
   uuid: string;
   modules: { data?: string; resources?: string; script?: string };
-  /** Feature id this pack turns on, or null for the core packs. */
-  feature: string | null;
+  /** Engine modules the script bundle imports; each becomes a manifest dependency. Only with a script module. */
+  scriptModules?: string[];
+  /** Feature id this pack belongs to; a behavior pack with a script module bundles src/packs/<feature>.ts. */
+  feature: string;
   /** Pack ids this pack depends on; the game activates them along with this pack. */
   dependsOn: string[];
   /** Whether the pack may replace vanilla definitions (under an overrides/ folder). */
@@ -38,6 +41,15 @@ export function loadPacks(): PackSpec[] {
       for (const dependency of pack.dependsOn) {
         if (!ids.has(dependency)) throw new Error(`packs.json: ${pack.id} depends on unknown pack ${dependency}`);
       }
+      if (pack.modules.script) {
+        if (pack.kind !== "behavior") throw new Error(`packs.json: ${pack.id} is a resource pack with a script module`);
+        if (!pack.scriptModules?.length)
+          throw new Error(`packs.json: ${pack.id} has a script module but no scriptModules`);
+        if (!fs.existsSync(scriptEntry(pack) as string))
+          throw new Error(`packs.json: ${pack.id} has a script module but no src/packs/${pack.feature}.ts`);
+      } else if (pack.scriptModules) {
+        throw new Error(`packs.json: ${pack.id} lists scriptModules without a script module`);
+      }
     }
     cache = document.packs;
   }
@@ -50,8 +62,10 @@ export function getPack(id: string): PackSpec {
   return pack;
 }
 
-/** The pack whose behavior pack carries the script bundle. */
-export const CORE_BEHAVIOR_ID = "elleedog67";
+/** The TypeScript entry esbuild bundles into this pack's scripts/main.js, or undefined for packs without scripts. */
+export function scriptEntry(pack: PackSpec): string | undefined {
+  return pack.modules.script ? path.join(PACK_ENTRIES, `${pack.feature}.ts`) : undefined;
+}
 
 export function packDir(id: string): string {
   return path.join(REPO_ROOT, getPack(id).dir);

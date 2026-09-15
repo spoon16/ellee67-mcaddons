@@ -129,7 +129,7 @@ class CarryAssets(unittest.TestCase):
    self.assertTrue(all(v['uv_size']==[16,16] for v in b['cubes'][0]['uv'].values()))
  def test_mapped_food_and_material_icons_do_not_override_behavior_items(self):
   files={p.stem for p in (ROOT/'behavior_pack/items').glob('*.json')}
-  self.assertEqual(files,{'paw_token','legacy_paw_token','morpher_book'})
+  self.assertEqual(files,{'morpher_book'})
  def test_at_most_one_mesh_per_hand_per_pet(self):
   for n,c in REPLACEMENTS:
    self.assertNotIn('query.life_time',str(c.ast)) # no timed swapping or ghost duplicates

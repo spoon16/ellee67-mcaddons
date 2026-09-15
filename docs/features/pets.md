@@ -2,10 +2,9 @@
 
 Feature id `pets`. Ported from ElleeDog 67 Pets 0.5.2 (Rbow companion build).
 
-Kind and packs: pack feature. It is active when "ElleeDog 67 Pets" (Behavior Packs) and
-"ElleeDog 67 Pets Resources" (Resource Packs) are active in Edit World; activating the behavior pack
-adds the resource pack and the core. There is no runtime switch. The scripts probe
-`EntityTypes.get("pet:diag_model")` after world load to know whether the packs are there.
+Packs: "ElleeDog 67 Pets" (Behavior Packs, carries the scripts) and "ElleeDog 67 Pets Resources"
+(Resource Packs); activating the behavior pack adds the resource pack. The feature is on exactly
+when the packs are active. Every command and enum is registered under `pet:`.
 
 ## What it does
 
@@ -84,8 +83,6 @@ All in `behavior_packs/elleedog67_pets/` and `resource_packs/elleedog67_pets/`.
 | Identifier | Component | Notes |
 |---|---|---|
 | `pet:morpher_book` | `pet:open_morpher` | "ElleeDog 67 Pet Morpher". Unstackable, has a use cooldown. Given by `/pet:book` only; never consumed. Registered for side carry so holding it does not trigger the unmapped-item fallback. |
-| `pet:paw_token` | `pet:open_form_menu` | "ElleeDog 67 Pets - Paw Menu". Craftable (`recipes/paw_token.json`); opens the same Morpher menu. |
-| `cav:paw_token` | `pet:open_form_menu` | Legacy 0.1.x token kept so old stacks still open the menu. |
 | `pet:diag_cube`, `pet:diag_model` | | Summonable test props owned by the player who ran `/pet:probe` (dynamic property `pet:probe_owner`). `pet:diag_model` carries `pet:model_id` and is the pack probe. |
 | `cav:diag_cube`, `cav:diag_model` | | Legacy props; only `/pet:cleanup` touches them. |
 
@@ -117,11 +114,8 @@ report as MISSING or INVALID.
 
 ## What off means
 
-Pets is active exactly when its two packs are active; `/elleedog67:disable pets` replies with the
-packs to deactivate and changes nothing.
-
 When "ElleeDog 67 Pets" and "ElleeDog 67 Pets Resources" are deactivated in Edit World and the world
-is reopened: players render as themselves and the pet commands refuse with the pack hint. Pet items
+is reopened: players render as themselves and the `pet:` commands no longer exist. Pet items
 already in inventories turn into unknown items until the packs are active again; saved pet choices
 come back when they are. The player override, the items, the recipe, the test prop entities and the
 resource pack leave the world with the packs. Saved preferences (`pet:preferred_form` and the display
@@ -198,8 +192,8 @@ per line with a screenshot.
 12. `/pet:probe` spawns a cube and a static model of your pet 3.5 blocks ahead; `/pet:cleanup`
     removes only yours.
 13. While transformed, deactivate "ElleeDog 67 Pets" and "ElleeDog 67 Pets Resources" in Edit World
-    and reopen the world: you are a normal player, `/pet:form carter` replies with the pack hint,
-    the Pet Morpher shows as an unknown item, and the ElleeDog 67 Manual reads `[PACKS OFF] Pets`.
+    and reopen the world: you are a normal player, `/pet:form carter` is an unknown command and
+    the Pet Morpher shows as an unknown item.
     Reactivate both packs and reopen: your pet returns on join without a chat line.
 14. Watch the content log for the whole session: only explicit command errors may appear. With Pets
     active and Rbow Ore not, note any missing-texture message from the Rbow slots.

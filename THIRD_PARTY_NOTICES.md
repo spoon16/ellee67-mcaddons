@@ -28,7 +28,7 @@ These adapted materials are not relicensed under this project's MIT license.
 
 ## Artwork
 
-The ElleeDog 67 pack icon, the ElleeDog 67 Book icon (a resized copy of the pack icon), the
+The
 Pet Morpher book art, the Redstone Guide book art, and the Rbow item, block and armor
 textures were supplied or approved by the user. The Carter, Mochi and Casper pet
 geometry, coats and paws are ElleeDog 67 assets. Inclusion does not assert ownership of

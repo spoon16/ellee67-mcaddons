@@ -1,4 +1,4 @@
-import { LOG_PREFIX } from "./config.ts";
+export const LOG_PREFIX = "[ElleeDog 67]";
 
 const warned = new Set<string>();
 

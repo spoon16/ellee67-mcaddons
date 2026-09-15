@@ -2,9 +2,8 @@
 
 Feature id: `creeper-mod`.
 
-Kind and packs: switch feature, on by default. It ships in the core packs ("ElleeDog 67 (Behavior)"
-and "ElleeDog 67 (Resources)") and is turned on or off per world from the manual or with
-`/elleedog67:enable creeper-mod` and `/elleedog67:disable creeper-mod`.
+Packs: "ElleeDog 67 Creeper Mod" (Behavior Packs, scripts only; no resource pack). The feature is
+on exactly when the pack is active.
 
 ## What it does
 
@@ -28,10 +27,9 @@ ships no entities, items, recipes or textures.
 
 ## What off means
 
-Turn off from the Creeper Mod page of the ElleeDog 67 Manual (ElleeDog or an operator) or with
-`/elleedog67:disable creeper-mod`. Creeper explosions behave like vanilla: blocks break, mobs and
-items take blast damage, and creepers drop kill loot again. Nothing from this feature stays in the
-world. The setting is per world and survives rejoins.
+Deactivate "ElleeDog 67 Creeper Mod" in Edit World and reopen the world. Creeper explosions behave
+like vanilla: blocks break, mobs and items take blast damage, and creepers drop kill loot again.
+Nothing from this feature stays in the world.
 
 ## Known limits
 
@@ -49,8 +47,8 @@ Quoted from the upstream source README:
 
 ## Manual in-game checks
 
-Use a copy of the world with the core packs active, the Content Log enabled and no other behavior
-packs active. Set `mobGriefing` ON so a failure is not masked by the game rule.
+Use a copy of the world with "ElleeDog 67 Creeper Mod" active, the Content Log enabled and no other
+behavior packs active. Set `mobGriefing` ON so a failure is not masked by the game rule.
 
 1. Build a small display: dirt, glass, a chest with items, a painting, an item frame with an item,
    loose items on the ground, a pet, another mob and a second creeper.
@@ -65,9 +63,8 @@ packs active. Set `mobGriefing` ON so a failure is not masked by the game rule.
 6. Switch to Creative, then Adventure, then Spectator: only Survival and Adventure take damage.
 7. Kill a creeper normally and confirm ordinary loot still drops.
 8. Detonate TNT and an end crystal away from the display: both stay destructive.
-9. Run `/elleedog67:disable creeper-mod`, detonate a creeper and confirm vanilla block damage returns;
-   run `/elleedog67:enable creeper-mod` and confirm the scripted blast is back without a reload. Then
-   do the same from the Creeper Mod page of the book with cheats off: Turn off, detonate, Turn on.
+9. Deactivate "ElleeDog 67 Creeper Mod" in Edit World, reopen, detonate a creeper and confirm vanilla
+   block damage returns; reactivate the pack, reopen and confirm the scripted blast is back.
 10. Reload the world and repeat step 2. Then repeat it in multiplayer with two players in range.
 
 Record the Bedrock version, device, pack version, cheats setting, reproduction steps, coordinates,

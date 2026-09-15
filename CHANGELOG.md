@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.3.0
+
+Breaking: the two core packs are gone. Every feature is now its own behavior pack with its own
+scripts, and activating the pack is the only switch.
+
+- Removed "ElleeDog 67 (Behavior)" and "ElleeDog 67 (Resources)", the ElleeDog 67 Manual book, the
+  `/elleedog67:enable|disable|features|book` commands and the per-world feature flags. Worlds on
+  0.2.x deactivate the two core packs by hand; see [docs/RELEASING.md](docs/RELEASING.md).
+- New packs "ElleeDog 67 Stair Sitting" (with its resource pack) and "ElleeDog 67 Creeper Mod",
+  which used to live inside the core. Pets, Rbow Ore, Ender Mod and Redstone Guide keep their uuids
+  and gain a script module each. Ten packs in the `.mcaddon`.
+- Fixed: no feature started in the real game. `FeatureContext.on` passed an `undefined` second
+  argument to `subscribe`, which the engine rejects on the signals that take one. Found by booting
+  the packs in Bedrock Dedicated Server.
+- Fixed: every `pet:`, `sit:` and `elleedog:` command was missing in the real game. The engine
+  allows one command namespace per script module, and the shared core registered `elleedog67:`
+  first. Splitting the scripts per pack restores them.
+- Pets: the "Paw Menu" token (`pet:paw_token`, its recipe and the legacy `cav:paw_token`) is gone;
+  the Pet Morpher book (`/pet:book`) is the way into the menu.
+- `npm run test:engine` boots every pack in Bedrock Dedicated Server headlessly, checks the pack
+  stack, the script load lines, the Content Log and one command per namespace; CI runs it. The
+  engine mock now enforces the one-namespace and subscribe-arity rules, so both fixes above are
+  unit tests too.
+- The manual artwork script `tools/art/manual_book.py` went with the book; `tools/art/pack_icons.py`
+  draws the Stair Sitting and Creeper Mod pack icons.
+
 ## 0.2.3
 
 - New ElleeDog 67 Manual artwork, drawn as pixel art from the concept cover: a red leather book with

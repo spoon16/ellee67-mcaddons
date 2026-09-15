@@ -23,7 +23,7 @@ Python 3.12, Pillow and numpy from `tools/codegen/pets/uv.lock` on first use).
 | `behavior_packs/elleedog67_pets/` and `resource_packs/elleedog67_pets/` (everything except the manifest and icon), plus `src/features/pets/*.generated.js` | `tools/codegen/pets/tools/build.py` (the Pets compiler) and the sync | `tools/codegen/pets/catalog/`, `assets/`, `project.json`, `baseline/`, `upstream/`, and the hand-written scripts in `src/features/pets/` |
 | `behavior_packs/elleedog67_rbow_ore/` and `resource_packs/elleedog67_rbow_ore/` (everything except the manifest and icon) | the Pets compiler, which copies and adapts the hash-locked Rbow 1.2.0 packs under `tools/codegen/pets/integration/rbow_1.2.0/`; the sync adds the standalone player armor and spear attachables from that tree directly | `tools/codegen/pets/integration/rbow_1.2.0/tools/build_data.py` and its tables (see "Regenerating Rbow") |
 
-Hand-written and never touched by the sync: the two core packs, the Ender Mod marker entity
+Hand-written and never touched by the sync: the Stair Sitting, Creeper Mod and Redstone Guide packs, the Ender Mod marker entity
 `behavior_packs/elleedog67_ender_mod/entities/ender_mod_marker.json`, the two Redstone Guide packs,
 and every `pack_icon.png`.
 
@@ -75,21 +75,17 @@ marks them and the manifests `linguist-generated` so GitHub folds them in diffs.
    change cannot churn the repo.
 4. **Manifests.** `tools/manifests.ts` rewrites all nine manifests from `packs.json`.
 
-Not part of `npm run codegen`: the ElleeDog 67 Manual artwork is 64x64 pixel art drawn by
-`tools/art/manual_book.py` (a red leather book with gold corners; the black cat, the bearded man,
-Carter in his shades and the white cat on a grass strip above the "ElleeDog 67" logo and a MANUAL
-banner). The script renders it as the book item texture
-(`resource_packs/elleedog67/textures/items/elleedog67_feature_book.png`, 128x128) and as the two
-core pack icons (256x256). Rerun it by hand after changing the drawing:
+Not part of `npm run codegen`: the Stair Sitting and Creeper Mod pack icons are 32x32 pixel art drawn
+by `tools/art/pack_icons.py` and saved at 256x256. Rerun it by hand after changing the drawing:
 
-```
-uv run --project tools/codegen/pets --frozen python tools/art/manual_book.py
+```bash
+uv run --project tools/codegen/pets --frozen python tools/art/pack_icons.py
 ```
 
 There is no union or verification step for shared files: each pack ships its own `texts/`,
 `textures/item_texture.json`, `textures/terrain_texture.json` and `blocks.json`, and the game
-merges them across active packs. The core resource pack's `texts/` and `item_texture.json` are
-hand-maintained and hold only the book and Stair Sitting keys and the book atlas entry.
+merges them across active packs. The Stair Sitting and Redstone Guide resource packs' `texts/` and
+`item_texture.json` are hand-maintained.
 
 ## Adding a pet
 

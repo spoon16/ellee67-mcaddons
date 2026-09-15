@@ -2,7 +2,7 @@
   "format_version": 2,
   "header": {
     "name": "ElleeDog 67 Pets",
-    "description": "Optional: become Carter, Mochi or Casper with the Pet Morpher. Replaces the player definition. Needs ElleeDog 67 (Behavior).",
+    "description": "Become Carter, Mochi or Casper with the Pet Morpher book (/pet:book). Replaces the player definition.",
     "uuid": "23c993af-8c46-4b3a-8d09-cfb07caa0bed",
     "version": [
       0,
@@ -24,6 +24,17 @@
         2,
         3
       ]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "4ece76bd-f5db-4546-addc-264f8ce73788",
+      "version": [
+        0,
+        2,
+        3
+      ],
+      "entry": "scripts/main.js"
     }
   ],
   "dependencies": [
@@ -36,12 +47,12 @@
       ]
     },
     {
-      "uuid": "c73542a6-b84a-4a5c-a0b7-53f5ac8d18ee",
-      "version": [
-        0,
-        2,
-        3
-      ]
+      "module_name": "@minecraft/server",
+      "version": "2.9.0"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.0.0"
     }
   ],
   "metadata": {

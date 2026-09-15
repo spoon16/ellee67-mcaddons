@@ -3,14 +3,13 @@ import {
   CustomCommandParamType,
   CustomCommandStatus,
   type Entity,
-  EntityTypes,
   type PlayerBreakBlockAfterEvent,
   type PlayerLeaveAfterEvent,
   type PlayerPlaceBlockAfterEvent,
   system,
   world,
 } from "@minecraft/server";
-import type { FeatureDefinition } from "../../core/features.ts";
+import type { FeatureDefinition } from "../../core/feature.ts";
 import { type ProtectionSelection, registerProtectionCommands } from "./commands.ts";
 import { GATE_PROPERTY, type Sighting, shouldAllowMovement } from "./gate.ts";
 import { ProtectionStore } from "./store.ts";
@@ -117,18 +116,6 @@ function onLeave(event: PlayerLeaveAfterEvent): void {
 export const enderMod: FeatureDefinition = {
   id: "ender-mod",
   title: "Ender Mod",
-  summary: "Endermen cannot move blocks in protected builds",
-  kind: "pack",
-  packs: ["ender-mod"],
-  installed: () => EntityTypes.get("elleedog:ender_mod_marker") !== undefined,
-  manual: {
-    about:
-      'Protect a build from Endermen. Run /elleedog:ender_protect pos1 and pos2 at two corners, then /elleedog:ender_protect name "my house". Endermen cannot take blocks from named regions or carry blocks placed by players.',
-    commands: [
-      '/elleedog:ender_protect pos1|pos2 (mark corners), name "..." (save a region), list, remove "..." (operators)',
-    ],
-    whileOff: "Endermen behave like vanilla. Saved regions are remembered and apply again when the pack is active.",
-  },
   register({ commands }) {
     registerProtectionCommands(
       commands,
@@ -152,8 +139,5 @@ export const enderMod: FeatureDefinition = {
     ctx.on(world.afterEvents.entityLoad, onLoaded);
     ctx.on(world.afterEvents.playerLeave, onLeave);
     ctx.every(1, updateAll);
-  },
-  stop() {
-    // pack feature: never stopped at runtime
   },
 };

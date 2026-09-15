@@ -1,6 +1,6 @@
-import { type Entity, ItemTypes, type Player, system, world } from "@minecraft/server";
+import { type Entity, type Player, system, world } from "@minecraft/server";
 import { ActionFormData, FormCancelationReason } from "@minecraft/server-ui";
-import type { FeatureDefinition } from "../../core/features.ts";
+import type { FeatureDefinition } from "../../core/feature.ts";
 import { log } from "../../core/log.ts";
 import { type Bookmark, HOME, normalizeBookmark, type Route, type Screen, screenFor } from "./reader.ts";
 
@@ -130,16 +130,6 @@ function requestOpen(source: Entity | undefined): void {
 export const redstoneGuide: FeatureDefinition = {
   id: "redstone-guide",
   title: "Redstone Guide",
-  summary: "Craft a guide book: 1 redstone + 1 leather",
-  kind: "pack",
-  packs: ["redstone-guide", "redstone-guide-resources"],
-  installed: () => ItemTypes.get("elleedog_redstone:guide_book") !== undefined,
-  manual: {
-    about:
-      "Craft a Redstone Guide with 1 redstone and 1 leather. Using it opens pages on every redstone component, their recipes and three example builds, and remembers where you left off.",
-    whileOff:
-      "The guide cannot be crafted and existing guides turn into unknown items until the packs are active again.",
-  },
   register({ items }) {
     items.registerCustomComponent(COMPONENT_ID, {
       onUse: (event) => requestOpen(event.source),
@@ -155,10 +145,5 @@ export const redstoneGuide: FeatureDefinition = {
       sessions.delete(event.playerId);
       lastUse.delete(event.playerId);
     });
-  },
-  stop() {
-    // Dropping every session ends any open reader at its next screen; nothing else is left in the world.
-    sessions.clear();
-    lastUse.clear();
   },
 };

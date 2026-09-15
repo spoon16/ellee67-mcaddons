@@ -1,47 +1,45 @@
 # ElleeDog 67
 
-One Minecraft Bedrock add-on: nine packs in one `.mcaddon`. The two core packs carry the
-ElleeDog 67 Manual (the in-game manual), Stair Sitting, Creeper Mod and every script. The other four
-features each ship in their own packs and are turned on by activating those packs in the world
-settings.
+One Minecraft Bedrock add-on: six features, ten packs, one `.mcaddon`. Every feature is its own
+behavior pack (plus a resource pack where it needs client files) with its own scripts. Activating a
+pack in the world settings is what turns the feature on; deactivating it turns the feature off.
+There is no central pack, no controller and no in-game switch.
 
-| Pack | What it turns on | Type | Needed |
+| Pack | What it turns on | Type | Comes with |
 |---|---|---|---|
-| ElleeDog 67 (Behavior) | the ElleeDog 67 Manual manual, Stair Sitting, Creeper Mod, and the scripts every other pack uses | behavior | required |
-| ElleeDog 67 (Resources) | the book and Stair Sitting visuals | resource | required; added with the Behavior pack |
-| ElleeDog 67 Pets | Pets: become Carter, Mochi or Casper with the Pet Morpher book, with fitted armor and mouth-carried tools | behavior | optional |
-| ElleeDog 67 Pets Resources | pet models, animations and fitted armor | resource | optional; added with Pets |
-| ElleeDog 67 Rbow Ore | Rbow Ore: rainbow ore, ingots, tools, armor and a spear | behavior | optional |
-| ElleeDog 67 Rbow Ore Resources | Rbow ore, item and armor art | resource | optional; added with Rbow Ore |
-| ElleeDog 67 Ender Mod | Ender Mod: Endermen cannot move blocks in protected builds (`/elleedog:ender_protect`) | behavior | optional |
-| ElleeDog 67 Redstone Guide | Redstone Guide: craft a book (1 redstone + 1 leather) that explains redstone components, recipes and builds | behavior | optional |
-| ElleeDog 67 Redstone Guide Resources | the guide book art | resource | optional; added with Redstone Guide |
+| ElleeDog 67 Pets | Pets: become Carter, Mochi or Casper with the Pet Morpher book, with fitted armor and mouth-carried tools | behavior | ElleeDog 67 Pets Resources |
+| ElleeDog 67 Pets Resources | pet models, animations and fitted armor | resource | |
+| ElleeDog 67 Rbow Ore | Rbow Ore: rainbow ore, ingots, tools, armor and a spear | behavior | ElleeDog 67 Rbow Ore Resources |
+| ElleeDog 67 Rbow Ore Resources | Rbow ore, item and armor art | resource | |
+| ElleeDog 67 Ender Mod | Ender Mod: Endermen cannot move blocks in protected builds (`/elleedog:ender_protect`) | behavior | |
+| ElleeDog 67 Redstone Guide | Redstone Guide: craft a book (1 redstone + 1 leather) that explains redstone components, recipes and builds | behavior | ElleeDog 67 Redstone Guide Resources |
+| ElleeDog 67 Redstone Guide Resources | the guide book art | resource | |
+| ElleeDog 67 Stair Sitting | Stair Sitting: sit on stairs with the Sit button, a crouch gesture or `/sit:down` | behavior | ElleeDog 67 Stair Sitting Resources |
+| ElleeDog 67 Stair Sitting Resources | the invisible seat and Sit prompt | resource | |
+| ElleeDog 67 Creeper Mod | Creeper Mod: creeper blasts hurt players only; blocks and other mobs are safe | behavior | |
 
-**Status: 0.2.0 has not been run in Minecraft yet.** Everything is checked by tests against an
-engine mock and by pack validation, which is not the same thing. The manual checklist is in
-[docs/TESTING.md](docs/TESTING.md).
+**Status: the packs boot cleanly in Bedrock Dedicated Server (`npm run test:engine`) but have not
+been played on a real device yet.** Everything else is checked by tests against an engine mock and
+by pack validation. The manual checklist is in [docs/TESTING.md](docs/TESTING.md).
 
 ## Play it
 
 1. Download `ElleeDog67_<version>.mcaddon` from the latest GitHub Release (or the CI artifact) and
-   open it with Minecraft. One import brings in all nine packs.
-2. Edit a copy of your world. Under Behavior Packs, activate "ElleeDog 67 (Behavior)". That gives
-   you the ElleeDog 67 Manual, Stair Sitting and Creeper Mod; "ElleeDog 67 (Resources)" comes along
-   on its own.
-3. Activate the optional packs you want: "ElleeDog 67 Pets", "ElleeDog 67 Rbow Ore",
-   "ElleeDog 67 Ender Mod", "ElleeDog 67 Redstone Guide". Each one pulls in its resource pack and
-   the core.
-4. Two ordering rules: keep "ElleeDog 67 Pets Resources" above "ElleeDog 67 Rbow Ore Resources",
+   open it with Minecraft. One import brings in all ten packs.
+2. Edit a copy of your world. Under Behavior Packs, activate the features you want: "ElleeDog 67
+   Pets", "ElleeDog 67 Rbow Ore", "ElleeDog 67 Ender Mod", "ElleeDog 67 Redstone Guide",
+   "ElleeDog 67 Stair Sitting", "ElleeDog 67 Creeper Mod". A pack that has a resource pack pulls it
+   in on its own.
+3. Two ordering rules: keep "ElleeDog 67 Pets Resources" above "ElleeDog 67 Rbow Ore Resources",
    and put any other pack that replaces the player or Endermen below the ElleeDog packs, or remove
    it. Everything else can be in any order.
-5. In game, the **ElleeDog 67 Manual** is the manual. It lists every feature, whether it is on, and
-   which packs turn it on or off. Anyone holding a book can read it. Players named ElleeDog (who
-   receive one on join) and operators can flip the two switches, Stair Sitting and Creeper Mod,
-   from its pages. `/elleedog67:features` prints the same states in chat. None of this needs cheats.
+4. In game, each feature brings its own commands: `/pet:book` gives you the Pet Morpher, `/sit:help`
+   lists the sitting controls, `/elleedog:ender_protect` protects a build. None of them needs
+   cheats.
 
-Import, activation and how to move a world from the old standalone packs or from 0.1.0:
-[docs/RELEASING.md](docs/RELEASING.md). What each feature does, its commands and what "off"
-means: [docs/FEATURES.md](docs/FEATURES.md).
+Import, activation and how to move a world from earlier versions:
+[docs/RELEASING.md](docs/RELEASING.md). What each feature does and its commands:
+[docs/FEATURES.md](docs/FEATURES.md).
 
 ## Develop it
 
@@ -51,25 +49,25 @@ for every pack file).
 
 ```bash
 npm install
-npm run build       # dist/<pack>/ for all nine packs, scripts bundled into the core, validation
+npm run build       # dist/<pack>/ for all ten packs, one script bundle per behavior pack, validation
 npm run package     # dist/ElleeDog67_<version>.mcaddon and SHA256SUMS.txt
 npm test            # unit tests plus a real build of the packs
 npm run check       # types and lint
+npm run test:engine # boots the packs in Bedrock Dedicated Server (downloads it once into .bds/)
 npm run manifests   # rewrite every manifest.json from packs.json
 ```
 
 Where things are:
 
 ```
-packs.json                    the nine packs: ids, titles, uuids, dependencies (manifests are generated from it)
-behavior_packs/elleedog67/    core behavior pack: the book item and the Stair Sitting entities
-behavior_packs/elleedog67_*/  one behavior pack per optional feature (pets, rbow_ore, ender_mod, redstone_guide)
-resource_packs/elleedog67/    core resource pack: the book and Stair Sitting visuals
-resource_packs/elleedog67_*/  one resource pack per optional feature that needs one
-src/core/                     feature registry, pack probes, commands, the book and the manual
-src/features/<id>/            each feature's scripts; index.ts is its entry point
+packs.json                    the ten packs: ids, titles, uuids, script modules, dependencies (manifests are generated from it)
+behavior_packs/elleedog67_*/  one behavior pack per feature (pets, rbow_ore, ender_mod, redstone_guide, stair_sit, creeper_mod)
+resource_packs/elleedog67_*/  one resource pack per feature that needs one
+src/packs/<id>.ts             each behavior pack's script entry: runs its feature
+src/core/                     the tiny shared runtime bundled into every pack: runFeature, FeatureContext, log
+src/features/<id>/            each feature's scripts; index.ts exports its definition
 test/                         vitest suites and the engine mock
-tools/                        build, validate, package, manifests, version bump, codegen
+tools/                        build, validate, package, manifests, version bump, codegen, the headless server harness
 docs/                         architecture, feature pages, testing, releasing, codegen, cloud environment, ecosystem
 ```
 
@@ -84,8 +82,8 @@ this toolchain from a `SessionStart` hook in `.claude/`, which installs Node 24,
 and the pinned Python side before the session starts. What that hook does, and the network settings
 the environment needs, are in [docs/CLOUD_ENVIRONMENT.md](docs/CLOUD_ENVIRONMENT.md).
 [docs/ECOSYSTEM.md](docs/ECOSYSTEM.md) evaluates the community and Mojang tooling against this
-repository's own, and shows that Bedrock Dedicated Server runs the add-on headlessly in that
-environment, Content Log, custom commands, GameTests and all.
+repository's own, and records the headless Bedrock Dedicated Server runs that led to
+`npm run test:engine`.
 
 ## Not in this version
 

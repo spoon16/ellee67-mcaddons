@@ -1,6 +1,6 @@
 // Pets-specific conveniences layered on the shared engine mock. They reproduce what the pack's original
 // test double offered (seeded entity properties, a write log, a test pickaxe) without editing test/mocks/.
-import { bootstrap } from "../../../src/core/bootstrap.ts";
+import { runFeature } from "../../../src/core/feature.ts";
 import { pets } from "../../../src/features/pets/index.ts";
 import {
   type Entity,
@@ -9,7 +9,6 @@ import {
   loadWorld,
   Player,
   players,
-  registerEntityType,
   runCommand,
   startup,
 } from "../../mocks/minecraft-server.ts";
@@ -101,15 +100,11 @@ export function declarePetEntities(): void {
   entityProperties["cav:diag_model"] = {};
 }
 
-/** The entity the Pets behavior pack declares and the feature probes for after world load. */
-export const PROBE_ENTITY = "pet:diag_model";
-
-/** Registers the pets feature with the core and loads a world whose Pets packs are active. */
+/** Runs the Pets pack's scripts through startup and world load. */
 export function start(): void {
   declarePetEntities();
-  bootstrap([pets]);
+  runFeature(pets);
   startup();
-  registerEntityType(PROBE_ENTITY);
   loadWorld();
 }
 

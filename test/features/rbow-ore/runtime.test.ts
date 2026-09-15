@@ -29,8 +29,7 @@ afterEach(() => vi.restoreAllMocks());
 describe("rbow-ore runtime", () => {
   it("registers only the Rbow tool component and subscribes the break and interact handlers", () => {
     boot();
-    const featureComponents = [...registry.components.keys()].filter((name) => !name.startsWith("elleedog67:"));
-    expect(featureComponents).toEqual(["elleedog:rbow_tool"]);
+    expect([...registry.components.keys()]).toEqual(["elleedog:rbow_tool"]);
     expect(warn).not.toHaveBeenCalled();
     expect(world.afterEvents.playerBreakBlock.size).toBe(1);
     expect(world.beforeEvents.playerInteractWithBlock.size).toBe(1);

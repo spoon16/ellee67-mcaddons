@@ -20,7 +20,10 @@ export class FeatureContext {
   }
 
   on<TEvent, TOptions>(signal: Signal<TEvent, TOptions>, callback: (event: TEvent) => void, options?: TOptions): void {
-    signal.subscribe(callback, options);
+    // The engine counts arguments at the native boundary: most signals take exactly one, and passing an undefined
+    // second argument is a TypeError there. Only forward options when the caller gave some.
+    if (options === undefined) signal.subscribe(callback);
+    else signal.subscribe(callback, options);
     this.disposers.push(() => signal.unsubscribe(callback));
   }
 

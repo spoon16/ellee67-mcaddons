@@ -8,8 +8,7 @@ import {
   system,
   world,
 } from "@minecraft/server";
-import type { FeatureRegistries } from "../../core/commands.ts";
-import type { FeatureDefinition } from "../../core/features.ts";
+import type { FeatureDefinition, FeatureRegistries } from "../../core/feature.ts";
 import type { FeatureContext } from "../../core/subscriptions.ts";
 import { CONFIG } from "./config.ts";
 import { aimedBlock, emptyHands, readStair, ridingEntity, SeatManager, valid } from "./seats.ts";
@@ -384,25 +383,11 @@ function subscribe(ctx: FeatureContext): void {
 /**
  * Sit on vanilla stairs with the native Sit button, a crouch-release gesture or `/sit:down`, and move between
  * nearby stairs while seated. Invisible `sit:seat` carriers and `sit:target` interaction helpers are transient and
- * swept while the feature runs; stopping it stands everyone up and removes every helper.
+ * swept while the feature runs. Deactivating the pack removes both entity definitions with it.
  */
 export const stairSit: FeatureDefinition = {
   id: "stair-sit",
   title: "Stair Sitting",
-  summary: "Sit on stairs with the Sit button, a crouch gesture or /sit:down",
-  kind: "switch",
-  defaultEnabled: true,
-  manual: {
-    about:
-      "Sit on any stair: look at it with empty hands and press Sit, crouch and release while looking at it, or run /sit:down. While seated, use a nearby free stair to move there without standing up.",
-    commands: [
-      "/sit:down and /sit:stand",
-      "/sit:help, /sit:status",
-      "/sit:button true|false (native Sit prompts), /sit:gesture true|false (crouch-release sitting)",
-      "/sit:height <-0.5 to 0.5> (seat height), /sit:clear (operators: remove every seat helper)",
-    ],
-    whileOff: "Seats and Sit prompts are removed and the sit commands refuse. Nothing stays behind in the world.",
-  },
   register: registerCommands,
   start(ctx) {
     subscribe(ctx);
@@ -412,13 +397,13 @@ export const stairSit: FeatureDefinition = {
       console.info(`[ElleeDog 67 Sit] ${CONFIG.version} loaded; stable API 2.9.0.`);
     });
   },
-  stop() {
-    manager.sweep(true);
-    targets.sweep(true);
-    // The clear-all pause only guards the discovery loop, which is disposed with the context; left in place it
-    // would just delay Sit prompts after re-enabling.
-    targets.pausedUntil = -1;
-    gestures.clear();
-    pending.clear();
-  },
 };
+
+/** Stands every rider up, removes every helper and clears the module state. Tests call it between worlds. */
+export function shutdownStairSit(): void {
+  manager.sweep(true);
+  targets.sweep(true);
+  targets.pausedUntil = -1;
+  gestures.clear();
+  pending.clear();
+}

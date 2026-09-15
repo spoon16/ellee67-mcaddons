@@ -142,10 +142,11 @@ def build(root=ROOT,output=None):
     for target in [rp/'models/entity',rp/'animations',rp/'animation_controllers',rp/'render_controllers',rp/'attachables',rp/'textures/entity/carter']:
         if target.exists():shutil.rmtree(target)
     shutil.copytree(root/'src',bp/'scripts',dirs_exist_ok=True)
-    # The inherited 1.20 recipe omitted mandatory unlock data.
-    recipe=read(bp/'recipes/paw_token.json')
-    recipe['minecraft:recipe_shapeless']['unlock']=[{'item':'minecraft:bone'}]
-    write(bp/'recipes/paw_token.json',recipe)
+    # 0.3.0 dropped the Paw Menu token (a second way into the Morpher menu): the book is the only entry point.
+    for rel in ['items/paw_token.json','items/legacy_paw_token.json','recipes/paw_token.json']:(bp/rel).unlink()
+    (rp/'textures/items/paw_token.png').unlink(missing_ok=True)
+    atlas=read(rp/'textures/item_texture.json');atlas['texture_data'].pop('cav_paw_token',None);write(rp/'textures/item_texture.json',atlas)
+    for lang in (rp/'texts').glob('*.lang'):lang.write_text(''.join(l for l in lang.read_text().splitlines(keepends=True) if 'paw_token' not in l))
     for folder in [bp,rp]:
         m=read(folder/'manifest.json');m['header']['name']=f'ElleeDog 67 Pets {version_str} — {release_label} {"BP" if folder==bp else "RP"}'
         m['header']['description']='Isolated native Player armor and pet render skeletons. Rbow 1.2.3 companion; Rbow 1.2.0 gameplay retained. Quiet startup. Client validation pending.'
@@ -330,7 +331,7 @@ def build(root=ROOT,output=None):
 
     text+='\n'.join(f'pet.form.{p["id"]}={p["display_name"]}' for p in pets)+'\n';lang.parent.mkdir(parents=True,exist_ok=True);lang.write_text(text)
     # Explicit test-only inventory grants. No runtime gear mutations.
-    (bp/'functions/pet/test_kit.mcfunction').write_text('give @s minecraft:diamond_pickaxe\ngive @s minecraft:diamond_sword\ngive @s minecraft:shield\ngive @s minecraft:oak_boat\ngive @s minecraft:water_bucket\ngive @s minecraft:nether_brick 16\ngive @s minecraft:iron_helmet\ngive @s minecraft:iron_chestplate\ngive @s minecraft:iron_leggings\ngive @s minecraft:iron_boots\ngive @s pet:paw_token\ngive @s pet:morpher_book\n')
+    (bp/'functions/pet/test_kit.mcfunction').write_text('give @s minecraft:diamond_pickaxe\ngive @s minecraft:diamond_sword\ngive @s minecraft:shield\ngive @s minecraft:oak_boat\ngive @s minecraft:water_bucket\ngive @s minecraft:nether_brick 16\ngive @s minecraft:iron_helmet\ngive @s minecraft:iron_chestplate\ngive @s minecraft:iron_leggings\ngive @s minecraft:iron_boots\ngive @s pet:morpher_book\n')
     write(out/'BUILD_INFO.json',{'build':project['build'],'version':version,'catalog_sha256':catalog_hash,'pets':[{k:p[k] for k in ['id','wire_id','rig','first_person','validation']} for p in pets],
        'based_on':'Pets 0.4.5 + supplied Rbow 1.2.0; immutable native baseline 0.2.1','input_feedback':'Native armor still detached after form changes. Isolate native Player/armor passes and remove obsolete pet writes to humanoid bones. Sitting-direction issue is unchanged in this focused test build.',
        'minecraft_client_tested':False,'realm_tested':False,'armor_adapters':len(armors),'mapped_handheld_items':len(tools),'mapped_side_items':len(side_items),'suppression':'scripts.hide_held_items; both-hand replacement guard; native fallback for unmapped hands','native_first_person_item_rendering_changed':False,'new_pet_without_core_edits':True,'rbow_integration':True,'companion_version':project['integration']['companion_version']})

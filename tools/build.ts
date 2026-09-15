@@ -1,11 +1,11 @@
-// Assembles dist/: copies every pack from packs.json, bundles src/main.ts into the core behavior pack with esbuild,
-// then validates the result. Nothing here runs a generator; see tools/codegen for that.
+// Assembles dist/: copies every pack from packs.json, bundles each behavior pack's src/packs/<feature>.ts into its
+// scripts/main.js with esbuild, then validates the result. Nothing here runs a generator; see tools/codegen for that.
 import fs from "node:fs";
 import path from "node:path";
 import { build as esbuild } from "esbuild";
 import { copyTree } from "./lib/files.ts";
-import { CORE_BEHAVIOR_ID, distDir, loadPacks, packDir } from "./lib/packs.ts";
-import { DIST, REPO_ROOT, SCRIPT_ENTRY } from "./lib/paths.ts";
+import { distDir, loadPacks, packDir, scriptEntry } from "./lib/packs.ts";
+import { DIST, REPO_ROOT } from "./lib/paths.ts";
 import { validateBuild } from "./validate.ts";
 
 export async function buildPacks(): Promise<void> {
@@ -19,19 +19,23 @@ export async function buildPacks(): Promise<void> {
       if (fs.existsSync(source)) fs.copyFileSync(source, path.join(target, notice));
     }
   }
-  await esbuild({
-    entryPoints: [SCRIPT_ENTRY],
-    outfile: path.join(distDir(CORE_BEHAVIOR_ID), "scripts", "main.js"),
-    bundle: true,
-    format: "esm",
-    platform: "neutral",
-    target: "es2020",
-    external: ["@minecraft/server", "@minecraft/server-ui"],
-    sourcemap: false,
-    minify: false,
-    legalComments: "none",
-    logLevel: "warning",
-  });
+  for (const pack of loadPacks()) {
+    const entry = scriptEntry(pack);
+    if (!entry) continue;
+    await esbuild({
+      entryPoints: [entry],
+      outfile: path.join(distDir(pack.id), "scripts", "main.js"),
+      bundle: true,
+      format: "esm",
+      platform: "neutral",
+      target: "es2020",
+      external: ["@minecraft/server", "@minecraft/server-ui"],
+      sourcemap: false,
+      minify: false,
+      legalComments: "none",
+      logLevel: "warning",
+    });
+  }
   const report = validateBuild();
   if (report.errors.length) {
     for (const error of report.errors) console.error(`error: ${error}`);

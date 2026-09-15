@@ -6,5 +6,5 @@
   "retrieved": "2026-09-13",
   "local_file": "upstream/enderman.json",
   "local_sha256": "375f2e9fdf8e15b85061673011a006c5687dcbafa89b598e088e5fa507e68cdd",
-  "note": "upstream/enderman.json is the byte-for-byte upstream file, comments included. The runtime file behavior_packs/elleedog67/entities/overrides/enderman.json is generated from it by inject.ts and differs only by one entity property (elleedog:may_move_blocks) and a bool_property filter on minecraft:behavior.take_block (can_take) and minecraft:behavior.place_block (can_place)."
+  "note": "upstream/enderman.json is the byte-for-byte upstream file, comments included. The runtime file behavior_packs/elleedog67_ender_mod/entities/overrides/enderman.json is generated from it by inject.ts and differs only by one entity property (elleedog:may_move_blocks) and a bool_property filter on minecraft:behavior.take_block (can_take) and minecraft:behavior.place_block (can_place)."
 }

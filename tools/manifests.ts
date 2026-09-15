@@ -3,12 +3,17 @@
 import fs from "node:fs";
 import path from "node:path";
 import { readStrictJson } from "./lib/json.ts";
-import { CORE_BEHAVIOR_ID, getPack, loadPacks, type PackSpec, packDir } from "./lib/packs.ts";
+import { getPack, loadPacks, type PackSpec, packDir } from "./lib/packs.ts";
 import { REPO_ROOT } from "./lib/paths.ts";
 
 export const MIN_ENGINE_VERSION = [1, 26, 40];
 export const SERVER_API = "2.9.0";
 export const SERVER_UI_API = "2.0.0";
+/** The stable engine module versions every script pack declares; packs.json names which of them each pack uses. */
+export const SCRIPT_MODULE_VERSIONS: Readonly<Record<string, string>> = {
+  "@minecraft/server": SERVER_API,
+  "@minecraft/server-ui": SERVER_UI_API,
+};
 
 export function packageVersion(): [number, number, number] {
   const text = (readStrictJson(path.join(REPO_ROOT, "package.json")) as { version: string }).version;
@@ -35,9 +40,10 @@ export function expectedManifest(pack: PackSpec, version = packageVersion()): Re
     uuid: getPack(id).uuid,
     version,
   }));
-  if (pack.id === CORE_BEHAVIOR_ID) {
-    dependencies.push({ module_name: "@minecraft/server", version: SERVER_API });
-    dependencies.push({ module_name: "@minecraft/server-ui", version: SERVER_UI_API });
+  for (const name of pack.scriptModules ?? []) {
+    const moduleVersion = SCRIPT_MODULE_VERSIONS[name];
+    if (!moduleVersion) throw new Error(`packs.json: ${pack.id} uses unknown script module ${name}`);
+    dependencies.push({ module_name: name, version: moduleVersion });
   }
   return {
     format_version: 2,

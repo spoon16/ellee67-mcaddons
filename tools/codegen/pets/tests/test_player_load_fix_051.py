@@ -100,11 +100,12 @@ class TypedDefaults(unittest.TestCase):
   self.assertIs(type(now['pet:seat_lift']['default']),float)
 
 class RecipeAndSpearDefaults(unittest.TestCase):
- def test_paw_recipe_unlock_added_without_changing_ingredients_or_result(self):
-  old=read(ROOT/'baseline/0.2.1/behavior_pack/recipes/paw_token.json')
-  new=read(BP/'recipes/paw_token.json')
-  self.assertEqual(new['minecraft:recipe_shapeless'].pop('unlock'),[{'item':'minecraft:bone'}])
-  self.assertEqual(old,new)
+ def test_paw_token_is_gone(self):
+  # 0.3.0 dropped the Paw Menu token; the Morpher book is the only way into the menu.
+  for rel in ['items/paw_token.json','items/legacy_paw_token.json','recipes/paw_token.json']:
+   self.assertFalse((BP/rel).exists(),rel)
+  self.assertNotIn('cav_paw_token',read(RP/'textures/item_texture.json')['texture_data'])
+  self.assertNotIn('paw_token',(RP/'texts/en_US.lang').read_text())
  def test_old_paw_recipe_fails_new_validation(self):
   with self.assertRaisesRegex(LoadValidationError,'unlock'):
    validate_recipe(read(ROOT/'baseline/0.2.1/behavior_pack/recipes/paw_token.json'))

@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { listFiles, pngSize } from "./lib/files.ts";
 import { JsonFileError, readStrictJson } from "./lib/json.ts";
-import { CORE_BEHAVIOR_ID, distDir, loadPacks, type PackSpec } from "./lib/packs.ts";
+import { distDir, loadPacks, type PackSpec, scriptEntry } from "./lib/packs.ts";
 import { expectedManifest } from "./manifests.ts";
 
 export interface ValidationReport {
@@ -125,7 +125,7 @@ export function validateBuild(): ValidationReport {
   counts.json = documents.size;
   counts.packs = packs.length;
 
-  // Manifests: exactly what packs.json + package.json generate; scripts only in the core.
+  // Manifests: exactly what packs.json + package.json generate; a bundle exactly where a script module is declared.
   for (const pack of packs) {
     const manifest = documents.get(`${pack.id}/manifest.json`);
     if (!manifest) {
@@ -135,14 +135,16 @@ export function validateBuild(): ValidationReport {
     if (!sameJson(manifest, expectedManifest(pack))) {
       errors.push(`${pack.id}/manifest.json differs from packs.json; run \`npm run manifests\``);
     }
-    const scriptEntry = path.join(roots.get(pack.id) as string, "scripts", "main.js");
-    if (pack.id === CORE_BEHAVIOR_ID) {
-      if (!fs.existsSync(scriptEntry)) errors.push(`${pack.id}: scripts/main.js was not bundled`);
+    const bundle = path.join(roots.get(pack.id) as string, "scripts", "main.js");
+    if (scriptEntry(pack)) {
+      if (!fs.existsSync(bundle)) errors.push(`${pack.id}: scripts/main.js was not bundled`);
     } else if (fs.existsSync(path.join(roots.get(pack.id) as string, "scripts"))) {
-      errors.push(`${pack.id}: only the core behavior pack may carry scripts`);
+      errors.push(`${pack.id}: carries scripts but declares no script module in packs.json`);
     }
-    if (pack.kind === "behavior" && pack.id !== CORE_BEHAVIOR_ID && !pack.dependsOn.includes(CORE_BEHAVIOR_ID)) {
-      errors.push(`${pack.id}: companion behavior packs must depend on ${CORE_BEHAVIOR_ID}`);
+    for (const dependency of pack.dependsOn) {
+      if (pack.kind === "resources") errors.push(`${pack.id}: resource packs must not depend on other packs`);
+      else if (loadPacks().find((candidate) => candidate.id === dependency)?.feature !== pack.feature)
+        errors.push(`${pack.id}: may only depend on its own feature's packs, not ${dependency}`);
     }
     const icon = path.join(roots.get(pack.id) as string, "pack_icon.png");
     if (!fs.existsSync(icon)) errors.push(`${pack.id}/pack_icon.png is missing`);
@@ -279,17 +281,21 @@ export function validateBuild(): ValidationReport {
     }
   }
 
-  // The bundled script imports only the engine modules.
-  const entry = path.join(roots.get(CORE_BEHAVIOR_ID) as string, "scripts", "main.js");
-  if (fs.existsSync(entry)) {
-    const script = fs.readFileSync(entry, "utf8");
-    const imports = [...script.matchAll(/^\s*import\s+(?:[^"']*?\s+from\s+)?["']([^"']+)["']/gm)].map(
-      (match) => match[1],
+  // Each bundle imports exactly the engine modules its manifest declares: nothing else, and nothing it does not use.
+  for (const pack of packs) {
+    if (!scriptEntry(pack)) continue;
+    const bundle = path.join(roots.get(pack.id) as string, "scripts", "main.js");
+    if (!fs.existsSync(bundle)) continue;
+    const script = fs.readFileSync(bundle, "utf8");
+    const imports = new Set(
+      [...script.matchAll(/^\s*import\s+(?:[^"']*?\s+from\s+)?["']([^"']+)["']/gm)].map((match) => match[1] as string),
     );
-    for (const specifier of imports) {
-      if (specifier !== "@minecraft/server" && specifier !== "@minecraft/server-ui")
-        errors.push(`scripts/main.js: unexpected import ${specifier}`);
-    }
+    const declared = new Set(pack.scriptModules ?? []);
+    for (const specifier of imports)
+      if (!declared.has(specifier)) errors.push(`${pack.id}/scripts/main.js imports undeclared module ${specifier}`);
+    for (const name of declared)
+      if (!imports.has(name))
+        errors.push(`${pack.id}: packs.json declares ${name} but scripts/main.js never imports it`);
   }
 
   return { errors, counts };

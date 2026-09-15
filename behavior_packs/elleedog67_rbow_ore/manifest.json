@@ -2,7 +2,7 @@
   "format_version": 2,
   "header": {
     "name": "ElleeDog 67 Rbow Ore",
-    "description": "Optional: Rbow ore, ingots, tools, armor and a spear. Adds ore generation to new chunks. Needs ElleeDog 67 (Behavior).",
+    "description": "Rbow ore, ingots, tools, armor and a spear. Adds ore generation to new chunks.",
     "uuid": "86151a41-68ea-4be5-abbc-d5a8c2476add",
     "version": [
       0,
@@ -24,6 +24,17 @@
         2,
         3
       ]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "cf6e1db3-0aaa-4fb7-b35b-8b6e71eda715",
+      "version": [
+        0,
+        2,
+        3
+      ],
+      "entry": "scripts/main.js"
     }
   ],
   "dependencies": [
@@ -36,12 +47,8 @@
       ]
     },
     {
-      "uuid": "c73542a6-b84a-4a5c-a0b7-53f5ac8d18ee",
-      "version": [
-        0,
-        2,
-        3
-      ]
+      "module_name": "@minecraft/server",
+      "version": "2.9.0"
     }
   ],
   "metadata": {

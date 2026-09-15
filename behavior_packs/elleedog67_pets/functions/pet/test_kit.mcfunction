@@ -8,5 +8,4 @@ give @s minecraft:iron_helmet
 give @s minecraft:iron_chestplate
 give @s minecraft:iron_leggings
 give @s minecraft:iron_boots
-give @s pet:paw_token
 give @s pet:morpher_book

@@ -6,10 +6,10 @@ set on top of it: three blocks, three materials, six tools, four armour pieces, 
 and world generation. Everything except the ore drop, the tool behaviours and legacy-drop recovery
 is plain pack data.
 
-Kind and packs: pack feature. It is active when "ElleeDog 67 Rbow Ore" (Behavior Packs) and
-"ElleeDog 67 Rbow Ore Resources" (Resource Packs) are active in Edit World; activating the behavior
-pack adds the resource pack and the core. There is no runtime switch. The scripts probe
-`EntityTypes.get("elleedog:rbow_drop")` after world load to know whether the packs are there.
+Packs: "ElleeDog 67 Rbow Ore" (Behavior Packs, carries the scripts) and "ElleeDog 67 Rbow Ore
+Resources" (Resource Packs); activating the behavior pack adds the resource pack. The feature is on
+exactly when the packs are active. It registers no custom commands; its diagnostic is a
+`/scriptevent`.
 
 ## Pack data
 
@@ -65,11 +65,11 @@ feature lifecycle.
 
 | Handler | Registered | Behaviour |
 | --- | --- | --- |
-| `world.afterEvents.playerBreakBlock` | at world load through `alwaysOn`, whether or not the packs are active (without them the Rbow blocks do not exist and it never fires) | Spawns the drop for the three Rbow blocks using the tool held before the break: raw ore (1 to 4 with Fortune, one stack of at most 64 per spawn), the ore block itself with Silk Touch, the storage block for `rbow_block`. Nothing in Creative or Spectator, with a wrong tool, or while `doTileDrops` is false. |
-| `elleedog:rbow_tool` item component | at startup; its callbacks do nothing while the packs are absent | Mining wear for the five diggers: two points for the sword, one for the others, each point skipped with the usual Unbreaking chance; the tool breaks with `random.break` at max durability. Combat wear: one point for sword and hoe, two for pickaxe, axe and shovel. |
-| `world.beforeEvents.playerInteractWithBlock` | while active | Hoe tills dirt, grass block, grass and path into farmland, coarse dirt into dirt, rooted dirt into dirt plus hanging roots. Shovel turns dirt, grass block, grass, coarse dirt, podzol, mycelium and rooted dirt into a path and extinguishes campfires. Axe strips vanilla logs, woods, stems, hyphae and bamboo blocks, keeping their states. Soil actions need air above and not an underside click. The before-event only cancels; the edit runs on the next tick and is skipped if the player, hotbar slot, held tool, game mode, block or the space above changed. |
+| `world.afterEvents.playerBreakBlock` | at world load | Spawns the drop for the three Rbow blocks using the tool held before the break: raw ore (1 to 4 with Fortune, one stack of at most 64 per spawn), the ore block itself with Silk Touch, the storage block for `rbow_block`. Nothing in Creative or Spectator, with a wrong tool, or while `doTileDrops` is false. |
+| `elleedog:rbow_tool` item component | at startup | Mining wear for the five diggers: two points for the sword, one for the others, each point skipped with the usual Unbreaking chance; the tool breaks with `random.break` at max durability. Combat wear: one point for sword and hoe, two for pickaxe, axe and shovel. |
+| `world.beforeEvents.playerInteractWithBlock` | at world load | Hoe tills dirt, grass block, grass and path into farmland, coarse dirt into dirt, rooted dirt into dirt plus hanging roots. Shovel turns dirt, grass block, grass, coarse dirt, podzol, mycelium and rooted dirt into a path and extinguishes campfires. Axe strips vanilla logs, woods, stems, hyphae and bamboo blocks, keeping their states. Soil actions need air above and not an underside click. The before-event only cancels; the edit runs on the next tick and is skipped if the player, hotbar slot, held tool, game mode, block or the space above changed. |
 | `system.afterEvents.scriptEventReceive` | while active | `/scriptevent elleedog:rbow_check` (below). |
-| `world.afterEvents.entityLoad` and a scan on start | while active | Legacy drop recovery: each `elleedog:rbow_drop` that loads gets its stored stack cloned into a native item drop, then the empty carrier is removed. A failed write rolls the spawned copy back and retries twice; a double failure marks the carrier `elleedog:legacy_release_blocked` and stops. |
+| `world.afterEvents.entityLoad` and a scan on start | at world load | Legacy drop recovery: each `elleedog:rbow_drop` that loads gets its stored stack cloned into a native item drop, then the empty carrier is removed. A failed write rolls the spawned copy back and retries twice; a double failure marks the carrier `elleedog:legacy_release_blocked` and stops. |
 
 ### Diagnostics and helpers
 
@@ -82,9 +82,6 @@ feature lifecycle.
   one of each tool and armour piece. Cheats must be on; use a disposable world.
 
 ## What off means
-
-Rbow Ore is active exactly when its two packs are active; `/elleedog67:disable rbow-ore` replies
-with the packs to deactivate and changes nothing.
 
 When "ElleeDog 67 Rbow Ore" and "ElleeDog 67 Rbow Ore Resources" are deactivated: no new ore
 generates and the Rbow tools and armor lose their behaviours. Ore already placed, items in chests and
@@ -152,5 +149,4 @@ attachables are what renders.
     says OK.
 15. **Packs off.** Deactivate "ElleeDog 67 Rbow Ore" and its resource pack on a disposable copy that
     has placed ore and Rbow items in a chest, reopen it, and record what the game did with them;
-    then reactivate the packs. `/elleedog67:features` reads `rbow-ore: packs off` while they are
-    off and `/elleedog67:disable rbow-ore` only replies with the pack hint.
+    then reactivate the packs.

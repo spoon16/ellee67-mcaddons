@@ -2,7 +2,7 @@
   "format_version": 2,
   "header": {
     "name": "ElleeDog 67 Redstone Guide",
-    "description": "Optional: craft a Redstone Guide book (1 redstone + 1 leather). Needs ElleeDog 67 (Behavior).",
+    "description": "Craft a Redstone Guide book (1 redstone + 1 leather) and read it in game.",
     "uuid": "953b3626-1d7e-449e-9de9-c2fc8ebfb60a",
     "version": [
       0,
@@ -24,6 +24,17 @@
         2,
         3
       ]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "c7c6c558-f51f-494f-8f8f-03b2a5284b46",
+      "version": [
+        0,
+        2,
+        3
+      ],
+      "entry": "scripts/main.js"
     }
   ],
   "dependencies": [
@@ -36,12 +47,12 @@
       ]
     },
     {
-      "uuid": "c73542a6-b84a-4a5c-a0b7-53f5ac8d18ee",
-      "version": [
-        0,
-        2,
-        3
-      ]
+      "module_name": "@minecraft/server",
+      "version": "2.9.0"
+    },
+    {
+      "module_name": "@minecraft/server-ui",
+      "version": "2.0.0"
     }
   ],
   "metadata": {

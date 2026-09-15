@@ -2,9 +2,6 @@
   "resource_pack_name": "ElleeDog 67 Pets 0.2.1",
   "texture_name": "atlas.items",
   "texture_data": {
-    "cav_paw_token": {
-      "textures": "textures/items/paw_token"
-    },
     "pet_morpher_book": {
       "textures": "textures/items/pet_morpher_book_043"
     }

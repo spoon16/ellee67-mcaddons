@@ -5,7 +5,18 @@
 
 export class Signal<T = any> {
   callbacks: Array<(event: T) => void> = [];
-  subscribe(callback: (event: T) => void, _options?: unknown): (event: T) => void {
+  /**
+   * Whether the engine's `subscribe` for this signal takes an options object. The engine counts arguments at the
+   * native boundary, so a second argument (even `undefined`) to a one-argument signal is a TypeError there.
+   */
+  readonly acceptsOptions: boolean;
+  constructor(acceptsOptions = false) {
+    this.acceptsOptions = acceptsOptions;
+  }
+  subscribe(callback: (event: T) => void, ...extra: unknown[]): (event: T) => void {
+    if (extra.length > 0 && !this.acceptsOptions) {
+      throw new TypeError(`Incorrect number of arguments to function. Expected 1, received ${1 + extra.length}`);
+    }
     this.callbacks.push(callback);
     return callback;
   }
@@ -112,7 +123,7 @@ export const system = {
     return currentTick;
   },
   beforeEvents: { startup: new Signal<StartupEvent>() },
-  afterEvents: { scriptEventReceive: new Signal<ScriptEventCommandMessageAfterEvent>() },
+  afterEvents: { scriptEventReceive: new Signal<ScriptEventCommandMessageAfterEvent>(true) },
   run(fn: () => void): number {
     return schedule(fn, currentTick + 1);
   },
@@ -668,24 +679,24 @@ export const world = {
     itemUse: new Signal(),
     playerInteractWithBlock: new Signal(),
     playerInteractWithEntity: new Signal(),
-    playerBreakBlock: new Signal(),
-    entityHurt: new Signal(),
+    playerBreakBlock: new Signal(true),
+    entityHurt: new Signal(true),
   },
   afterEvents: {
     worldLoad: new Signal(),
     playerSpawn: new Signal(),
     playerLeave: new Signal(),
     playerDimensionChange: new Signal(),
-    playerPlaceBlock: new Signal(),
-    playerBreakBlock: new Signal(),
+    playerPlaceBlock: new Signal(true),
+    playerBreakBlock: new Signal(true),
     playerInteractWithBlock: new Signal(),
     playerInteractWithEntity: new Signal(),
     entitySpawn: new Signal(),
     entityLoad: new Signal(),
-    entityRemove: new Signal(),
-    entityHitEntity: new Signal(),
-    entityDie: new Signal(),
-    entityHurt: new Signal(),
+    entityRemove: new Signal(true),
+    entityHitEntity: new Signal(true),
+    entityDie: new Signal(true),
+    entityHurt: new Signal(true),
     itemUse: new Signal(),
     explosion: new Signal(),
   },
@@ -747,8 +758,20 @@ export const registry = {
   components: new Map<string, Record<string, any>>(),
   /** When set, `registerEnum` rejects any value matching the pattern (simulates engine name rules). */
   rejectEnumValues: undefined as RegExp | undefined,
+  /** The one namespace this script module's commands and enums share; the engine fixes it at the first registration. */
+  namespace: undefined as string | undefined,
+  claimNamespace(name: string): void {
+    if (!name.includes(":")) throw new Error(`${name} needs a namespace`);
+    const namespace = name.slice(0, name.indexOf(":"));
+    if (this.namespace === undefined) this.namespace = namespace;
+    else if (namespace !== this.namespace) {
+      throw new Error(
+        `Custom Command Enum namespaces must match. Namespace '${namespace}' does not match existing namespace '${this.namespace}'.`,
+      );
+    }
+  },
   registerEnum(name: string, values: string[]): void {
-    if (!name.includes(":")) throw new Error(`Enum ${name} needs a namespace`);
+    this.claimNamespace(name);
     if (this.enums.has(name)) throw new Error(`Duplicate enum ${name}`);
     if (this.rejectEnumValues && values.some((value) => this.rejectEnumValues?.test(value))) {
       throw new Error(`Enum value rejected for ${name}`);
@@ -756,7 +779,7 @@ export const registry = {
     this.enums.set(name, [...values]);
   },
   registerCommand(definition: any, callback: (origin: any, ...args: any[]) => any): void {
-    if (!definition.name.includes(":")) throw new Error(`Command ${definition.name} needs a namespace`);
+    this.claimNamespace(definition.name);
     for (const parameter of [...(definition.mandatoryParameters ?? []), ...(definition.optionalParameters ?? [])]) {
       if (parameter.type === CustomCommandParamType.Enum && !this.enums.has(parameter.name)) {
         throw new Error(`Enum ${parameter.name} is not registered`);
@@ -849,6 +872,7 @@ export function reset(): void {
   registry.commands.clear();
   registry.components.clear();
   registry.rejectEnumValues = undefined;
+  registry.namespace = undefined;
   for (const key of Object.keys(entityProperties)) delete entityProperties[key];
   entityTypes.clear();
   itemTypes.clear();

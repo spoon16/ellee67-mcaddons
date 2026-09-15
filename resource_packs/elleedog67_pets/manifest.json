@@ -2,7 +2,7 @@
   "format_version": 2,
   "header": {
     "name": "ElleeDog 67 Pets Resources",
-    "description": "Optional: pet models, animations and fitted armor. Replaces the player renderer. Keep above ElleeDog 67 Rbow Ore Resources.",
+    "description": "Pet models, animations and fitted armor. Replaces the player renderer. Keep above ElleeDog 67 Rbow Ore Resources.",
     "uuid": "93bb9bdd-55e4-42e7-8a2c-a3b0430a699a",
     "version": [
       0,

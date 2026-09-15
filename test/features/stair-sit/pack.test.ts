@@ -8,8 +8,8 @@ import { pngSize } from "../../../tools/lib/files.ts";
 import { readStrictJson } from "../../../tools/lib/json.ts";
 import { packDir } from "../../../tools/lib/packs.ts";
 
-const BP_SOURCE = packDir("elleedog67");
-const RP_SOURCE = packDir("elleedog67-resources");
+const BP_SOURCE = packDir("stair-sit");
+const RP_SOURCE = packDir("stair-sit-resources");
 
 import { reset } from "../../mocks/minecraft-server.ts";
 
@@ -18,10 +18,10 @@ type Json = Record<string, any>;
 const bp = (relative: string): Json => readStrictJson(path.join(BP_SOURCE, relative)) as Json;
 const rp = (relative: string): Json => readStrictJson(path.join(RP_SOURCE, relative)) as Json;
 
-const seat = bp("entities/stair-sit/seat.json")["minecraft:entity"];
-const target = bp("entities/stair-sit/target.json")["minecraft:entity"];
-const seatClient = rp("entity/stair-sit/seat.entity.json")["minecraft:client_entity"].description;
-const targetClient = rp("entity/stair-sit/target.entity.json")["minecraft:client_entity"].description;
+const seat = bp("entities/seat.json")["minecraft:entity"];
+const target = bp("entities/target.json")["minecraft:entity"];
+const seatClient = rp("entity/seat.entity.json")["minecraft:client_entity"].description;
+const targetClient = rp("entity/target.entity.json")["minecraft:client_entity"].description;
 
 function componentGroupsUsedBy(entity: Json): string[] {
   const names: string[] = [];
@@ -96,9 +96,9 @@ describe("stair-sit pack data", () => {
   });
 
   it("wires both client entities to the same invisible geometry, render controller and texture", () => {
-    const geometry = rp("models/entity/stair-sit/seat.geo.json")["minecraft:geometry"][0].description.identifier;
+    const geometry = rp("models/entity/seat.geo.json")["minecraft:geometry"][0].description.identifier;
     expect(seatClient.geometry.default).toBe(geometry);
-    const controllers = rp("render_controllers/stair-sit/seat.render_controllers.json").render_controllers;
+    const controllers = rp("render_controllers/seat.render_controllers.json").render_controllers;
     for (const name of seatClient.render_controllers) {
       expect(controllers).toHaveProperty(name);
       expect(controllers[name].part_visibility).toEqual([{ "*": "0.0" }]);

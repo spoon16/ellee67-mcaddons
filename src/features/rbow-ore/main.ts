@@ -11,7 +11,7 @@ import {
   system,
   world,
 } from "@minecraft/server";
-import type { GatedItemComponentRegistry } from "../../core/commands.ts";
+import type { ItemRegistry } from "../../core/feature.ts";
 import { BLOCKS, durabilityLoss, enchantment, GEAR, miningDrop, NS, toolAction } from "./rules.ts";
 
 /** The state methods as the engine accepts them; the API types them against vanilla state names only. */
@@ -26,7 +26,7 @@ function warnOnce(label: string, error: unknown): void {
   warned.add(label);
   console.warn(`[67 Rbow Ore Mod] ${label}: ${String(error)}`);
 }
-// Engine callbacks hand over live entities, so validity is not re-checked here (core/book.ts isPlayer would).
+// Engine callbacks hand over live entities, so validity is not re-checked here.
 function isPlayer(entity: Entity | undefined): entity is Player {
   return entity?.typeId === "minecraft:player";
 }
@@ -51,7 +51,7 @@ function consumeDurability(player: Player, expectedId: string, amount: number): 
   }
 }
 
-export function registerToolComponent(registry: GatedItemComponentRegistry): void {
+export function registerToolComponent(registry: ItemRegistry): void {
   registry.registerCustomComponent("elleedog:rbow_tool", {
     // Custom diggers require explicit mining wear. Combat wear is still handled
     // by the engine, so it is NOT also charged by a global hit callback.

@@ -17,6 +17,7 @@
       "problemMatcher": []
     },
     { "label": "check (types + lint)", "type": "npm", "script": "check", "problemMatcher": [] },
-    { "label": "codegen", "type": "npm", "script": "codegen", "problemMatcher": [] }
+    { "label": "codegen", "type": "npm", "script": "codegen", "problemMatcher": [] },
+    { "label": "test:engine (Bedrock Dedicated Server)", "type": "npm", "script": "test:engine", "problemMatcher": [] }
   ]
 }

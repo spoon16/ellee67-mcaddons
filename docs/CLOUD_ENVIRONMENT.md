@@ -61,6 +61,7 @@ npm test           # vitest: core, every feature, and a real build of the packs
 npm run build
 npm run package
 npm run codegen    # the Pets/Rbow compiler and its 244 Python tests
+npm run test:engine  # boots the packs in Bedrock Dedicated Server (no IPv6 here; the harness preloads its shim)
 ```
 
 ## Settings to choose in the web UI
@@ -77,8 +78,9 @@ Environments are configured when they are created, outside this repository. For 
   | `registry.npmjs.org` | `npm install` |
   | `github.com`, `objects.githubusercontent.com` | the standalone CPython build `uv python install` fetches |
   | `pypi.org`, `files.pythonhosted.org` | the Pillow and numpy wheels `uv sync` fetches |
+  | `www.minecraft.net` | the Bedrock Dedicated Server zip `npm run test:engine` downloads once into `.bds/` |
 
-  If the environment uses a "trusted hosts only" policy rather than open egress, those four rows
+  If the environment uses a "trusted hosts only" policy rather than open egress, those five rows
   are the allowlist. `github.com` is already reachable for the clone itself.
 - **Environment variables** — none. The project needs no API keys, tokens or registry credentials;
   everything it installs is public.

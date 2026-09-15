@@ -1,0 +1,61 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ElleeDog 67 Stair Sitting",
+    "description": "Sit on stairs with the Sit button, a crouch gesture or /sit:down, and move between nearby stairs while seated.",
+    "uuid": "a2b4cd29-a89d-48e8-a15c-13f6766ed3d3",
+    "version": [
+      0,
+      2,
+      3
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "ab1898d5-d5bb-41c0-9931-342e1852947c",
+      "version": [
+        0,
+        2,
+        3
+      ]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "51914eb1-b358-4795-8746-4c6703a14add",
+      "version": [
+        0,
+        2,
+        3
+      ],
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "44739c1e-a7c9-4596-8b44-a955e99e5fcf",
+      "version": [
+        0,
+        2,
+        3
+      ]
+    },
+    {
+      "module_name": "@minecraft/server",
+      "version": "2.9.0"
+    }
+  ],
+  "metadata": {
+    "authors": [
+      "ElleeDog 67"
+    ],
+    "license": "MIT for original code; see LICENSE and THIRD_PARTY_NOTICES.md",
+    "product_type": "addon"
+  }
+}

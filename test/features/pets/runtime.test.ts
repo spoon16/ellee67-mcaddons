@@ -30,13 +30,7 @@ describe("command registration", () => {
     expect(registry.enums.get("pet:form_choice")).toEqual(["player", ...PETS.map((p) => p.id), "human"]);
     const names = [...registry.commands.keys()];
     expect(names.filter((name) => name.startsWith("pet:"))).toHaveLength(27);
-    expect(names.filter((name) => !name.startsWith("pet:"))).toEqual([
-      "elleedog67:enable",
-      "elleedog67:disable",
-      "elleedog67:features",
-      "elleedog67:book",
-    ]);
-    expect(registry.commands.size).toBe(31);
+    expect(registry.commands.size).toBe(27);
   });
 
   it("Commands are self-only and do not require cheats", () => {
@@ -226,17 +220,6 @@ describe("diagnostics and menus", () => {
     command("menu", p);
     await ticks(50);
     expect(ui.shown).toBe(3);
-  });
-
-  it("Token opens the same catalog menu", async () => {
-    const p = petPlayer("token");
-    ui.responses = [
-      { canceled: false, selection: 2 },
-      { canceled: false, selection: 0 },
-    ];
-    registry.components.get("pet:open_form_menu")?.onUse({ source: p });
-    await ticks(8);
-    expect(p.props["pet:model_id"]).toBe(2);
   });
 });
 

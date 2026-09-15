@@ -1,4 +1,4 @@
-import { bootstrap } from "../../../src/core/bootstrap.ts";
+import { runFeature } from "../../../src/core/feature.ts";
 import { rbowOre } from "../../../src/features/rbow-ore/index.ts";
 import { LEGACY_TYPE } from "../../../src/features/rbow-ore/legacy_drop_logic.ts";
 import {
@@ -12,7 +12,6 @@ import {
   ItemStack,
   loadWorld,
   type Player,
-  registerEntityType,
   registry,
   startup,
   step,
@@ -25,14 +24,10 @@ export interface Durability {
   unbreakable: boolean;
 }
 
-/** The entity the Rbow Ore behavior pack declares and the feature probes for after world load. */
-export const PROBE_ENTITY = "elleedog:rbow_drop";
-
-/** Boots the add-on with only rbow-ore, its packs active, and runs the tick on which start() scans for legacy drops. */
+/** Runs the Rbow Ore pack's scripts through startup and world load, plus the tick on which start() scans for legacy drops. */
 export function boot(): void {
-  bootstrap([rbowOre]);
+  runFeature(rbowOre);
   startup();
-  registerEntityType(PROBE_ENTITY);
   loadWorld();
   step(1);
 }
@@ -59,7 +54,7 @@ export function blockAt(dimension: Dimension, location: Vector3): Block {
   return block;
 }
 
-/** The `elleedog:rbow_tool` component as the engine received it at startup, gate included. */
+/** The `elleedog:rbow_tool` component as the engine received it at startup. */
 export function toolComponent(): Record<string, any> {
   const component = registry.components.get("elleedog:rbow_tool");
   if (!component) throw new Error("elleedog:rbow_tool is not registered");

@@ -2,7 +2,7 @@
   "name": "ellee67-mcaddons",
   "version": "0.2.3",
   "private": true,
-  "description": "ElleeDog 67: one Minecraft Bedrock add-on (behavior pack + resource pack) with six toggleable features.",
+  "description": "ElleeDog 67: one Minecraft Bedrock .mcaddon holding six self-contained features, each its own behavior pack (and resource pack where needed).",
   "type": "module",
   "engines": {
     "node": ">=24"
@@ -12,6 +12,8 @@
     "package": "tsx tools/package.ts",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:engine": "tsx tools/bds/smoke.ts",
+    "bds:setup": "tsx tools/bds/setup.ts",
     "check": "tsc --noEmit && biome check .",
     "lint": "biome lint .",
     "format": "biome format --write .",

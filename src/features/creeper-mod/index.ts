@@ -1,5 +1,5 @@
 import { EntityDamageCause, GameMode, system, world } from "@minecraft/server";
-import type { FeatureDefinition } from "../../core/features.ts";
+import type { FeatureDefinition } from "../../core/feature.ts";
 import { createCreeperHandler } from "./blast.ts";
 
 /**
@@ -9,18 +9,7 @@ import { createCreeperHandler } from "./blast.ts";
 export const creeperMod: FeatureDefinition = {
   id: "creeper-mod",
   title: "Creeper Mod",
-  summary: "Creeper blasts hurt players only; blocks and other mobs are safe",
-  kind: "switch",
-  defaultEnabled: true,
-  manual: {
-    about:
-      "Creeper explosions only hurt players. Blocks and other mobs are never damaged. The blast is a scripted approximation of the vanilla numbers, not the vanilla explosion.",
-    whileOff: "Creeper explosions behave like vanilla.",
-  },
   start(ctx) {
     ctx.on(world.beforeEvents.explosion, createCreeperHandler({ world, system, GameMode, EntityDamageCause }));
-  },
-  stop() {
-    // Nothing to restore: dropping the explosion subscription is what brings vanilla creeper blasts back.
   },
 };

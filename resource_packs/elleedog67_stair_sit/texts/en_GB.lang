@@ -1,0 +1,4 @@
+## stair-sit
+entity.sit:seat.name=Stair seat
+entity.sit:target.name=Stair
+action.interact.sit67=Sit

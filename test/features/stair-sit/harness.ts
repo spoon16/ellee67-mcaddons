@@ -1,9 +1,8 @@
 // Runs the ported entry-point tests against the shared engine mock. The upstream runtime.js owned its own
 // scheduler; here the mock's `step`/`flushCurrentTick` drive the clock and this file only adds what that
 // harness exposed on top of it: the fake dimension, fake players and the pending one-shot job count.
-import { bootstrap } from "../../../src/core/bootstrap.ts";
-import { isRunning, stopFeature } from "../../../src/core/features.ts";
-import { stairSit } from "../../../src/features/stair-sit/index.ts";
+import { runFeature } from "../../../src/core/feature.ts";
+import { shutdownStairSit, stairSit } from "../../../src/features/stair-sit/index.ts";
 import {
   type Dimension,
   dimensions,
@@ -43,18 +42,18 @@ export function installDimension(): FakeDimension {
   return runtime.dimension;
 }
 
-/** Boots the add-on with only stair-sit, loads the world and runs the first tick so the start-up sweep is done. */
+/** Runs the Stair Sitting pack's scripts, loads the world and runs the first tick so the start-up sweep is done. */
 export function boot(): void {
   installDimension();
-  bootstrap([stairSit]);
+  runFeature(stairSit);
   startup();
   loadWorld();
   step();
 }
 
-/** Stops the feature so its module-level seat and target state cannot leak into the next test. */
+/** Clears the feature's module-level seat and target state so it cannot leak into the next test. */
 export function shutdown(): void {
-  if (isRunning("stair-sit")) stopFeature("stair-sit");
+  shutdownStairSit();
 }
 
 export function sitCommand(name: string): RegisteredCommand {

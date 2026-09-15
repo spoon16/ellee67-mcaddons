@@ -1,0 +1,37 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "ElleeDog 67 Stair Sitting Resources",
+    "description": "The invisible seat and Sit prompt visuals. Activated automatically with ElleeDog 67 Stair Sitting.",
+    "uuid": "44739c1e-a7c9-4596-8b44-a955e99e5fcf",
+    "version": [
+      0,
+      2,
+      3
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      40
+    ]
+  },
+  "modules": [
+    {
+      "type": "resources",
+      "uuid": "adad4004-4327-4101-8939-b625bb332e92",
+      "version": [
+        0,
+        2,
+        3
+      ]
+    }
+  ],
+  "dependencies": [],
+  "metadata": {
+    "authors": [
+      "ElleeDog 67"
+    ],
+    "license": "MIT for original code; see LICENSE and THIRD_PARTY_NOTICES.md",
+    "product_type": "addon"
+  }
+}

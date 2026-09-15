@@ -5,6 +5,7 @@ import path from "node:path";
 import { listFiles, pngSize } from "./lib/files.ts";
 import { JsonFileError, readStrictJson } from "./lib/json.ts";
 import { distDir, loadPacks, type PackSpec, scriptEntry } from "./lib/packs.ts";
+import { isMain } from "./lib/paths.ts";
 import { expectedManifest } from "./manifests.ts";
 
 export interface ValidationReport {
@@ -95,11 +96,21 @@ function sameJson(a: unknown, b: unknown): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
-export function validateBuild(): ValidationReport {
+export interface ValidateOptions {
+  /** Where each pack's built folder is, by pack id; defaults to dist/. Tests point this at doctored copies. */
+  roots?: Map<string, string>;
+}
+
+/** Where every pack lands after `npm run build`. */
+export function distRoots(): Map<string, string> {
+  return new Map(loadPacks().map((pack) => [pack.id, distDir(pack.id)]));
+}
+
+export function validateBuild(options: ValidateOptions = {}): ValidationReport {
   const errors: string[] = [];
   const counts: Record<string, number> = {};
   const packs = loadPacks();
-  const roots = new Map<string, string>(packs.map((pack) => [pack.id, distDir(pack.id)]));
+  const roots = options.roots ?? distRoots();
 
   // Every JSON file in every pack, parsed strictly. Keys are "<pack id>/<relative path>".
   const documents = new Map<string, Json>();
@@ -301,7 +312,7 @@ export function validateBuild(): ValidationReport {
   return { errors, counts };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (isMain(import.meta.url)) {
   const report = validateBuild();
   for (const error of report.errors) console.error(`error: ${error}`);
   console.log(`validated: ${JSON.stringify(report.counts)}`);

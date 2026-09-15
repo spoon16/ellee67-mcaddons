@@ -37,8 +37,13 @@ export interface FeatureDefinition {
   start(ctx: FeatureContext): void;
 }
 
-/** Wires one feature into the engine. A throwing `register` or `start` is logged and leaves the rest untouched. */
+/**
+ * Wires one feature into the engine. A throwing `register` or `start` is logged and leaves the rest untouched.
+ * `worldLoad` can fire more than once in a script module's life (the engine keeps the module across some reloads),
+ * so the previous context is disposed before `start` runs again: no handler or loop is ever subscribed twice.
+ */
 export function runFeature(feature: FeatureDefinition): void {
+  let live: FeatureContext | undefined;
   system.beforeEvents.startup.subscribe((event) => {
     try {
       feature.register?.({ commands: event.customCommandRegistry, items: event.itemComponentRegistry });
@@ -47,12 +52,15 @@ export function runFeature(feature: FeatureDefinition): void {
     }
   });
   world.afterEvents.worldLoad.subscribe(() => {
+    live?.dispose();
     const context = new FeatureContext(feature.id);
+    live = context;
     try {
       feature.start(context);
       log.info(`${feature.id} loaded`);
     } catch (error) {
       context.dispose();
+      live = undefined;
       log.warn(`${feature.id} failed to start: ${log.describe(error)}`);
     }
   });

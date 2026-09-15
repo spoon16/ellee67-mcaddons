@@ -6,10 +6,10 @@ import {
   SeatManager,
   safeExit,
 } from "../../../src/features/stair-sit/seats.ts";
-import { engine, reset } from "../../mocks/minecraft-server.ts";
+import { type Block, engine, GameMode, reset } from "../../mocks/minecraft-server.ts";
 import { FakeDimension, FakePlayer, fixture } from "./fakes.ts";
 
-const readStair = (block: unknown): any => readStairModule(engine(block));
+const readStair = (block: Block | undefined): any => readStairModule(engine(block));
 
 function setup() {
   const f = fixture();
@@ -75,9 +75,9 @@ describe("seat manager", () => {
 
   it("reject spectator, dead player, occupied mount and distant player", () => {
     const { m, player, stair } = setup();
-    player.mode = "Spectator";
+    player.setGameMode(GameMode.Spectator);
     expect(m.sit(player, stair).ok).toBe(false);
-    player.mode = "Survival";
+    player.setGameMode(GameMode.Survival);
     player.health = 0;
     expect(m.sit(player, stair).ok).toBe(false);
     player.health = 20;
@@ -101,7 +101,7 @@ describe("seat manager", () => {
     dimension.put({ x: 0, y: 65, z: 0 }, "minecraft:stone");
     expect(hasHeadroom(engine(dimension), readStair(stair))).toBe(false);
     expect(m.sit(player, stair).ok).toBe(false);
-    expect(dimension.getBlock({ x: 0, y: 65, z: 0 }).typeId).toBe("minecraft:stone");
+    expect(dimension.getBlock({ x: 0, y: 65, z: 0 })?.typeId).toBe("minecraft:stone");
   });
 
   it("support removal ejects rider and deletes occupancy", () => {
@@ -212,13 +212,13 @@ describe("seat manager", () => {
 
   it("height adjustment is bounded and applied only to anchor", () => {
     const { m, player, stair } = setup();
-    player.props.set("sit:height", 0.125);
+    player.setDynamicProperty("sit:height", 0.125);
     expect(m.sit(player, stair).ok).toBe(true);
     expect(m.get(player.id).anchor.y).toBe(64.625);
     expect(stair.typeId).toBe("minecraft:oak_stairs");
-    player.props.set("sit:height", Number.POSITIVE_INFINITY);
+    player.setDynamicProperty("sit:height", Number.POSITIVE_INFINITY);
     expect(m.height(player)).toBe(0);
-    player.props.set("sit:height", 999);
+    player.setDynamicProperty("sit:height", 999);
     expect(m.height(player)).toBe(0.5);
   });
 

@@ -33,10 +33,29 @@ export function loadPacks(): PackSpec[] {
   if (!cache) {
     const document = readStrictJson(PACKS_FILE) as { packs: PackSpec[] };
     const ids = new Set<string>();
+    // A uuid names a pack or a module to the game for its whole life; two packs sharing one would replace each
+    // other on import. Folder names are how the .mcaddon keeps the packs apart.
+    const unique = new Map<string, Set<string>>([
+      ["uuid", new Set()],
+      ["module uuid", new Set()],
+      ["archiveDir", new Set()],
+    ]);
+    const claim = (kind: string, value: string | undefined, pack: PackSpec) => {
+      if (value === undefined) return;
+      const seen = unique.get(kind) as Set<string>;
+      if (seen.has(value)) throw new Error(`packs.json: ${pack.id} repeats ${kind} ${value}`);
+      seen.add(value);
+    };
     for (const pack of document.packs) {
       if (ids.has(pack.id)) throw new Error(`packs.json: duplicate pack id ${pack.id}`);
       ids.add(pack.id);
+      claim("uuid", pack.uuid, pack);
+      claim("module uuid", pack.modules.data, pack);
+      claim("module uuid", pack.modules.resources, pack);
+      claim("module uuid", pack.modules.script, pack);
+      claim("archiveDir", pack.archiveDir, pack);
     }
+    for (const pack of document.packs) claim("module uuid", pack.uuid, pack);
     for (const pack of document.packs) {
       for (const dependency of pack.dependsOn) {
         if (!ids.has(dependency)) throw new Error(`packs.json: ${pack.id} depends on unknown pack ${dependency}`);

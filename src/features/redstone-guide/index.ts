@@ -1,10 +1,11 @@
 import { type Entity, type Player, system, world } from "@minecraft/server";
 import { ActionFormData, FormCancelationReason } from "@minecraft/server-ui";
 import type { FeatureDefinition } from "../../core/feature.ts";
-import { log } from "../../core/log.ts";
+import { featureLog } from "../../core/log.ts";
 import { entityId } from "../../core/vanilla.ts";
 import { type Bookmark, HOME, normalizeBookmark, type Route, type Screen, screenFor } from "./reader.ts";
 
+const log = featureLog("Redstone Guide");
 export const BOOK_ID = "elleedog_redstone:guide_book";
 export const COMPONENT_ID = "elleedog_redstone:open_guide";
 export const BOOKMARK_KEY = "elleedog_redstone:bookmark_v1";
@@ -114,7 +115,7 @@ function requestOpen(source: Entity | undefined): void {
     if (sessions.get(id) !== token) return;
     readBook(player, token)
       .catch((error) => {
-        log.warn(`Redstone Guide: reader failed for ${player.name}: ${log.describe(error)}`);
+        log.warn(`reader failed for ${player.name}: ${log.describe(error)}`);
         message(player, "Could not open the guide. Close other screens and try again.");
       })
       .finally(() => {

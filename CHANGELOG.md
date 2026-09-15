@@ -1,5 +1,39 @@
 # Changelog
 
+## Unreleased
+
+Quieter in the game, cheaper per tick, and a few real bugs closed.
+
+- Chat: no feature speaks unprompted any more. Stair Sitting's join hint and its two action-bar
+  texts are gone, a Sit button press or crouch gesture that is refused says nothing (the reason is
+  in `/sit:status`), and standing up because a stair changed is silent. Commands still answer.
+- Stair Sitting: a seat check that threw stood the player up silently every tick; it now logs the
+  reason once. `/sit:button` is stored once (the dynamic property) and the filter tag only mirrors
+  it. Target discovery for a player standing still is cached for two seconds, existing targets are
+  re-read against their stair every pass, and the crouch-gesture window comes from `CONFIG`.
+- Ender Mod: an enderman that has not left its block is not re-checked every tick, sections know
+  the bounds of their placed blocks, and a placement re-evaluates only the endermen next to it.
+- Pets: one refresh loop instead of two, one session counter instead of two, the small helpers
+  (`setIfChanged`, JSON dynamic properties) live in `core.ts`, every `pet:` command registers on its
+  own so one bad entry cannot take the rest down, and the state resets on a world reload.
+- Rbow Ore clears a broken tool with the one-argument `setEquipment(slot)`; the mock now refuses an
+  explicit `undefined` there, and `CLAUDE.md` names `setDynamicProperty(key, undefined)` as the
+  one documented clear.
+- Core: `featureLog(title)` (with `warnOnce` and `throttled`) replaces five hand-rolled warning
+  guards, `loadedDimensions(world)` replaces five copies of the same loop, and `runFeature` disposes
+  the previous context when `worldLoad` fires again in the same module.
+- Redstone Guide's screen builder is one function per route kind.
+- Tooling: the server runner reports a binary that cannot start instead of hanging; the engine smoke
+  test fails on a timeout, a non-zero exit or a missing content log and clears old content logs
+  first; `packs.json` rejects a repeated uuid, module uuid or folder name; a checkout path with a
+  space no longer makes the CLI entry points do nothing; `jsonc-parser` parses commented JSON.
+- Tests: the validator's rules are proven by breaking them; the mock's signal arity flags are checked
+  against the engine typings; module versions must agree with the installed packages and the
+  GameTest manifest; every bundle stays under 160 KB with no `@minecraft/vanilla-data` enums;
+  the mock restores every game rule between tests.
+- CI: read-only token, cancelled superseded runs, job timeouts, actions pinned to commits, and the
+  server download cached by version rather than by the setup file's hash.
+
 ## 0.3.0
 
 Breaking: the two core packs are gone. Every feature is now its own behavior pack with its own

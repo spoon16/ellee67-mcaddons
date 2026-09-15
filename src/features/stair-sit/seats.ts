@@ -10,8 +10,10 @@ import {
   type Vector3,
   type World,
 } from "@minecraft/server";
+import { loadedDimensions } from "../../core/dimensions.ts";
 import { blockId } from "../../core/vanilla.ts";
 import { CONFIG } from "./config.ts";
+import { log } from "./log.ts";
 import { describeStair, distanceSquared, highTreadPoint, type StairDescription } from "./stairs.ts";
 
 const BAD_SUPPORT: ReadonlySet<string> = new Set<string>([
@@ -226,13 +228,17 @@ export function clearTransferPath(dimension: Dimension, from: StairDescription, 
   return true;
 }
 
+/** The slices of the engine the seat modules read; tests inject plain objects with a settable clock. */
+export type SeatWorld = Pick<World, "getAllPlayers" | "getDimension">;
+export type SeatClock = Pick<System, "currentTick">;
+
 export class SeatManager {
-  readonly world: World;
-  readonly system: System;
+  readonly world: SeatWorld;
+  readonly system: SeatClock;
   byPlayer = new Map<string, SeatRecord>();
   byBlock = new Map<string, SeatRecord>();
   cooldowns = new Map<string, number>();
-  constructor(world: World, system: System) {
+  constructor(world: SeatWorld, system: SeatClock) {
     this.world = world;
     this.system = system;
   }
@@ -306,11 +312,6 @@ export class SeatManager {
       };
       this.byPlayer.set(player.id, record);
       this.byBlock.set(stair.key, record);
-      try {
-        player.onScreenDisplay.setActionBar("Sitting • Use another nearby stair to move • Crouch / Dismount to stand");
-      } catch {
-        /* Optional UI. */
-      }
       return { ok: true };
     } catch (error) {
       try {
@@ -326,8 +327,8 @@ export class SeatManager {
           /* Disconnected. */
         }
       }
-      console.warn(`[ElleeDog 67 Sit] Could not mount: ${String(error)}`);
-      return failure("Could not create the seat. Check that BOTH packs are active and inspect the Content Log.");
+      log.warn(`could not mount: ${log.describe(error)}`);
+      return failure("Could not create the seat. Check that both Stair Sitting packs are active.");
     }
   }
   /**
@@ -369,7 +370,7 @@ export class SeatManager {
     if (!clearTransferPath(dimension, record.stair, stair))
       return failure("The space between these chairs is obstructed.");
     // No inter-chair cooldown. Every accepted request commits in this call;
-    // main.js coalesces pending duplicate input instead of making the rider wait.
+    // the entry point coalesces pending duplicate input instead of making the rider wait.
 
     const previous = { stair: record.stair, anchor: record.anchor, rotation: player.getRotation() };
     // Preserve the exact, already-calibrated height throughout this sitting session.
@@ -404,34 +405,43 @@ export class SeatManager {
       return { ok: true, transferred: true, vacatedStair: previous.stair };
     } catch (error) {
       this.byBlock.delete(stair.key);
-      // Roll back a failed operation, but never retrieve a player who has moved
-      // dimensions, gone away, or boarded a different vehicle in the meantime.
-      try {
-        const mount = ridingEntity(player);
-        if (
-          valid(player) &&
-          valid(seat) &&
-          player.dimension.id === dimension.id &&
-          distanceSquared(player.location, anchor) <= 16 &&
-          (!mount || mount.id === seat.id)
-        ) {
-          seat.teleport(previous.anchor, {
-            checkForBlocks: false,
-            keepVelocity: false,
-            rotation: { x: 0, y: previous.stair.front.yaw },
-          });
-          // Emergency recovery only; never used during a successful transfer.
-          if (!ridingEntity(player)) seat.getComponent("minecraft:rideable")?.addRider(player);
-          player.setRotation(previous.rotation);
-        }
-      } catch {
-        /* Normal tick cleanup handles an irrecoverable helper. */
-      }
-      console.warn(`[ElleeDog 67 Sit] Could not transfer: ${String(error)}`);
-      return failure("Could not move the seat. Check /sit:status and the Content Log.");
+      this.restoreSeat(record, previous, anchor);
+      log.warn(`could not transfer: ${log.describe(error)}`);
+      return failure("Could not move the seat; /sit:status has the details.");
     }
   }
-  release(playerId: string, reposition = false, message?: string): boolean {
+  /**
+   * Rolls back a failed transfer, but never retrieves a player who has moved dimensions, gone away or boarded a
+   * different vehicle in the meantime. Emergency recovery only; a successful transfer never comes here.
+   */
+  private restoreSeat(
+    record: SeatRecord,
+    previous: { stair: StairDescription; anchor: Vector3; rotation: Vector2 },
+    attempted: Vector3,
+  ): void {
+    const { player, seat, dimension } = record;
+    try {
+      const mount = ridingEntity(player);
+      if (
+        !valid(player) ||
+        !valid(seat) ||
+        player.dimension.id !== dimension.id ||
+        distanceSquared(player.location, attempted) > 16 ||
+        (mount && mount.id !== seat.id)
+      )
+        return;
+      seat.teleport(previous.anchor, {
+        checkForBlocks: false,
+        keepVelocity: false,
+        rotation: { x: 0, y: previous.stair.front.yaw },
+      });
+      if (!ridingEntity(player)) seat.getComponent("minecraft:rideable")?.addRider(player);
+      player.setRotation(previous.rotation);
+    } catch {
+      /* Normal tick cleanup handles an irrecoverable helper. */
+    }
+  }
+  release(playerId: string, reposition = false): boolean {
     const record = this.byPlayer.get(playerId);
     if (!record) return false;
     this.byPlayer.delete(playerId);
@@ -458,7 +468,6 @@ export class SeatManager {
         /* Keep native dismount position. */
       }
     }
-    if (message && valid(player)) this.message(player, message);
     return true;
   }
   tick(): void {
@@ -484,7 +493,7 @@ export class SeatManager {
         }
         const actual = readStair(getBlock(dimension, stair.location));
         if (!actual || actual.fingerprint !== stair.fingerprint || !hasHeadroom(dimension, actual)) {
-          this.release(id, true, "The stair changed or became obstructed, so you stood up.");
+          this.release(id, true);
           continue;
         }
         if (player.getGameMode() === GameMode.Spectator || player.isSwimming || player.isFlying || player.isGliding) {
@@ -492,7 +501,10 @@ export class SeatManager {
           continue;
         }
         if (this.system.currentTick % CONFIG.heartbeatInterval === 0) seat.triggerEvent("sit:heartbeat");
-      } catch {
+      } catch (error) {
+        // Stand the player up rather than keep a seat the engine can no longer describe, and say why once: a
+        // silent release every tick is the hardest symptom to trace in the Content Log.
+        log.warnOnce(`tick:${id}`, `seat check failed for ${id}, standing the player up: ${log.describe(error)}`);
         this.release(id);
       }
     }
@@ -503,20 +515,18 @@ export class SeatManager {
   forget(playerId: string): void {
     this.release(playerId);
     this.cooldowns.delete(playerId);
+    log.forget(`tick:${playerId}`);
+  }
+  /** Drops every record and cooldown without touching entities; `sweep` handles those. */
+  reset(): void {
+    this.byPlayer.clear();
+    this.byBlock.clear();
+    this.cooldowns.clear();
   }
   /** Sweep only this add-on's helper entities in loaded dimensions/chunks. */
   sweep(clearAll = false): number {
     let removed = 0;
-    const dimensions = new Map<string, Dimension>();
-    for (const id of ["overworld", "nether", "the_end"]) {
-      try {
-        const d = this.world.getDimension(id);
-        dimensions.set(d.id, d);
-      } catch {
-        /* Not available. */
-      }
-    }
-    for (const player of this.world.getAllPlayers()) dimensions.set(player.dimension.id, player.dimension);
+    const dimensions = loadedDimensions(this.world);
     if (clearAll) {
       for (const id of [...this.byPlayer.keys()]) if (this.release(id, true)) removed++;
     }

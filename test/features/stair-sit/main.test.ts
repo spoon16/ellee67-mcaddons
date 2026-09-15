@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { runFeature } from "../../../src/core/feature.ts";
 import { stairSit } from "../../../src/features/stair-sit/index.ts";
 import {
+  type Block,
   CommandPermissionLevel,
   CustomCommandStatus,
   flushCurrentTick,
@@ -16,10 +17,10 @@ import {
   system,
   world,
 } from "../../mocks/minecraft-server.ts";
-import type { FakeBlock, FakePlayer, FakeSeat } from "./fakes.ts";
+import type { FakePlayer, FakeSeat } from "./fakes.ts";
 import { boot, installDimension, runtime, shutdown, sitCommand, sitCommands } from "./harness.ts";
 
-function nativeTargetAt(stair: FakeBlock): FakeSeat | undefined {
+function nativeTargetAt(stair: Block): FakeSeat | undefined {
   return runtime.dimension
     .getEntities({ type: "sit:target" })
     .find(
@@ -36,7 +37,7 @@ function interactTarget(player: FakePlayer, target: FakeSeat | undefined, extra:
   return event;
 }
 
-function interactBlock(player: FakePlayer, block: FakeBlock) {
+function interactBlock(player: FakePlayer, block: Block) {
   const event = { player, block, isFirstEvent: true, cancel: false };
   world.beforeEvents.playerInteractWithBlock.emit(event);
   return event;
@@ -163,7 +164,7 @@ describe("stair-sit entry point", () => {
     const p = runtime.makePlayer();
     sitCommand("sit:status").callback({ sourceEntity: p });
     step();
-    expect(p.messages.some((m) => m.includes("Version 0.2.1"))).toBe(true);
+    expect(p.chat.some((m) => m.includes("Version 0.2.1"))).toBe(true);
   });
 
   it("native Sit target click defers mounting and repeated events mount only once", () => {
@@ -244,7 +245,7 @@ describe("stair-sit entry point", () => {
     step();
     expect(target?.isValid).toBe(false);
     expect(p.mount).toBeUndefined();
-    expect(p.mainHand.typeId).toBe("minecraft:stone");
+    expect(p.mainHand?.typeId).toBe("minecraft:stone");
   });
 
   it("attack/mining input on a helper suppresses it instead of sitting", () => {
@@ -306,7 +307,7 @@ describe("stair-sit entry point", () => {
     step();
     sitCommand("sit:status").callback({ sourceEntity: p });
     step();
-    expect(p.messages.some((m) => m.includes(`Seat helper: ${id}; moves this session: 1`))).toBe(true);
+    expect(p.chat.some((m) => m.includes(`Seat helper: ${id}; moves this session: 1`))).toBe(true);
   });
 
   it("ASAP dispatch is deferred safely but needs no tick increment in the model", () => {
@@ -493,9 +494,9 @@ describe("stair-sit entry point", () => {
     flushCurrentTick();
     sitCommand("sit:status").callback({ sourceEntity: p });
     flushCurrentTick();
-    expect(p.messages.some((m) => m.includes("Switch cooldown: 0 ticks; input dispatch: ASAP"))).toBe(true);
+    expect(p.chat.some((m) => m.includes("Last attempt: ok"))).toBe(true);
     expect(
-      p.messages.some((m) => m.includes("Last button/block input delay: 0 server ticks (not client display latency)")),
+      p.chat.some((m) => m.includes("Last button/block input delay: 0 server ticks (not client display latency)")),
     ).toBe(true);
   });
 
@@ -515,7 +516,7 @@ describe("stair-sit entry point", () => {
     step(3);
     sitCommand("sit:status").callback({ sourceEntity: p });
     flushCurrentTick();
-    expect(p.messages.some((m) => m.includes("Last button/block input delay: 3 server ticks"))).toBe(true);
+    expect(p.chat.some((m) => m.includes("Last button/block input delay: 3 server ticks"))).toBe(true);
   });
 });
 

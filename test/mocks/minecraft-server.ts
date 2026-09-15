@@ -318,6 +318,45 @@ export class Container {
 
 let nextEntityId = 1;
 
+const rideableTypes = new Set<string>();
+
+/** Declares that entities of this type carry a `minecraft:rideable` component, as their behavior JSON would. */
+export function registerRideableType(typeId: string): void {
+  rideableTypes.add(typeId);
+}
+
+/** The `minecraft:rideable` component: one seat, riders tracked by identity, counters for the tests. */
+export class RideableComponent {
+  readonly owner: Entity;
+  riders: Entity[] = [];
+  addCount = 0;
+  ejectCount = 0;
+  /** When set, `addRider` refuses every rider, as the engine does for a full or incompatible seat. */
+  rejectRiders = false;
+  constructor(owner: Entity) {
+    this.owner = owner;
+  }
+  addRider(rider: Entity): boolean {
+    this.addCount++;
+    if (this.rejectRiders) return false;
+    this.riders.push(rider);
+    rider.mount = this.owner;
+    rider.location = { ...this.owner.location };
+    return true;
+  }
+  ejectRiders(): void {
+    this.ejectCount++;
+    for (const rider of this.riders) if (rider.mount === this.owner) rider.mount = undefined;
+    this.riders = [];
+  }
+  getRiders(): Entity[] {
+    return [...this.riders];
+  }
+  getSeats(): Array<{ position: Vector3 }> {
+    return [{ position: { x: 0, y: 0, z: 0 } }];
+  }
+}
+
 /**
  * Entity properties seeded onto entities spawned by `Dimension.spawnEntity`, keyed by type id, mirroring the
  * `properties` block of the entity's behavior JSON. Feature tests register what their entities declare.
@@ -338,6 +377,8 @@ export class Entity {
   rotation = { x: 0, y: 0 };
   velocity: Vector3 = { x: 0, y: 0, z: 0 };
   nameTag = "";
+  /** The entity this one rides, exposed through the `minecraft:riding` component. */
+  mount?: Entity;
   /** Entity property writes land on the next tick, like the engine. */
   deferPropertyWrites = true;
   constructor(typeId: string, location: Vector3, dimension: Dimension) {
@@ -385,18 +426,29 @@ export class Entity {
     return [...this.tags];
   }
   getComponent(id: string): any {
+    if (id === "minecraft:riding") return this.mount ? { entityRidingOn: this.mount } : undefined;
     return this.components[id];
   }
   hasComponent(id: string): boolean {
-    return id in this.components;
+    return id === "minecraft:riding" ? this.mount !== undefined : id in this.components;
   }
   triggerEvent(name: string): void {
     this.events.push(name);
   }
   teleport(location: Vector3, options?: { dimension?: Dimension; rotation?: { x: number; y: number } }): void {
+    const previous = this.location;
     this.location = { ...location };
     if (options?.dimension) this.dimension = options.dimension;
     if (options?.rotation) this.rotation = { ...options.rotation };
+    // Riders travel with their mount.
+    const rideable = this.components["minecraft:rideable"] as RideableComponent | undefined;
+    for (const rider of rideable?.riders ?? []) {
+      rider.location = {
+        x: rider.location.x + location.x - previous.x,
+        y: rider.location.y + location.y - previous.y,
+        z: rider.location.z + location.z - previous.z,
+      };
+    }
   }
   getRotation() {
     return { ...this.rotation };
@@ -414,6 +466,7 @@ export class Entity {
     return { x: 0, y: 0, z: 1 };
   }
   remove(): void {
+    (this.components["minecraft:rideable"] as RideableComponent | undefined)?.ejectRiders();
     this.isValid = false;
     this.dimension.entities = this.dimension.entities.filter((entity) => entity !== this);
   }
@@ -444,7 +497,9 @@ export class Player extends Entity {
   isSprinting = false;
   isOnGround = true;
   isFlying = false;
+  isGliding = false;
   isSwimming = false;
+  isSleeping = false;
   isInWater = false;
   isEmoting = false;
   failPersistence = false;
@@ -463,7 +518,13 @@ export class Player extends Entity {
     this.components["minecraft:equippable"] = {
       getEquipment: (slot: EquipmentSlot) =>
         slot === EquipmentSlot.Mainhand ? this.inventory.getItem(this.selectedSlotIndex) : this.equipment[slot],
-      setEquipment: (slot: EquipmentSlot, item?: ItemStack) => {
+      setEquipment: (slot: EquipmentSlot, ...rest: [ItemStack?]) => {
+        // The engine's optional parameters are counted, not typed: `setEquipment(slot, undefined)` is refused
+        // at the native boundary. Clearing a slot is the one-argument call.
+        if (rest.length > 0 && rest[0] === undefined) {
+          throw new TypeError("Native optional type conversion failed: pass one argument to clear the slot");
+        }
+        const item = rest[0];
         if (slot === EquipmentSlot.Mainhand) this.inventory.setItem(this.selectedSlotIndex, item);
         else this.equipment[slot] = item;
         return true;
@@ -494,16 +555,27 @@ export class Player extends Entity {
   playSound(): void {}
 }
 
+/**
+ * A handle to one position, like the engine's: `typeId`, the states and `isWaterlogged` read the dimension's
+ * current block every time, so a block placed after the handle was taken is what the handle reports.
+ */
 export class Block {
-  typeId: string;
   location: Vector3;
   dimension: Dimension;
-  states: Record<string, unknown>;
+  private readonly fallback: { typeId: string; states: Record<string, unknown> };
   constructor(typeId: string, location: Vector3, dimension: Dimension, states: Record<string, unknown> = {}) {
-    this.typeId = typeId;
-    this.location = { ...location };
+    this.location = { x: Math.floor(location.x), y: Math.floor(location.y), z: Math.floor(location.z) };
     this.dimension = dimension;
-    this.states = states;
+    this.fallback = { typeId, states };
+  }
+  private get entry(): BlockEntry {
+    return this.dimension.blocks.get(blockKey(this.location)) ?? this.fallback;
+  }
+  get typeId(): string {
+    return this.entry.typeId;
+  }
+  get states(): Record<string, unknown> {
+    return this.entry.states;
   }
   get isAir(): boolean {
     return this.typeId === "minecraft:air";
@@ -513,6 +585,13 @@ export class Block {
   }
   get isSolid(): boolean {
     return !this.isAir && !this.isLiquid;
+  }
+  get isWaterlogged(): boolean {
+    return this.entry.waterlogged === true;
+  }
+  /** Mock only: the engine's `isWaterlogged` is read-only, so tests flood a block through this setter. */
+  set isWaterlogged(flag: boolean) {
+    this.dimension.blocks.set(blockKey(this.location), { ...this.entry, waterlogged: flag });
   }
   get permutation(): BlockPermutation {
     return BlockPermutation.resolve(this.typeId, this.states);
@@ -570,10 +649,27 @@ function blockKey(location: Vector3): string {
   return `${Math.floor(location.x)},${Math.floor(location.y)},${Math.floor(location.z)}`;
 }
 
+interface BlockEntry {
+  typeId: string;
+  states: Record<string, unknown>;
+  waterlogged?: boolean;
+}
+
+/** The face a ray entered a block through, from the axis the ray mostly travels along. */
+function entryFace(direction: Vector3): { face: string; axis: "x" | "y" | "z"; at: 0 | 1 } {
+  const ax = Math.abs(direction.x);
+  const ay = Math.abs(direction.y);
+  const az = Math.abs(direction.z);
+  if (ay >= ax && ay >= az)
+    return direction.y < 0 ? { face: "Up", axis: "y", at: 1 } : { face: "Down", axis: "y", at: 0 };
+  if (ax >= az) return direction.x < 0 ? { face: "East", axis: "x", at: 1 } : { face: "West", axis: "x", at: 0 };
+  return direction.z < 0 ? { face: "South", axis: "z", at: 1 } : { face: "North", axis: "z", at: 0 };
+}
+
 export class Dimension {
   id: string;
   entities: Entity[] = [];
-  blocks = new Map<string, { typeId: string; states: Record<string, unknown> }>();
+  blocks = new Map<string, BlockEntry>();
   commands: string[] = [];
   sounds: string[] = [];
   particles: string[] = [];
@@ -604,8 +700,12 @@ export class Dimension {
   spawnEntity(typeId: string, location: Vector3): Entity {
     this.spawnCount++;
     if (this.spawnFailAt === this.spawnCount) throw new Error("mock spawn failure");
-    const entity = new Entity(typeId, location, this);
-    entity.props = { ...(entityProperties[typeId] ?? {}) };
+    return this.adopt(new Entity(typeId, location, this));
+  }
+  /** Seeds a freshly constructed entity with its type's properties and components and lists it. */
+  adopt<T extends Entity>(entity: T): T {
+    entity.props = { ...(entityProperties[entity.typeId] ?? {}) };
+    if (rideableTypes.has(entity.typeId)) entity.components["minecraft:rideable"] = new RideableComponent(entity);
     this.entities.push(entity);
     return entity;
   }
@@ -621,19 +721,41 @@ export class Dimension {
   }
   getBlock(location: Vector3): Block | undefined {
     const entry = this.blocks.get(blockKey(location));
-    if (!entry) return new Block("minecraft:air", location, this);
-    return new Block(entry.typeId, location, this, entry.states);
+    return new Block(entry?.typeId ?? "minecraft:air", location, this, entry?.states ?? {});
   }
-  getBlockFromRay(origin: Vector3, direction: Vector3, options: { maxDistance?: number } = {}) {
+  /**
+   * Marches the ray in small steps and reports the first block whose face it crosses: a block the origin already
+   * sits inside is never a hit, since no face was entered. `faceLocation` is relative to the block, with the
+   * crossed coordinate snapped to the face, and `face` names the side entered.
+   */
+  getBlockFromRay(
+    origin: Vector3,
+    direction: Vector3,
+    options: { maxDistance?: number; includeLiquidBlocks?: boolean; includePassableBlocks?: boolean } = {},
+  ): { block: Block; face: string; faceLocation: Vector3 } | undefined {
     const max = options.maxDistance ?? 16;
-    for (let distance = 0; distance <= max; distance += 0.5) {
+    const length = Math.hypot(direction.x, direction.y, direction.z) || 1;
+    const unit = { x: direction.x / length, y: direction.y / length, z: direction.z / length };
+    const step = 0.05;
+    const startKey = blockKey(origin);
+    const entered = entryFace(direction);
+    for (let distance = step; distance <= max + 1e-9; distance += step) {
       const point = {
-        x: origin.x + direction.x * distance,
-        y: origin.y + direction.y * distance,
-        z: origin.z + direction.z * distance,
+        x: origin.x + unit.x * distance,
+        y: origin.y + unit.y * distance,
+        z: origin.z + unit.z * distance,
       };
-      const block = this.getBlock(point);
-      if (block && !block.isAir) return { block, face: "Up", faceLocation: point };
+      if (blockKey(point) === startKey) continue;
+      const block = this.getBlock(point) as Block;
+      if (block.isAir) continue;
+      if (block.isLiquid && !options.includeLiquidBlocks) continue;
+      const faceLocation = {
+        x: point.x - block.location.x,
+        y: point.y - block.location.y,
+        z: point.z - block.location.z,
+      };
+      faceLocation[entered.axis] = entered.at;
+      return { block, face: entered.face, faceLocation };
     }
     return undefined;
   }
@@ -670,6 +792,7 @@ export function engine(value: unknown): any {
 
 export const players: Player[] = [];
 export const worldMessages: unknown[] = [];
+const DEFAULT_GAME_RULES = { doTileDrops: true, recipesUnlock: true, showRecipeMessages: true };
 let worldDynamic: Record<string, unknown> = {};
 let difficulty: Difficulty = Difficulty.Normal;
 
@@ -700,7 +823,7 @@ export const world = {
     itemUse: new Signal(),
     explosion: new Signal(),
   },
-  gameRules: { doTileDrops: true, recipesUnlock: true, showRecipeMessages: true },
+  gameRules: { ...DEFAULT_GAME_RULES },
   getAllPlayers(): Player[] {
     return players.filter((player) => player.isValid);
   },
@@ -862,7 +985,7 @@ export function reset(): void {
   worldMessages.length = 0;
   worldDynamic = {};
   difficulty = Difficulty.Normal;
-  world.gameRules.doTileDrops = true;
+  Object.assign(world.gameRules, DEFAULT_GAME_RULES);
   for (const key of DIMENSION_KEYS) dimensions[key] = new Dimension(`minecraft:${key}`);
   for (const signal of [...Object.values(world.beforeEvents), ...Object.values(world.afterEvents)])
     signal.callbacks = [];

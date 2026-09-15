@@ -45,7 +45,7 @@ Every command is registered with `cheatsRequired: false` and must be run by a pl
 | `/sit:gesture` | Any | `enabled: Boolean` | Enable or disable crouch-release sitting for yourself. Default on. |
 | `/sit:button` | Any | `enabled: Boolean` | Enable or disable native Sit targets for yourself. Default on. Crouch and command controls are unaffected. |
 | `/sit:height` | Any | `offset: Float` | Seat-height adjustment in blocks, from -0.5 to 0.5; 0 resets. Applies to the next sitting session. |
-| `/sit:status` | Any | none | Diagnostics: version, preferences, loaded targets, carrier id, current chair, moves this session, input queue delay, aimed block states. |
+| `/sit:status` | Any | none | Diagnostics: version, preferences, loaded targets, carrier id, current chair, moves this session, the last sit attempt and why it was refused, input queue delay, aimed block states. |
 | `/sit:clear` | Admin | none | Stand up every rider and remove all loaded seat and target helpers. Target discovery pauses for two seconds. |
 
 ## Entities and identifiers
@@ -63,8 +63,17 @@ Entity events: `sit:heartbeat` renews the `sit:lease` timer group, `sit:expire` 
 (instant despawn).
 
 Per-player dynamic properties: `sit:gesture` (boolean, `false` turns the crouch gesture off), `sit:height`
-(number, clamped to -0.5 to 0.5) and `sit:button` (boolean, `false` turns Sit targets off). The tag
-`ed67_sit_no_button` mirrors `sit:button false` so the target's `has_tag` filter can hide the prompt.
+(number, clamped to -0.5 to 0.5) and `sit:button` (boolean, `false` turns Sit targets off). The property is
+the source of truth; the tag `ed67_sit_no_button` only mirrors it so the target's `has_tag` filter can hide
+the prompt, and the scripts re-sync the tag on every discovery pass, so a stray `/tag` edit is corrected.
+
+Chat: the feature says nothing on its own. There is no join hint and no action-bar text; `/sit:help` lists
+the controls, explicit commands answer in chat, and a refused Sit button press or crouch gesture is silent
+(the reason is in `/sit:status`). Warnings go to the Content Log under `[ElleeDog 67] Stair Sitting:`.
+
+Discovery: a player who stays in one block, with no block placed or broken nearby and no seat change, keeps
+the result of the last target scan for two seconds; existing targets are still re-read against their stair
+every pass, so a chair broken by a piston loses its prompt at once.
 
 Lang keys in the resource pack's `texts/en_US.lang` and `texts/en_GB.lang`:
 `action.interact.sit67`, `entity.sit:seat.name`, `entity.sit:target.name`.
@@ -96,10 +105,9 @@ Quoted from the upstream README, "Compatibility and deliberate limits":
 ## Manual in-game checks
 
 Use a copy of the world with the two Stair Sitting packs active, the Content Log enabled and experiments
-off. The Content Log shows `[ElleeDog 67] stair-sit loaded` and the `[ElleeDog 67 Sit] 0.2.1 loaded` line.
+off. The Content Log shows `[ElleeDog 67] stair-sit loaded` and nothing appears in chat on join.
 
-1. `/sit:status` reports version 0.2.1, Native Sit enabled, "Switch cooldown: 0 ticks; input dispatch:
-   ASAP".
+1. `/sit:status` reports version 0.2.1 and Native Sit enabled.
 2. Place two upright oak stairs side by side with two clear blocks above and space in front. Empty both
    hands and do not crouch. Aim at the first stair's seat or back: a **Sit** action appears (not "Board"
    and not a raw key). Press it. The pose matches the approved 0.1.1 build; no helper geometry or nameplate
@@ -140,6 +148,6 @@ off. The Content Log shows `[ElleeDog 67] stair-sit loaded` and the `[ElleeDog 6
     assets or raw translation keys in the Content Log.
 
 Record the Bedrock version, device and touch scheme, `/sit:status` before and after, a short third-person
-clip, and Content Log lines beginning `[ElleeDog 67 Sit]`. When reporting slowness, say whether it happens
+clip, and Content Log lines beginning `[ElleeDog 67] Stair Sitting:`. When reporting slowness, say whether it happens
 before the move starts or as a visible glide afterwards; the input delay diagnostic only measures the
 script queue.

@@ -1,5 +1,6 @@
 import fs from "node:fs";
-import { type Node, type ParseError, parseTree, printParseErrorCode } from "jsonc-parser";
+import path from "node:path";
+import { type Node, type ParseError, parse, parseTree, printParseErrorCode } from "jsonc-parser";
 
 export class JsonFileError extends Error {}
 
@@ -40,42 +41,10 @@ export function readJsonWithComments(file: string): unknown {
   const problems = parseErrors.map((error) => `${file}: ${printParseErrorCode(error.error)} at offset ${error.offset}`);
   walk(tree, file, problems, []);
   if (problems.length) throw new JsonFileError(problems.join("\n"));
-  return JSON.parse(stripComments(text));
-}
-
-function stripComments(text: string): string {
-  let out = "";
-  let inString = false;
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i] as string;
-    const next = text[i + 1];
-    if (inString) {
-      out += char;
-      if (char === "\\") {
-        out += next ?? "";
-        i++;
-      } else if (char === '"') inString = false;
-      continue;
-    }
-    if (char === '"') {
-      inString = true;
-      out += char;
-    } else if (char === "/" && next === "/") {
-      while (i < text.length && text[i] !== "\n") i++;
-      out += "\n";
-    } else if (char === "/" && next === "*") {
-      const end = text.indexOf("*/", i + 2);
-      i = end === -1 ? text.length : end + 1;
-    } else out += char;
-  }
-  return out.replace(/,(\s*[}\]])/g, "$1");
+  return parse(text, undefined, { allowTrailingComma: true, disallowComments: false });
 }
 
 export function writeJson(file: string, value: unknown): void {
-  fs.mkdirSync(require_dirname(file), { recursive: true });
+  fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
-}
-
-function require_dirname(file: string): string {
-  return file.slice(0, Math.max(0, file.lastIndexOf("/")));
 }

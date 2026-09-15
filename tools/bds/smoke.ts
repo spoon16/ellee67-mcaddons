@@ -33,19 +33,28 @@ interface Check {
   detail?: string;
 }
 
-function latestContentLog(serverDir: string): string[] {
+const CONTENT_LOG = /^ContentLog.*\.txt$/;
+
+/** Removes every content log from earlier runs, so the one read afterwards can only be this run's. */
+export function clearContentLogs(serverDir: string): void {
+  for (const name of fs.readdirSync(serverDir)) if (CONTENT_LOG.test(name)) fs.rmSync(path.join(serverDir, name));
+}
+
+/** The content log this run wrote, or undefined when the server wrote none (itself a failure). */
+export function contentLog(serverDir: string): string[] | undefined {
   const files = fs
     .readdirSync(serverDir)
-    .filter((name) => /^ContentLog.*\.txt$/.test(name))
+    .filter((name) => CONTENT_LOG.test(name))
     .sort();
   const latest = files[files.length - 1];
-  return latest ? fs.readFileSync(path.join(serverDir, latest), "utf8").split(/\r?\n/) : [];
+  return latest ? fs.readFileSync(path.join(serverDir, latest), "utf8").split(/\r?\n/) : undefined;
 }
 
 async function main(): Promise<void> {
   await buildPacks();
   const serverDir = setup();
   console.log(`Bedrock Dedicated Server ${BDS_VERSION} at ${path.relative(REPO_ROOT, serverDir)}`);
+  clearContentLogs(serverDir);
   const result = await runServer(serverDir, {
     commands: PROBES.map((probe) => probe.command),
     onLine: (line) => {
@@ -56,7 +65,13 @@ async function main(): Promise<void> {
   const packs = loadPacks();
   const checks: Check[] = [];
   const lines = result.lines;
-  checks.push({ name: "server started", ok: result.started, detail: result.timedOut ? "timed out" : undefined });
+  checks.push({
+    name: "server started",
+    ok: result.started,
+    detail: result.started ? undefined : lines.slice(-5).join("\n"),
+  });
+  checks.push({ name: "run finished within the time limit", ok: !result.timedOut });
+  checks.push({ name: "server exited cleanly", ok: result.exitCode === 0, detail: `exit code ${result.exitCode}` });
   for (const pack of packs) {
     if (pack.kind !== "behavior") continue;
     const listed = lines.some((line) => line.includes("Pack Stack") && line.includes(`(id: ${pack.uuid},`));
@@ -70,10 +85,13 @@ async function main(): Promise<void> {
   const expected = (line: string) => EXPECTED_NOTICES.some((notice) => notice.test(line));
   const problems = lines.filter((line) => SCRIPT_PROBLEM.test(line) && !expected(line));
   checks.push({ name: "no script warnings or errors", ok: problems.length === 0, detail: problems.join("\n") });
-  const contentErrors = latestContentLog(serverDir).filter(
-    (line) => /\[(error|warning)\]/.test(line) && !expected(line),
-  );
-  checks.push({ name: "content log clean", ok: contentErrors.length === 0, detail: contentErrors.join("\n") });
+  const content = contentLog(serverDir);
+  const contentErrors = (content ?? []).filter((line) => /\[(error|warning)\]/.test(line) && !expected(line));
+  checks.push({
+    name: "content log written and clean",
+    ok: content !== undefined && contentErrors.length === 0,
+    detail: content === undefined ? "the server wrote no ContentLog*.txt" : contentErrors.join("\n"),
+  });
   for (const probe of PROBES) {
     const name = probe.command.split(" ")[0] as string;
     const unknown = lines.find((line) => line.includes(`Unknown command: ${name}`));

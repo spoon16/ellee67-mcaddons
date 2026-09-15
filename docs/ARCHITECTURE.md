@@ -94,12 +94,19 @@ interface FeatureDefinition {
   no world access) it calls `register()` with the engine's command and item component registries;
   after `world.afterEvents.worldLoad` it calls `start(ctx)` with a fresh `FeatureContext` and logs
   `<id> loaded`. A throwing `register()` or `start()` is logged and leaves the rest of the pack
-  running.
+  running. A second `worldLoad` in the same module's life disposes the previous context before
+  `start` runs again, so nothing is subscribed twice; features clear their own module state at the
+  top of `start`.
 - `subscriptions.ts`: `FeatureContext`, whose `on(signal, handler, options?)`, `every(ticks, fn)`,
   `after(ticks, fn)` and `onDispose(fn)` are all undone by `dispose()`. `on` forwards `options` only
   when the caller gave some: the engine counts arguments at the native boundary, and most signals
   take exactly one.
-- `log.ts`: `[ElleeDog 67]`-prefixed `info`, `warn` and `warnOnce`.
+- `log.ts`: `featureLog(title)` gives a feature `info`, `warn`, `warnOnce(key)` and
+  `throttled(key, tick, ticks)`, every line prefixed `[ElleeDog 67] <title>:`; the runner's own
+  `log` writes the `<id> loaded` lines.
+- `dimensions.ts`: `loadedDimensions(world)`, the three vanilla dimensions plus every online
+  player's, for the sweeps that look for helper entities.
+- `vanilla.ts`: `entityId`, `blockId` and `itemId`, compile-time-checked vanilla identifiers.
 
 Two engine rules shape every feature and are enforced by the engine mock and by
 `npm run test:engine`:

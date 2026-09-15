@@ -31,7 +31,7 @@ describe("pets lifecycle", () => {
     expect([...registry.components.keys()]).toEqual(["pet:open_morpher"]);
   });
 
-  it("subscribes the player handlers and its two loops on world load", () => {
+  it("subscribes the player handlers and one refresh loop on world load", () => {
     declarePetEntities();
     runFeature(pets);
     startup();
@@ -41,7 +41,7 @@ describe("pets lifecycle", () => {
       spawn: before.spawn + 1,
       leave: before.leave + 1,
       dimension: before.dimension + 1,
-      intervals: before.intervals + 2,
+      intervals: before.intervals + 1,
     });
   });
 });

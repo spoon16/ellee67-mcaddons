@@ -12,6 +12,7 @@ import {
   world,
 } from "@minecraft/server";
 import type { ItemRegistry } from "../../core/feature.ts";
+import { featureLog } from "../../core/log.ts";
 import { entityId } from "../../core/vanilla.ts";
 import { BLOCKS, durabilityLoss, enchantment, GEAR, miningDrop, NS, toolAction } from "./rules.ts";
 
@@ -21,11 +22,9 @@ interface PermutationStates {
   withState(name: string, value: boolean | number | string): BlockPermutation;
 }
 
-const warned = new Set<string>();
+export const log = featureLog("Rbow Ore");
 function warnOnce(label: string, error: unknown): void {
-  if (warned.has(label)) return;
-  warned.add(label);
-  console.warn(`[67 Rbow Ore Mod] ${label}: ${String(error)}`);
+  log.warnOnce(label, `${label}: ${log.describe(error)}`);
 }
 // Engine callbacks hand over live entities, so validity is not re-checked here.
 function isPlayer(entity: Entity | undefined): entity is Player {
@@ -44,7 +43,8 @@ function consumeDurability(player: Player, expectedId: string, amount: number): 
   const loss = durabilityLoss(amount, enchantment(item, "unbreaking"));
   if (!loss) return;
   if (durability.damage + loss >= durability.maxDurability) {
-    equipment.setEquipment(EquipmentSlot.Mainhand, undefined);
+    // One argument clears the slot; an explicit undefined is refused at the native boundary.
+    equipment.setEquipment(EquipmentSlot.Mainhand);
     player.dimension.playSound("random.break", player.location);
   } else {
     durability.damage += loss;
@@ -196,10 +196,10 @@ export function onScriptEvent(event: ScriptEventCommandMessageAfterEvent): void 
   lines.push("This checks registrations/components, not client icons or manual equip/place behavior.");
   const output = lines.join("\n");
   if (isPlayer(event.sourceEntity)) event.sourceEntity.sendMessage(output);
-  else console.warn(output);
+  else log.info(output);
 }
 
 export function resetState(): void {
   pending.clear();
-  warned.clear();
+  log.reset();
 }

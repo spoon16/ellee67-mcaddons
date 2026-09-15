@@ -6,7 +6,7 @@ import { type Zippable, zipSync } from "fflate";
 import { listFiles } from "./lib/files.ts";
 import { readStrictJson } from "./lib/json.ts";
 import { distDir, loadPacks } from "./lib/packs.ts";
-import { DIST, REPO_ROOT } from "./lib/paths.ts";
+import { DIST, isMain, REPO_ROOT } from "./lib/paths.ts";
 
 const STAMP = new Date(Date.UTC(2026, 0, 1));
 
@@ -33,7 +33,7 @@ export function packageArchives(): string[] {
   return [addon];
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (isMain(import.meta.url)) {
   try {
     for (const file of packageArchives())
       console.log(`wrote ${path.relative(REPO_ROOT, file)} (${fs.statSync(file).size} bytes)`);

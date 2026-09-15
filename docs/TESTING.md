@@ -148,9 +148,9 @@ World, so every step that changes them ends with reopening the world.
    `/pet:form carter` is an unknown command, and the Pet Morpher in the inventory shows as an
    unknown item. Reactivate both packs and reopen: the player is Carter again on join without a
    chat line and the morpher is back.
-9. **Quiet join.** Rejoin the world with every pack active and confirm nothing was announced in
-   chat on join except Stair Sitting's one-line hint (Pets is designed to be silent on lifecycle
-   events) and the Content Log shows no script errors, missing assets or raw translation keys.
+9. **Quiet join.** Rejoin the world with every pack active and confirm nothing at all was announced
+   in chat on join (every feature is silent on lifecycle events) and the Content Log shows no script
+   errors, missing assets or raw translation keys.
 
 Record the Bedrock version, device, pack version, the active pack list and order, cheats setting,
 reproduction steps, expected versus actual, and any Content Log errors.

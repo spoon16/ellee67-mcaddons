@@ -2,10 +2,10 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { CONFIG } from "../../../src/features/stair-sit/config.ts";
 import { readStair as readStairModule, SeatManager } from "../../../src/features/stair-sit/seats.ts";
 import { InteractionTargets } from "../../../src/features/stair-sit/targets.ts";
-import { engine, reset } from "../../mocks/minecraft-server.ts";
+import { type Block, engine, GameMode, reset } from "../../mocks/minecraft-server.ts";
 import { FakeDimension, FakePlayer, fixture } from "./fakes.ts";
 
-const readStair = (block: unknown): any => readStairModule(engine(block));
+const readStair = (block: Block | undefined): any => readStairModule(engine(block));
 
 function setup() {
   const f = fixture();
@@ -62,7 +62,6 @@ describe("interaction targets", () => {
     "spectator",
     "dead",
     "disabled",
-    "disabled-tag",
     "boat",
     "cooldown",
   ]) {
@@ -75,16 +74,56 @@ describe("interaction targets", () => {
       if (state === "gliding") f.player.isGliding = true;
       if (state === "swimming") f.player.isSwimming = true;
       if (state === "sleeping") f.player.isSleeping = true;
-      if (state === "spectator") f.player.mode = "Spectator";
+      if (state === "spectator") f.player.setGameMode(GameMode.Spectator);
       if (state === "dead") f.player.health = 0;
       if (state === "disabled") f.player.setDynamicProperty(CONFIG.buttonProperty, false);
-      if (state === "disabled-tag") f.player.addTag(CONFIG.buttonDisabledTag);
       if (state === "boat") f.player.mount = { id: "boat", typeId: "minecraft:boat" };
       if (state === "cooldown") f.m.cooldowns.set(f.player.id, f.system.currentTick + 30);
       f.targets.refresh();
       expect(f.targets.byBlock.size).toBe(0);
     });
   }
+
+  it("the filter tag mirrors the button preference; an edited tag is corrected on the next pass", () => {
+    const f = setup();
+    f.player.addTag(CONFIG.buttonDisabledTag);
+    f.targets.refresh();
+    expect(f.targets.byBlock.size).toBe(1);
+    expect(f.player.hasTag(CONFIG.buttonDisabledTag)).toBe(false);
+    f.targets.setEnabled(f.player, false);
+    expect(f.player.hasTag(CONFIG.buttonDisabledTag)).toBe(true);
+    expect(f.targets.byBlock.size).toBe(0);
+    f.targets.setEnabled(f.player, true);
+    expect(f.player.hasTag(CONFIG.buttonDisabledTag)).toBe(false);
+    expect(f.targets.byBlock.size).toBe(1);
+  });
+
+  it("a standing player's discovery is cached until a block changes, the player moves or the cache ages", () => {
+    const f = setup();
+    let scans = 0;
+    const original = f.targets.candidates.bind(f.targets);
+    f.targets.candidates = (...args: unknown[]) => {
+      scans++;
+      return original(...(args as [never]));
+    };
+    f.targets.refresh();
+    f.targets.refresh();
+    expect(scans).toBe(1);
+    f.dimension.stair({ x: 0, y: 64, z: 1 });
+    f.targets.refresh();
+    expect(scans).toBe(1);
+    expect(f.targets.byBlock.size).toBe(1);
+    f.targets.blocksChanged();
+    f.targets.refresh();
+    expect(scans).toBe(2);
+    expect(f.targets.byBlock.size).toBe(2);
+    f.player.location.z += 1;
+    f.targets.refresh();
+    expect(scans).toBe(3);
+    f.system.currentTick += CONFIG.targetCacheTicks;
+    f.targets.refresh();
+    expect(scans).toBe(4);
+  });
 
   it("seated players get neighboring targets, not their own occupied chair or a distant chair", () => {
     const f = setup();

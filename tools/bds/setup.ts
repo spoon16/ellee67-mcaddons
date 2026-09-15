@@ -8,7 +8,7 @@ import path from "node:path";
 import { unzipSync } from "fflate";
 import { readStrictJson } from "../lib/json.ts";
 import { distDir, loadPacks } from "../lib/packs.ts";
-import { REPO_ROOT } from "../lib/paths.ts";
+import { isMain, REPO_ROOT } from "../lib/paths.ts";
 
 /** Matches the game version the packs target (min_engine_version 1.26.40); bump both together. */
 export const BDS_VERSION = "1.26.45.1";
@@ -179,7 +179,7 @@ export function setup(): string {
   return serverDir;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (isMain(import.meta.url)) {
   try {
     console.log(`ready: ${path.relative(REPO_ROOT, setup())} (Bedrock Dedicated Server ${BDS_VERSION})`);
   } catch (error) {

@@ -143,6 +143,3 @@ export function restoreAppearance(
 ): { form: string; properties: AppearanceTarget } {
   return transitionForm(player, preferredForm(player), { persist: persistMigration, defaults: false });
 }
-export function forgetAppearance(player: PlayerLike): void {
-  pending.delete(player);
-}

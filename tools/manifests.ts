@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { readStrictJson } from "./lib/json.ts";
 import { getPack, loadPacks, type PackSpec, packDir } from "./lib/packs.ts";
-import { REPO_ROOT } from "./lib/paths.ts";
+import { isMain, REPO_ROOT } from "./lib/paths.ts";
 
 export const MIN_ENGINE_VERSION = [1, 26, 40];
 export const SERVER_API = "2.9.0";
@@ -76,6 +76,6 @@ export function writeManifests(): string[] {
   return written;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (isMain(import.meta.url)) {
   for (const file of writeManifests()) console.log(`wrote ${file}`);
 }

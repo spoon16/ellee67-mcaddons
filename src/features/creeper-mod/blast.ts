@@ -138,12 +138,12 @@ export function createCreeperHandler({
             vertical: Math.max(0.05, impact * 0.35),
           });
         } catch (error) {
-          warn(`[67 Creeper Mod] Cannot sample player: ${error}`);
+          warn(`Cannot sample player: ${error}`);
         }
       }
     } catch (error) {
       // Leave the native explosion cancelled even when sampling fails.
-      warn(`[67 Creeper Mod] Explosion cancelled; sampling failed: ${error}`);
+      warn(`Explosion cancelled; sampling failed: ${error}`);
     }
 
     system.run(() => {
@@ -152,18 +152,18 @@ export function createCreeperHandler({
       try {
         if (source.isValid) source.remove();
       } catch (error) {
-        warn(`[67 Creeper Mod] Detonator cleanup: ${error}`);
+        warn(`Detonator cleanup: ${error}`);
       }
       if (!dimension || !origin) return;
       try {
         dimension.spawnParticle("minecraft:huge_explosion_emitter", origin);
       } catch (error) {
-        warn(`[67 Creeper Mod] Visual effect: ${error}`);
+        warn(`Visual effect: ${error}`);
       }
       try {
         dimension.playSound("random.explode", origin, { volume: 1, pitch: 1 });
       } catch (error) {
-        warn(`[67 Creeper Mod] Sound effect: ${error}`);
+        warn(`Sound effect: ${error}`);
       }
       for (const hit of snapshots) {
         try {
@@ -174,7 +174,7 @@ export function createCreeperHandler({
           const hurt = player.applyDamage(hit.damage, { cause: damageCause.entityExplosion });
           if (hurt) player.applyKnockback(hit.horizontal, hit.vertical);
         } catch (error) {
-          warn(`[67 Creeper Mod] Player damage: ${error}`);
+          warn(`Player damage: ${error}`);
         }
       }
     });

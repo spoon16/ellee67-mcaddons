@@ -1,5 +1,6 @@
 /** Pure stair geometry helpers. No Minecraft runtime or dependency required. */
 import type { Vector3 } from "@minecraft/server";
+import { CONFIG } from "./config.ts";
 
 /** Which way a stair's full-height side faces, and the yaw a seated player should take (looking away from it). */
 export interface StairFront {
@@ -96,5 +97,5 @@ export function highTreadPoint(stair: StairDescription): Vector3 {
 export function gestureComplete(armed: ArmedGesture | undefined, tick: number, targetKey: string | undefined): boolean {
   if (!armed || targetKey !== armed.key) return false;
   const held = tick - armed.tick;
-  return held >= 2 && held <= 120;
+  return held >= CONFIG.gestureMinTicks && held <= CONFIG.gestureMaxTicks;
 }

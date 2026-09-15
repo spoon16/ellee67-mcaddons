@@ -183,7 +183,7 @@ describe("ender-mod lifecycle", () => {
     const first = warn.mock.calls.length;
     expect(first).toBeGreaterThanOrEqual(1);
     expect(first).toBeLessThanOrEqual(2);
-    expect(warn.mock.calls.every(([line]) => String(line).startsWith("[67 Ender Mod] "))).toBe(true);
+    expect(warn.mock.calls.every(([line]) => String(line).startsWith("[ElleeDog 67] Ender Mod: "))).toBe(true);
     step(200);
     expect(warn.mock.calls.length).toBe(first + 1);
   });

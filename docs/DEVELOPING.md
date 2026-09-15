@@ -31,7 +31,7 @@ packs.json                    the ten packs: ids, titles, uuids, script modules,
 behavior_packs/elleedog67_*/  one behavior pack per feature (pets, rbow_ore, ender_mod, redstone_guide, stair_sit, creeper_mod)
 resource_packs/elleedog67_*/  one resource pack per feature that needs one
 src/packs/<id>.ts             each behavior pack's script entry: runs its feature
-src/core/                     the tiny shared runtime bundled into every pack: runFeature, FeatureContext, log, vanilla ids
+src/core/                     the tiny shared runtime bundled into every pack: runFeature, FeatureContext, featureLog, loadedDimensions, vanilla ids
 src/features/<id>/            each feature's scripts; index.ts exports its definition
 test/                         vitest suites and the engine mock
 tools/                        build, validate, package, manifests, version bump, codegen, the headless server harness

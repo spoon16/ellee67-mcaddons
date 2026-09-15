@@ -32,7 +32,6 @@ export interface MorpherMenuOptions {
 export interface MorpherMenu {
   open(player: Entity | undefined): Promise<boolean>;
   close(id: string): void;
-  isOpen(id: string): boolean;
 }
 
 export function giveMorpher(player: PlayerLike): ItemStack {
@@ -127,5 +126,5 @@ export function createMorpherMenu({ select, reportError, wait }: MorpherMenuOpti
       if (active.get(id) === token) active.delete(id);
     }
   }
-  return { open, close, isOpen: (id) => active.has(id) };
+  return { open, close };
 }

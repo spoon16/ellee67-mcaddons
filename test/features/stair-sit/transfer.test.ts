@@ -6,22 +6,23 @@ import {
   readStair as readStairModule,
   SeatManager,
 } from "../../../src/features/stair-sit/seats.ts";
-import { engine, reset } from "../../mocks/minecraft-server.ts";
+import { type Block, engine, GameMode, reset } from "../../mocks/minecraft-server.ts";
 import { FakeDimension, FakePlayer, fixture } from "./fakes.ts";
 
-const readStair = (block: unknown): any => readStairModule(engine(block));
+const readStair = (block: Block | undefined): any => readStairModule(engine(block));
 
 function setup() {
   const f = fixture();
   const m: any = new SeatManager(engine(f.world), engine(f.system));
   const next = f.dimension.stair({ x: 0, y: 64, z: 1 });
   expect(m.sit(f.player, f.stair).ok).toBe(true);
-  return { ...f, m, next, carrier: f.player.mount };
+  // Blocks are live handles, so the key is taken now: a scenario may turn the stair into air later.
+  return { ...f, m, next, carrier: f.player.mount, stairKey: readStair(f.stair).key as string };
 }
 
 function remains(f: ReturnType<typeof setup>): void {
   expect(f.player.mount).toBe(f.carrier);
-  expect(f.m.get(f.player.id).stair.key).toBe(readStair(f.stair).key);
+  expect(f.m.get(f.player.id).stair.key).toBe(f.stairKey);
   expect(f.m.byBlock.size).toBe(1);
   expect(f.m.byPlayer.size).toBe(1);
   expect(f.carrier.riders[0]).toBe(f.player);
@@ -96,7 +97,6 @@ describe("seated transfer", () => {
     const up = f.dimension.stair({ x: 0, y: 65, z: 1 });
     expect(f.m.sit(f.player, up).ok).toBe(true);
     expect(f.carrier.location.y).toBe(65.5);
-    f.system.currentTick += CONFIG.transferCooldownTicks;
     expect(f.m.sit(f.player, f.stair).ok).toBe(true);
     expect(f.carrier.location.y).toBe(64.5);
     expect(f.carrier.ejectCount).toBe(0);
@@ -115,7 +115,6 @@ describe("seated transfer", () => {
     const f = setup();
     const third = f.dimension.stair({ x: 0, y: 64, z: 2 });
     const tick = f.system.currentTick;
-    expect(CONFIG.transferCooldownTicks).toBe(0);
     expect(f.m.sit(f.player, f.next).ok).toBe(true);
     expect(f.m.sit(f.player, f.next).alreadyThere).toBe(true);
     expect(f.m.sit(f.player, third).ok).toBe(true);
@@ -206,7 +205,7 @@ describe("seated transfer", () => {
       if (scenario === "offhand") f.player.offHand = { typeId: "minecraft:shield" };
       if (scenario === "sneaking") f.player.isSneaking = true;
       if (scenario === "dead") f.player.health = 0;
-      if (scenario === "spectator") f.player.mode = "Spectator";
+      if (scenario === "spectator") f.player.setGameMode(GameMode.Spectator);
       if (scenario === "source-changed") f.dimension.put(f.stair.location, "minecraft:air");
       expect(f.m.sit(f.player, target).ok).toBe(false);
       remains(f);
@@ -218,7 +217,7 @@ describe("seated transfer", () => {
     const f = setup();
     f.player.mainHand = { typeId: "minecraft:diamond_pickaxe" };
     expect(f.m.sit(f.player, f.next, false).ok).toBe(true);
-    expect(f.player.mainHand.typeId).toBe("minecraft:diamond_pickaxe");
+    expect(f.player.mainHand?.typeId).toBe("minecraft:diamond_pickaxe");
   });
 
   it("wall in the path blocks movement even when the destination has headroom", () => {

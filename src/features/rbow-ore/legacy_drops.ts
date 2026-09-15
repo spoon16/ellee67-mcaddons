@@ -3,7 +3,9 @@
  * Retained for old chunks that may not be visited until a future play session.
  */
 import { type Entity, system, world } from "@minecraft/server";
+import { loadedDimensions } from "../../core/dimensions.ts";
 import { LEGACY_TYPE, releaseLegacyDrop } from "./legacy_drop_logic.ts";
+import { log } from "./main.ts";
 
 const queued = new Set<string>();
 export function scheduleRecovery(entity: Entity): void {
@@ -18,8 +20,8 @@ export function scheduleRecovery(entity: Entity): void {
     try {
       const result = releaseLegacyDrop(entity);
       if (result.status === "blocked")
-        console.warn(
-          "[67 Rbow] Legacy item recovery is blocked after a write/rollback error. Inspect the backup; no automatic copies will be made.",
+        log.warn(
+          "legacy item recovery is blocked after a write/rollback error. Inspect the backup; no automatic copies will be made.",
         );
       queued.delete(id);
     } catch (error) {
@@ -27,9 +29,7 @@ export function scheduleRecovery(entity: Entity): void {
         system.runTimeout(() => attempt(number + 1), 20);
       } else {
         queued.delete(id);
-        console.warn(
-          `[67 Rbow] Legacy item recovery: ${String(error)}. Reloading its chunk can retry a transient failure.`,
-        );
+        log.warn(`legacy item recovery: ${log.describe(error)}. Reloading its chunk can retry a transient failure.`);
       }
     }
   }
@@ -37,11 +37,11 @@ export function scheduleRecovery(entity: Entity): void {
 }
 export function scanLoadedDrops(): void {
   system.run(() => {
-    for (const name of ["overworld", "nether", "the_end"]) {
+    for (const dimension of loadedDimensions(world).values()) {
       try {
-        for (const entity of world.getDimension(name).getEntities({ type: LEGACY_TYPE })) scheduleRecovery(entity);
+        for (const entity of dimension.getEntities({ type: LEGACY_TYPE })) scheduleRecovery(entity);
       } catch (error) {
-        console.warn(`[67 Rbow] Legacy load scan: ${String(error)}`);
+        log.warn(`legacy load scan: ${log.describe(error)}`);
       }
     }
   });

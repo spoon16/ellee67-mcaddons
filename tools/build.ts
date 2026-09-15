@@ -5,7 +5,7 @@ import path from "node:path";
 import { build as esbuild } from "esbuild";
 import { copyTree } from "./lib/files.ts";
 import { distDir, loadPacks, packDir, scriptEntry } from "./lib/packs.ts";
-import { DIST, REPO_ROOT } from "./lib/paths.ts";
+import { DIST, isMain, REPO_ROOT } from "./lib/paths.ts";
 import { validateBuild } from "./validate.ts";
 
 export async function buildPacks(): Promise<void> {
@@ -44,7 +44,7 @@ export async function buildPacks(): Promise<void> {
   console.log(`built dist/ (${JSON.stringify(report.counts)})`);
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (isMain(import.meta.url)) {
   buildPacks().catch((error) => {
     console.error(error instanceof Error ? error.message : String(error));
     process.exit(1);

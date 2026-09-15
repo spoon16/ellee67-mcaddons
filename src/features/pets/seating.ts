@@ -4,7 +4,7 @@
  */
 import { type Entity, type Seat, system, type Vector3 } from "@minecraft/server";
 import { MODEL_BY_WIRE } from "./catalog.generated.ts";
-import { FORM_PROPERTY, isPlayer, type PlayerLike, safeMessage } from "./core.ts";
+import { FORM_PROPERTY, isPlayer, type PlayerLike, readJsonObject, safeMessage, setIfChanged } from "./core.ts";
 
 export type SeatKind = "boat" | "pig" | "stairs" | "other";
 
@@ -50,14 +50,7 @@ const cache = new Map<string, SeatReport>();
 const KINDS: Readonly<Record<"none" | SeatKind, number>> = { none: 0, boat: 1, pig: 2, stairs: 3, other: 4 };
 const clamp = (x: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, x));
 const round = (x: number): number => Math.round(x * 10000) / 10000;
-function trims(player: PlayerLike): Record<string, unknown> {
-  try {
-    const parsed = JSON.parse(String(player.getDynamicProperty(TRIM_KEY) ?? "{}"));
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch {
-    return {};
-  }
-}
+const trims = (player: PlayerLike): Record<string, unknown> => readJsonObject(player, TRIM_KEY);
 function ride(player: PlayerLike): Entity | undefined {
   try {
     return player.getComponent("minecraft:riding")?.entityRidingOn;
@@ -189,15 +182,12 @@ export function initialSeatProperties(player: PlayerLike): { "pet:seat_lift": nu
     return empty;
   }
 }
-function setIfDifferent(p: PlayerLike, key: string, v: number): void {
-  if (p.getProperty(key) !== v) p.setProperty(key, v);
-}
 export function refreshSeat(player: PlayerLike): boolean {
   if (!isPlayer(player)) return false;
   const mount = MODEL_BY_WIRE[String(player.getProperty(FORM_PROPERTY))] ? ride(player) : undefined;
   if (!mount) {
-    if (player.getProperty("pet:seat_lift") !== undefined) setIfDifferent(player, "pet:seat_lift", 0);
-    if (player.getProperty("pet:seat_kind") !== undefined) setIfDifferent(player, "pet:seat_kind", 0);
+    if (player.getProperty("pet:seat_lift") !== undefined) setIfChanged(player, "pet:seat_lift", 0);
+    if (player.getProperty("pet:seat_kind") !== undefined) setIfChanged(player, "pet:seat_kind", 0);
     cache.delete(player.id);
     return false;
   }
@@ -228,8 +218,8 @@ export function refreshSeat(player: PlayerLike): boolean {
     trimPixels: trim,
   };
   cache.set(player.id, report);
-  setIfDifferent(player, "pet:seat_lift", lift);
-  setIfDifferent(player, "pet:seat_kind", KINDS[report.kind]);
+  setIfChanged(player, "pet:seat_lift", lift);
+  setIfChanged(player, "pet:seat_kind", KINDS[report.kind]);
   return true;
 }
 export function seatInfo(player: PlayerLike): SeatInfo {

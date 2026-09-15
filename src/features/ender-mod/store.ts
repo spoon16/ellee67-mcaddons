@@ -14,6 +14,30 @@ const REGION_KEY = "elleedog:ender_regions_v1";
 const MAX_REGIONS = 64;
 const CACHE_LIMIT = 512;
 
+/** The inclusive world-coordinate box around a section's placed blocks, or null for an empty section. */
+type SectionBounds = { minX: number; maxX: number; minY: number; maxY: number; minZ: number; maxZ: number } | null;
+
+function decodeLocal(n: number, sx: number, sy: number, sz: number): { x: number; y: number; z: number } {
+  return { x: sx * 16 + (n % 16), y: sy * 16 + Math.floor(n / 256), z: sz * 16 + (Math.floor(n / 16) % 16) };
+}
+
+function boundsOf(entries: Set<number>, sx: number, sy: number, sz: number): SectionBounds {
+  let bounds: SectionBounds = null;
+  for (const n of entries) {
+    const p = decodeLocal(n, sx, sy, sz);
+    if (!bounds) bounds = { minX: p.x, maxX: p.x, minY: p.y, maxY: p.y, minZ: p.z, maxZ: p.z };
+    else {
+      bounds.minX = Math.min(bounds.minX, p.x);
+      bounds.maxX = Math.max(bounds.maxX, p.x);
+      bounds.minY = Math.min(bounds.minY, p.y);
+      bounds.maxY = Math.max(bounds.maxY, p.y);
+      bounds.minZ = Math.min(bounds.minZ, p.z);
+      bounds.maxZ = Math.max(bounds.maxZ, p.z);
+    }
+  }
+  return bounds;
+}
+
 /** The dynamic-property surface the store reads and writes; `world` provides it in the game. */
 export interface ProtectionStorage {
   getDynamicProperty(identifier: string): unknown;
@@ -26,8 +50,12 @@ export interface ProtectionStorage {
 export class ProtectionStore {
   readonly storage: ProtectionStorage;
   cache = new Map<string, Set<number>>();
+  /** Per-section bounds, computed once per loaded section and dropped when the section changes. */
+  private bounds = new Map<string, SectionBounds>();
   regions: Region[] = [];
   faulted = false;
+  /** Moves on with every placement, removal and region change, so readers can tell a stale answer from a fresh one. */
+  generation = 0;
   constructor(storage: ProtectionStorage) {
     this.storage = storage;
     try {
@@ -88,6 +116,7 @@ export class ProtectionStore {
       throw error;
     }
     this.regions = next;
+    this.generation++;
   }
 
   ensureHealthy(): void {
@@ -114,7 +143,10 @@ export class ProtectionStore {
       this.cache.set(key, set);
       if (this.cache.size > CACHE_LIMIT) {
         const oldest = this.cache.keys().next().value;
-        if (oldest !== undefined) this.cache.delete(oldest);
+        if (oldest !== undefined) {
+          this.cache.delete(oldest);
+          this.bounds.delete(oldest);
+        }
       }
       return set;
     } catch (error) {
@@ -138,6 +170,8 @@ export class ProtectionStore {
       throw error;
     }
     this.cache.set(key, next);
+    this.bounds.delete(key);
+    this.generation++;
   }
 
   isPlaced(dimension: string, position: Vector3): boolean {
@@ -151,11 +185,28 @@ export class ProtectionStore {
     for (let sx = Math.floor(box.minX / 16); sx <= Math.floor(box.maxX / 16); sx++) {
       for (let sy = Math.floor(box.minY / 16); sy <= Math.floor(box.maxY / 16); sy++) {
         for (let sz = Math.floor(box.minZ / 16); sz <= Math.floor(box.maxZ / 16); sz++) {
-          const entries = this.loadSection(sectionKey(dimension, sx, sy, sz));
+          const key = sectionKey(dimension, sx, sy, sz);
+          const entries = this.loadSection(key);
+          if (entries.size === 0) continue;
+          // A section's bounds reject most queries without touching its entries: a built-up section holds up to
+          // 4096 of them, and the scan asks about every loaded enderman.
+          let bounds = this.bounds.get(key);
+          if (bounds === undefined) {
+            bounds = boundsOf(entries, sx, sy, sz);
+            this.bounds.set(key, bounds);
+          }
+          if (
+            !bounds ||
+            bounds.minX > box.maxX ||
+            bounds.maxX < box.minX ||
+            bounds.minY > box.maxY ||
+            bounds.maxY < box.minY ||
+            bounds.minZ > box.maxZ ||
+            bounds.maxZ < box.minZ
+          )
+            continue;
           for (const n of entries) {
-            const x = sx * 16 + (n % 16);
-            const y = sy * 16 + Math.floor(n / 256);
-            const z = sz * 16 + (Math.floor(n / 16) % 16);
+            const { x, y, z } = decodeLocal(n, sx, sy, sz);
             if (x >= box.minX && x <= box.maxX && y >= box.minY && y <= box.maxY && z >= box.minZ && z <= box.maxZ)
               return true;
           }

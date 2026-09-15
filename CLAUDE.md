@@ -32,11 +32,15 @@ The engine tests download Bedrock Dedicated Server once into `.bds/` (git-ignore
    `elleedog:`. Never register a name under another prefix inside a feature, and never share a
    bundle between features.
 2. **Argument counts are checked at the native boundary.** `signal.subscribe(callback, undefined)`
-   is a `TypeError` on the 117 signals that take one argument. Subscribe only through
+   is a `TypeError` on the signals that take one argument. Subscribe only through
    `FeatureContext.on`, which forwards options only when given. The same applies to any engine
-   method: do not pass explicit `undefined` for optional parameters.
+   method: leave an optional parameter out rather than pass `undefined` (`setEquipment(slot)` clears
+   a slot). The one documented exception is `setDynamicProperty(key, undefined)`, which is how a
+   dynamic property is removed.
 
-Both rules are enforced by `test/mocks/minecraft-server.ts` and proven by `npm run test:engine`.
+Both rules are enforced by `test/mocks/minecraft-server.ts` (subscribe arity for every signal it
+exposes, checked against the engine typings by `test/core/engine-surface.test.ts`, and `setEquipment`)
+and proven by `npm run test:engine`.
 
 ## Layout and sources of truth
 
@@ -45,7 +49,10 @@ Both rules are enforced by `test/mocks/minecraft-server.ts` and proven by `npm r
   by hand and never change a uuid.
 - `src/packs/<feature>.ts` is a behavior pack's entry; `src/features/<id>/index.ts` exports its
   `FeatureDefinition` (`id`, `title`, `register?`, `start`). `src/core/` (runFeature,
-  FeatureContext, log, polyfills) is bundled into every pack; keep it tiny and generic.
+  FeatureContext, `featureLog`, `loadedDimensions`, vanilla ids, polyfills) is bundled into every
+  pack; keep it tiny and generic. `start` can run more than once in a module's life (the runner
+  disposes the previous context first), so a feature clears its module-level state at the top of
+  `start`.
 - Generated, never hand-edited (see `docs/CODEGEN.md` and `.gitattributes`):
   `behavior_packs/elleedog67_pets/**`, `resource_packs/elleedog67_pets/**`,
   `behavior_packs/elleedog67_rbow_ore/**`, `resource_packs/elleedog67_rbow_ore/**`,
@@ -70,7 +77,12 @@ Both rules are enforced by `test/mocks/minecraft-server.ts` and proven by `npm r
 ## Conventions
 
 - Engine callbacks and before-events are read-only: capture, then mutate inside `system.run`.
-- Chat and log text are plain sentences with no em-dashes; log lines carry the feature name.
+- Chat and log text are plain sentences with no em-dashes. Log through `featureLog(title)` (or the
+  Pets module's own logger), which prefixes the feature name and offers `warnOnce` and `throttled`
+  for anything inside a loop; never `console.*` directly.
+- Players hear from a feature only when they asked: a command gets a reply, an explicit failure a
+  reason. No join messages, no action-bar hints, no chat for a refused implicit action (the Sit
+  button, a gesture) and nothing on lifecycle events; those go to `/…:status` commands and the log.
 - Do not write `@minecraft/server` calls you have not seen in `node_modules/@minecraft/server/index.d.ts`.
 - Stable modules only in shipped packs (`@minecraft/server` 2.9.0, `@minecraft/server-ui` 2.0.0);
   the beta `@minecraft/server-gametest` is used only by `tools/bds/gametest/`, which is never shipped.

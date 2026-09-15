@@ -8,6 +8,9 @@ export const GATE_PROPERTY = "elleedog:may_move_blocks";
 export interface Sighting extends Vector3 {
   dimension: string;
   holdUntil: number;
+  /** The block the last evaluation was made for, and the store generation it saw; the scan reuses a match. */
+  blockKey?: string;
+  generation?: number;
 }
 
 export interface MovementGate {

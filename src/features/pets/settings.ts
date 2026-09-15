@@ -1,6 +1,6 @@
 /** Per-player preferences. No item, camera or physical entity state is changed. */
 import { DEFAULT_HAND_HEIGHT, MODEL_BY_ID } from "./catalog.generated.ts";
-import { isPlayer, type PlayerLike, preferredForm } from "./core.ts";
+import { isPlayer, type PlayerLike, preferredForm, readJsonObject } from "./core.ts";
 import { type PropertyValue, requireProperties } from "./property_health.ts";
 
 export const VIEW_PROPERTY = "pet:view";
@@ -107,14 +107,7 @@ export function restoreSettings(player: PlayerLike): void {
   applyGear(player, preferredGear(player), false);
   applyArmorFit(player);
 }
-function armorTrims(player: PlayerLike): StoredArmorTrims {
-  try {
-    const parsed = JSON.parse(String(player.getDynamicProperty(ARMOR_FIT_TRIMS) ?? "{}"));
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch {
-    return {};
-  }
-}
+const armorTrims = (player: PlayerLike): StoredArmorTrims => readJsonObject<StoredArmorTrims>(player, ARMOR_FIT_TRIMS);
 /** Live fitted-armor calibration for one pet: lift in model pixels and a scale factor, applied on top of the
  * pre-scale baked into that pet's armor meshes. Saved per pet so switching forms keeps each pet's numbers. */
 export function armorFitFor(player: PlayerLike, form: string): ArmorFit {

@@ -1,155 +1,83 @@
-// Small deterministic test doubles ported from the upstream stair-sitting tests. They are NOT the Minecraft
-// engine: blocks are a map, rays only look straight down at full-block surfaces, and seats record what the
-// scripts asked of them. The seats and targets modules take the engine types, so tests hand these doubles over
-// through the mock's `engine()` cast.
+// Stair Sitting's test conveniences on top of the shared engine mock: a dimension that can place stairs and fail
+// a spawn, a seat carrier with fault-injection knobs, and a player who aims at a block. Every object here IS a mock
+// engine object (a subclass), so the seat modules take them as the `Dimension`, `Entity` and `Player` they are.
+import {
+  type Block,
+  Dimension,
+  Entity,
+  type GameMode,
+  ItemStack,
+  Player,
+  type RideableComponent,
+  registerRideableType,
+  type Vector3,
+} from "../../mocks/minecraft-server.ts";
 
-export interface Vector3 {
-  x: number;
-  y: number;
-  z: number;
-}
+registerRideableType("sit:seat");
 
-let nextId = 1;
-
-export class FakeBlock {
-  dimension: FakeDimension;
-  location: Vector3;
-  typeId: string;
-  permutation: { getAllStates: () => Record<string, unknown> };
-  isAir: boolean;
-  isLiquid: boolean;
-  isWaterlogged = false;
-  constructor(
-    dimension: FakeDimension,
-    location: Vector3,
-    typeId = "minecraft:air",
-    states: Record<string, unknown> = {},
-  ) {
-    this.dimension = dimension;
-    this.location = { ...location };
-    this.typeId = typeId;
-    this.permutation = { getAllStates: () => ({ ...states }) };
-    this.isAir = typeId === "minecraft:air";
-    this.isLiquid = ["minecraft:water", "minecraft:lava"].includes(typeId);
-  }
-}
-
-export class FakeDimension {
-  id: string;
-  blocks = new Map<string, FakeBlock>();
-  entities: FakeSeat[] = [];
+export class FakeDimension extends Dimension {
+  /** Every `spawnEntity` throws while set, like a dimension whose chunk is not loaded. */
   failSpawn = false;
+  /** Every carrier spawned refuses its rider, like a seat the engine will not fill. */
   rejectMount = false;
   constructor(id = "minecraft:overworld") {
-    this.id = id;
+    super(id);
   }
-  key(p: Vector3): string {
-    return `${Math.floor(p.x)},${Math.floor(p.y)},${Math.floor(p.z)}`;
+  put(location: Vector3, typeId: string, states: Record<string, unknown> = {}): Block {
+    return this.setBlock(location, typeId, states);
   }
-  put(p: Vector3, typeId: string, states: Record<string, unknown> = {}): FakeBlock {
-    const b = new FakeBlock(this, p, typeId, states);
-    this.blocks.set(this.key(p), b);
-    return b;
-  }
-  stair(p: Vector3 = { x: 0, y: 64, z: 0 }, direction = 0, corner = "none"): FakeBlock {
-    return this.put(p, "minecraft:oak_stairs", {
+  stair(location: Vector3 = { x: 0, y: 64, z: 0 }, direction = 0, corner = "none"): Block {
+    return this.put(location, "minecraft:oak_stairs", {
       weirdo_direction: direction,
       upside_down_bit: false,
       "minecraft:corner": corner,
     });
   }
-  getBlock(p: Vector3): FakeBlock {
-    return (
-      this.blocks.get(this.key(p)) ??
-      new FakeBlock(this, { x: Math.floor(p.x), y: Math.floor(p.y), z: Math.floor(p.z) })
-    );
-  }
-  getBlockFromRay(origin: Vector3, _direction: Vector3, options: { maxDistance: number }) {
-    // Tests need only downward support rays and full-block surfaces. The actual
-    // client collision shapes and dismount placement are in the manual test plan.
-    for (let y = Math.floor(origin.y); y >= Math.floor(origin.y - options.maxDistance); y--) {
-      const b = this.getBlock({ x: origin.x, y, z: origin.z });
-      if (!b.isAir && y + 1 <= origin.y && origin.y - (y + 1) <= options.maxDistance) {
-        return { block: b, face: "Up", faceLocation: { x: origin.x % 1, y: 1, z: origin.z % 1 } };
-      }
-    }
-    return undefined;
-  }
-  getEntities({ type }: { type?: string } = {}): FakeSeat[] {
-    return this.entities.filter((e) => e.isValid && (!type || e.typeId === type));
-  }
-  spawnEntity(typeId: string, location: Vector3): FakeSeat {
+  override spawnEntity(typeId: string, location: Vector3): FakeSeat {
     if (this.failSpawn) throw new Error("simulated spawn failure");
-    const e = new FakeSeat(this, typeId, location);
-    this.entities.push(e);
-    return e;
+    return this.adopt(new FakeSeat(typeId, location, this));
   }
-}
-
-export interface FakeRideable {
-  addRider(player: FakePlayer): boolean;
-  ejectRiders(): void;
-  getRiders(): FakePlayer[];
-}
-
-export interface FakeTeleportOptions {
-  dimension?: FakeDimension;
-  rotation?: { x: number; y: number };
-  checkForBlocks?: boolean;
-  keepVelocity?: boolean;
+  override getEntities(options: Parameters<Dimension["getEntities"]>[0] = {}): FakeSeat[] {
+    return super.getEntities(options) as FakeSeat[];
+  }
 }
 
 /** Any helper entity the scripts spawn: seat carriers, interaction targets and bystander mobs alike. */
-export class FakeSeat {
-  dimension: FakeDimension;
-  typeId: string;
-  location: Vector3;
-  id: string;
-  isValid = true;
-  events: string[] = [];
-  riders: FakePlayer[] = [];
-  rotation = { x: 0, y: 0 };
-  teleports: Array<{ location: Vector3; options: FakeTeleportOptions }> = [];
-  addCount = 0;
-  ejectCount = 0;
+export class FakeSeat extends Entity {
+  teleports: Array<{ location: Vector3; options: Record<string, unknown> }> = [];
   removeCount = 0;
   throwTeleportOnce = false;
   noopTeleportOnce = false;
   dropRiderOnce = false;
   throwAfterMoveOnce = false;
-  rideable: FakeRideable;
-  constructor(dimension: FakeDimension, typeId: string, location: Vector3) {
-    this.dimension = dimension;
-    this.typeId = typeId;
-    this.location = { ...location };
-    this.id = `seat-${nextId++}`;
-    this.rideable = {
-      addRider: (player) => {
-        this.addCount++;
-        if (dimension.rejectMount) return false;
-        this.riders.push(player);
-        player.mount = this;
-        player.location = { ...this.location };
-        return true;
-      },
-      ejectRiders: () => {
-        this.ejectCount++;
-        for (const p of this.riders) if (p.mount === this) p.mount = undefined;
-        this.riders = [];
-      },
-      getRiders: () => [...this.riders],
-    };
+  /** The carrier's `minecraft:rideable` component, or undefined for a Sit target. */
+  get rideable(): RideableComponent {
+    return this.components["minecraft:rideable"] as RideableComponent;
   }
-  getComponent(id: string): FakeRideable | undefined {
-    return id === "minecraft:rideable" && this.typeId !== "sit:target" ? this.rideable : undefined;
+  get riders(): Entity[] {
+    return this.rideable.riders;
   }
-  getRotation() {
-    return { ...this.rotation };
+  get addCount(): number {
+    return this.rideable.addCount;
   }
-  setRotation(rotation: { x: number; y: number }): void {
-    this.rotation = { ...rotation };
+  get ejectCount(): number {
+    return this.rideable.ejectCount;
   }
-  teleport(location: Vector3, options: FakeTeleportOptions = {}): void {
+  override getComponent(id: string): any {
+    const component = super.getComponent(id);
+    if (id === "minecraft:rideable" && component && (this.dimension as FakeDimension).rejectMount)
+      (component as RideableComponent).rejectRiders = true;
+    return component;
+  }
+  override triggerEvent(event: string): void {
+    super.triggerEvent(event);
+    if (event === "sit:expire") this.remove();
+  }
+  override remove(): void {
+    this.removeCount++;
+    super.remove();
+  }
+  override teleport(location: Vector3, options: Record<string, unknown> = {}): void {
     this.teleports.push({ location: { ...location }, options: { ...options } });
     if (this.throwTeleportOnce) {
       this.throwTeleportOnce = false;
@@ -159,17 +87,7 @@ export class FakeSeat {
       this.noopTeleportOnce = false;
       return;
     }
-    const previous = this.location;
-    this.location = { ...location };
-    if (options.dimension) this.dimension = options.dimension;
-    if (options.rotation) this.rotation = { ...options.rotation };
-    for (const p of this.riders) {
-      p.location = {
-        x: p.location.x + location.x - previous.x,
-        y: p.location.y + location.y - previous.y,
-        z: p.location.z + location.z - previous.z,
-      };
-    }
+    super.teleport(location, options);
     if (this.dropRiderOnce) {
       this.dropRiderOnce = false;
       this.rideable.ejectRiders();
@@ -179,106 +97,66 @@ export class FakeSeat {
       throw new Error("simulated partial teleport failure");
     }
   }
-  triggerEvent(event: string): void {
-    this.events.push(event);
-    if (event === "sit:expire") this.remove();
-  }
-  remove(): void {
-    this.removeCount++;
-    this.rideable.ejectRiders();
-    this.isValid = false;
-  }
 }
 
-export class FakePlayer {
-  dimension: FakeDimension;
-  id: string;
-  /** The core's book grant reads a name on spawn; the upstream double had none. */
-  name: string;
-  typeId = "minecraft:player";
-  location: Vector3 = { x: -1, y: 64, z: 0.5 };
-  rotation = { x: 15, y: 0 };
-  isValid = true;
-  isSneaking = false;
-  isFlying = false;
-  isGliding = false;
-  isSwimming = false;
-  isSleeping = false;
-  tags = new Set<string>();
-  mode = "Survival";
-  health = 20;
-  props = new Map<string, unknown>();
-  messages: string[] = [];
-  mainHand?: { typeId: string };
-  offHand?: { typeId: string };
-  /** The seat carrier, or a stand-in such as `{ id: "boat" }` for another vehicle. */
-  mount?: any;
-  target?: FakeBlock;
+export class FakePlayer extends Player {
+  /** The seat carrier, or a stand-in such as `{ id: "boat" }` for another vehicle. Untyped for the stand-ins. */
+  declare mount?: any;
+  /** What `getBlockFromViewDirection` answers with. */
+  target?: Block;
+  /** Set by `teleport`, so a test can prove the scripts never moved the player. */
   teleported?: boolean;
-  actionBar?: string;
-  onScreenDisplay = {
-    setActionBar: (s: string) => {
-      this.actionBar = s;
-    },
-  };
-  constructor(dimension: FakeDimension, id = `player-${nextId++}`) {
-    this.dimension = dimension;
-    this.id = id;
-    this.name = id;
+  constructor(dimension: FakeDimension, name = `player-${nextPlayer++}`) {
+    super(name, dimension);
+    this.location = { x: -1, y: 64, z: 0.5 };
+    this.rotation = { x: 15, y: 0 };
   }
-  getComponent(id: string): any {
-    if (id === "minecraft:equippable") {
-      return { getEquipment: (slot: string) => (slot === "Mainhand" ? this.mainHand : this.offHand) };
-    }
-    if (id === "minecraft:health") return { currentValue: this.health };
-    if (id === "minecraft:riding") return this.mount ? { entityRidingOn: this.mount } : undefined;
-    return undefined;
+  get mainHand(): ItemStack | undefined {
+    return this.inventory.getItem(this.selectedSlotIndex);
   }
-  hasTag(tag: string): boolean {
-    return this.tags.has(tag);
+  set mainHand(item: { typeId: string } | undefined) {
+    this.inventory.setItem(this.selectedSlotIndex, item ? new ItemStack(item.typeId) : undefined);
   }
-  addTag(tag: string): boolean {
-    this.tags.add(tag);
-    return true;
+  get offHand(): ItemStack | undefined {
+    return this.equipment.Offhand;
   }
-  removeTag(tag: string): boolean {
-    return this.tags.delete(tag);
+  set offHand(item: { typeId: string } | undefined) {
+    this.equipment.Offhand = item ? new ItemStack(item.typeId) : undefined;
   }
-  getGameMode(): string {
-    return this.mode;
+  get health(): number {
+    return (this.components["minecraft:health"] as { currentValue: number }).currentValue;
   }
-  getRotation() {
-    return { ...this.rotation };
+  set health(value: number) {
+    (this.components["minecraft:health"] as { currentValue: number }).currentValue = value;
   }
-  setRotation(rotation: { x: number; y: number }): void {
-    this.rotation = { ...rotation };
+  get mode(): GameMode {
+    return this.gameMode;
   }
-  getDynamicProperty(key: string): unknown {
-    return this.props.get(key);
+  set mode(mode: GameMode | `${GameMode}`) {
+    this.gameMode = mode as GameMode;
   }
-  setDynamicProperty(key: string, value: unknown): void {
-    this.props.set(key, value);
-  }
-  getBlockFromViewDirection(): { block: FakeBlock } | undefined {
+  override getBlockFromViewDirection(): { block: Block } | undefined {
     return this.target ? { block: this.target } : undefined;
   }
-  sendMessage(message: string): void {
-    this.messages.push(message);
-  }
-  teleport(position: Vector3, { dimension }: { dimension: FakeDimension }): void {
-    this.location = { ...position };
-    this.dimension = dimension;
+  override teleport(location: Vector3, options?: { dimension?: Dimension }): void {
+    super.teleport(location, options);
     this.teleported = true;
   }
 }
 
-/** One player next to one stair at the origin, with the injectable `world` and `system` the seat modules expect. */
+let nextPlayer = 1;
+
+/**
+ * One player next to one stair at the origin, plus the two slices of the engine the seat modules read (`SeatWorld`
+ * and `SeatClock` in seats.ts) as plain objects with a settable tick. Tests hand them over through `engine()`, the
+ * repo's one cast from mock objects to the engine types `src/` is written against.
+ */
 export function fixture() {
   const dimension = new FakeDimension();
   const player = new FakePlayer(dimension);
   const stair = dimension.stair();
   player.target = stair;
-  const world = { getAllPlayers: () => [player], getDimension: () => dimension };
+  const world = { getAllPlayers: () => [player] as Player[], getDimension: () => dimension as Dimension };
   const system = { currentTick: 100 };
   return { dimension, player, stair, world, system };
 }

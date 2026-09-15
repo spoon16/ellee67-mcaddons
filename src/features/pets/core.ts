@@ -63,9 +63,14 @@ export interface InventoryCapture {
 }
 
 export interface SessionGuard {
+  /** Starts a new session for the player and returns its generation; every earlier generation is now stale. */
   next(id: string): number;
+  /** The player's live generation, so a deferred check can later ask `current(id, generation)`. */
+  peek(id: string): number | undefined;
   current(id: string, generation: number): boolean;
   remove(id: string): void;
+  /** Forgets every player, for a world reload. */
+  clear(): void;
 }
 
 export function wireId(form: string): number {
@@ -198,13 +203,34 @@ export function createSessionGuard(): SessionGuard {
       generation.set(id, n);
       return n;
     },
+    peek(id) {
+      return generation.get(id);
+    },
     current(id, n) {
       return generation.get(id) === n;
     },
     remove(id) {
       generation.delete(id);
     },
+    clear() {
+      generation.clear();
+    },
   };
+}
+
+/** Writes an entity property only when it differs, so unchanged frames queue no engine work. */
+export function setIfChanged(player: PlayerLike, key: string, value: PropertyValue): void {
+  if (player.getProperty(key) !== value) player.setProperty(key, value);
+}
+
+/** Reads a dynamic property holding a JSON object; anything missing, malformed or not an object reads as `{}`. */
+export function readJsonObject<T extends object = Record<string, unknown>>(player: PlayerLike, key: string): T {
+  try {
+    const parsed = JSON.parse(String(player.getDynamicProperty(key) ?? "{}"));
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? (parsed as T) : ({} as T);
+  } catch {
+    return {} as T;
+  }
 }
 
 export type { PropertyValue };

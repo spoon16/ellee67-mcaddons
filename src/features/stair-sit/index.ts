@@ -12,8 +12,9 @@ import type { FeatureDefinition, FeatureRegistries } from "../../core/feature.ts
 import type { FeatureContext } from "../../core/subscriptions.ts";
 import { entityId } from "../../core/vanilla.ts";
 import { CONFIG } from "./config.ts";
-import { aimedBlock, emptyHands, readStair, ridingEntity, SeatManager, valid } from "./seats.ts";
-import { gestureComplete } from "./stairs.ts";
+import { log } from "./log.ts";
+import { aimedBlock, emptyHands, readStair, ridingEntity, SeatManager, type SitResult, valid } from "./seats.ts";
+import { gestureComplete, type StairDescription } from "./stairs.ts";
 import { InteractionTargets } from "./targets.ts";
 
 interface GestureState {
@@ -39,7 +40,7 @@ const manager = new SeatManager(world, system);
 const targets = new InteractionTargets(world, system, manager);
 const gestures = new Map<string, GestureState>();
 const pending = new Map<string, PendingToken>();
-/** The outcome of each player's latest sit attempt, for diagnostics; refusals otherwise only reach chat. */
+/** The outcome of each player's latest sit attempt, for `/sit:status` and the GameTests. */
 const lastResults = new Map<string, { ok: boolean; error?: string }>();
 
 /** What the scripts know about one player's sitting state. Read by the GameTests and free for `/sit:status`. */
@@ -55,14 +56,18 @@ export function stairSitDiagnostics(playerId: string): {
   };
 }
 
-function showResult(player: Player, result: any): void {
-  lastResults.set(player.id, { ok: !!result.ok, error: result.error });
-  if (!result.ok && !result.silent) manager.message(player, result.error);
-  if (result.ok && !result.alreadyThere) targets.refreshForPlayer(player, result.vacatedStair);
-}
-
-function reportError(error: unknown): void {
-  console.warn(`[ElleeDog 67 Sit] ${String(error)}`);
+/**
+ * Records a sit attempt and refreshes the player's targets after a success. Only an explicit command reports a
+ * refusal in chat: the Sit button and the crouch gesture are implicit, and a chat line for every near miss (a
+ * held item, a stair one block too far) is noise. The reason still lands in `/sit:status`.
+ */
+function showResult(player: Player, result: SitResult, explicit: boolean): void {
+  lastResults.set(player.id, result.ok ? { ok: true } : { ok: false, error: result.error });
+  if (!result.ok) {
+    if (explicit) manager.message(player, result.error);
+    return;
+  }
+  if (!result.alreadyThere) targets.refreshForPlayer(player, result.vacatedStair);
 }
 
 function deferred(player: Player, action: () => void): void {
@@ -73,8 +78,8 @@ function deferred(player: Player, action: () => void): void {
     try {
       action();
     } catch (error) {
-      reportError(error);
-      manager.message(player, "Action failed; check the Content Log.");
+      log.warn(`command failed: ${log.describe(error)}`);
+      manager.message(player, "That did not work; the Content Log has the reason.");
     }
   }, 0);
 }
@@ -84,7 +89,7 @@ function deferred(player: Player, action: () => void): void {
  * Exactly one non-recursive ASAP callback per pending player/session. Mutations
  * still happen outside before-events' restricted execution, never inline.
  */
-function queueStair(player: Player, stair: any): void {
+function queueStair(player: Player, stair: StairDescription): void {
   const playerId = player.id;
   const sourceSeat: string | undefined = manager.get(playerId)?.seat.id;
   const request: StairRequest = {
@@ -110,18 +115,16 @@ function queueStair(player: Player, stair: any): void {
     try {
       const block = player.dimension.getBlock(position);
       const actual = readStair(block);
-      if (!actual || actual.fingerprint !== fingerprint) {
-        manager.message(player, "That stair changed before you could sit.");
-        return;
-      }
+      // The stair changed between the click and this tick; the next click reads the new one.
+      if (!actual || actual.fingerprint !== fingerprint) return;
       const result = manager.sit(player, block, true);
       if (result.ok) {
         const record = manager.get(playerId);
         if (record) record.lastInputDelayTicks = Math.max(0, system.currentTick - requestedTick);
       }
-      showResult(player, result);
+      showResult(player, result, false);
     } catch (error) {
-      reportError(error);
+      log.warn(`queued sit failed: ${log.describe(error)}`);
     }
   }, 0);
 }
@@ -149,21 +152,20 @@ function tickGestures(): void {
       if (crouching && !previous?.crouching) {
         const stair = emptyHands(player) ? readStair(aimedBlock(player)) : undefined;
         state.armed = stair ? { key: stair.key, tick } : undefined;
-        if (stair) {
-          try {
-            player.onScreenDisplay.setActionBar("Uncrouch while looking at this stair to sit");
-          } catch {
-            /* Optional. */
-          }
-        }
       } else if (!crouching && previous?.crouching) {
         const block = aimedBlock(player);
         const stair = emptyHands(player) ? readStair(block) : undefined;
-        if (gestureComplete(previous.armed, tick, stair?.key)) showResult(player, manager.sit(player, block, true));
+        if (gestureComplete(previous.armed, tick, stair?.key))
+          showResult(player, manager.sit(player, block, true), false);
         state.armed = undefined;
       }
     } catch (error) {
-      reportError(error);
+      log.throttled(
+        `gesture:${player.id}`,
+        system.currentTick,
+        CONFIG.sweepInterval,
+        `gesture failed: ${log.describe(error)}`,
+      );
       gestures.delete(player.id);
     }
   }
@@ -172,6 +174,7 @@ function tickGestures(): void {
 
 function forgetPlayer(playerId: string): void {
   manager.forget(playerId);
+  targets.forget(playerId);
   gestures.delete(playerId);
   pending.delete(playerId);
   lastResults.delete(playerId);
@@ -204,7 +207,7 @@ function registerCommands({ commands }: FeatureRegistries): void {
     );
   }
   register("sit:down", "Sit on, or move your seat to, the nearby stair you are looking at", (player) => {
-    showResult(player, manager.sit(player, aimedBlock(player), false));
+    showResult(player, manager.sit(player, aimedBlock(player), false), true);
   });
   register("sit:stand", "Stand up from your stair seat", (player) => {
     if (!manager.release(player.id, true)) manager.message(player, "You are not sitting on one of these stair seats.");
@@ -240,14 +243,8 @@ function registerCommands({ commands }: FeatureRegistries): void {
     "sit:button",
     "Enable or disable native Sit interaction targets for yourself",
     (player, enabled: boolean) => {
-      player.setDynamicProperty(CONFIG.buttonProperty, enabled);
-      if (enabled) player.removeTag(CONFIG.buttonDisabledTag);
-      else player.addTag(CONFIG.buttonDisabledTag);
-      targets.refresh();
-      manager.message(
-        player,
-        `Native Sit button is ${enabled ? "enabled" : "disabled"}. Existing crouch and command controls are unchanged.`,
-      );
+      targets.setEnabled(player, enabled);
+      manager.message(player, `Native Sit button is ${enabled ? "enabled" : "disabled"}.`);
     },
     [{ name: "enabled", type: CustomCommandParamType.Boolean }],
   );
@@ -268,6 +265,7 @@ function registerCommands({ commands }: FeatureRegistries): void {
     const block = aimedBlock(player);
     const stair = readStair(block);
     const seat = manager.get(player.id);
+    const last = lastResults.get(player.id);
     let states = "none";
     try {
       if (block) states = JSON.stringify(block.permutation.getAllStates());
@@ -282,12 +280,11 @@ function registerCommands({ commands }: FeatureRegistries): void {
         `Native Sit: ${targets.enabled(player)}; loaded targets: ${targets.byBlock.size}`,
         `Seat helper: ${seat?.seat.id ?? "none"}; moves this session: ${seat?.transfers ?? 0}`,
         `Current chair: ${seat?.stair.key ?? "none"}; transfer limit: ${CONFIG.transferReach} blocks`,
-        `Switch cooldown: ${CONFIG.transferCooldownTicks} ticks; input dispatch: ASAP`,
+        `Last attempt: ${last ? (last.ok ? "ok" : last.error) : "none"}`,
         `Last button/block input delay: ${seat?.lastInputDelayTicks ?? "n/a"} server ticks (not client display latency)`,
         `Gesture: ${player.getDynamicProperty(CONFIG.gestureProperty) !== false}; height: ${manager.height(player)}`,
         `Target: ${block?.typeId ?? "none"}; valid dry upright stair: ${!!stair}`,
         `States: ${states}`,
-        "Native touch button and mounted transitions require a client-side check.",
       ].join("\n"),
     );
   });
@@ -317,7 +314,7 @@ function subscribe(ctx: FeatureContext): void {
       event.cancel = true;
       queueStair(player, stair);
     } catch (error) {
-      reportError(error);
+      log.warnOnce("interact-block", `block interaction failed: ${log.describe(error)}`);
     }
   });
 
@@ -349,7 +346,7 @@ function subscribe(ctx: FeatureContext): void {
       // modes where the player taps a neighboring stair away from the crosshair.
       queueStair(player, record.stair);
     } catch (error) {
-      reportError(error);
+      log.warnOnce("interact-entity", `target interaction failed: ${log.describe(error)}`);
     }
   });
 
@@ -363,6 +360,10 @@ function subscribe(ctx: FeatureContext): void {
     }
   });
 
+  // A stair placed or broken next to a standing player must show up without the player moving.
+  ctx.on(world.afterEvents.playerPlaceBlock, () => targets.blocksChanged());
+  ctx.on(world.afterEvents.playerBreakBlock, () => targets.blocksChanged());
+
   ctx.every(CONFIG.tickInterval, tickGestures);
   ctx.every(CONFIG.targetScanInterval, () => targets.refresh());
   ctx.every(CONFIG.sweepInterval, () => {
@@ -371,17 +372,7 @@ function subscribe(ctx: FeatureContext): void {
   });
 
   ctx.on(world.afterEvents.playerLeave, ({ playerId }) => forgetPlayer(playerId));
-  ctx.on(world.afterEvents.playerSpawn, ({ player, initialSpawn }) => {
-    forgetPlayer(player.id);
-    if (initialSpawn) {
-      deferred(player, () =>
-        manager.message(
-          player,
-          "Stair Sitting ready. Empty hands: look at a stair and press Sit. Use another nearby stair to move while seated. /sit:help",
-        ),
-      );
-    }
-  });
+  ctx.on(world.afterEvents.playerSpawn, ({ player }) => forgetPlayer(player.id));
   ctx.on(world.afterEvents.entityDie, ({ deadEntity }) => {
     if (deadEntity.typeId === entityId("minecraft:player")) {
       pending.delete(deadEntity.id);
@@ -401,28 +392,36 @@ function subscribe(ctx: FeatureContext): void {
 /**
  * Sit on vanilla stairs with the native Sit button, a crouch-release gesture or `/sit:down`, and move between
  * nearby stairs while seated. Invisible `sit:seat` carriers and `sit:target` interaction helpers are transient and
- * swept while the feature runs. Deactivating the pack removes both entity definitions with it.
+ * swept while the feature runs. Deactivating the pack removes both entity definitions with it. The feature says
+ * nothing in chat on its own: `/sit:help` is the way to learn the controls.
  */
 export const stairSit: FeatureDefinition = {
   id: "stair-sit",
   title: "Stair Sitting",
   register: registerCommands,
   start(ctx) {
+    resetState();
     subscribe(ctx);
     system.run(() => {
       manager.sweep();
       targets.sweep();
-      console.info(`[ElleeDog 67 Sit] ${CONFIG.version} loaded; stable API 2.9.0.`);
     });
   },
 };
+
+/** Clears the module state so a second world load (or the next test) starts clean. Helpers are swept by `start`. */
+function resetState(): void {
+  manager.reset();
+  targets.reset();
+  gestures.clear();
+  pending.clear();
+  lastResults.clear();
+  log.reset();
+}
 
 /** Stands every rider up, removes every helper and clears the module state. Tests call it between worlds. */
 export function shutdownStairSit(): void {
   manager.sweep(true);
   targets.sweep(true);
-  targets.pausedUntil = -1;
-  gestures.clear();
-  pending.clear();
-  lastResults.clear();
+  resetState();
 }

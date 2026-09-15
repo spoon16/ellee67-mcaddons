@@ -5,13 +5,24 @@ on:
     branches: [main]
   pull_request:
 
+# The token only reads; the release workflow is the one that writes. A newer push to the same branch or pull
+# request cancels the runs still going for the old one.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Third-party actions are pinned to commits, with the tag they were taken from alongside.
 jobs:
   build:
     name: Check, test, build, package
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -20,7 +31,7 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run package
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ElleeDog67-addon
           path: |
@@ -31,13 +42,14 @@ jobs:
   codegen-check:
     name: Generated files are up to date
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .nvmrc
           cache: npm
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
         with:
           enable-cache: true
       - run: npm ci
@@ -52,21 +64,28 @@ jobs:
   engine:
     name: Boot in Bedrock Dedicated Server
     runs-on: ubuntu-latest
+    # The two engine runs take about two minutes; a server that never starts would otherwise burn the six-hour default.
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Server version
+        id: bds
+        run: echo "version=$(node -e "console.log(/BDS_VERSION = \"([^\"]+)\"/.exec(require('fs').readFileSync('tools/bds/setup.ts','utf8'))[1])")" >> "$GITHUB_OUTPUT"
       - name: Cache the server download
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: .bds/bedrock-server-*.zip
-          key: bds-${{ hashFiles('tools/bds/setup.ts') }}
+          # Keyed on the pinned version alone, so editing anything else in setup.ts keeps the 700 MB download.
+          key: bds-${{ steps.bds.outputs.version }}
+          restore-keys: bds-
       - run: npm run test:engine
       - run: npm run test:gametest
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: failure()
         with:
           name: bds-logs

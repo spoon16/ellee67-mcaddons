@@ -255,6 +255,12 @@ export interface StructureBlock {
  * Builds an .mcstructure: a box of `size` blocks where `blockAt(x, y, z)` names each block (undefined for air).
  * The engine reads block_indices as two layers (blocks and the waterlog layer, -1 for none) in x, y, z order.
  */
+/**
+ * The block-palette format version a .mcstructure carries: the game version packed as four bytes, here 1.21.100.1
+ * (1 << 24 | 21 << 16 | 100 << 8 | 1). Any recent value works; the engine upgrades older palettes on load.
+ */
+export const BLOCK_VERSION = (1 << 24) | (21 << 16) | (100 << 8) | 1;
+
 export function buildStructure(
   size: [number, number, number],
   blockAt: (x: number, y: number, z: number) => StructureBlock | undefined,
@@ -290,7 +296,7 @@ export function buildStructure(
         default: compound({
           block_palette: list(
             palette.map((block) =>
-              compound({ name: string(block.name), states: compound(block.states ?? {}), version: int(18168865) }),
+              compound({ name: string(block.name), states: compound(block.states ?? {}), version: int(BLOCK_VERSION) }),
             ),
           ),
           block_position_data: compound({}),

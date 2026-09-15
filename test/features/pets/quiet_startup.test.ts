@@ -120,21 +120,29 @@ describe("quiet startup", () => {
     expect(ui.shown).toBe(0);
   });
 
-  it("Startup registration errors remain in the content log, not player chat", async () => {
+  it("Startup registration errors remain in the content log, not player chat, and cost only the failing entry", async () => {
     const p = petPlayer("registration");
+    const registered: string[] = [];
     const logs = await withLogs(async () => {
       registerPetCommands({
         registerEnum() {
           throw new Error("Simulated registration failure");
         },
-        registerCommand() {},
+        registerCommand(definition) {
+          if (definition.name === "pet:form") throw new Error("Simulated command failure");
+          registered.push(definition.name);
+        },
       });
       registerPetItems({ registerCustomComponent() {} });
       await ticks(3);
     });
     expect(p.messages).toEqual([]);
-    expect(logs).toHaveLength(1);
-    expect(logs[0]).toMatch(/Simulated registration failure/);
+    // Four enums and one command fail on their own; every other command still registers.
+    expect(logs).toHaveLength(5);
+    expect(logs.filter((line) => /Simulated registration failure/.test(line))).toHaveLength(4);
+    expect(logs.filter((line) => /Simulated command failure/.test(line))).toHaveLength(1);
+    expect(registered).not.toContain("pet:form");
+    expect(registered.length).toBeGreaterThan(20);
   });
 });
 

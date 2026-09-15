@@ -80,7 +80,7 @@ class MorpherAssets(unittest.TestCase):
    with Image.open(RP/f'textures/ui/pets/{name}.png') as im:self.assertEqual(im.width,im.height)
  def test_book_and_settings_commands_are_distinct(self):
   s=(BP/'scripts/main.js').read_text()
-  self.assertRegex(s,r'reg\(["\']book["\']');self.assertRegex(s,r'reg\(["\']settings["\']');self.assertRegex(s,r'\(?p\)?\s*=>\s*morpher\.open\(p\)')
+  self.assertRegex(s,r'name:\s*["\']book["\']');self.assertRegex(s,r'name:\s*["\']settings["\']');self.assertRegex(s,r'\(?p\)?\s*=>\s*morpher\.open\(p\)')
  def test_core_transform_module_never_edits_inventory_or_camera(self):
   s=(BP/'scripts/appearance.js').read_text()
   for method in ['.setEquipment(','.setItem(','.addItem(','.teleport(','.setCamera(','.addEffect(','.spawnEntity(']:self.assertNotIn(method,s)

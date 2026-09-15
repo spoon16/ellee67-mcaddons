@@ -3,7 +3,7 @@
  */
 import { EquipmentSlot, type ItemStack } from "@minecraft/server";
 import { HANDHELD_INDEX, MODEL_BY_WIRE, SIDE_CARRY_INDEX } from "./catalog.generated.ts";
-import { FORM_PROPERTY, isPlayer, type PlayerLike } from "./core.ts";
+import { FORM_PROPERTY, isPlayer, type PlayerLike, setIfChanged } from "./core.ts";
 
 /** What a hand slot needs to expose for glint and routing: the id, and the enchantable component when present. */
 export type HeldItem = Pick<ItemStack, "typeId" | "getComponent">;
@@ -64,9 +64,6 @@ export function gearRoute(player: PlayerLike): GearRoute {
     thirdPersonReplacement: enabled && main !== "native-unmapped" && off !== "native-unmapped",
     note: "Expected third-person routing; the server cannot observe client rendering.",
   };
-}
-function setIfChanged(player: PlayerLike, key: string, value: boolean | number): void {
-  if (player.getProperty(key) !== value) player.setProperty(key, value);
 }
 export function refreshToolGlint(player: PlayerLike): boolean {
   if (!isPlayer(player) || !MODEL_BY_WIRE[String(player.getProperty(FORM_PROPERTY))]) return false;

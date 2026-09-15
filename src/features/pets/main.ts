@@ -74,10 +74,9 @@ interface MenuAction {
   run(): void;
 }
 
+/** One generation per player session; a deferred check for a stale generation does nothing. */
 const sessions = createSessionGuard();
 const menus = new Set<string>();
-const selectionTickets = new Map<string, number>();
-let sequence = 0;
 const slots: Readonly<Record<string, EquipmentSlot>> = {
   head: EquipmentSlot.Head,
   chest: EquipmentSlot.Chest,
@@ -108,14 +107,12 @@ const morpher = createMorpherMenu({
 });
 function select(player: Player, form: string): void {
   morpher.close(player.id);
-  sessions.next(player.id);
+  const generation = sessions.next(player.id);
   const result = transitionForm(player, form);
   const selected = result.form;
   clearSeatCache(player.id);
-  const ticket = ++sequence;
-  selectionTickets.set(player.id, ticket);
   system.runTimeout(() => {
-    if (!isPlayer(player) || selectionTickets.get(player.id) !== ticket) return;
+    if (!isPlayer(player) || !sessions.current(player.id, generation)) return;
     try {
       const actual = player.getProperty(FORM_PROPERTY);
       if (actual !== wireId(selected)) {
@@ -141,9 +138,9 @@ function select(player: Player, form: string): void {
   }, 2);
 }
 function verify(player: Player, key: string, value: PropertyValue, message: string): void {
-  const selection = selectionTickets.get(player.id);
+  const generation = sessions.peek(player.id);
   system.runTimeout(() => {
-    if (!isPlayer(player) || selectionTickets.get(player.id) !== selection) return;
+    if (!isPlayer(player) || sessions.peek(player.id) !== generation) return;
     try {
       if (player.getProperty(key) !== value) throw new Error(`Property did not apply: ${key}`);
       safeMessage(player, message);
@@ -416,73 +413,107 @@ function selfCommand(handler: CommandAction, delay = 1): CommandCallback {
     return { status: CustomCommandStatus.Success };
   };
 }
-/** Runs during `system.beforeEvents.startup` with the engine's command registry. */
-export function registerPetCommands(r: CommandRegistry): void {
-  try {
-    r.registerEnum("pet:form_choice", ["player", ...PETS.map((p) => p.id), "human"]);
-    r.registerEnum("pet:debug_choice", ["on", "off"]);
-    r.registerEnum("pet:view_choice", ["paws", "native"]);
-    r.registerEnum("pet:armor_choice", ["native", "fitted", "auto"]);
-    const en = (name: string): CustomCommandParameter => ({ name: `pet:${name}`, type: CustomCommandParamType.Enum });
-    const reg = (
-      name: string,
-      description: string,
-      handler: CommandAction,
-      params: CustomCommandParameter[] = [],
-      delay = 1,
-    ): void =>
-      r.registerCommand(
-        {
-          name: `pet:${name}`,
-          description,
-          permissionLevel: CommandPermissionLevel.Any,
-          cheatsRequired: false,
-          mandatoryParameters: params,
-        },
-        selfCommand(handler, delay),
-      );
-    reg("form", "Choose Player, Carter, Mochi or Casper", select, [en("form_choice")]);
-    reg("forms", "List registered pet models", listForms);
-    reg("book", "Give yourself the ElleeDog 67 Pet Morpher book", (p) => {
+interface PetCommand {
+  name: string;
+  description: string;
+  handler: CommandAction;
+  params?: CustomCommandParameter[];
+  /** Ticks before the handler runs; menus wait longer so the command UI has closed. */
+  delay?: number;
+}
+const en = (name: string): CustomCommandParameter => ({ name: `pet:${name}`, type: CustomCommandParamType.Enum });
+const integer = (name: string): CustomCommandParameter => ({ name, type: CustomCommandParamType.Integer });
+/** Every `pet:` command. Data rather than calls so one bad entry cannot take the rest down. */
+const COMMANDS: readonly PetCommand[] = [
+  { name: "form", description: "Choose Player, Carter, Mochi or Casper", handler: select, params: [en("form_choice")] },
+  { name: "forms", description: "List registered pet models", handler: listForms },
+  {
+    name: "book",
+    description: "Give yourself the ElleeDog 67 Pet Morpher book",
+    handler: (p) => {
       giveMorpher(p);
       safeMessage(p, `${BOOK_TITLE} added. Put it in your hotbar, select it and use Open Pet Morpher.`);
-    });
-    reg("menu", "Open the Pet Morpher menu", (p) => morpher.open(p), [], 5);
-    reg("settings", "Open advanced pet display settings and diagnostics", settingsMenu, [], 5);
-    reg("view", "Choose paws or native first-person view", view, [en("view_choice")]);
-    reg("handheight", "Set empty-hand height (-8..12; default 2)", handheight, [
-      { name: "height", type: CustomCommandParamType.Integer },
-    ]);
-    reg("handreset", "Clear calibration and use the selected pet default", (p) => {
+    },
+  },
+  { name: "menu", description: "Open the Pet Morpher menu", handler: (p) => morpher.open(p), delay: 5 },
+  {
+    name: "settings",
+    description: "Open advanced pet display settings and diagnostics",
+    handler: settingsMenu,
+    delay: 5,
+  },
+  { name: "view", description: "Choose paws or native first-person view", handler: view, params: [en("view_choice")] },
+  {
+    name: "handheight",
+    description: "Set empty-hand height (-8..12; default 2)",
+    handler: handheight,
+    params: [integer("height")],
+  },
+  {
+    name: "handreset",
+    description: "Clear calibration and use the selected pet default",
+    handler: (p) => {
       resetHandHeight(p);
       playerDefaults(p);
       safeMessage(p, "Pet default hand height restored (2; Player view stays native).");
-    });
-    reg("motion", "Enable or pause pet locomotion", motion, [en("debug_choice")]);
-    reg("armor", "Choose fitted armor, native presentation or automatic default", armor, [en("armor_choice")]);
-    reg("gear", "Choose mouth tools, side carry, shields or native gear", gear, [en("armor_choice")]);
-    reg("armorlift", "Raise or lower fitted armor on your pet in model pixels (-16..16)", armorlift, [
-      { name: "pixels", type: CustomCommandParamType.Float },
-    ]);
-    reg("armorscale", "Grow or shrink fitted armor on your pet in percent (50..150)", armorscale, [
-      { name: "percent", type: CustomCommandParamType.Integer },
-    ]);
-    reg("armorfitreset", "Clear the armor lift and scale saved for your pet", armorfitreset);
-    reg("seatinfo", "Show mount and seat-height diagnostics", (p) => safeMessage(p, JSON.stringify(seatInfo(p))));
-    reg("seatheight", "Adjust current seat category height in model pixels", setSeatTrim, [
-      { name: "pixels", type: CustomCommandParamType.Integer },
-    ]);
-    reg("seatreset", "Reset current seat category calibration", resetSeatTrim);
-    reg("check", "Read player property health without changing settings", check);
-    reg("rbowcheck", "Read Rbow/Pets compatibility and equipped-item routing", (p) =>
-      safeMessage(p, JSON.stringify(rbowReport(p))),
-    );
-    reg("diagnose", "Print server state and resource check", diagnose);
-    reg("clientcheck", "Check resource version", clientcheck);
-    reg("debug", "Show pet/version and grip markers", (p, v: string) => p.setProperty(DEBUG_PROPERTY, v === "on"), [
-      en("debug_choice"),
-    ]);
-    reg("probe", "Spawn a temporary stationary version of your selected pet", (p) => {
+    },
+  },
+  { name: "motion", description: "Enable or pause pet locomotion", handler: motion, params: [en("debug_choice")] },
+  {
+    name: "armor",
+    description: "Choose fitted armor, native presentation or automatic default",
+    handler: armor,
+    params: [en("armor_choice")],
+  },
+  {
+    name: "gear",
+    description: "Choose mouth tools, side carry, shields or native gear",
+    handler: gear,
+    params: [en("armor_choice")],
+  },
+  {
+    name: "armorlift",
+    description: "Raise or lower fitted armor on your pet in model pixels (-16..16)",
+    handler: armorlift,
+    params: [{ name: "pixels", type: CustomCommandParamType.Float }],
+  },
+  {
+    name: "armorscale",
+    description: "Grow or shrink fitted armor on your pet in percent (50..150)",
+    handler: armorscale,
+    params: [integer("percent")],
+  },
+  { name: "armorfitreset", description: "Clear the armor lift and scale saved for your pet", handler: armorfitreset },
+  {
+    name: "seatinfo",
+    description: "Show mount and seat-height diagnostics",
+    handler: (p) => safeMessage(p, JSON.stringify(seatInfo(p))),
+  },
+  {
+    name: "seatheight",
+    description: "Adjust current seat category height in model pixels",
+    handler: setSeatTrim,
+    params: [integer("pixels")],
+  },
+  { name: "seatreset", description: "Reset current seat category calibration", handler: resetSeatTrim },
+  { name: "check", description: "Read player property health without changing settings", handler: check },
+  {
+    name: "rbowcheck",
+    description: "Read Rbow/Pets compatibility and equipped-item routing",
+    handler: (p) => safeMessage(p, JSON.stringify(rbowReport(p))),
+  },
+  { name: "diagnose", description: "Print server state and resource check", handler: diagnose },
+  { name: "clientcheck", description: "Check resource version", handler: clientcheck },
+  {
+    name: "debug",
+    description: "Show pet/version and grip markers",
+    handler: (p, v: string) => p.setProperty(DEBUG_PROPERTY, v === "on"),
+    params: [en("debug_choice")],
+  },
+  {
+    name: "probe",
+    description: "Spawn a temporary stationary version of your selected pet",
+    handler: (p) => {
       const form = preferredForm(p) === "human" ? (PETS[0]?.id ?? "human") : preferredForm(p);
       const pet = MODEL_BY_ID[form];
       if (!pet) throw new Error(`No pet model is registered for ${form}.`);
@@ -491,11 +522,15 @@ export function registerPetCommands(r: CommandRegistry): void {
         p,
         `Spawned ${result.length} test props for ${formLabel(form)}. Not player substitutes. /pet:cleanup removes your loaded props.`,
       );
-    });
-    reg("cleanup", "Remove your own temporary test props", cleanup);
-    reg("snapshot", "Capture read-only inventory comparison", snapshot);
-    reg("compare", "Compare captured inventory/equipment fields", compare);
-    reg("reset", "Restore Player and default pet settings", (p) => {
+    },
+  },
+  { name: "cleanup", description: "Remove your own temporary test props", handler: cleanup },
+  { name: "snapshot", description: "Capture read-only inventory comparison", handler: snapshot },
+  { name: "compare", description: "Compare captured inventory/equipment fields", handler: compare },
+  {
+    name: "reset",
+    description: "Restore Player and default pet settings",
+    handler: (p) => {
       resetHandHeight(p);
       p.setDynamicProperty(ARMOR_FIT_TRIMS, undefined);
       select(p, "human");
@@ -503,9 +538,39 @@ export function registerPetCommands(r: CommandRegistry): void {
       p.setDynamicProperty(SNAPSHOT, undefined);
       p.setDynamicProperty(LEGACY_SNAPSHOT, undefined);
       cleanup(p);
-    });
-  } catch (error) {
-    fail(undefined, error);
+    },
+  },
+];
+/** Runs during `system.beforeEvents.startup` with the engine's command registry. */
+export function registerPetCommands(r: CommandRegistry): void {
+  const enums: Array<[string, string[]]> = [
+    ["pet:form_choice", ["player", ...PETS.map((p) => p.id), "human"]],
+    ["pet:debug_choice", ["on", "off"]],
+    ["pet:view_choice", ["paws", "native"]],
+    ["pet:armor_choice", ["native", "fitted", "auto"]],
+  ];
+  for (const [name, values] of enums) {
+    try {
+      r.registerEnum(name, values);
+    } catch (error) {
+      fail(undefined, error);
+    }
+  }
+  for (const command of COMMANDS) {
+    try {
+      r.registerCommand(
+        {
+          name: `pet:${command.name}`,
+          description: command.description,
+          permissionLevel: CommandPermissionLevel.Any,
+          cheatsRequired: false,
+          mandatoryParameters: command.params ?? [],
+        },
+        selfCommand(command.handler, command.delay ?? 1),
+      );
+    } catch (error) {
+      fail(undefined, error);
+    }
   }
 }
 /** Runs during `system.beforeEvents.startup` with the engine's item component registry. */
@@ -529,44 +594,49 @@ function closeSessions(id: string): void {
   sessions.remove(id);
   menus.delete(id);
   morpher.close(id);
-  selectionTickets.delete(id);
   clearSeatCache(id);
+  loopWarnings.delete(id);
 }
 
-// Read only the two equipped hand slots at 5 Hz while transformed. No full inventory scan,
-// item creation, equipment replacement, attacks or damage changes.
-const glintWarnings = new Set<string>();
-function glintLoop(): void {
+/** Per-player keys that have already warned, so a persistent engine error costs one log line, not one per tick. */
+const loopWarnings = new Set<string>();
+function refreshQuietly(player: Player, key: string, refresh: (player: Player) => void): void {
+  const warning = `${key}:${player.id}`;
+  try {
+    refresh(player);
+    loopWarnings.delete(warning);
+  } catch (error) {
+    if (loopWarnings.has(warning)) return;
+    loopWarnings.add(warning);
+    log(`${key}: ${String(error)}`);
+  }
+}
+
+/** Every player every 2 ticks: the seat alignment each pass, the two hand slots every other pass. */
+const LOOP_TICKS = 2;
+let passes = 0;
+function refreshLoop(): void {
+  passes++;
+  const hands = passes % 2 === 0;
   for (const player of world.getAllPlayers()) {
-    try {
-      refreshToolGlint(player);
-      glintWarnings.delete(player.id);
-    } catch (error) {
-      if (!glintWarnings.has(player.id)) {
-        glintWarnings.add(player.id);
-        log(`Tool glint sync: ${String(error)}`);
-      }
-    }
+    // Visual-only seat alignment. No teleporting or changes to the mount/seat definitions.
+    refreshQuietly(player, "Seat alignment", refreshSeat);
+    // Read only the two equipped hand slots at 5 Hz while transformed. No full inventory scan,
+    // item creation, equipment replacement, attacks or damage changes.
+    if (hands) refreshQuietly(player, "Tool glint sync", refreshToolGlint);
   }
 }
 
-// Visual-only seat alignment. No teleporting or changes to the mount/seat definitions.
-const seatWarnings = new Set<string>();
-function seatLoop(): void {
-  for (const p of world.getAllPlayers()) {
-    try {
-      refreshSeat(p);
-      seatWarnings.delete(p.id);
-    } catch (e) {
-      if (!seatWarnings.has(p.id)) {
-        seatWarnings.add(p.id);
-        log(`Seat alignment: ${String(e)}`);
-      }
-    }
-  }
+/** Clears the module state so a second world load starts clean; players are restored again by `startPets`. */
+function resetState(): void {
+  sessions.clear();
+  menus.clear();
+  loopWarnings.clear();
+  passes = 0;
 }
 
 export function startPets(ctx: FeatureContext): void {
+  resetState();
   ctx.on(world.afterEvents.playerSpawn, (e) =>
     system.run(() => {
       morpher.close(e.player.id);
@@ -576,8 +646,6 @@ export function startPets(ctx: FeatureContext): void {
   ctx.on(world.afterEvents.playerLeave, (e) => {
     forgetFailure(e.playerId);
     closeSessions(e.playerId);
-    glintWarnings.delete(e.playerId);
-    seatWarnings.delete(e.playerId);
   });
   ctx.on(world.afterEvents.playerDimensionChange, (e) =>
     system.run(() => {
@@ -586,6 +654,5 @@ export function startPets(ctx: FeatureContext): void {
     }),
   );
   ctx.after(20, restoreAll);
-  ctx.every(4, glintLoop);
-  ctx.every(2, seatLoop);
+  ctx.every(LOOP_TICKS, refreshLoop);
 }

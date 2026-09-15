@@ -4,10 +4,9 @@
 import { runFeature } from "../../../src/core/feature.ts";
 import { shutdownStairSit, stairSit } from "../../../src/features/stair-sit/index.ts";
 import {
-  type Dimension,
+  type Block,
   dimensions,
   loadWorld,
-  type Player,
   players,
   type RegisteredCommand,
   registry,
@@ -15,9 +14,9 @@ import {
   step,
   system,
 } from "../../mocks/minecraft-server.ts";
-import { type FakeBlock, FakeDimension, FakePlayer } from "./fakes.ts";
+import { FakeDimension, FakePlayer } from "./fakes.ts";
 
-export type AimingPlayer = FakePlayer & { target: FakeBlock };
+export type AimingPlayer = FakePlayer & { target: Block };
 
 export const runtime = {
   /** The fake overworld installed by `installDimension()`; `world.getDimension("overworld")` returns it. */
@@ -26,7 +25,7 @@ export const runtime = {
   makePlayer(): AimingPlayer {
     const player = new FakePlayer(runtime.dimension) as AimingPlayer;
     player.target = runtime.dimension.stair();
-    players.push(player as unknown as Player);
+    players.push(player);
     return player;
   },
   /** One-shot jobs waiting in the scheduler, which the upstream harness exposed as `system.jobs.length`. */
@@ -38,7 +37,7 @@ export const runtime = {
 /** Replaces the mock overworld with a fresh fake dimension. Call after `reset()`. */
 export function installDimension(): FakeDimension {
   runtime.dimension = new FakeDimension();
-  dimensions.overworld = runtime.dimension as unknown as Dimension;
+  dimensions.overworld = runtime.dimension;
   return runtime.dimension;
 }
 

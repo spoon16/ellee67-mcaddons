@@ -40,16 +40,32 @@ export function runServer(serverDir = SERVER_DIR, options: RunOptions = {}): Pro
     let stopping = false;
     let commandsSent = false;
     let buffered = "";
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      if (buffered) result.lines.push(buffered);
+      resolve(result);
+    };
+    // A dead child rejects writes (EPIPE); the exit handler reports what happened, so the write can be ignored.
+    const send = (text: string) => {
+      try {
+        child.stdin.write(text);
+      } catch {
+        /* The exit handler resolves the run. */
+      }
+    };
     const stop = () => {
       if (stopping) return;
       stopping = true;
-      child.stdin.write("stop\n");
+      send("stop\n");
       setTimeout(() => child.kill("SIGKILL"), 30_000).unref();
     };
     const drive = async () => {
       await sleep(warmUpMs);
       for (const command of commands) {
-        child.stdin.write(`${command}\n`);
+        send(`${command}\n`);
         if (command === commands[commands.length - 1]) commandsSent = true;
         await sleep(commandGapMs);
       }
@@ -75,11 +91,16 @@ export function runServer(serverDir = SERVER_DIR, options: RunOptions = {}): Pro
       result.timedOut = true;
       stop();
     }, timeoutMs);
+    // A binary that cannot start (missing, not executable) emits `error` and never `exit`: without this handler the
+    // promise would hang and Node would die on the unhandled event with a bare ENOENT.
+    child.on("error", (error) => {
+      result.lines.push(`could not start ${path.join(serverDir, "bedrock_server")}: ${error.message}`);
+      result.lines.push("run `npm run bds:setup` to download and unpack Bedrock Dedicated Server");
+      finish();
+    });
     child.on("exit", (code) => {
-      clearTimeout(timer);
-      if (buffered) result.lines.push(buffered);
       result.exitCode = code;
-      resolve(result);
+      finish();
     });
   });
 }

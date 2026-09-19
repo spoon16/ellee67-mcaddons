@@ -1,21 +1,19 @@
-import { EntityDamageCause, GameMode, system, world } from "@minecraft/server";
+import { world } from "@minecraft/server";
 import type { FeatureDefinition } from "../../core/feature.ts";
 import { featureLog } from "../../core/log.ts";
-import { createCreeperHandler } from "./blast.ts";
+import { createCreeperGuard } from "./guard.ts";
 
 const log = featureLog("Creeper Mod");
 
 /**
- * Cancels every vanilla creeper explosion and replaces it with a cosmetic blast that damages and knocks back
- * Survival and Adventure players only. Blocks, items, paintings, pets and other mobs are never touched.
+ * Creeper explosions happen as in vanilla, blast, sound, damage and knockback included, but break no blocks: the
+ * before-event's impacted-block list is emptied and nothing else about the explosion is touched.
  */
 export const creeperMod: FeatureDefinition = {
   id: "creeper-mod",
   title: "Creeper Mod",
   start(ctx) {
-    ctx.on(
-      world.beforeEvents.explosion,
-      createCreeperHandler({ world, system, GameMode, EntityDamageCause, warn: (text) => log.warn(text) }),
-    );
+    log.reset();
+    ctx.on(world.beforeEvents.explosion, createCreeperGuard({ warn: (text) => log.warnOnce("impacted-blocks", text) }));
   },
 };

@@ -14,7 +14,7 @@ Claude Code does the coding. You tell it what to build, then you test it in the 
 | 👁️ | **ElleeDog 67 Ender Mod** | Endermen cannot steal blocks from your builds. | nothing else |
 | 📕 | **ElleeDog 67 Redstone Guide** | Craft a book that teaches redstone. | ElleeDog 67 Redstone Guide Resources |
 | 🪑 | **ElleeDog 67 Stair Sitting** | Sit on any stair. | ElleeDog 67 Stair Sitting Resources |
-| 💥 | **ElleeDog 67 Creeper Mod** | Creeper blasts hurt players only. Blocks and animals are safe. | nothing else |
+| 💥 | **ElleeDog 67 Creeper Mod** | Creeper blasts still hurt, but never break blocks. | nothing else |
 
 A "Resources" pack holds the pictures and models. It turns on by itself. You never pick it.
 
@@ -94,7 +94,7 @@ No commands. They just work.
 
 - **Rbow Ore**: dig down in **new** chunks. Smelt the ore. Craft with the ingots.
 - **Redstone Guide**: craft it with **1 redstone + 1 leather**. Use it to read.
-- **Creeper Mod**: creepers still go bang, but only players get hurt.
+- **Creeper Mod**: creepers still go bang and still hurt, but your blocks stay put.
 
 ## Change the add-on
 
@@ -105,7 +105,7 @@ Claude Code writes the code for you. Here is how to work with it.
 3. **Say what you want.** Be specific. Good examples:
    - "Add a `/sit:wave` command that makes the player wave."
    - "Make Mochi's paws bigger."
-   - "The creeper blast is too strong. Make it half as strong."
+   - "Let creeper blasts break sand and gravel, but nothing else."
 4. Ask it to **check its work**. Say: **"Run the full check and the engine tests."**
    That runs the tests and starts a real Minecraft server to try the packs.
 5. When it says everything passed, say: **"Merge to main."**

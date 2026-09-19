@@ -3,6 +3,7 @@ import {
   type CustomCommandParameter,
   CustomCommandParamType,
   CustomCommandStatus,
+  EntityTypes,
   EquipmentSlot,
   type ItemComponentUseEvent,
   type ItemComponentUseOnEvent,
@@ -397,10 +398,28 @@ function cleanup(player: Player): void {
   safeMessage(player, `Removed ${r.removed} of your loaded test props.`);
   if (r.errors.length) throw new Error(r.errors.join("; "));
 }
-function selfCommand(handler: CommandAction, delay = 1): CommandCallback {
+/**
+ * The entity definition the Pets behavior pack ships beside its scripts. Its presence after world load proves the
+ * pack's data loaded with the bundle; commands are registered at startup regardless (the engine accepts custom
+ * commands only inside `system.beforeEvents.startup`), and each handler asks this instead.
+ */
+const PACK_PROBE = "pet:diag_model";
+export const INACTIVE_MESSAGE =
+  'Pets is not active. Pets is turned on by activating "ElleeDog 67 Pets" (Behavior Packs) in Edit World. Its resource pack is added automatically.';
+/** Whether the Pets pack data is loaded in this world. Read every time: a static lookup, and commands are rare. */
+export function petsActive(): boolean {
+  try {
+    return EntityTypes.get(PACK_PROBE) !== undefined;
+  } catch {
+    return false;
+  }
+}
+function selfCommand(handler: CommandAction, delay = 1, diagnostic = false): CommandCallback {
   return (origin, ...args) => {
     const player = origin.sourceEntity;
     if (!isPlayer(player)) return { status: CustomCommandStatus.Failure, message: "Run directly as a player." };
+    // Diagnostics answer even without the pack data: they exist to explain a missing or replaced definition.
+    if (!diagnostic && !petsActive()) return { status: CustomCommandStatus.Failure, message: INACTIVE_MESSAGE };
     system.runTimeout(() => {
       if (isPlayer(player)) {
         try {
@@ -420,13 +439,15 @@ interface PetCommand {
   params?: CustomCommandParameter[];
   /** Ticks before the handler runs; menus wait longer so the command UI has closed. */
   delay?: number;
+  /** Read-only report that must answer even while the pack data is missing, instead of "Pets is not active". */
+  diagnostic?: boolean;
 }
 const en = (name: string): CustomCommandParameter => ({ name: `pet:${name}`, type: CustomCommandParamType.Enum });
 const integer = (name: string): CustomCommandParameter => ({ name, type: CustomCommandParamType.Integer });
 /** Every `pet:` command. Data rather than calls so one bad entry cannot take the rest down. */
 const COMMANDS: readonly PetCommand[] = [
   { name: "form", description: "Choose Player, Carter, Mochi or Casper", handler: select, params: [en("form_choice")] },
-  { name: "forms", description: "List registered pet models", handler: listForms },
+  { name: "forms", description: "List registered pet models", handler: listForms, diagnostic: true },
   {
     name: "book",
     description: "Give yourself the ElleeDog 67 Pet Morpher book",
@@ -496,14 +517,20 @@ const COMMANDS: readonly PetCommand[] = [
     params: [integer("pixels")],
   },
   { name: "seatreset", description: "Reset current seat category calibration", handler: resetSeatTrim },
-  { name: "check", description: "Read player property health without changing settings", handler: check },
+  {
+    name: "check",
+    description: "Read player property health without changing settings",
+    handler: check,
+    diagnostic: true,
+  },
   {
     name: "rbowcheck",
     description: "Read Rbow/Pets compatibility and equipped-item routing",
     handler: (p) => safeMessage(p, JSON.stringify(rbowReport(p))),
+    diagnostic: true,
   },
-  { name: "diagnose", description: "Print server state and resource check", handler: diagnose },
-  { name: "clientcheck", description: "Check resource version", handler: clientcheck },
+  { name: "diagnose", description: "Print server state and resource check", handler: diagnose, diagnostic: true },
+  { name: "clientcheck", description: "Check resource version", handler: clientcheck, diagnostic: true },
   {
     name: "debug",
     description: "Show pet/version and grip markers",
@@ -541,7 +568,13 @@ const COMMANDS: readonly PetCommand[] = [
     },
   },
 ];
-/** Runs during `system.beforeEvents.startup` with the engine's command registry. */
+/** Every `pet:` command name, for the docs and the registration test. */
+export const PET_COMMAND_NAMES: readonly string[] = Object.freeze(COMMANDS.map((command) => `pet:${command.name}`));
+/**
+ * Runs during `system.beforeEvents.startup` with the engine's command registry, and only there: Bedrock ignores a
+ * `registerCommand` after startup, so nothing here waits for the world, a player or the pack probe. Enums are
+ * registered before the commands that name them; each entry is guarded so one refusal cannot take the rest down.
+ */
 export function registerPetCommands(r: CommandRegistry): void {
   const enums: Array<[string, string[]]> = [
     ["pet:form_choice", ["player", ...PETS.map((p) => p.id), "human"]],
@@ -566,7 +599,7 @@ export function registerPetCommands(r: CommandRegistry): void {
           cheatsRequired: false,
           mandatoryParameters: command.params ?? [],
         },
-        selfCommand(command.handler, command.delay ?? 1),
+        selfCommand(command.handler, command.delay ?? 1, command.diagnostic ?? false),
       );
     } catch (error) {
       fail(undefined, error);

@@ -75,7 +75,7 @@ simulated player driving the add-on's own commands:
 |---|---|
 | `ed67:pets_book` | `/pet:book` puts the Pet Morpher in a Survival player's inventory |
 | `ed67:sit_down` | an empty-handed player looking at an oak stair who runs `/sit:down` ends up riding a `sit:seat` |
-| `ed67:creeper_blast` | a forced creeper explosion hurts the player next to it and leaves the stone floor intact |
+| `ed67:creeper_blast` | a forced creeper explosion hurts the player next to it, kills the pig two blocks away and leaves the stone floor intact |
 
 Why one feature per bundle: a `SimulatedPlayer` exists only in the script module that spawned
 it. Other packs' modules see it as `undefined` in `world.getAllPlayers()` and in events (the first

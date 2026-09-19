@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Creeper Mod keeps the explosion and drops only the block damage: the before-event's impacted
+  block list is emptied (`setImpactedBlocks([])`) and nothing is cancelled, so the blast, its sound,
+  vanilla damage and knockback reach every entity in range, animals included. The scripted
+  player-only blast, its damage model and the creeper removal are gone; the GameTest now also
+  expects a pig two blocks from the creeper to die.
 - Pets: every `pet:` command registers during `system.beforeEvents.startup` and nowhere else, and
   each handler checks that the pack's data is loaded (the `pet:diag_model` probe) before it runs,
   answering "Pets is not active" otherwise; the read-only diagnostics answer regardless. A new test

@@ -3,13 +3,12 @@ import { runFeature } from "../../../src/core/feature.ts";
 import { creeperMod } from "../../../src/features/creeper-mod/index.ts";
 import {
   addPlayer,
+  type Block,
   dimensions,
   type Entity,
-  EntityDamageCause,
   engine,
   GameMode,
   loadWorld,
-  type Player,
   reset,
   startup,
   step,
@@ -17,27 +16,36 @@ import {
   world,
 } from "../../mocks/minecraft-server.ts";
 
-interface Hit {
-  amount: number;
-  cause: EntityDamageCause;
+/** The before-event the engine sends: its source, the blocks it is about to break, and the cancel flag. */
+interface Explosion {
+  source: Entity | undefined;
+  cancel: boolean;
+  getImpactedBlocks(): Block[];
+  setImpactedBlocks(blocks: Block[]): void;
 }
 
-/** A Survival player standing next to the blast origin who records every scripted hit. */
-function bystander(name = "Steve"): { player: Player; hits: Hit[] } {
-  const hits: Hit[] = [];
-  const player = addPlayer(name);
-  player.gameMode = GameMode.Survival;
-  engine(player).applyDamage = (amount: number, options: { cause: EntityDamageCause }) => {
-    hits.push({ amount, cause: options.cause });
-    return true;
+/** Fires `world.beforeEvents.explosion` for `source` with `blocks` about to break, as the engine would. */
+function detonate(source: Entity | undefined, blocks: Block[]): Explosion {
+  let impacted = blocks;
+  const event: Explosion = {
+    source,
+    cancel: false,
+    getImpactedBlocks: () => impacted,
+    setImpactedBlocks(next) {
+      impacted = next;
+    },
   };
-  return { player, hits };
-}
-
-function detonate(source: Entity): { source: Entity; cancel: boolean } {
-  const event = { source, cancel: false };
   world.beforeEvents.explosion.emit(event);
   return event;
+}
+
+function floor(): Block[] {
+  const blocks: Block[] = [];
+  for (const x of [-1, 0, 1]) {
+    dimensions.overworld.setBlock({ x, y: 64, z: 0 }, "minecraft:stone");
+    blocks.push(dimensions.overworld.getBlock({ x, y: 64, z: 0 }) as Block);
+  }
+  return blocks;
 }
 
 function boot(): void {
@@ -59,32 +67,41 @@ describe("creeper-mod lifecycle", () => {
     expect(system.intervalCount).toBe(intervalsBefore);
   });
 
-  it("cancels a creeper explosion and hurts a nearby Survival player on the next tick", () => {
+  it("keeps a creeper explosion and removes every block from it", () => {
     boot();
     const creeper = dimensions.overworld.spawnEntity("minecraft:creeper", { x: 0, y: 65, z: 0 });
-    const { hits } = bystander();
-    const event = detonate(creeper);
-    expect(event.cancel).toBe(true);
-    expect(hits).toEqual([]);
+    const player = addPlayer("Steve");
+    player.gameMode = GameMode.Survival;
+    let scripted = 0;
+    engine(player).applyDamage = () => {
+      scripted++;
+      return true;
+    };
+    const event = detonate(creeper, floor());
+    expect(event.cancel).toBe(false);
+    expect(event.getImpactedBlocks()).toEqual([]);
+    step(5);
+    // The engine's explosion goes on to hurt whoever is in range; the script neither damages nor removes anything.
+    expect(scripted).toBe(0);
     expect(creeper.isValid).toBe(true);
-    step(1);
-    expect(hits.length).toBe(1);
-    expect(hits[0]?.amount).toBeGreaterThan(0);
-    expect(hits[0]?.cause).toBe(EntityDamageCause.entityExplosion);
-    expect(creeper.isValid).toBe(false);
-    expect(dimensions.overworld.entities).not.toContain(creeper);
-    expect(dimensions.overworld.particles).toEqual(["minecraft:huge_explosion_emitter"]);
-    expect(dimensions.overworld.sounds).toEqual(["random.explode"]);
+    expect(dimensions.overworld.particles).toEqual([]);
+    expect(dimensions.overworld.sounds).toEqual([]);
+    expect(system.intervalCount).toBe(0);
   });
 
-  it("leaves explosions from other sources to the engine", () => {
+  it("leaves explosions from other sources to the engine, blocks included", () => {
     boot();
     const tnt = dimensions.overworld.spawnEntity("minecraft:tnt", { x: 0, y: 65, z: 0 });
-    const { hits } = bystander();
-    const event = detonate(tnt);
-    step(1);
+    const blocks = floor();
+    const event = detonate(tnt, blocks);
     expect(event.cancel).toBe(false);
-    expect(hits).toEqual([]);
-    expect(tnt.isValid).toBe(true);
+    expect(event.getImpactedBlocks()).toEqual(blocks);
+    expect(detonate(undefined, blocks).getImpactedBlocks()).toEqual(blocks);
+  });
+
+  it("guards every creeper, not one per 200 ticks: there is no deduplication to get in the way", () => {
+    boot();
+    const creeper = dimensions.overworld.spawnEntity("minecraft:creeper", { x: 0, y: 65, z: 0 });
+    for (let i = 0; i < 3; i++) expect(detonate(creeper, floor()).getImpactedBlocks()).toEqual([]);
   });
 });

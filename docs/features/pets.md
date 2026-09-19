@@ -37,11 +37,20 @@ and read only the equipped items and the riding component.
 
 ## Commands
 
-All 24 commands are `pet:*`, permission level Any, `cheatsRequired: false`, and run only for the
+All 27 commands are `pet:*`, permission level Any, `cheatsRequired: false`, and run only for the
 player who typed them ("Run directly as a player." otherwise). They reply in chat with the
-`[ElleeDog 67 Pets 0.5.2-native-armor-isolation]` prefix. While the Pets packs are not active every
-one of them answers "Pets is not active. Pets is turned on by activating "ElleeDog 67 Pets"
-(Behavior Packs) in Edit World. Its resource pack is added automatically."
+`[ElleeDog 67 Pets 0.5.2-native-armor-isolation]` prefix.
+
+Every command and enum is registered during `system.beforeEvents.startup`, unconditionally: Bedrock
+accepts a custom command only there and silently drops one registered later, so registration never
+waits for the world, a player or a pack probe. The handler checks the pack instead: before it runs,
+each command confirms the pack's data is loaded (the `pet:diag_model` entity the pack ships resolves
+through `EntityTypes.get`) and otherwise answers "Pets is not active. Pets is turned on by activating
+"ElleeDog 67 Pets" (Behavior Packs) in Edit World. Its resource pack is added automatically." The
+read-only diagnostics (`/pet:check`, `/pet:diagnose`, `/pet:clientcheck`, `/pet:rbowcheck`,
+`/pet:forms`) answer regardless, because they exist to explain a missing or replaced definition.
+`test/features/pets/registration.test.ts` holds the feature to this: every documented command
+registers at startup with no pack data, no player and no world.
 
 | Command | Parameters | Effect |
 |---|---|---|

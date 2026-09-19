@@ -9,6 +9,7 @@ import {
   loadWorld,
   Player,
   players,
+  registerEntityType,
   runCommand,
   startup,
 } from "../../mocks/minecraft-server.ts";
@@ -92,12 +93,17 @@ export function petPlayer(name: string): PetPlayer {
   return player;
 }
 
-/** Declares the diagnostic prop entities so `Dimension.spawnEntity` seeds their properties. */
+/**
+ * Declares the diagnostic prop entities so `Dimension.spawnEntity` seeds their properties and `EntityTypes.get`
+ * resolves them: the pack data is present, which is what every non-diagnostic `pet:` command checks first.
+ */
 export function declarePetEntities(): void {
   entityProperties["pet:diag_cube"] = {};
   entityProperties["pet:diag_model"] = { "pet:model_id": 0 };
   entityProperties["cav:diag_cube"] = {};
   entityProperties["cav:diag_model"] = {};
+  registerEntityType("pet:diag_cube");
+  registerEntityType("pet:diag_model");
 }
 
 /** Runs the Pets pack's scripts through startup and world load. */

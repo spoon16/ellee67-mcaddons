@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Pets: every `pet:` command registers during `system.beforeEvents.startup` and nowhere else, and
+  each handler checks that the pack's data is loaded (the `pet:diag_model` probe) before it runs,
+  answering "Pets is not active" otherwise; the read-only diagnostics answer regardless. A new test
+  holds all 27 documented commands to registering at startup with no pack data, player or world.
+
 ## 0.3.1
 
 Quieter in the game, cheaper per tick, a few real bugs closed, and a Creeper Mod icon you can see.

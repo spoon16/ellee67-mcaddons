@@ -36,6 +36,15 @@ The starter profile now includes:
 Do not add `pet_tool_mount`, `pet_shield_left`, or `pet_shield_right` to the source
 geometry; the compiler creates these helpers. Reserve those names.
 
+## Seating profile
+
+Optional `seating.kinds.<kind>.trim`: model pixels added to the measured seat lift when the
+pet rides that kind of mount (`boat`, `pig`, `stairs`, `horse`, `strider`, `happy_ghast`,
+`cushion`; the list is `tools/seat_kinds.py`, and `other` cannot be baked). A missing kind is
+zero. Measure the number in game with `/pet:seatheight`, then move it here: the compiler stamps
+the profiles (`SEAT_TRIM_BAKE`) and the runtime drops the live trims of the profiled kinds once
+when the stamp changes, so the baked number is not doubled by an older calibration.
+
 A new coat variant can reuse fitting unchanged; a new muzzle/body/ear shape requires
 new fitting review. Boots/leg joints, ear clearance, and tool bite positions cannot be
 inferred reliably from an arbitrary mesh without artist input.

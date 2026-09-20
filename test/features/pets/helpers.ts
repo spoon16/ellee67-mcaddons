@@ -56,6 +56,8 @@ export function testItem(typeId = "minecraft:diamond_pickaxe"): ItemStack {
 export class PetPlayer extends Player {
   /** Every `setProperty` call in order, whether or not it has applied yet. */
   writes: Array<[string, unknown]> = [];
+  /** How many times `setDynamicProperty` was called, so a test can prove a read path did not write. */
+  dynamicWrites = 0;
 
   constructor(name: string) {
     super(name);
@@ -74,6 +76,11 @@ export class PetPlayer extends Player {
     if (!(key in this.props)) throw new Error(`Unknown entity property ${key}`);
     this.writes.push([key, value]);
     super.setProperty(key, value);
+  }
+
+  override setDynamicProperty(key: string, value: unknown): void {
+    this.dynamicWrites++;
+    super.setDynamicProperty(key, value);
   }
 
   get items(): Array<ItemStack | undefined> {

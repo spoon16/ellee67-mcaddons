@@ -25,3 +25,41 @@ class SeatKinds(unittest.TestCase):
   self.assertIn('export const SEAT_KINDS = Object.freeze('+json.dumps(SEAT_KINDS)+');',script)
 
 if __name__=='__main__':unittest.main()
+
+class BakedTrims(unittest.TestCase):
+ def fixture(self):
+  import shutil,tempfile
+  tmp=tempfile.TemporaryDirectory();self.addCleanup(tmp.cleanup);target=Path(tmp.name)/'src'
+  def ignore(source,names):
+   omitted={'__pycache__'}
+   if Path(source)==ROOT:omitted.update({'dist','previews','behavior_pack','resource_pack','rbow_behavior_pack','rbow_resource_pack'})
+   return omitted.intersection(names)
+  shutil.copytree(ROOT,target,ignore=ignore)
+  return target
+ def test_carter_bakes_the_measured_trims_and_the_cats_bake_nothing(self):
+  by={p['id']:p['seating']['kinds'] for p in PETS}
+  self.assertEqual({k:v['trim'] for k,v in by['carter'].items()},
+   {'boat':0,'stairs':0,'pig':-2,'horse':4,'strider':1,'happy_ghast':3,'cushion':1,'other':0})
+  for ident in ['mochi','casper']:self.assertEqual({k:v['trim'] for k,v in by[ident].items()},{k:0 for k in SEAT_KINDS[1:]})
+ def test_every_pet_lists_every_kind_but_none_so_the_runtime_indexes_by_kind(self):
+  for p in PETS:self.assertEqual(list(p['seating']['kinds']),SEAT_KINDS[1:])
+ def test_generated_catalog_carries_the_profiles_and_a_bake_stamp(self):
+  script=(ROOT/'src/catalog.generated.js').read_text()
+  emitted=json.loads(script.split('export const PETS = Object.freeze(',1)[1].split('.map(p => Object.freeze(p)));',1)[0])
+  self.assertEqual({p['id']:p['seating'] for p in emitted},{p['id']:p['seating'] for p in PETS})
+  self.assertEqual(next(p for p in emitted if p['id']=='carter')['seating']['kinds']['happy_ghast'],{'trim':3})
+  import re
+  stamp=re.search(r'export const SEAT_TRIM_BAKE = "([0-9a-f]{16})";',script);self.assertIsNotNone(stamp)
+  expected=__import__('hashlib').sha256(json.dumps({p['id']:p['seating'] for p in PETS},sort_keys=True,separators=(',',':')).encode()).hexdigest()[:16]
+  self.assertEqual(stamp.group(1),expected)
+ def test_other_and_unknown_kinds_and_bad_numbers_are_rejected(self):
+  from catalog import write,load_catalog,CatalogError
+  for kinds in [{'other':{'trim':1}},{'none':{'trim':0}},{'sofa':{'trim':1}},{'pig':{'lift':1}},{'pig':{'trim':'2'}},{'pig':{'trim':99}},{'pig':{'trim':True}}]:
+   r=self.fixture();path=r/'catalog/pets/mochi.json';d=read(path);d['seating']={'kinds':kinds};write(path,d)
+   with self.assertRaises(CatalogError,msg=str(kinds)):load_catalog(r)
+  r=self.fixture();path=r/'catalog/pets/mochi.json';d=read(path);d['seating']={'kinds':{'pig':{'trim':-1.5}},'note':'ok'};write(path,d)
+  _,pets,_=load_catalog(r);mochi=next(p for p in pets if p['id']=='mochi')
+  self.assertEqual(mochi['seating']['kinds']['pig'],{'trim':-1.5});self.assertEqual(mochi['seating']['note'],'ok')
+  # A normalized block (every kind listed, "other" at zero) is accepted again, so a cloned pet loads.
+  from seat_kinds import normalize_seating
+  self.assertEqual(normalize_seating(mochi['seating'],'mochi'),mochi['seating'])

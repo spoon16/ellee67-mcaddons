@@ -100,6 +100,32 @@
       "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
     }
   },
+  "seating": {
+    "note": "Model pixels added to the measured seat lift per mount kind; measured in game on 0.5.2, where horse, strider, happy ghast and cushion still sat as unprofiled mounts at the rider anchor.",
+    "kinds": {
+      "boat": {
+        "trim": 0
+      },
+      "stairs": {
+        "trim": 0
+      },
+      "pig": {
+        "trim": -2
+      },
+      "horse": {
+        "trim": 4
+      },
+      "strider": {
+        "trim": 1
+      },
+      "happy_ghast": {
+        "trim": 3
+      },
+      "cushion": {
+        "trim": 1
+      }
+    }
+  },
   "validation": {
     "appearance": "user-confirmed-0.3.0",
     "ground_motion": "user-confirmed-0.3.0",

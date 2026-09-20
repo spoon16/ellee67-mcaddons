@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { transitionForm } from "../../../src/features/pets/appearance.ts";
+import { MODEL_BY_ID, PETS, SEAT_KINDS, SEAT_TRIM_BAKE } from "../../../src/features/pets/catalog.generated.ts";
 import {
+  bakedTrim,
   calculateLift,
   refreshSeat,
   resetSeatTrim,
@@ -214,6 +216,100 @@ describe("support profiles", () => {
     expect(values.get("other")).toBe(4);
     expect(new Set(values.values()).size).toBe(values.size);
     for (const value of values.values()) expect(value).toBeGreaterThan(0);
+  });
+});
+
+describe("baked seat trims", () => {
+  const TRIMS = "pet:seat_height_trims";
+  const stored = (p: { dynamic: Record<string, unknown> }) => JSON.parse(String(p.dynamic[TRIMS]));
+
+  it("Carter's catalog carries the measured trims per kind and the cats bake nothing", () => {
+    const kinds = MODEL_BY_ID.carter?.seating.kinds;
+    expect(Object.fromEntries(Object.entries(kinds ?? {}).map(([k, v]) => [k, v.trim]))).toEqual({
+      boat: 0,
+      stairs: 0,
+      pig: -2,
+      horse: 4,
+      strider: 1,
+      happy_ghast: 3,
+      cushion: 1,
+      other: 0,
+    });
+    for (const pet of PETS) {
+      expect(Object.keys(pet.seating.kinds)).toEqual(SEAT_KINDS.slice(1));
+      if (pet.id !== "carter") for (const kind of Object.values(pet.seating.kinds)) expect(kind.trim).toBe(0);
+    }
+    expect(bakedTrim(MODEL_BY_ID.carter, "pig")).toBe(-2);
+    expect(bakedTrim(MODEL_BY_ID.mochi, "pig")).toBe(0);
+    expect(bakedTrim(undefined, "pig")).toBe(0);
+  });
+
+  it("The baked trim is part of the lift and reported apart from the live one", async () => {
+    const { p } = mounted("minecraft:pig");
+    refreshSeat(p);
+    await ticks(1);
+    expect(p.props["pet:seat_lift"]).toBe(calculateLift(21, 20.3, -2));
+    expect(seatInfo(p)).toMatchObject({ kind: "pig", bakedPixels: -2, trimPixels: 0 });
+    setSeatTrim(p, 3);
+    await ticks(1);
+    expect(p.props["pet:seat_lift"]).toBe(calculateLift(21, 20.3, 1));
+    expect(seatInfo(p)).toMatchObject({ bakedPixels: -2, trimPixels: 3 });
+    expect(text(p)).toMatch(/pig seat adjustment: 3 pixels, on top of Carter's baked -2/);
+    resetSeatTrim(p);
+    await ticks(1);
+    expect(p.props["pet:seat_lift"]).toBe(calculateLift(21, 20.3, -2));
+    expect(text(p)).toMatch(/Carter's baked -2 stays/);
+  });
+
+  it("The baked trim follows the pet: Mochi on the same pig gets none, Carter on a horse gets four", async () => {
+    const cat = mounted("minecraft:pig");
+    cat.p.props["pet:model_id"] = 2;
+    cat.p.dynamic["pet:preferred_form"] = "mochi";
+    refreshSeat(cat.p);
+    await ticks(1);
+    expect(cat.p.props["pet:seat_lift"]).toBe(calculateLift(21, 20.3, 0));
+    expect(seatInfo(cat.p).bakedPixels).toBe(0);
+    const horse = mounted("minecraft:horse");
+    refreshSeat(horse.p);
+    await ticks(1);
+    expect(horse.p.props["pet:seat_lift"]).toBe(calculateLift(20.63, 20.3, 4));
+    expect(seatInfo(horse.p)).toMatchObject({ kind: "horse", bakedPixels: 4 });
+  });
+
+  it("A new bake drops the live trims of the profiled kinds once and keeps other", async () => {
+    const { p } = mounted("minecraft:pig");
+    p.dynamic[TRIMS] = JSON.stringify({ pig: 5, horse: 2, boat: 1, other: 3 });
+    refreshSeat(p);
+    await ticks(1);
+    expect(stored(p)).toEqual({ bake: SEAT_TRIM_BAKE, other: 3 });
+    expect(seatInfo(p).trimPixels).toBe(0);
+    expect(p.props["pet:seat_lift"]).toBe(calculateLift(21, 20.3, -2));
+    // Stamped trims are left alone from now on, and a new trim keeps the stamp.
+    setSeatTrim(p, 4);
+    await ticks(1);
+    const writes = p.dynamicWrites;
+    refreshSeat(p);
+    refreshSeat(p);
+    await ticks(1);
+    expect(p.dynamicWrites).toBe(writes);
+    expect(stored(p)).toEqual({ bake: SEAT_TRIM_BAKE, other: 3, pig: 4 });
+  });
+
+  it("A trim saved against the current bake is kept as it is", async () => {
+    const { p } = mounted("minecraft:pig");
+    p.dynamic[TRIMS] = JSON.stringify({ bake: SEAT_TRIM_BAKE, pig: 5 });
+    refreshSeat(p);
+    await ticks(1);
+    expect(seatInfo(p).trimPixels).toBe(5);
+    expect(p.props["pet:seat_lift"]).toBe(calculateLift(21, 20.3, 3));
+  });
+
+  it("Choosing a pet while mounted queues that pet's baked trim with the form", () => {
+    const { p } = mounted("minecraft:pig");
+    p.props["pet:model_id"] = 0;
+    p.dynamic["pet:preferred_form"] = "human";
+    expect(transitionForm(p, "carter").properties["pet:seat_lift"]).toBe(calculateLift(21, 20.3, -2));
+    expect(transitionForm(p, "mochi").properties["pet:seat_lift"]).toBe(calculateLift(21, 20.3, 0));
   });
 });
 

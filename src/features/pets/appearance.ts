@@ -84,7 +84,7 @@ export function appearanceFor(player: PlayerLike, form: string, defaults = false
     target[`pet:carry_${hand}_enchanted_for`] = 0;
     target[`pet:${hand}_shield_enchanted`] = false;
   }
-  if (pet) Object.assign(target, initialSeatProperties(player));
+  if (pet) Object.assign(target, initialSeatProperties(player, MODEL_BY_ID[normalized]));
   return target;
 }
 

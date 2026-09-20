@@ -133,6 +133,10 @@ def build(root=ROOT,output=None):
     script+='export const MODEL_BY_ID = Object.freeze(Object.fromEntries(PETS.map(p => [p.id,p])));\nexport const MODEL_BY_WIRE = Object.freeze(Object.fromEntries(PETS.map(p => [p.wire_id,p])));\n'
     # Mount kinds by wire value: the runtime classifies a ride into one and writes its index to pet:seat_kind.
     script+='export const SEAT_KINDS = Object.freeze('+json.dumps(SEAT_KINDS)+');\n'
+    # Identifies the baked seating profiles; a saved live trim carries the stamp it was measured against, so a
+    # re-bake starts the live trims of the profiled kinds over at zero instead of doubling up.
+    seating_hash=hashlib.sha256(json.dumps({p['id']:p['seating'] for p in pets},sort_keys=True,separators=(',',':')).encode()).hexdigest()[:16]
+    script+='export const SEAT_TRIM_BAKE = '+json.dumps(seating_hash)+';\n'
     # Updating generated test input is explicit, also when building to an alternate output.
     (root/'src/catalog.generated.js').write_text(script)
     base=root/'baseline/0.2.1'

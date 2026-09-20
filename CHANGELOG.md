@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
+
+Carter's seat tuning, the pet in the paperdoll, pet: commands proven at startup, and creeper blasts
+that hurt like vanilla without breaking a block.
 
 - Pets: the inventory paperdoll renders the active pet. The pet body pass counted first person as
   "no pet"; the paperdoll is rendered as part of the UI with the camera's first-person flag still

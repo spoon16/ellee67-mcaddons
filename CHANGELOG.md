@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Pets: horses (with donkeys, mules and the undead horses), striders, happy ghasts and cushion
+  seats are mount kinds of their own (`horse`, `strider`, `happy_ghast`, `cushion`), each with its
+  own `/pet:seatheight` trim and wire value in `pet:seat_kind` (now 0..8); they sit at the same
+  rider anchor "other" gave them before. The kind list is owned by the compiler.
 - Creeper Mod keeps the explosion and drops only the block damage: the before-event's impacted
   block list is emptied (`setImpactedBlocks([])`) and nothing is cancelled, so the blast, its sound,
   vanilla damage and knockback reach every entity in range, animals included. The scripted

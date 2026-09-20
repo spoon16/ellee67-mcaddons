@@ -92,7 +92,10 @@ class TypedDefaults(unittest.TestCase):
   # Old snapshot deliberately keeps the invalid 0 as regression evidence.
   old=read(ROOT/'integration/pets_045_player.json')['minecraft:entity']['description']['properties']
   now=read(BP/'entities/player.json')['minecraft:entity']['description']['properties']
-  # pet:armor_lift and pet:armor_scale were added for fitted-armor calibration; every older property is unchanged.
+  # pet:armor_lift and pet:armor_scale were added for fitted-armor calibration; pet:seat_kind's range grew with the
+  # mount kinds (its old values keep their meaning); every other older property is unchanged.
+  from seat_kinds import SEAT_KINDS
+  self.assertEqual(old['pet:seat_kind']['range'],[0,4]);old['pet:seat_kind']['range']=[0,len(SEAT_KINDS)-1]
   self.assertEqual({k:v for k,v in now.items() if k.startswith('pet:') and k not in ('pet:armor_lift','pet:armor_scale')},old)
   self.assertEqual(now['pet:armor_lift'],{'type':'float','range':[-16.0,16.0],'default':0.0,'client_sync':True})
   self.assertEqual(now['pet:armor_scale'],{'type':'float','range':[0.5,1.5],'default':1.0,'client_sync':True})

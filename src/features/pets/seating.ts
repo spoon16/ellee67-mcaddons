@@ -3,10 +3,17 @@
  * Native mount skins and third-party seat implementations still require client tests.
  */
 import { type Entity, type Seat, system, type Vector3 } from "@minecraft/server";
-import { MODEL_BY_WIRE } from "./catalog.generated.ts";
+import { MODEL_BY_WIRE, SEAT_KINDS } from "./catalog.generated.ts";
 import { FORM_PROPERTY, isPlayer, type PlayerLike, readJsonObject, safeMessage, setIfChanged } from "./core.ts";
 
-export type SeatKind = "boat" | "pig" | "stairs" | "other";
+/**
+ * What a mounted pet is sitting on. Each kind carries its own saved trim and its own wire value in
+ * `pet:seat_kind` (the index in the compiler's `SEAT_KINDS`, 0 being "none"), so the client can pose per kind.
+ * Boats, pigs, stairs and unprofiled mounts are the original four; horses (with donkeys, mules and the undead
+ * horses), striders, happy ghasts and cushions (a seat entity inside or on a block named cushion) were split out
+ * of "other" so each can be trimmed on its own.
+ */
+export type SeatKind = "boat" | "pig" | "stairs" | "other" | "horse" | "strider" | "happy_ghast" | "cushion";
 
 /** The measured support under a mounted pet: which profile applied and where its surface sits. */
 export interface SeatSupport {
@@ -36,7 +43,9 @@ export interface SeatInfo extends Partial<Omit<SeatReport, "kind" | "mount" | "l
   liftPixels: unknown;
   note?: string;
 }
-interface StairCandidate {
+/** A block near the seat that names what the player sits on: a stair (with its tread height) or a cushion. */
+interface BlockCandidate {
+  kind: "stairs" | "cushion";
   y: number;
   block: string;
   position: Vector3;
@@ -47,7 +56,18 @@ const SCALE = 0.9375;
 const PIXELS = 16 / SCALE;
 const TRIM_KEY = "pet:seat_height_trims";
 const cache = new Map<string, SeatReport>();
-const KINDS: Readonly<Record<"none" | SeatKind, number>> = { none: 0, boat: 1, pig: 2, stairs: 3, other: 4 };
+/** Wire value per kind, from the generated list so the scripts, the property range and the client agree. */
+const KINDS: Readonly<Record<"none" | SeatKind, number>> = Object.fromEntries(
+  SEAT_KINDS.map((kind, index) => [kind, index]),
+) as Record<"none" | SeatKind, number>;
+/** The saddle family: the rider sits on the back, at the mount's rideable seat anchor. */
+const HORSES: ReadonlySet<string> = new Set([
+  "minecraft:horse",
+  "minecraft:donkey",
+  "minecraft:mule",
+  "minecraft:skeleton_horse",
+  "minecraft:zombie_horse",
+]);
 const clamp = (x: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, x));
 const round = (x: number): number => Math.round(x * 10000) / 10000;
 const trims = (player: PlayerLike): Record<string, unknown> => readJsonObject(player, TRIM_KEY);
@@ -65,10 +85,10 @@ function seats(mount: Entity): Seat[] {
     return [];
   }
 }
-function stairSurface(player: PlayerLike, mount: Entity): StairCandidate | undefined {
+function seatBlock(player: PlayerLike, mount: Entity): BlockCandidate | undefined {
   // Local column search only for non-native seats. Checking a nearby stair does
   // not make a standing pet sit: a live riding component is always required.
-  const candidates: StairCandidate[] = [];
+  const candidates: BlockCandidate[] = [];
   const centers = [mount.location, player.location];
   const visited = new Set<string>();
   for (const p of centers) {
@@ -85,7 +105,15 @@ function stairSurface(player: PlayerLike, mount: Entity): StairCandidate | undef
           } catch {
             continue;
           }
-          if (!b?.typeId.endsWith("_stairs")) continue;
+          if (!b) continue;
+          const distance = Math.hypot(mount.location.x - (pos.x + 0.5), mount.location.z - (pos.z + 0.5));
+          if (distance > 0.85) continue;
+          if (b.typeId.toLowerCase().includes("cushion")) {
+            // The block only names the kind; the seat entity's anchor is the surface, as for any custom seat.
+            candidates.push({ kind: "cushion", y: pos.y, block: b.typeId, position: pos, score: distance });
+            continue;
+          }
+          if (!b.typeId.endsWith("_stairs")) continue;
           let upside = false;
           try {
             upside = !!b.permutation.getState("upside_down_bit");
@@ -93,9 +121,8 @@ function stairSurface(player: PlayerLike, mount: Entity): StairCandidate | undef
             /* Unreadable state reads as a normal stair. */
           }
           const y = pos.y + (upside ? 1 : 0.5);
-          const distance = Math.hypot(mount.location.x - (pos.x + 0.5), mount.location.z - (pos.z + 0.5));
-          if (distance > 0.85) continue;
           candidates.push({
+            kind: "stairs",
             y,
             block: b.typeId,
             position: pos,
@@ -135,26 +162,34 @@ export function supportFor(player: PlayerLike, mount: Entity | undefined): SeatS
   }
   if (id === "minecraft:pig")
     return { ...result, kind: "pig", surfaceY: p.y + 1.0, source: "adult pig saddle/back profile" };
+  const seat = ss.find((s) => Number.isFinite(s.position?.y));
+  // The named mounts sit the pet at the mount's own rider anchor, exactly where "other" put them before they
+  // had a kind of their own, so a trim measured against the old placement keeps its meaning.
+  const anchored = (kind: SeatKind, label: string, extra: Partial<SeatSupport> = {}): SeatSupport => ({
+    ...result,
+    kind,
+    surfaceY: p.y + (seat?.position.y ?? 0),
+    source: seat ? `rideable seat anchor (${label})` : `mount origin fallback (${label})`,
+    ...extra,
+  });
+  if (HORSES.has(id)) return anchored("horse", "horse profile");
+  if (id === "minecraft:strider") return anchored("strider", "strider profile");
+  if (id === "minecraft:happy_ghast") return anchored("happy_ghast", "happy ghast profile");
   if (!id.startsWith("minecraft:")) {
-    const stair = stairSurface(player, mount);
-    if (stair) {
+    const block = seatBlock(player, mount);
+    if (block?.kind === "stairs") {
       return {
         ...result,
         kind: "stairs",
-        surfaceY: stair.y,
+        surfaceY: block.y,
         source: "measured stair tread",
-        block: stair.block,
-        blockPosition: stair.position,
+        block: block.block,
+        blockPosition: block.position,
       };
     }
+    if (block) return anchored("cushion", "cushion seat", { block: block.block, blockPosition: block.position });
   }
-  const seat = ss.find((s) => Number.isFinite(s.position?.y));
-  return {
-    ...result,
-    kind: "other",
-    surfaceY: p.y + (seat?.position.y ?? 0),
-    source: seat ? "rideable seat anchor (unprofiled mount)" : "mount origin fallback",
-  };
+  return anchored("other", "unprofiled mount");
 }
 export function calculateLift(surfaceY: number, playerY: number, trim = 0): number {
   if (![surfaceY, playerY, trim].every(Number.isFinite)) throw new Error("Seat measurement is not finite.");

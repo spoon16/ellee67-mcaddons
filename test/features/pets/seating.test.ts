@@ -116,10 +116,104 @@ describe("support profiles", () => {
   });
 
   it("Unprofiled mounts use their actual rideable seat as fallback", () => {
-    const { p, m } = mounted("minecraft:horse");
+    const { p, m } = mounted("minecraft:camel");
     const r = support(p, m);
     expect(r.kind).toBe("other");
     expect(r.surfaceY).toBe(20.63);
+    expect(r.source).toMatch(/unprofiled mount/);
+  });
+
+  for (const [type, kind] of [
+    ["minecraft:horse", "horse"],
+    ["minecraft:donkey", "horse"],
+    ["minecraft:mule", "horse"],
+    ["minecraft:skeleton_horse", "horse"],
+    ["minecraft:zombie_horse", "horse"],
+    ["minecraft:strider", "strider"],
+    ["minecraft:happy_ghast", "happy_ghast"],
+  ] as const) {
+    it(`${type} is its own kind (${kind}) at the rider anchor, where "other" used to put it`, () => {
+      const { p, m } = mounted(type);
+      const r = support(p, m);
+      expect(r.kind).toBe(kind);
+      expect(r.surfaceY).toBe(20.63);
+      expect(r.source).toMatch(/rideable seat anchor/);
+    });
+  }
+
+  it("A named mount without a readable seat falls back to its origin, still under its own kind", () => {
+    const { p, m } = mounted("minecraft:strider");
+    m.getComponent = () => undefined as never;
+    const r = support(p, m);
+    expect(r.kind).toBe("strider");
+    expect(r.surfaceY).toBe(20);
+    expect(r.source).toMatch(/mount origin fallback/);
+  });
+
+  it("A custom seat inside a cushion block is the cushion kind, measured at the seat anchor", () => {
+    const { p, m } = mounted("furniture:seat", 20.1, 19.6);
+    p.dimension = engine({
+      id: "minecraft:overworld",
+      getBlock: (pos: { x: number; y: number; z: number }) =>
+        pos.x === 0 && pos.y === 20 && pos.z === 0
+          ? { typeId: "furniture:red_cushion", permutation: { getState: () => false } }
+          : undefined,
+    });
+    const r = support(p, m);
+    expect(r.kind).toBe("cushion");
+    expect(r.block).toBe("furniture:red_cushion");
+    expect(r.blockPosition).toEqual({ x: 0, y: 20, z: 0 });
+    expect(r.surfaceY).toBeCloseTo(20.1 + 0.63);
+    expect(r.source).toMatch(/cushion seat/);
+  });
+
+  it("A stair seat is still the stairs kind when a cushion sits further away", () => {
+    const { p, m } = mounted("test:stair_seat", 20.1, 19.6);
+    p.dimension = engine({
+      id: "minecraft:overworld",
+      getBlock: (pos: { x: number; y: number; z: number }) => {
+        if (pos.x === 0 && pos.y === 20 && pos.z === 0)
+          return { typeId: "minecraft:oak_stairs", permutation: { getState: () => false } };
+        if (pos.x === 1 && pos.y === 20 && pos.z === 0)
+          return { typeId: "deco:cushion", permutation: { getState: () => false } };
+        return undefined;
+      },
+    });
+    const r = support(p, m);
+    expect(r.kind).toBe("stairs");
+    expect(r.surfaceY).toBe(20.5);
+  });
+
+  it("Vanilla mounts never scan blocks, so a horse in a cushion shop is still a horse", () => {
+    const { p, m } = mounted("minecraft:horse");
+    p.dimension = engine({
+      getBlock: () => {
+        throw new Error("Should not scan blocks for a vanilla mount");
+      },
+    });
+    expect(support(p, m).kind).toBe("horse");
+  });
+
+  it("Every kind has a distinct wire value in pet:seat_kind and the original five keep theirs", async () => {
+    const values = new Map<string, number>();
+    for (const [type, kind] of [
+      ["minecraft:boat", "boat"],
+      ["minecraft:pig", "pig"],
+      ["minecraft:camel", "other"],
+      ["minecraft:horse", "horse"],
+      ["minecraft:strider", "strider"],
+      ["minecraft:happy_ghast", "happy_ghast"],
+    ] as const) {
+      const { p } = mounted(type);
+      refreshSeat(p);
+      await ticks(1);
+      values.set(kind, p.props["pet:seat_kind"] as number);
+    }
+    expect(values.get("boat")).toBe(1);
+    expect(values.get("pig")).toBe(2);
+    expect(values.get("other")).toBe(4);
+    expect(new Set(values.values()).size).toBe(values.size);
+    for (const value of values.values()) expect(value).toBeGreaterThan(0);
   });
 });
 
@@ -160,6 +254,28 @@ describe("seat alignment", () => {
     expect(p.props["pet:armor_fit"]).toBe(false);
     expect(p.props["pet:gear_fit"]).toBe(false);
     expect(p.props["pet:view"]).toBe("native");
+  });
+
+  it("Seat calibration is per mount kind for the new kinds too", async () => {
+    const { p, m } = mounted("minecraft:strider");
+    setSeatTrim(p, 3);
+    await ticks(1);
+    expect(seatInfo(p).kind).toBe("strider");
+    expect(seatInfo(p).trimPixels).toBe(3);
+    expect(text(p)).toMatch(/strider seat adjustment: 3 pixels/);
+    m.typeId = "minecraft:horse";
+    m.id = "horse";
+    refreshSeat(p);
+    await ticks(1);
+    expect(seatInfo(p).kind).toBe("horse");
+    expect(seatInfo(p).trimPixels).toBe(0);
+    setSeatTrim(p, -2);
+    await ticks(1);
+    expect(JSON.parse(String(p.dynamic["pet:seat_height_trims"]))).toMatchObject({ strider: 3, horse: -2 });
+    resetSeatTrim(p);
+    await ticks(1);
+    expect(seatInfo(p).trimPixels).toBe(0);
+    expect(JSON.parse(String(p.dynamic["pet:seat_height_trims"]))).toMatchObject({ strider: 3 });
   });
 
   it("Seat calibration is per mount kind, not shared across boat and pig", async () => {

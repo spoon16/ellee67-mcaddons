@@ -65,8 +65,8 @@ registers at startup with no pack data, no player and no world.
 | `/pet:motion <choice>` | `pet:debug_choice`: `on`, `off` | Enable or pause the pet locomotion clips. Player physics keep running. |
 | `/pet:armor <choice>` | `pet:armor_choice`: `native`, `fitted`, `auto` | Fitted pet armor, native armor presentation, or clear the override. Never moves items. |
 | `/pet:gear <choice>` | `pet:armor_choice` | Mouth tools, side carry and shields, or native gear. `auto` clears the override. |
-| `/pet:seatinfo` | | Print the mount and seat-height measurement as JSON. |
-| `/pet:seatheight <pixels>` | Integer -16..32 | Trim the seat height for the current mount kind (boat, pig, stairs, other). |
+| `/pet:seatinfo` | | Print the mount kind and the seat-height measurement as JSON. |
+| `/pet:seatheight <pixels>` | Integer -16..32 | Trim the seat height for the current mount kind (see "Mount kinds"). Saved per kind, shared by the pets. |
 | `/pet:seatreset` | | Drop the trim for the current mount kind. |
 | `/pet:armorlift <pixels>` | Float -16..16 | Raise (positive) or lower the fitted armor on the selected pet, in model pixels, on top of the baked position. Saved per pet. |
 | `/pet:armorscale <percent>` | Integer 50..150 | Grow or shrink the fitted armor on the selected pet. 100 is the baked size. Saved per pet. |
@@ -84,6 +84,29 @@ registers at startup with no pack data, no player and no world.
 
 Every property write is confirmed two ticks later; if the engine did not apply it the command
 reports `ERROR: ...` and the failure is kept for `/pet:check` until the player leaves.
+
+### Mount kinds
+
+While a pet is mounted the seat loop classifies the ride into one kind, writes its wire value to
+`pet:seat_kind` and measures the surface the pet sits on; `/pet:seatheight` and `/pet:seatreset`
+trim that kind alone, and `/pet:seatinfo` names it.
+
+| Kind | Wire value | Detected by | Surface |
+|---|---|---|---|
+| `boat` | 1 | any vanilla boat, chest boat or raft | interior floor (raft deck) profile |
+| `pig` | 2 | `minecraft:pig` | saddle profile, 1.0 above the pig |
+| `stairs` | 3 | a non-vanilla seat entity with a stair block within 0.85 of it | the measured tread (upside-down stairs use the full block) |
+| `other` | 4 | any other vanilla mount | the mount's rideable seat anchor, else its origin |
+| `horse` | 5 | `minecraft:horse`, `donkey`, `mule`, `skeleton_horse`, `zombie_horse` | rideable seat anchor |
+| `strider` | 6 | `minecraft:strider` | rideable seat anchor |
+| `happy_ghast` | 7 | `minecraft:happy_ghast` | rideable seat anchor |
+| `cushion` | 8 | a non-vanilla seat entity with a block whose id contains `cushion` within 0.85 of it | rideable seat anchor |
+
+Horses, striders and happy ghasts sat as `other` before they had kinds of their own, and the
+cushion seat as `other` too, so their surface is the same rider anchor as before: a trim measured
+on the old build keeps its meaning. Vanilla mounts never scan blocks. The kind list lives in the
+compiler (`tools/codegen/pets/tools/seat_kinds.py`), which sets the `pet:seat_kind` range and emits
+the same list into `catalog.generated.ts`; a new kind is appended there, never inserted.
 
 ## Items and entities
 
@@ -109,7 +132,7 @@ declares 20 entity properties, all `client_sync: true` except the last:
 - `pet:tool_enchanted`, `pet:tool_enchanted_for`, `pet:carry_main_enchanted`,
   `pet:carry_main_enchanted_for`, `pet:main_shield_enchanted`, `pet:carry_off_enchanted`,
   `pet:carry_off_enchanted_for`, `pet:off_shield_enchanted`
-- `pet:seat_lift` (float -64..64), `pet:seat_kind` (int 0..4)
+- `pet:seat_lift` (float -64..64), `pet:seat_kind` (int 0..8, the index in the mount kind list)
 - `pet:armor_lift` (float -16..16), `pet:armor_scale` (float 0.5..1.5): live fitted-armor calibration
 - `elleedog:rbow_armor_count` (int 0..4, server only) for the Rbow Ore companion
 
@@ -192,8 +215,10 @@ per line with a screenshot.
    the view override resets.
 8. While Player, `/pet:armor native` changes nothing visible and keeps the form. While a pet, the same
    command keeps the pet body and shows native armor; the next book choice restores fitted armor.
-9. Ride a boat, a pig and a stair seat as a pet. The pet sits on the surface, `/pet:seatinfo` names
-   the kind, `/pet:seatheight 4` and `/pet:seatreset` move and restore only that kind. Dismounting
+9. Ride a boat, a pig, a stair seat, a horse, a strider, a happy ghast and a cushion seat (if a
+   furniture pack provides one) as a pet. The pet sits on the surface, `/pet:seatinfo` names the
+   kind (`boat`, `pig`, `stairs`, `horse`, `strider`, `happy_ghast`, `cushion`; a camel or a minecart
+   is `other`), `/pet:seatheight 4` and `/pet:seatreset` move and restore only that kind. Dismounting
    clears the lift.
 10. `/pet:snapshot`, switch forms with the book only, `/pet:compare` prints PASS.
 11. Leave and rejoin, die and respawn, travel to the Nether and back: the pet form returns each time

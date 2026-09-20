@@ -27,7 +27,11 @@ class SharedPlayer(unittest.TestCase):
    self.assertIn('pet:model_id',selected);self.assertIn('elleedog:rbow_armor_count',selected);self.assertEqual(len(selected),20)
  def test_model_and_knockback_fields_keep_original_definitions(self):
   now=read(P/'entities/player.json')['minecraft:entity'];old=read(ROOT/'integration/pets_045_player.json')['minecraft:entity'];rb=read(SRC/'behavior_pack/entities/player.json')['minecraft:entity']
-  for k,v in old['description']['properties'].items():self.assertEqual(now['description']['properties'][k],v)
+  from seat_kinds import SEAT_KINDS
+  for k,v in old['description']['properties'].items():
+   # pet:seat_kind grew with the mount kinds (horse, strider, happy ghast, cushion); the old range stays inside it.
+   if k=='pet:seat_kind':v={**v,'range':[0,len(SEAT_KINDS)-1]};self.assertGreaterEqual(v['range'][1],4)
+   self.assertEqual(now['description']['properties'][k],v)
   for k,v in rb['description']['properties'].items():self.assertEqual(now['description']['properties'][k],v)
  def test_all_rbow_armor_count_triggers_preserved(self):
   now=read(P/'entities/player.json')['minecraft:entity'];rb=read(SRC/'behavior_pack/entities/player.json')['minecraft:entity']

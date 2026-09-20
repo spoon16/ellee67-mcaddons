@@ -17,6 +17,7 @@ from morpher_assets import generate as morpher_assets
 import rbow_compat
 from load_validation import validate_behavior_pack
 import seating
+from seat_kinds import SEAT_KINDS
 from equipment import fit_clip as armor_fit_clip
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -130,6 +131,8 @@ def build(root=ROOT,output=None):
     script+='export const SIDE_CARRY_INDEX = Object.freeze('+json.dumps({i['id']:n for n,i in enumerate(side_items,1)})+');\n'
     script+='export const HANDHELD_INDEX = Object.freeze('+json.dumps({i['id']:n for n,i in enumerate(items,1)})+');\n'
     script+='export const MODEL_BY_ID = Object.freeze(Object.fromEntries(PETS.map(p => [p.id,p])));\nexport const MODEL_BY_WIRE = Object.freeze(Object.fromEntries(PETS.map(p => [p.wire_id,p])));\n'
+    # Mount kinds by wire value: the runtime classifies a ride into one and writes its index to pet:seat_kind.
+    script+='export const SEAT_KINDS = Object.freeze('+json.dumps(SEAT_KINDS)+');\n'
     # Updating generated test input is explicit, also when building to an alternate output.
     (root/'src/catalog.generated.js').write_text(script)
     base=root/'baseline/0.2.1'
@@ -169,7 +172,7 @@ def build(root=ROOT,output=None):
         desc['properties'][f'pet:carry_{hand}_enchanted_for']={'type':'int','range':[0,4095],'default':0,'client_sync':True}
         desc['properties'][f'pet:{hand}_shield_enchanted']={'type':'bool','default':False,'client_sync':True}
     desc['properties']['pet:seat_lift']={'type':'float','range':[-64.0,64.0],'default':0.0,'client_sync':True}
-    desc['properties']['pet:seat_kind']={'type':'int','range':[0,4],'default':0,'client_sync':True}
+    desc['properties']['pet:seat_kind']={'type':'int','range':[0,len(SEAT_KINDS)-1],'default':0,'client_sync':True}
     # Live calibration of the fitted armor attachables: the wearer's armor meshes are lifted by pet:armor_lift model
     # pixels and scaled by pet:armor_scale about the feet, on top of the per-pet pre-scale baked into the geometry.
     desc['properties']['pet:armor_lift']={'type':'float','range':[-16.0,16.0],'default':0.0,'client_sync':True}

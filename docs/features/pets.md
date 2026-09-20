@@ -65,9 +65,9 @@ registers at startup with no pack data, no player and no world.
 | `/pet:motion <choice>` | `pet:debug_choice`: `on`, `off` | Enable or pause the pet locomotion clips. Player physics keep running. |
 | `/pet:armor <choice>` | `pet:armor_choice`: `native`, `fitted`, `auto` | Fitted pet armor, native armor presentation, or clear the override. Never moves items. |
 | `/pet:gear <choice>` | `pet:armor_choice` | Mouth tools, side carry and shields, or native gear. `auto` clears the override. |
-| `/pet:seatinfo` | | Print the mount kind and the seat-height measurement as JSON. |
-| `/pet:seatheight <pixels>` | Integer -16..32 | Trim the seat height for the current mount kind (see "Mount kinds"). Saved per kind, shared by the pets. |
-| `/pet:seatreset` | | Drop the trim for the current mount kind. |
+| `/pet:seatinfo` | | Print the mount kind and the seat-height measurement as JSON, with the baked and the live trim apart. |
+| `/pet:seatheight <pixels>` | Integer -16..32 | Trim the seat height for the current mount kind (see "Mount kinds"), on top of the pet's baked trim. Saved per kind, shared by the pets. |
+| `/pet:seatreset` | | Drop the live trim for the current mount kind; the baked trim stays. |
 | `/pet:armorlift <pixels>` | Float -16..16 | Raise (positive) or lower the fitted armor on the selected pet, in model pixels, on top of the baked position. Saved per pet. |
 | `/pet:armorscale <percent>` | Integer 50..150 | Grow or shrink the fitted armor on the selected pet. 100 is the baked size. Saved per pet. |
 | `/pet:armorfitreset` | | Drop the armor lift and scale saved for the selected pet. |
@@ -107,6 +107,24 @@ cushion seat as `other` too, so their surface is the same rider anchor as before
 on the old build keeps its meaning. Vanilla mounts never scan blocks. The kind list lives in the
 compiler (`tools/codegen/pets/tools/seat_kinds.py`), which sets the `pet:seat_kind` range and emits
 the same list into `catalog.generated.ts`; a new kind is appended there, never inserted.
+
+### Baked seat trims
+
+`pet:seat_lift` is the measured surface offset plus two trims in model pixels: the pet's baked
+trim for the kind, from its catalog entry (`seating.kinds.<kind>.trim` in
+`tools/codegen/pets/catalog/pets/<pet>.json`), and the player's live `/pet:seatheight` trim on top.
+Carter's baked trims are the numbers measured in game on 0.5.2:
+
+| Kind | boat | stairs | pig | horse | strider | happy_ghast | cushion |
+|---|---|---|---|---|---|---|---|
+| Carter | 0 | 0 | -2 | +4 | +1 | +3 | +1 |
+
+Mochi and Casper bake nothing yet. `other` cannot be baked. The compiler stamps the catalog's
+seating profiles (`SEAT_TRIM_BAKE` in `catalog.generated.ts`) and the saved trims carry the stamp
+they were measured against, so a re-bake drops the live trims of every profiled kind once (the
+`other` trim is kept) instead of adding the old calibration to the new numbers. To bake a number
+found with `/pet:seatheight`, move it into the catalog, run `npm run codegen`, and the next ride
+starts from zero on top of it.
 
 ## Items and entities
 
@@ -161,6 +179,8 @@ From the 0.5.2 release notes:
 - Seated pose: the generated ride clip is emitted in Bedrock's rotation sign (negative X raises the
   chest, as in vanilla `animation.cat.sit`). Pets sit on their rear with the body raised, front legs
   vertical with paws on the seat plane, hind legs folded forward and paws flat, tail resting behind.
+  The seat height per mount kind is a measurement plus the baked and live trims above; the baked
+  numbers are Carter's only and were read off a client, not proven by the automated suites.
 - Fitted armor meshes are pre-scaled per pet (`equipment.armor_attachable.scale` in the catalog:
   Mochi and Casper 0.9375, the player's render scale, and Carter 1.0) because the armor attachables
   rebuild their bone matrices without the entity scale. At 0.9375 the cat armor rests on the cats,
@@ -216,10 +236,13 @@ per line with a screenshot.
 8. While Player, `/pet:armor native` changes nothing visible and keeps the form. While a pet, the same
    command keeps the pet body and shows native armor; the next book choice restores fitted armor.
 9. Ride a boat, a pig, a stair seat, a horse, a strider, a happy ghast and a cushion seat (if a
-   furniture pack provides one) as a pet. The pet sits on the surface, `/pet:seatinfo` names the
-   kind (`boat`, `pig`, `stairs`, `horse`, `strider`, `happy_ghast`, `cushion`; a camel or a minecart
-   is `other`), `/pet:seatheight 4` and `/pet:seatreset` move and restore only that kind. Dismounting
-   clears the lift.
+   furniture pack provides one) as Carter. He sits on the surface with the baked trim applied
+   (`/pet:seatinfo` shows `bakedPixels` -2 on the pig, 4 on the horse, 1 on the strider, 3 on the
+   happy ghast, 1 on the cushion, 0 on boats and stairs, and `trimPixels` 0), the kind is named
+   (`boat`, `pig`, `stairs`, `horse`, `strider`, `happy_ghast`, `cushion`; a camel or a minecart is
+   `other`), `/pet:seatheight 4` and `/pet:seatreset` move and restore only that kind on top of the
+   baked value. A world that had seat trims saved before this build starts every profiled kind at
+   0 again. Dismounting clears the lift. Repeat the pig and the horse as Mochi: no baked trim.
 10. `/pet:snapshot`, switch forms with the book only, `/pet:compare` prints PASS.
 11. Leave and rejoin, die and respawn, travel to the Nether and back: the pet form returns each time
     with no chat line. A second player with a different pet sees both forms correctly.

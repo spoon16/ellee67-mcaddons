@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Pets: Carter's seat trims are baked into the catalog (`seating.kinds` in
+  `tools/codegen/pets/catalog/pets/carter.json`: boat 0, stairs 0, pig -2, horse +4, strider +1,
+  happy ghast +3, cushion +1) and applied under the live `/pet:seatheight` trim; `/pet:seatinfo`
+  reports `bakedPixels` and `trimPixels` apart. The compiler stamps the profiles and the saved live
+  trims of every profiled kind are dropped once per new bake, so an old calibration cannot double
+  up with the baked number.
 - Pets: horses (with donkeys, mules and the undead horses), striders, happy ghasts and cushion
   seats are mount kinds of their own (`horse`, `strider`, `happy_ghast`, `cushion`), each with its
   own `/pet:seatheight` trim and wire value in `pet:seat_kind` (now 0..8); they sit at the same

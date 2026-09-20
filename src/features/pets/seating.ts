@@ -3,8 +3,18 @@
  * Native mount skins and third-party seat implementations still require client tests.
  */
 import { type Entity, type Seat, system, type Vector3 } from "@minecraft/server";
-import { MODEL_BY_WIRE, SEAT_KINDS } from "./catalog.generated.ts";
-import { FORM_PROPERTY, isPlayer, type PlayerLike, readJsonObject, safeMessage, setIfChanged } from "./core.ts";
+import { MODEL_BY_ID, MODEL_BY_WIRE, SEAT_KINDS, SEAT_TRIM_BAKE } from "./catalog.generated.ts";
+import {
+  FORM_PROPERTY,
+  formLabel,
+  isPlayer,
+  type Pet,
+  type PlayerLike,
+  preferredForm,
+  readJsonObject,
+  safeMessage,
+  setIfChanged,
+} from "./core.ts";
 
 /**
  * What a mounted pet is sitting on. Each kind carries its own saved trim and its own wire value in
@@ -33,8 +43,12 @@ interface SeatMeasurement extends SeatSupport {
   tick: number;
 }
 export interface SeatReport extends SeatMeasurement {
+  /** What `pet:seat_lift` carries: the measured surface offset plus the baked and the live trim. */
   liftPixels: number;
-  trimPixels: unknown;
+  /** The player's own `/pet:seatheight` trim for this kind, in model pixels. */
+  trimPixels: number;
+  /** The catalog's trim for this pet and kind, in model pixels, applied before the live trim. */
+  bakedPixels: number;
 }
 /** `/pet:seatinfo`: the cached report while mounted, otherwise the bare lift the entity currently carries. */
 export interface SeatInfo extends Partial<Omit<SeatReport, "kind" | "mount" | "liftPixels">> {
@@ -55,6 +69,8 @@ interface BlockCandidate {
 const SCALE = 0.9375;
 const PIXELS = 16 / SCALE;
 const TRIM_KEY = "pet:seat_height_trims";
+/** Key inside the saved trims naming the catalog bake they were measured against. */
+const BAKE_STAMP = "bake";
 const cache = new Map<string, SeatReport>();
 /** Wire value per kind, from the generated list so the scripts, the property range and the client agree. */
 const KINDS: Readonly<Record<"none" | SeatKind, number>> = Object.fromEntries(
@@ -70,7 +86,37 @@ const HORSES: ReadonlySet<string> = new Set([
 ]);
 const clamp = (x: number, lo: number, hi: number): number => Math.max(lo, Math.min(hi, x));
 const round = (x: number): number => Math.round(x * 10000) / 10000;
-const trims = (player: PlayerLike): Record<string, unknown> => readJsonObject(player, TRIM_KEY);
+function finiteTrim(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+/** The catalog's trim for this pet on this kind of mount, in model pixels; zero for the player and unknown kinds. */
+export function bakedTrim(pet: Pet | undefined, kind: SeatKind): number {
+  return pet ? finiteTrim(pet.seating.kinds[kind]?.trim) : 0;
+}
+/**
+ * The saved live trims, brought up to the current catalog bake. A live trim for a profiled kind was measured on top
+ * of the bake in force at the time, so a new bake drops those once, keeps "other" (never baked) and stamps the
+ * object; the caller persists the result when it changed. Reading alone never writes.
+ */
+function liveTrims(player: PlayerLike): { trims: Record<string, unknown>; changed: boolean } {
+  const stored = readJsonObject(player, TRIM_KEY);
+  if (stored[BAKE_STAMP] === SEAT_TRIM_BAKE) return { trims: stored, changed: false };
+  const kept: Record<string, unknown> = { [BAKE_STAMP]: SEAT_TRIM_BAKE };
+  for (const [kind, value] of Object.entries(stored)) {
+    if (kind !== BAKE_STAMP && (kind === "other" || !(SEAT_KINDS as readonly string[]).includes(kind)))
+      kept[kind] = value;
+  }
+  return { trims: kept, changed: true };
+}
+function saveTrims(player: PlayerLike, trims: Record<string, unknown>): void {
+  player.setDynamicProperty(TRIM_KEY, JSON.stringify(trims));
+}
+/** The live trim for one kind, persisting the bake migration when this read caused one. */
+function liveTrim(player: PlayerLike, kind: SeatKind): number {
+  const { trims, changed } = liveTrims(player);
+  if (changed) saveTrims(player, trims);
+  return finiteTrim(trims[kind]);
+}
 function ride(player: PlayerLike): Entity | undefined {
   try {
     return player.getComponent("minecraft:riding")?.entityRidingOn;
@@ -195,22 +241,22 @@ export function calculateLift(surfaceY: number, playerY: number, trim = 0): numb
   if (![surfaceY, playerY, trim].every(Number.isFinite)) throw new Error("Seat measurement is not finite.");
   return Math.round(clamp((surfaceY - playerY) * PIXELS + trim, -64, 64) * 64) / 64;
 }
-function finiteTrim(value: unknown): number {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
-}
 /** Read-only initial alignment for a requested pet form, before its model property
  * has become readable. Transient unloaded mounts fall back to zero; polling retries.
  */
-export function initialSeatProperties(player: PlayerLike): { "pet:seat_lift": number; "pet:seat_kind": number } {
+export function initialSeatProperties(
+  player: PlayerLike,
+  pet: Pet | undefined,
+): { "pet:seat_lift": number; "pet:seat_kind": number } {
   const empty = { "pet:seat_lift": 0, "pet:seat_kind": 0 };
   try {
     const mount = ride(player);
     if (!mount) return empty;
     const r = supportFor(player, mount);
     if (!r) return empty;
-    const t = trims(player)[r.kind] ?? 0;
+    const live = finiteTrim(liveTrims(player).trims[r.kind]);
     return {
-      "pet:seat_lift": calculateLift(r.surfaceY, player.location.y, finiteTrim(t)),
+      "pet:seat_lift": calculateLift(r.surfaceY, player.location.y, bakedTrim(pet, r.kind) + live),
       "pet:seat_kind": KINDS[r.kind],
     };
   } catch {
@@ -219,7 +265,8 @@ export function initialSeatProperties(player: PlayerLike): { "pet:seat_lift": nu
 }
 export function refreshSeat(player: PlayerLike): boolean {
   if (!isPlayer(player)) return false;
-  const mount = MODEL_BY_WIRE[String(player.getProperty(FORM_PROPERTY))] ? ride(player) : undefined;
+  const pet = MODEL_BY_WIRE[String(player.getProperty(FORM_PROPERTY))];
+  const mount = pet ? ride(player) : undefined;
   if (!mount) {
     if (player.getProperty("pet:seat_lift") !== undefined) setIfChanged(player, "pet:seat_lift", 0);
     if (player.getProperty("pet:seat_kind") !== undefined) setIfChanged(player, "pet:seat_kind", 0);
@@ -243,14 +290,16 @@ export function refreshSeat(player: PlayerLike): boolean {
   } else if (measurement.kind !== "stairs") {
     measurement = { ...measurement, surfaceY: measurement.surfaceY + (mount.location.y - measurement.mountY) };
   }
-  const trim = trims(player)[measurement.kind] ?? 0;
-  const lift = calculateLift(measurement.surfaceY, player.location.y, finiteTrim(trim));
+  const trim = liveTrim(player, measurement.kind);
+  const baked = bakedTrim(pet, measurement.kind);
+  const lift = calculateLift(measurement.surfaceY, player.location.y, baked + trim);
   const report: SeatReport = {
     ...measurement,
     mountY: mount.location.y,
     playerY: player.location.y,
     liftPixels: lift,
     trimPixels: trim,
+    bakedPixels: baked,
   };
   cache.set(player.id, report);
   setIfChanged(player, "pet:seat_lift", lift);
@@ -270,21 +319,26 @@ export function setSeatTrim(player: PlayerLike, pixels: number): void {
   refreshSeat(player);
   const r = cache.get(player.id);
   if (!r) throw new Error("Ride a boat, pig, or stair seat in pet form first.");
-  const t = trims(player);
-  t[r.kind] = pixels;
-  player.setDynamicProperty(TRIM_KEY, JSON.stringify(t));
+  const { trims } = liveTrims(player);
+  trims[r.kind] = pixels;
+  saveTrims(player, trims);
   refreshSeat(player);
-  safeMessage(player, `${r.kind} seat adjustment: ${pixels} pixels.`);
+  const baked = bakedTrim(MODEL_BY_ID[preferredForm(player)], r.kind);
+  safeMessage(
+    player,
+    `${r.kind} seat adjustment: ${pixels} pixels, on top of ${formLabel(preferredForm(player))}'s baked ${baked}.`,
+  );
 }
 export function resetSeatTrim(player: PlayerLike): void {
   refreshSeat(player);
   const r = cache.get(player.id);
   if (!r) throw new Error("Ride a seat in pet form first.");
-  const t = trims(player);
-  delete t[r.kind];
-  player.setDynamicProperty(TRIM_KEY, JSON.stringify(t));
+  const { trims } = liveTrims(player);
+  delete trims[r.kind];
+  saveTrims(player, trims);
   refreshSeat(player);
-  safeMessage(player, `${r.kind} seat adjustment reset.`);
+  const baked = bakedTrim(MODEL_BY_ID[preferredForm(player)], r.kind);
+  safeMessage(player, `${r.kind} seat adjustment reset; ${formLabel(preferredForm(player))}'s baked ${baked} stays.`);
 }
 export function clearSeatCache(id: string): void {
   cache.delete(id);

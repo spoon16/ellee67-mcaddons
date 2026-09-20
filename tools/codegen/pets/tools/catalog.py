@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json, re, math
 from pathlib import Path
+from seat_kinds import normalize_seating
 
 ID = re.compile(r'^[a-z][a-z0-9_]{0,31}$')
 class CatalogError(ValueError): pass
@@ -105,6 +106,7 @@ def load_catalog(root):
                 if p['bone'] not in by: raise CatalogError('Armor references missing bone')
                 vector(p['origin'],'armor origin');vector(p['size'],'armor size')
                 if any(x<=0 for x in p['size']): raise CatalogError('Armor cube must have positive dimensions')
+        d['seating']=normalize_seating(d.get('seating'),ident,CatalogError)
         d['wire_id']=ids['reserved'][ident];d['rig_definition']=rig
         records.append(d)
     if not records: raise CatalogError('No pets registered')

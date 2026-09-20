@@ -1,7 +1,7 @@
 // GENERATED from catalog/pets; edit the catalog, not this module.
 export const BUILD = "0.5.2-native-armor-isolation";
 export const RELEASE_VERSION = "0.5.2";
-export const CATALOG_HASH = "2b3fc3d316754061353295aede681dd6c785834d334b5e678235e5a7e4e65f5e";
+export const CATALOG_HASH = "052c7dd71e616705a76cb977e6c2ec365fca14759c5b9cdc8da4508d135e8079";
 export const MAX_WIRE_ID = 4095;
 export const DEFAULT_HAND_HEIGHT = 2;
 export const PETS = Object.freeze([
@@ -106,6 +106,35 @@ export const PETS = Object.freeze([
         "scale": 1.0,
         "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
       }
+    },
+    "seating": {
+      "kinds": {
+        "boat": {
+          "trim": 0
+        },
+        "pig": {
+          "trim": -2
+        },
+        "stairs": {
+          "trim": 0
+        },
+        "other": {
+          "trim": 0
+        },
+        "horse": {
+          "trim": 4
+        },
+        "strider": {
+          "trim": 1
+        },
+        "happy_ghast": {
+          "trim": 3
+        },
+        "cushion": {
+          "trim": 1
+        }
+      },
+      "note": "Model pixels added to the measured seat lift per mount kind; measured in game on 0.5.2, where horse, strider, happy ghast and cushion still sat as unprofiled mounts at the rider anchor."
     },
     "validation": {
       "appearance": "user-confirmed-0.3.0",
@@ -232,6 +261,34 @@ export const PETS = Object.freeze([
     "owner": "warspoon17",
     "pet_kind": "cat",
     "species": "Tuxedo cat",
+    "seating": {
+      "kinds": {
+        "boat": {
+          "trim": 0
+        },
+        "pig": {
+          "trim": 0
+        },
+        "stairs": {
+          "trim": 0
+        },
+        "other": {
+          "trim": 0
+        },
+        "horse": {
+          "trim": 0
+        },
+        "strider": {
+          "trim": 0
+        },
+        "happy_ghast": {
+          "trim": 0
+        },
+        "cushion": {
+          "trim": 0
+        }
+      }
+    },
     "wire_id": 2,
     "menu_icon": "textures/ui/pets/mochi"
   },
@@ -353,6 +410,34 @@ export const PETS = Object.freeze([
       "eyes": "blue",
       "nose": "pink"
     },
+    "seating": {
+      "kinds": {
+        "boat": {
+          "trim": 0
+        },
+        "pig": {
+          "trim": 0
+        },
+        "stairs": {
+          "trim": 0
+        },
+        "other": {
+          "trim": 0
+        },
+        "horse": {
+          "trim": 0
+        },
+        "strider": {
+          "trim": 0
+        },
+        "happy_ghast": {
+          "trim": 0
+        },
+        "cushion": {
+          "trim": 0
+        }
+      }
+    },
     "wire_id": 3,
     "menu_icon": "textures/ui/pets/casper"
   }
@@ -362,3 +447,4 @@ export const HANDHELD_INDEX = Object.freeze({"minecraft:wooden_sword": 1, "minec
 export const MODEL_BY_ID = Object.freeze(Object.fromEntries(PETS.map(p => [p.id,p])));
 export const MODEL_BY_WIRE = Object.freeze(Object.fromEntries(PETS.map(p => [p.wire_id,p])));
 export const SEAT_KINDS = Object.freeze(["none", "boat", "pig", "stairs", "other", "horse", "strider", "happy_ghast", "cushion"]);
+export const SEAT_TRIM_BAKE = "5d61e7358e271669";

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Pets: the seated pose keeps the head clear of the body. The head bone is moved forward and up in
+  the ride clip until the muzzle leads the chest as it does standing and the chest reaches no
+  deeper into the skull; before, the chest pitched up in front of and into Carter's counter-rotated
+  head on a pig. The cats get the same clearance.
 - Pets: a mount kind can bake a forward offset (`seating.kinds.<kind>.forward`, model pixels
   toward the nose) that the compiler writes into the seat alignment clip per pet and kind; Carter
   starts one pixel forward on striders. `/pet:seatinfo` reports it as `forwardPixels`.

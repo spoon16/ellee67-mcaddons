@@ -183,8 +183,14 @@ From the 0.5.2 release notes:
 - Seated pose: the generated ride clip is emitted in Bedrock's rotation sign (negative X raises the
   chest, as in vanilla `animation.cat.sit`). Pets sit on their rear with the body raised, front legs
   vertical with paws on the seat plane, hind legs folded forward and paws flat, tail resting behind.
-  The seat height per mount kind is a measurement plus the baked and live trims above; the baked
-  numbers are Carter's only and were read off a client, not proven by the automated suites.
+  The head is counter-rotated to stay upright, which swings it up and back with the pitched body,
+  so the ride clip also moves the head bone forward and up until the muzzle leads the chest by as
+  much as when standing and the chest sits no deeper in the skull (`head_clearance` in the
+  compiler's `seating.py`; 4.5 pixels forward and 0.9 up for Carter, 3.8 and 0.3 for the cats,
+  whose shorter neck caps the forward move where it would leave the skull).
+  Before that the raised chest reached 2.3 pixels ahead of Carter's chin. The seat height per
+  mount kind is a measurement plus the baked and live trims above; the baked numbers are Carter's
+  only and were read off a client, not proven by the automated suites.
 - Fitted armor meshes are pre-scaled per pet (`equipment.armor_attachable.scale` in the catalog:
   Mochi and Casper 0.9375, the player's render scale, and Carter 1.0) because the armor attachables
   rebuild their bone matrices without the entity scale. At 0.9375 the cat armor rests on the cats,
@@ -249,7 +255,10 @@ per line with a screenshot.
    0 again. On the strider Carter also sits one pixel further toward the strider's head than 0.5.2
    did (`forwardPixels` 1); if he moved back instead, the sign in the clip is wrong for this engine
    and `forward` in the catalog wants negating. Dismounting clears the lift. Repeat the pig and the
-   horse as Mochi: no baked trim, no forward offset.
+   horse as Mochi: no baked trim, no forward offset. On the pig, Carter's head sits above and in
+   front of his chest with the neck hidden behind it, nothing of the chest or neck showing through
+   the skull, and the muzzle over the front paws; his ears hang beside the chest. Mochi and Casper
+   get the same head clearance; check them once too.
 10. `/pet:snapshot`, switch forms with the book only, `/pet:compare` prints PASS.
 11. Leave and rejoin, die and respawn, travel to the Nether and back: the pet form returns each time
     with no chat line. A second player with a different pet sees both forms correctly.

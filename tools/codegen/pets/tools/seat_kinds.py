@@ -10,7 +10,9 @@ SEAT_KINDS=['none','boat','pig','stairs','other','horse','strider','happy_ghast'
 BAKEABLE=[k for k in SEAT_KINDS if k not in ('none','other')]
 # Model pixels, the same unit /pet:seatheight uses; a baked trim is added to the measured lift before the live one.
 TRIM_RANGE=(-32,32)
-FIELDS={'trim':TRIM_RANGE}
+# Model pixels toward the pet's nose (the model faces -z, so the clip negates it); baked into the client animation.
+FORWARD_RANGE=(-16,16)
+FIELDS={'trim':TRIM_RANGE,'forward':FORWARD_RANGE}
 
 def _number(value,label,low,high,error):
     if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or not low<=value<=high:
@@ -20,9 +22,10 @@ def _number(value,label,low,high,error):
 def normalize_seating(value,ident,error=ValueError):
     """Validates a pet's optional `seating` block and fills in every kind, so the runtime reads one shape per pet.
 
-    Catalog form: {"kinds": {"pig": {"trim": -2}, ...}, "note": "..."}. Only bakeable kinds may appear ("other" is
-    every unprofiled mount and stays unbaked); a missing kind or field is zero. The result lists every kind but
-    "none", "other" included with zeros, so the generated catalog indexes cleanly by kind.
+    Catalog form: {"kinds": {"pig": {"trim": -2}, "strider": {"trim": 1, "forward": 1}, ...}, "note": "..."}. Only
+    bakeable kinds may appear ("other" is every unprofiled mount and stays unbaked); a missing kind or field is zero.
+    The result lists every kind but "none", "other" included with zeros, so the generated catalog indexes cleanly by
+    kind. `trim` is applied by the scripts through pet:seat_lift; `forward` is compiled into the seat alignment clip.
     """
     value={} if value is None else value
     if not isinstance(value,dict) or not set(value)<={'kinds','note'}:raise error(f'{ident}: seating holds only kinds and note')

@@ -14,6 +14,7 @@ from itertools import product
 import numpy as np
 from catalog import read
 from rig_math import matrices, rotation
+from seat_kinds import SEAT_KINDS
 
 BEDROCK_ROTATION_SIGN=np.array([-1.,-1.,1.])
 
@@ -87,8 +88,26 @@ def ride_clip(root,pet):
         for k,v in ch.items():ch[k]=[round(float(x),8)+0.0 for x in v]
     return {'loop':True,'bones':pose}
 
-def alignment_clip():
+def forward_expression(pets):
+    """Molang for the seat-forward offset: per pet (variable.pet_model_id) and mount kind (pet:seat_kind).
+
+    The catalog's `forward` is model pixels toward the nose; the model faces -z, so the clip moves pet_root by
+    -forward. Pets and kinds without an offset contribute no branch, and the whole thing is 0.0 when nothing is baked.
+    """
+    kind="(query.has_property('pet:seat_kind') ? query.property('pet:seat_kind') : 0.0)"
+    expression='0.0'
+    for pet in reversed(pets):
+        branches='0.0'
+        for index,name in reversed(list(enumerate(SEAT_KINDS))):
+            forward=pet['seating']['kinds'].get(name,{}).get('forward',0)
+            if forward:branches=f"({kind} == {index} ? {round(-float(forward),8)+0.0} : {branches})"
+        if branches!='0.0':expression=f"(variable.pet_model_id == {pet['wire_id']} ? {branches} : {expression})"
+    return expression
+
+def alignment_clip(pets=()):
     # These are independent roots. Only pet_root is translated; native Player bones
     # are owned exclusively by Minecraft's player animations.
     lift="query.is_riding ? (query.has_property('pet:seat_lift') ? query.property('pet:seat_lift') : 0.0) : 0.0"
-    return {'loop':True,'bones':{'pet_root':{'position':[0,lift,0]}}}
+    forward=forward_expression(pets)
+    z=0 if forward=='0.0' else f"query.is_riding ? {forward} : 0.0"
+    return {'loop':True,'bones':{'pet_root':{'position':[0,lift,z]}}}

@@ -101,7 +101,7 @@
     }
   },
   "seating": {
-    "note": "Model pixels added to the measured seat lift per mount kind; measured in game on 0.5.2, where horse, strider, happy ghast and cushion still sat as unprofiled mounts at the rider anchor.",
+    "note": "Model pixels per mount kind: trim is added to the measured seat lift, forward moves the pet toward its nose. Measured in game on 0.5.2, where horse, strider, happy ghast and cushion still sat as unprofiled mounts at the rider anchor; Carter sat slightly too far back on the strider, hence the forward pixel.",
     "kinds": {
       "boat": {
         "trim": 0
@@ -116,7 +116,8 @@
         "trim": 4
       },
       "strider": {
-        "trim": 1
+        "trim": 1,
+        "forward": 1
       },
       "happy_ghast": {
         "trim": 3

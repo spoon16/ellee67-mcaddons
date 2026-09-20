@@ -113,11 +113,15 @@ the same list into `catalog.generated.ts`; a new kind is appended there, never i
 `pet:seat_lift` is the measured surface offset plus two trims in model pixels: the pet's baked
 trim for the kind, from its catalog entry (`seating.kinds.<kind>.trim` in
 `tools/codegen/pets/catalog/pets/<pet>.json`), and the player's live `/pet:seatheight` trim on top.
-Carter's baked trims are the numbers measured in game on 0.5.2:
+A kind can also carry `forward`, model pixels toward the pet's nose: the compiler bakes it into the
+seat alignment clip (`animation.pet.seat_align` moves `pet_root` by `-forward` on z for that pet and
+`pet:seat_kind`), there is no live command for it, and `/pet:seatinfo` reports it as
+`forwardPixels`. Carter's numbers are the ones measured in game on 0.5.2:
 
 | Kind | boat | stairs | pig | horse | strider | happy_ghast | cushion |
 |---|---|---|---|---|---|---|---|
-| Carter | 0 | 0 | -2 | +4 | +1 | +3 | +1 |
+| Carter trim | 0 | 0 | -2 | +4 | +1 | +3 | +1 |
+| Carter forward | 0 | 0 | 0 | 0 | +1 | 0 | 0 |
 
 Mochi and Casper bake nothing yet. `other` cannot be baked. The compiler stamps the catalog's
 seating profiles (`SEAT_TRIM_BAKE` in `catalog.generated.ts`) and the saved trims carry the stamp
@@ -242,7 +246,10 @@ per line with a screenshot.
    (`boat`, `pig`, `stairs`, `horse`, `strider`, `happy_ghast`, `cushion`; a camel or a minecart is
    `other`), `/pet:seatheight 4` and `/pet:seatreset` move and restore only that kind on top of the
    baked value. A world that had seat trims saved before this build starts every profiled kind at
-   0 again. Dismounting clears the lift. Repeat the pig and the horse as Mochi: no baked trim.
+   0 again. On the strider Carter also sits one pixel further toward the strider's head than 0.5.2
+   did (`forwardPixels` 1); if he moved back instead, the sign in the clip is wrong for this engine
+   and `forward` in the catalog wants negating. Dismounting clears the lift. Repeat the pig and the
+   horse as Mochi: no baked trim, no forward offset.
 10. `/pet:snapshot`, switch forms with the book only, `/pet:compare` prints PASS.
 11. Leave and rejoin, die and respawn, travel to the Nether and back: the pet form returns each time
     with no chat line. A second player with a different pet sees both forms correctly.

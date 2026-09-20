@@ -44,6 +44,9 @@ pet rides that kind of mount (`boat`, `pig`, `stairs`, `horse`, `strider`, `happ
 zero. Measure the number in game with `/pet:seatheight`, then move it here: the compiler stamps
 the profiles (`SEAT_TRIM_BAKE`) and the runtime drops the live trims of the profiled kinds once
 when the stamp changes, so the baked number is not doubled by an older calibration.
+`seating.kinds.<kind>.forward` moves the seated pet toward its nose by that many model pixels;
+it is compiled into `animation.pet.seat_align` (which negates it, since the model faces -z) and
+has no live command.
 
 A new coat variant can reuse fitting unchanged; a new muzzle/body/ear shape requires
 new fitting review. Boots/leg joints, ear clearance, and tool bite positions cannot be

@@ -140,6 +140,21 @@ All in `behavior_packs/elleedog67_pets/` and `resource_packs/elleedog67_pets/`.
 | `pet:diag_cube`, `pet:diag_model` | | Summonable test props owned by the player who ran `/pet:probe` (dynamic property `pet:probe_owner`). `pet:diag_model` carries `pet:model_id` and is the pack probe. |
 | `cav:diag_cube`, `cav:diag_model` | | Legacy props; only `/pet:cleanup` touches them. |
 
+### The inventory paperdoll
+
+The paperdoll in the inventory screen renders the same player entity as part of the UI
+(`query.is_in_ui`), and the engine leaves `variable.is_first_person` as the camera has it: vanilla's
+own cape rule reads `(!variable.is_first_person || variable.is_paperdoll)` for exactly that reason.
+The pet body pass used to require `!variable.is_first_person`, so a player in first person saw
+their human skin in the paperdoll while everyone else saw the pet. The compiler now counts the UI
+as third person for the pet (`variable.pet_tp`), never draws the first-person paws there, hides
+the native body as it does in the world, and plays no locomotion or seat lift in the paperdoll
+(its ground, water and riding queries are not the world's, and vanilla's paperdoll state plays
+none either); the tail wag and the head look still run. `tools/codegen/pets/tests/test_paperdoll.py`
+holds the truth tables. Whether the paperdoll carries entity properties at all is a client
+question: if it still shows the human after this change, `query.property('pet:model_id')` is not
+evaluated in the UI and the paperdoll needs a channel other than properties.
+
 The Morpher menu is one `ActionFormData` per step: Player, Carter, Mochi, Casper, then a biography
 page with "Become X" and "Back". One session per player; a late response after leaving, changing
 dimension, respawning or choosing by command is discarded. A busy client is retried three times.
@@ -270,6 +285,11 @@ per line with a screenshot.
     Reactivate both packs and reopen: your pet returns on join without a chat line.
 14. Watch the content log for the whole session: only explicit command errors may appear. With Pets
     active and Rbow Ore not, note any missing-texture message from the Rbow slots.
+15. As Carter, open the inventory in first person and in third person: the paperdoll shows Carter
+    standing (no human skin, no paws, no sitting pose even while mounted), his tail wags and his
+    head follows the cursor. Choose Player: the paperdoll shows the skin again. If the paperdoll
+    shows the human while the world shows Carter, report it: the paperdoll is not reading entity
+    properties and the fix needs another channel.
 
 If a step fails, send one screenshot taken after choosing Player, the `/pet:diagnose` output and the
 active pack list. Do not count re-equipping a piece or relogging as a passing transition.

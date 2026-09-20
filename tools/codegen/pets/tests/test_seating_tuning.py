@@ -1,6 +1,7 @@
 """Mount kinds, baked seat trims and the seated pose: offline data and math checks, not a Minecraft client."""
 from pathlib import Path
 import json,sys,unittest
+import numpy as np
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tools'))
 from catalog import read,load_catalog
 from seat_kinds import SEAT_KINDS
@@ -95,3 +96,39 @@ class ForwardOffset(unittest.TestCase):
   self.assertEqual(normalize_seating({'kinds':{'strider':{'forward':2}}},'x')['kinds']['strider'],{'trim':0,'forward':2})
   for bad in [{'strider':{'forward':17}},{'strider':{'forward':'1'}},{'other':{'forward':1}}]:
    with self.assertRaises(ValueError,msg=str(bad)):normalize_seating({'kinds':bad},'x')
+
+class SeatedHead(unittest.TestCase):
+ def setUp(self):
+  from seating import ride_clip,rig_pose,head_fit
+  self.head_fit=head_fit;self.poses={p['id']:rig_pose(ride_clip(ROOT,p)['bones']) for p in PETS}
+ def geometry(self,p):return read(ROOT/p['model'])['minecraft:geometry'][0]
+ def test_seated_muzzle_leads_the_chest_as_it_does_standing(self):
+  # Before the clearance the pitched chest reached 2.3 pixels ahead of Carter's muzzle and 0.9 deeper into his skull.
+  for p in PETS:
+   g=self.geometry(p);rest=self.head_fit(g,{});seated=self.head_fit(g,self.poses[p['id']])
+   self.assertGreater(rest['lead'],2);self.assertGreater(seated['lead'],2,p['id'])
+   self.assertLessEqual(seated['sunk'],rest['sunk']+1e-6,p['id'])
+   # Carter's neck is long enough for the full standing lead; the cats stop where the neck would leave the skull.
+   if p['id']=='carter':self.assertAlmostEqual(seated['lead'],rest['lead'],places=6)
+   else:self.assertAlmostEqual(seated['attach'],0,places=6)
+ def test_seated_neck_still_reaches_into_the_skull(self):
+  from seating import transformed_vertices
+  for p in PETS:
+   g=self.geometry(p);pose=self.poses[p['id']]
+   head=transformed_vertices(g,pose,['pet_head']);neck=transformed_vertices(g,pose,['pet_neck'])
+   self.assertGreaterEqual(head[:,2].max(),neck[:,2].min()-1e-6,p['id'])
+   self.assertGreater(neck[:,1].max(),head[:,1].min(),p['id'])
+ def test_head_offset_is_baked_on_the_head_bone_only(self):
+  for p in PETS:
+   clip=read(RP/f'animations/pets/{p["id"]}.animation.json')['animations'][f'animation.pet.{p["id"]}.ride']['bones']
+   self.assertIn('position',clip['pet_head']);self.assertNotIn('position',clip.get('pet_jaw',{}))
+   for name in ['pet_ear_left','pet_ear_right','pet_neck']:self.assertNotIn(name,clip)
+   x,y,z=clip['pet_head']['position'];self.assertEqual(x,0);self.assertLess(z,0)
+ def test_head_stays_upright_over_the_front_paws(self):
+  from seating import transformed_vertices
+  from rig_math import matrices
+  for p in PETS:
+   g=self.geometry(p);pose={k:{a:np.array(b) for a,b in v.items()} for k,v in self.poses[p['id']].items()}
+   np.testing.assert_allclose(matrices(g['bones'],pose)['pet_head'][:3,:3],np.eye(3),atol=1e-7)
+   head=transformed_vertices(g,self.poses[p['id']],['pet_head']);paws=transformed_vertices(g,self.poses[p['id']],['pet_front_left_paw'])
+   self.assertLess(head[:,2].min(),paws[:,2].min());self.assertGreater(head[:,2].max(),paws[:,2].min())

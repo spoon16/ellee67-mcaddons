@@ -617,9 +617,9 @@
     "resource_pack/models/entity/pets/mochi/tool_sword.geo.json": "141b329efad181edde1f45d81f299da112bd7ce02fae671be822cd53f39d90f5",
     "resource_pack/animations/pet_seating.animation.json": "e73df6d888dbac4550d23761931e75b7860eb56d1235023aaa88f14329715a5e",
     "resource_pack/animations/pet_shared.animation.json": "f1f15dddd3d2b11c44b36c4ee8b62404260df50f7de895c524722317cdd6fa19",
-    "resource_pack/animations/pets/carter.animation.json": "cdfd51dda060f57cda346f0a6dcaada54de478654bf7ba0ee6e54ff9b19ba200",
-    "resource_pack/animations/pets/casper.animation.json": "6ee6eca4a2d561826e96110e2feab01172070a008d9d1b064651eac5467262ae",
-    "resource_pack/animations/pets/mochi.animation.json": "46e8e54cffc99df93bd0a98f400916b7e57307b6261d75e3514bc5f73e56cb86"
+    "resource_pack/animations/pets/carter.animation.json": "fa49d1cda6f91ae94244e512f15b741b6cfe808d1e9932284282708fab67ef33",
+    "resource_pack/animations/pets/casper.animation.json": "f658ccfe60201d482b2df51e3845ef0dc7b1349e3f75086000fb5fec430442d4",
+    "resource_pack/animations/pets/mochi.animation.json": "64c6ae0e2c295cbcfa8ee8b3e80c406da8af86a9768f1ac1a02b9b585b039335"
   },
   "armor_fields": {
     "resource_pack/attachables/chainmail_helmet.player.json": {

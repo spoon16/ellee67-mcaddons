@@ -45,6 +45,28 @@ def transformed_vertices(g, pose, names):
             for c in b.get('cubes',[]):pts.extend((mats[b['name']]@vertices(c).T).T[:,:3])
     return np.array(pts)
 
+def head_fit(g,pose):
+    """How the head sits against the chest in a pose: the muzzle's lead over the chest's front-most point (+z is
+    back, so front is min z) and how far the chest's top reaches up into the head, both in model pixels."""
+    by={b['name']:b for b in g['bones']}
+    box=lambda name:(lambda pts:(pts.min(0),pts.max(0)))(transformed_vertices(g,pose,[name]))
+    head_low,head_high=box('pet_head');chest_low,chest_high=box('pet_chest' if 'pet_chest' in by else 'pet_body')
+    # How far the neck's front reaches into the skull (+z is back); a rig without a neck bone is never detached.
+    attach=head_high[2]-box('pet_neck')[0][2] if 'pet_neck' in by else float('inf')
+    return {'lead':chest_low[2]-head_low[2],'sunk':chest_high[1]-head_low[1],'attach':attach}
+
+def head_clearance(g,pose,r):
+    """The head's position offset (in its parent's frame) that keeps the rest pose's head-to-chest relation.
+
+    The head is counter-rotated to stay upright while its parents pitch up with the body, so it swings up and back:
+    the raised chest ends up in front of the muzzle and reaches up into the skull. Moving the head forward until the
+    muzzle leads the chest by as much as when standing (or as far as the neck's front still reaches into the skull,
+    on a short-necked rig), and up until the chest sits no deeper in it, puts the head over the front paws again.
+    """
+    rest=head_fit(g,{});seated=head_fit(g,pose)
+    forward=min(max(0.,rest['lead']-seated['lead']),max(0.,seated['attach']));up=max(0.,seated['sunk']-rest['sunk'])
+    return (r.T@np.array([0.,up,-forward])).tolist()
+
 def ride_clip(root,pet):
     g=read(root/pet['model'])['minecraft:geometry'][0]
     by={b['name']:b for b in g['bones']}
@@ -82,6 +104,8 @@ def ride_clip(root,pet):
     points=transformed_vertices(g,pose,[n for n in by if n.startswith('pet_tail')])
     if points.size and points[:,1].min()<.2:
         pose['pet_tail_base']['position']=(r.T@np.array([0.,.2-points[:,1].min(),0.])).tolist()
+    # The head, jaw, ears and mouth mount move together: the offset is on the head bone.
+    pose['pet_head']['position']=head_clearance(g,pose,r)
     pose=bedrock_pose(pose)
     # Stable precision makes the output deterministic across builds.
     for ch in pose.values():

@@ -47,7 +47,7 @@ class BakedTrims(unittest.TestCase):
   script=(ROOT/'src/catalog.generated.js').read_text()
   emitted=json.loads(script.split('export const PETS = Object.freeze(',1)[1].split('.map(p => Object.freeze(p)));',1)[0])
   self.assertEqual({p['id']:p['seating'] for p in emitted},{p['id']:p['seating'] for p in PETS})
-  self.assertEqual(next(p for p in emitted if p['id']=='carter')['seating']['kinds']['happy_ghast'],{'trim':3})
+  self.assertEqual(next(p for p in emitted if p['id']=='carter')['seating']['kinds']['happy_ghast'],{'trim':3,'forward':0})
   import re
   stamp=re.search(r'export const SEAT_TRIM_BAKE = "([0-9a-f]{16})";',script);self.assertIsNotNone(stamp)
   expected=__import__('hashlib').sha256(json.dumps({p['id']:p['seating'] for p in PETS},sort_keys=True,separators=(',',':')).encode()).hexdigest()[:16]
@@ -59,7 +59,39 @@ class BakedTrims(unittest.TestCase):
    with self.assertRaises(CatalogError,msg=str(kinds)):load_catalog(r)
   r=self.fixture();path=r/'catalog/pets/mochi.json';d=read(path);d['seating']={'kinds':{'pig':{'trim':-1.5}},'note':'ok'};write(path,d)
   _,pets,_=load_catalog(r);mochi=next(p for p in pets if p['id']=='mochi')
-  self.assertEqual(mochi['seating']['kinds']['pig'],{'trim':-1.5});self.assertEqual(mochi['seating']['note'],'ok')
+  self.assertEqual(mochi['seating']['kinds']['pig'],{'trim':-1.5,'forward':0});self.assertEqual(mochi['seating']['note'],'ok')
   # A normalized block (every kind listed, "other" at zero) is accepted again, so a cloned pet loads.
   from seat_kinds import normalize_seating
   self.assertEqual(normalize_seating(mochi['seating'],'mochi'),mochi['seating'])
+
+class ForwardOffset(unittest.TestCase):
+ def clip(self):return read(RP/'animations/pet_seating.animation.json')['animations']['animation.pet.seat_align']
+ def test_carter_sits_one_pixel_forward_on_a_strider_and_nowhere_else(self):
+  by={p['id']:p['seating']['kinds'] for p in PETS}
+  self.assertEqual({k:v['forward'] for k,v in by['carter'].items() if v['forward']},{'strider':1})
+  for ident in ['mochi','casper']:self.assertFalse(any(v['forward'] for v in by[ident].values()))
+ def test_alignment_clip_moves_pet_root_toward_the_nose_for_that_pet_and_kind_only(self):
+  from molang_subset import Expression
+  from seat_kinds import SEAT_KINDS
+  a=self.clip();self.assertEqual(set(a['bones']),{'pet_root'})
+  x,y,z=a['bones']['pet_root']['position'];self.assertEqual(x,0)
+  self.assertEqual(Expression(y)({'query.is_riding':True},{'pet:seat_lift':12}),12)
+  e=Expression(z);strider=SEAT_KINDS.index('strider')
+  for pet in PETS:
+   for index,kind in enumerate(SEAT_KINDS):
+    value=e({'query.is_riding':True,'variable.pet_model_id':pet['wire_id']},{'pet:seat_kind':index})
+    # The model faces -z: one pixel toward the nose is -1 in the clip, and only Carter on a strider gets it.
+    self.assertEqual(value,-1.0 if (pet['id']=='carter' and kind=='strider') else 0.0,(pet['id'],kind))
+   self.assertEqual(e({'query.is_riding':False,'variable.pet_model_id':pet['wire_id']},{'pet:seat_kind':strider}),0.0)
+  self.assertEqual(e({'query.is_riding':True,'variable.pet_model_id':0},{'pet:seat_kind':strider}),0.0)
+ def test_no_forward_offsets_leaves_the_clip_as_it_was(self):
+  from seating import alignment_clip
+  from copy import deepcopy
+  quiet=[{**deepcopy(p),'seating':{'kinds':{k:{'trim':v['trim'],'forward':0} for k,v in p['seating']['kinds'].items()}}} for p in PETS]
+  self.assertEqual(alignment_clip(quiet)['bones']['pet_root']['position'][2],0)
+  self.assertEqual(alignment_clip()['bones']['pet_root']['position'][2],0)
+ def test_forward_is_validated_like_trim(self):
+  from seat_kinds import normalize_seating
+  self.assertEqual(normalize_seating({'kinds':{'strider':{'forward':2}}},'x')['kinds']['strider'],{'trim':0,'forward':2})
+  for bad in [{'strider':{'forward':17}},{'strider':{'forward':'1'}},{'other':{'forward':1}}]:
+   with self.assertRaises(ValueError,msg=str(bad)):normalize_seating({'kinds':bad},'x')

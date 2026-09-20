@@ -8,7 +8,7 @@
           "position": [
             0,
             "query.is_riding ? (query.has_property('pet:seat_lift') ? query.property('pet:seat_lift') : 0.0) : 0.0",
-            0
+            "query.is_riding ? (variable.pet_model_id == 1 ? ((query.has_property('pet:seat_kind') ? query.property('pet:seat_kind') : 0.0) == 6 ? -1.0 : 0.0) : 0.0) : 0.0"
           ]
         }
       }

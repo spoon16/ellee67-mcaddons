@@ -49,6 +49,8 @@ export interface SeatReport extends SeatMeasurement {
   trimPixels: number;
   /** The catalog's trim for this pet and kind, in model pixels, applied before the live trim. */
   bakedPixels: number;
+  /** The catalog's forward offset for this pet and kind, in model pixels toward the nose; the client applies it. */
+  forwardPixels: number;
 }
 /** `/pet:seatinfo`: the cached report while mounted, otherwise the bare lift the entity currently carries. */
 export interface SeatInfo extends Partial<Omit<SeatReport, "kind" | "mount" | "liftPixels">> {
@@ -92,6 +94,13 @@ function finiteTrim(value: unknown): number {
 /** The catalog's trim for this pet on this kind of mount, in model pixels; zero for the player and unknown kinds. */
 export function bakedTrim(pet: Pet | undefined, kind: SeatKind): number {
   return pet ? finiteTrim(pet.seating.kinds[kind]?.trim) : 0;
+}
+/**
+ * The catalog's forward offset for this pet on this kind of mount, in model pixels toward the nose. It is compiled
+ * into the seat alignment clip (keyed on `pet:seat_kind`), so the scripts only report it.
+ */
+export function bakedForward(pet: Pet | undefined, kind: SeatKind): number {
+  return pet ? finiteTrim(pet.seating.kinds[kind]?.forward) : 0;
 }
 /**
  * The saved live trims, brought up to the current catalog bake. A live trim for a profiled kind was measured on top
@@ -300,6 +309,7 @@ export function refreshSeat(player: PlayerLike): boolean {
     liftPixels: lift,
     trimPixels: trim,
     bakedPixels: baked,
+    forwardPixels: bakedForward(pet, measurement.kind),
   };
   cache.set(player.id, report);
   setIfChanged(player, "pet:seat_lift", lift);

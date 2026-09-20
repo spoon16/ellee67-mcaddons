@@ -247,7 +247,7 @@ def build(root=ROOT,output=None):
         else:Image.open(root/p['texture']).resize((128,128)).save(target)
     d['animations']['pet_paw_flex']='animation.pet.paw_flex';d['animations']['pet_fp_lift']='animation.pet.fp_lift'
     d['animations']['pet_seat_align']='animation.pet.seat_align'
-    write(rp/'animations/pet_seating.animation.json',{'format_version':'1.8.0','animations':{'animation.pet.seat_align':seating.alignment_clip()}})
+    write(rp/'animations/pet_seating.animation.json',{'format_version':'1.8.0','animations':{'animation.pet.seat_align':seating.alignment_clip(pets)}})
     write(rp/'animations/pet_armor_fit.animation.json',{'format_version':'1.8.0','animations':{'animation.pet.armor_fit':armor_fit_clip()}})
     s['animate'].append({'pet_seat_align':'variable.pet_tp && query.is_riding'})
     s['animate'] += [{'pet_paw_flex':'variable.pet_fp_paws && variable.attack_time > 0.0'},{'pet_fp_lift':f'{fp} && ({EMPTY})'}]

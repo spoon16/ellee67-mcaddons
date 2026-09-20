@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { transitionForm } from "../../../src/features/pets/appearance.ts";
 import { MODEL_BY_ID, PETS, SEAT_KINDS, SEAT_TRIM_BAKE } from "../../../src/features/pets/catalog.generated.ts";
 import {
+  bakedForward,
   bakedTrim,
   calculateLift,
   refreshSeat,
@@ -242,6 +243,20 @@ describe("baked seat trims", () => {
     expect(bakedTrim(MODEL_BY_ID.carter, "pig")).toBe(-2);
     expect(bakedTrim(MODEL_BY_ID.mochi, "pig")).toBe(0);
     expect(bakedTrim(undefined, "pig")).toBe(0);
+  });
+
+  it("Carter sits one pixel forward on a strider; the clip applies it, the scripts only report it", async () => {
+    expect(bakedForward(MODEL_BY_ID.carter, "strider")).toBe(1);
+    expect(bakedForward(MODEL_BY_ID.carter, "pig")).toBe(0);
+    expect(bakedForward(MODEL_BY_ID.mochi, "strider")).toBe(0);
+    expect(bakedForward(undefined, "strider")).toBe(0);
+    const { p } = mounted("minecraft:strider");
+    refreshSeat(p);
+    await ticks(1);
+    expect(seatInfo(p)).toMatchObject({ kind: "strider", bakedPixels: 1, forwardPixels: 1 });
+    // The forward offset never reaches pet:seat_lift; the vertical trim alone does.
+    expect(p.props["pet:seat_lift"]).toBe(calculateLift(20.63, 20.3, 1));
+    expect(Object.keys(p.props).filter((k) => k.startsWith("pet:seat"))).toEqual(["pet:seat_lift", "pet:seat_kind"]);
   });
 
   it("The baked trim is part of the lift and reported apart from the live one", async () => {

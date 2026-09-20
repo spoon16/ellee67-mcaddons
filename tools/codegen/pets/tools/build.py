@@ -204,8 +204,13 @@ def build(root=ROOT,output=None):
     index='0.0'
     for i,p in reversed(list(enumerate(pets,1))):index=f"({getter} == {p['wire_id']} ? {i}.0 : {index})"
     select=f'({index} > 0.0)'
-    tp=f'({select} && !variable.is_first_person && !variable.map_face_icon && !query.is_spectator)'
-    fp=f'({select} && variable.is_first_person && !variable.map_face_icon && !query.is_spectator)'
+    # The inventory paperdoll renders the same player entity as part of the UI (query.is_in_ui); the engine leaves
+    # variable.is_first_person as the camera has it, which is why vanilla's own cape rule reads
+    # "(!variable.is_first_person || variable.is_paperdoll)". A pet is a third-person body, so the UI counts as
+    # third person for it and never shows the first-person paws.
+    ui='query.is_in_ui'
+    tp=f'({select} && (!variable.is_first_person || {ui}) && !variable.map_face_icon && !query.is_spectator)'
+    fp=f'({select} && variable.is_first_person && !{ui} && !variable.map_face_icon && !query.is_spectator)'
     paws=f"({fp} && (query.has_property('pet:view') ? query.property('pet:view') == 'paws' : 1.0))"
     native=read(root/'upstream/player.entity.json');d=native['minecraft:client_entity']['description'];s=d['scripts']
     s.setdefault('initialize',[]).extend(['variable.pet_active = 0.0;','variable.pet_model_id = 0.0;','variable.pet_armor_fit = 0.0;','variable.melee_spear_equipped = 0.0;'])
@@ -235,7 +240,9 @@ def build(root=ROOT,output=None):
         d['animations'][f'pet_{ident}_locomotion']=f'controller.animation.pet.{ident}.locomotion'
         cond=f"variable.pet_tp && variable.pet_model_id == {p['wire_id']}"
         moving=f"{cond} && ((query.has_property('pet:motion') ? query.property('pet:motion') : 1.0) || query.is_riding)"
-        for name,condition in [('grip',cond),('shield_pose',cond),('locomotion',moving),('secondary',moving+' && !query.is_sleeping'),('look',moving+' && !query.is_sleeping'),('attack',cond+' && variable.attack_time > 0.0'),('eat',cond+' && query.is_eating')]:
+        # The paperdoll gets the standing pose: its ground, water and riding queries are not the world's, and vanilla's
+        # own paperdoll state plays no locomotion either. The tail and the look still move there.
+        for name,condition in [('grip',cond),('shield_pose',cond),('locomotion',f'{moving} && !{ui}'),('secondary',moving+' && !query.is_sleeping'),('look',moving+' && !query.is_sleeping'),('attack',cond+' && variable.attack_time > 0.0'),('eat',cond+' && query.is_eating')]:
             s['animate'].append({f'pet_{ident}_{name}':condition})
         label={'carter':'D52','mochi':'M52','casper':'C52'}.get(ident,'D52')
         badge(rp/f'textures/entity/pets/markers/{ident}_052.png',label,(24,120,85) if ident=='carter' else (82,88,125),version_str)
@@ -249,7 +256,7 @@ def build(root=ROOT,output=None):
     d['animations']['pet_seat_align']='animation.pet.seat_align'
     write(rp/'animations/pet_seating.animation.json',{'format_version':'1.8.0','animations':{'animation.pet.seat_align':seating.alignment_clip(pets)}})
     write(rp/'animations/pet_armor_fit.animation.json',{'format_version':'1.8.0','animations':{'animation.pet.armor_fit':armor_fit_clip()}})
-    s['animate'].append({'pet_seat_align':'variable.pet_tp && query.is_riding'})
+    s['animate'].append({'pet_seat_align':f'variable.pet_tp && query.is_riding && !{ui}'})
     s['animate'] += [{'pet_paw_flex':'variable.pet_fp_paws && variable.attack_time > 0.0'},{'pet_fp_lift':f'{fp} && ({EMPTY})'}]
     # Primary player rendering, retaining original Human visibility rules.
     oldrc=read(base/'resource_pack/render_controllers/player.render_controllers.json')['render_controllers'];rc={}

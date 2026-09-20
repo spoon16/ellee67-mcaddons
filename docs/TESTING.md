@@ -37,7 +37,7 @@ player override byte-identical in Pets and Rbow Ore, the standalone Rbow attacha
 Ore resource pack, every manifest on the `package.json` version, and a deterministic `.mcaddon`
 whose top-level folders are exactly the ten `archiveDir` names.
 
-The Pets compiler's own 244 Python tests run as part of `npm run codegen`.
+The Pets compiler's own 264 Python tests run as part of `npm run codegen`.
 
 ### In the engine: `npm run test:engine`
 

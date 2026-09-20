@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Pets: the inventory paperdoll renders the active pet. The pet body pass counted first person as
+  "no pet"; the paperdoll is rendered as part of the UI with the camera's first-person flag still
+  set, so a first-person player saw their skin there. The UI now counts as third person for the pet,
+  the paws never draw there, and the paperdoll plays no locomotion or seat lift.
 - Pets: the seated pose keeps the head clear of the body. The head bone is moved forward and up in
   the ride clip until the muzzle leads the chest as it does standing and the chest reaches no
   deeper into the skull; before, the chest pitched up in front of and into Carter's counter-rotated

@@ -53,7 +53,7 @@ marks them and the manifests `linguist-generated` so GitHub folds them in diffs.
    JavaScript in its `src/` with TypeScript's `transpileModule`, rewriting `./x.ts` imports to
    `./x.js`; the compiler packages and unit-tests that JavaScript, so a few of its tests grep the
    emitted text (see the constraints listed in `tools/codegen/run.ts`). It then runs
-   `tools/build.py` in place and the compiler's own 244 Python tests. The compiler verifies its baseline and Rbow input hashes itself and produces
+   `tools/build.py` in place and the compiler's own Python tests. The compiler verifies its baseline and Rbow input hashes itself and produces
    four packs: `behavior_pack`, `resource_pack`, `rbow_behavior_pack`, `rbow_resource_pack`.
 3. **Sync.** `tools/codegen/sync.ts` writes each compiler pack into its own repo pack:
 

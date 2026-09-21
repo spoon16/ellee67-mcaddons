@@ -274,6 +274,31 @@ describe("validateBuild rejects", () => {
     ]);
   });
 
+  it("a replaced vanilla render controller file that drops one of its controllers", () => {
+    // The file replaces vanilla's outright, so a controller it stops defining stops existing for every player.
+    const file = "render_controllers/overrides/player.render_controllers.json";
+    const errors = doctored("pets-resources", (root) => {
+      const document = readJson(root, file);
+      delete document.render_controllers["controller.render.player.map"];
+      delete document.render_controllers["controller.render.player.third_person_spectator"];
+      write(root, file, document);
+    });
+    expect(errors).toEqual([
+      `pets-resources/${file}: replaces the vanilla file but no longer defines controller.render.player.third_person_spectator`,
+      `pets-resources/${file}: replaces the vanilla file but no longer defines controller.render.player.map`,
+    ]);
+    const persona = "render_controllers/overrides/persona.render_controllers.json";
+    expect(
+      doctored("pets-resources", (root) => {
+        const document = readJson(root, persona);
+        delete document.render_controllers["controller.render.player.map.persona"];
+        write(root, persona, document);
+      }),
+    ).toEqual([
+      `pets-resources/${persona}: replaces the vanilla file but no longer defines controller.render.player.map.persona`,
+    ]);
+  });
+
   it("the same identifier defined by two packs unless the pair is documented as shared", () => {
     const errors = doctored("creeper-mod", (root) => {
       write(root, "entities/target.json", {

@@ -174,6 +174,12 @@ dimension, respawning or choosing by command is discarded. A busy client is retr
 
 ## Player override and property budget
 
+The resource pack replaces vanilla's `player.render_controllers.json` and
+`persona.render_controllers.json` as well, which means it owns every controller they define, not only
+the ones it changes: the first and third person spectator passes, the map face icon pass and the
+persona map pass are copied through from the pinned vanilla files unchanged. Up to 0.4.0 they were
+missing while the shipped client entity still asked for three of them.
+
 `behavior_packs/elleedog67_pets/entities/overrides/player.json` replaces `minecraft:player`. It
 declares 20 entity properties, all `client_sync: true` except the last:
 

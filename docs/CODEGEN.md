@@ -23,6 +23,12 @@ Python 3.12, Pillow and numpy from `tools/codegen/pets/uv.lock` on first use).
 | `behavior_packs/elleedog67_pets/` and `resource_packs/elleedog67_pets/` (everything except the manifest and icon), plus `src/features/pets/*.generated.js` | `tools/codegen/pets/tools/build.py` (the Pets compiler) and the sync | `tools/codegen/pets/catalog/`, `assets/`, `project.json`, `baseline/`, `upstream/`, and the hand-written scripts in `src/features/pets/` |
 | `behavior_packs/elleedog67_rbow_ore/` and `resource_packs/elleedog67_rbow_ore/` (everything except the manifest and icon) | the Pets compiler, which copies and adapts the hash-locked Rbow 1.2.0 packs under `tools/codegen/pets/integration/rbow_1.2.0/`; the sync adds the standalone player armor and spear attachables from that tree directly | `tools/codegen/pets/integration/rbow_1.2.0/tools/build_data.py` and its tables (see "Regenerating Rbow") |
 
+`tools/codegen/pets/upstream/` holds the pinned vanilla files the compiler builds from, each with a
+provenance file naming the commit and hashes. Two of them, `player.render_controllers.json` and
+`persona.render_controllers.json`, are complete copies rather than extracts: the pack ships files with
+those names, which replaces vanilla's outright, so every controller they define has to be carried
+through or it stops existing for the player. `npm run build` fails when one goes missing.
+
 Hand-written and never touched by the sync: the Stair Sitting, Creeper Mod and Redstone Guide packs, the Ender Mod marker entity
 `behavior_packs/elleedog67_ender_mod/entities/ender_mod_marker.json`, the two Redstone Guide packs,
 and every `pack_icon.png`.

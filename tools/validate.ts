@@ -5,7 +5,7 @@ import path from "node:path";
 import { listFiles, pngSize } from "./lib/files.ts";
 import { JsonFileError, readStrictJson } from "./lib/json.ts";
 import { distDir, loadPacks, type PackSpec, scriptEntry } from "./lib/packs.ts";
-import { isMain } from "./lib/paths.ts";
+import { isMain, REPO_ROOT } from "./lib/paths.ts";
 import { expectedManifest } from "./manifests.ts";
 
 export interface ValidationReport {
@@ -45,6 +45,31 @@ const SHARED_IDENTIFIERS: Record<string, string[]> = {
 };
 
 type Json = Record<string, any>;
+
+interface PinnedVanillaFile {
+  controllers: string[];
+}
+/**
+ * The vanilla render controller files the add-on replaces, pinned beside the Pets compiler that builds from them
+ * (`tools/codegen/pets/upstream/render_controllers.PROVENANCE.json`). Keyed by the path the pack ships them at,
+ * which is the vanilla path with the `overrides/` folder the build requires for a vanilla replacement.
+ */
+function pinnedVanillaFiles(): Map<string, PinnedVanillaFile> {
+  const provenance = readStrictJson(
+    path.join(REPO_ROOT, "tools", "codegen", "pets", "upstream", "render_controllers.PROVENANCE.json"),
+  ) as Json;
+  return new Map(
+    Object.entries(provenance.files as Record<string, PinnedVanillaFile>).map(([name, entry]) => [
+      `render_controllers/overrides/${name}`,
+      entry,
+    ]),
+  );
+}
+const PINNED_VANILLA = pinnedVanillaFiles();
+/** The pinned vanilla file a built pack file replaces, or undefined when it replaces none. */
+function replacedVanillaFile(file: string): PinnedVanillaFile | undefined {
+  return PINNED_VANILLA.get(file.slice(file.indexOf("/") + 1));
+}
 
 function isVanillaIdentifier(id: string): boolean {
   return (
@@ -197,6 +222,19 @@ export function validateBuild(options: ValidateOptions = {}): ValidationReport {
       errors.push(`${file}: lives under overrides/ but replaces no vanilla identifier`);
     }
   }
+  // A file in a pack replaces the vanilla file of the same path outright, so every identifier the vanilla file
+  // defined and the pack does not simply stops existing. The pinned copies the Pets compiler builds from say what
+  // vanilla defines; 0.4.0 shipped a player.render_controllers.json without the spectator and map passes its own
+  // client entity still asked for, and nothing here noticed.
+  for (const [file, document] of documents) {
+    const vanilla = replacedVanillaFile(file);
+    if (!vanilla) continue;
+    const defined = new Set(Object.keys(document.render_controllers ?? {}));
+    for (const id of vanilla.controllers) {
+      if (!defined.has(id)) errors.push(`${file}: replaces the vanilla file but no longer defines ${id}`);
+    }
+  }
+
   for (const [key, packIds] of Object.entries(SHARED_IDENTIFIERS)) {
     const owner = seen.get(key);
     if (!owner) errors.push(`shared identifier ${key} is not defined by any pack`);

@@ -154,8 +154,11 @@ exactly the modules the manifest lists, that a behavior pack depends only on its
 resource pack, that identifiers are unique across the union of all packs except the documented
 duplicates (the player override in Pets and Rbow Ore, asserted byte-identical; the five Rbow armor
 and spear attachables that Pets Resources overrides), that vanilla identifiers sit only under
-`overrides/` in packs flagged `overrides`, that texture references resolve against the union of all
-resource packs, that lang keys are unique per file, and that every pack icon is 256x256.
+`overrides/` in packs flagged `overrides`, that a file replacing a vanilla render controller file still
+defines every controller that file defined (the pinned list is
+`tools/codegen/pets/upstream/render_controllers.PROVENANCE.json`), that texture references resolve
+against the union of all resource packs, that lang keys are unique per file, and that every pack icon
+is 256x256.
 
 `npm run package` zips `dist/` into `dist/ElleeDog67_<version>.mcaddon` holding all ten pack
 folders, plus `SHA256SUMS.txt`, with fixed timestamps so the same commit always produces the same

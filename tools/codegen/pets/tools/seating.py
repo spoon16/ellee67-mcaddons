@@ -67,7 +67,25 @@ def head_clearance(g,pose,r):
     forward=min(max(0.,rest['lead']-seated['lead']),max(0.,seated['attach']));up=max(0.,seated['sunk']-rest['sunk'])
     return (r.T@np.array([0.,up,-forward])).tolist()
 
-def ride_clip(root,pet):
+def neck_tuck(g):
+    """The body-frame offset that parks the seated neck inside the torso, or None for a rig without a neck bone.
+
+    The neck keeps the body's pitch (it has no channel of its own and no rest rotation), so once the head is
+    counter-rotated upright and moved clear by `head_clearance`, the neck's own cube stands out behind the skull as
+    a pitched wedge: 44% of its surface is exposed on Carter, 57% on the cats. Sliding it to the centre of the body
+    cube hides it inside the torso whatever the head does, because both boxes carry the same rotation. The head is a
+    child of the neck, and the neck has no rotation channel, so its frame is the body's and the same offset taken
+    off `pet_head` leaves the head's world matrix untouched.
+    """
+    by={b['name']:b for b in g['bones']}
+    if 'pet_neck' not in by:return None
+    centre=lambda n:np.array(by[n]['cubes'][0]['origin'],float)+np.array(by[n]['cubes'][0]['size'],float)/2
+    offset=centre('pet_body')-centre('pet_neck')
+    offset[0]=0.
+    return offset
+
+def seated_pose(root,pet):
+    """The rig-space seated pose before the neck is tucked away: what the legs, tail and head clearance solve for."""
     g=read(root/pet['model'])['minecraft:geometry'][0]
     by={b['name']:b for b in g['bones']}
     iscat=pet.get('pet_kind')=='cat' or pet.get('rig','').startswith('feline')
@@ -106,6 +124,15 @@ def ride_clip(root,pet):
         pose['pet_tail_base']['position']=(r.T@np.array([0.,.2-points[:,1].min(),0.])).tolist()
     # The head, jaw, ears and mouth mount move together: the offset is on the head bone.
     pose['pet_head']['position']=head_clearance(g,pose,r)
+    return g,pose
+
+def ride_clip(root,pet):
+    g,pose=seated_pose(root,pet)
+    # Hide the neck inside the torso and take the same offset off the head, which is its child: the head does not move.
+    offset=neck_tuck(g)
+    if offset is not None:
+        pose['pet_neck']={'position':offset.tolist()}
+        pose['pet_head']['position']=(np.array(pose['pet_head']['position'],float)-offset).tolist()
     pose=bedrock_pose(pose)
     # Stable precision makes the output deterministic across builds.
     for ch in pose.values():

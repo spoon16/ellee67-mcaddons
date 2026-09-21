@@ -99,31 +99,53 @@ class ForwardOffset(unittest.TestCase):
 
 class SeatedHead(unittest.TestCase):
  def setUp(self):
-  from seating import ride_clip,rig_pose,head_fit
+  from seating import ride_clip,seated_pose,rig_pose,head_fit
   self.head_fit=head_fit;self.poses={p['id']:rig_pose(ride_clip(ROOT,p)['bones']) for p in PETS}
+  # The head-to-chest solve happens before the neck is tucked away; the tuck moves the neck only.
+  self.solved={p['id']:seated_pose(ROOT,p)[1] for p in PETS}
  def geometry(self,p):return read(ROOT/p['model'])['minecraft:geometry'][0]
  def test_seated_muzzle_leads_the_chest_as_it_does_standing(self):
   # Before the clearance the pitched chest reached 2.3 pixels ahead of Carter's muzzle and 0.9 deeper into his skull.
   for p in PETS:
-   g=self.geometry(p);rest=self.head_fit(g,{});seated=self.head_fit(g,self.poses[p['id']])
+   g=self.geometry(p);rest=self.head_fit(g,{});seated=self.head_fit(g,self.solved[p['id']])
    self.assertGreater(rest['lead'],2);self.assertGreater(seated['lead'],2,p['id'])
    self.assertLessEqual(seated['sunk'],rest['sunk']+1e-6,p['id'])
    # Carter's neck is long enough for the full standing lead; the cats stop where the neck would leave the skull.
    if p['id']=='carter':self.assertAlmostEqual(seated['lead'],rest['lead'],places=6)
    else:self.assertAlmostEqual(seated['attach'],0,places=6)
- def test_seated_neck_still_reaches_into_the_skull(self):
+ def test_seated_neck_is_hidden_inside_the_torso_whatever_the_head_does(self):
+  # The neck keeps the body's pitch, so once the head is counter-rotated upright it used to stand out behind the
+  # skull as a wedge (44% of its surface on Carter, 57% on the cats). Parked in the body cube it cannot show.
   from seating import transformed_vertices
+  from rig_math import matrices
   for p in PETS:
-   g=self.geometry(p);pose=self.poses[p['id']]
-   head=transformed_vertices(g,pose,['pet_head']);neck=transformed_vertices(g,pose,['pet_neck'])
-   self.assertGreaterEqual(head[:,2].max(),neck[:,2].min()-1e-6,p['id'])
-   self.assertGreater(neck[:,1].max(),head[:,1].min(),p['id'])
+   g=self.geometry(p);cube=next(b for b in g['bones'] if b['name']=='pet_body')['cubes'][0]
+   lo=np.array(cube['origin'],float);hi=lo+np.array(cube['size'],float)
+   # The head look clip runs while riding, so check the extremes it can reach as well as the seated rest.
+   for look in [(0,0),(26,0),(-26,0),(0,38.5),(0,-38.5),(26,38.5),(-26,-38.5)]:
+    pose={k:{a:np.array(b,dtype=float) for a,b in v.items()} for k,v in self.poses[p['id']].items()}
+    pose['pet_head']['rotation']=pose['pet_head']['rotation']+np.array([look[0],look[1],0.])
+    body=matrices(g['bones'],pose)['pet_body']
+    neck=transformed_vertices(g,{k:{a:list(b) for a,b in v.items()} for k,v in pose.items()},['pet_neck'])
+    local=(np.linalg.inv(body)@np.hstack([neck,np.ones((len(neck),1))]).T).T[:,:3]
+    self.assertGreaterEqual((np.minimum(local-lo,hi-local)).min(),0,(p['id'],look))
+ def test_neck_tuck_never_moves_the_head_or_any_other_bone(self):
+  from seating import seated_pose,rig_pose,ride_clip
+  from rig_math import matrices
+  for p in PETS:
+   g=self.geometry(p);before=seated_pose(ROOT,p)[1];after=rig_pose(ride_clip(ROOT,p)['bones'])
+   a=matrices(g['bones'],{k:{x:np.array(y,dtype=float) for x,y in v.items()} for k,v in before.items()})
+   b=matrices(g['bones'],{k:{x:np.array(y,dtype=float) for x,y in v.items()} for k,v in after.items()})
+   for bone in a:
+    if bone!='pet_neck':np.testing.assert_allclose(a[bone],b[bone],atol=1e-7,err_msg=f"{p['id']}/{bone}")
  def test_head_offset_is_baked_on_the_head_bone_only(self):
   for p in PETS:
    clip=read(RP/f'animations/pets/{p["id"]}.animation.json')['animations'][f'animation.pet.{p["id"]}.ride']['bones']
    self.assertIn('position',clip['pet_head']);self.assertNotIn('position',clip.get('pet_jaw',{}))
-   for name in ['pet_ear_left','pet_ear_right','pet_neck']:self.assertNotIn(name,clip)
+   for name in ['pet_ear_left','pet_ear_right']:self.assertNotIn(name,clip)
    x,y,z=clip['pet_head']['position'];self.assertEqual(x,0);self.assertLess(z,0)
+   # The neck carries a pure translation in the body's frame: no rotation, no scale, nothing off the centre line.
+   self.assertEqual(list(clip['pet_neck']),['position']);self.assertEqual(clip['pet_neck']['position'][0],0)
  def test_head_stays_upright_over_the_front_paws(self):
   from seating import transformed_vertices
   from rig_math import matrices

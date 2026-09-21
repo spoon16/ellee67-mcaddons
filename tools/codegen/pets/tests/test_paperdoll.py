@@ -1,7 +1,7 @@
 """The paperdoll and the skin path: Molang truth tables over the emitted player entity, not a client run."""
 from pathlib import Path
 from itertools import product
-import sys,unittest
+import json,sys,unittest
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tools'))
 from catalog import read,load_catalog
 from molang_subset import Expression
@@ -101,3 +101,32 @@ class SkinCompatibility(unittest.TestCase):
   fp=RC['controller.render.player.first_person']
   self.assertEqual(fp['arrays']['geometries']['Array.pet_models'][0],'Geometry.default')
   self.assertEqual(fp['arrays']['textures']['Array.pet_coats'][0],'Texture.default')
+
+class ReplacedVanillaFiles(unittest.TestCase):
+ """A render controller file in a pack replaces the vanilla file of that name, so anything vanilla defined there and
+ the pack does not is gone for every player. 0.4.0 shipped four such holes, three of them still referenced."""
+ PINNED='player.render_controllers.json','persona.render_controllers.json'
+ def emitted(self,filename):return read(RP/'render_controllers'/filename)['render_controllers']
+ def test_every_controller_the_replaced_vanilla_files_define_is_still_defined(self):
+  for filename in self.PINNED:
+   vanilla=read(ROOT/'upstream'/filename)['render_controllers'];ours=self.emitted(filename)
+   self.assertLessEqual(set(vanilla),set(ours),filename)
+ def test_the_pinned_copies_are_the_files_the_provenance_names(self):
+  import hashlib
+  p=read(ROOT/'upstream/render_controllers.PROVENANCE.json')
+  for filename,entry in p['files'].items():
+   raw=(ROOT/'upstream'/filename).read_bytes()
+   self.assertEqual(hashlib.sha256(raw).hexdigest(),entry['sha256_normalised'],filename)
+   self.assertEqual(sorted(read(ROOT/'upstream'/filename)['render_controllers']),sorted(entry['controllers']),filename)
+ def test_the_controllers_only_vanilla_supplies_are_copied_untouched(self):
+  for filename in self.PINNED:
+   vanilla=read(ROOT/'upstream'/filename)['render_controllers'];ours=self.emitted(filename)
+   for name,entry in vanilla.items():
+    # The pack rewrites the passes it gates (player first/third person, the persona bodies); the rest must be vanilla.
+    if json.dumps(ours[name])!=json.dumps(entry):
+     self.assertIn('pet',json.dumps(ours[name]),f'{filename}/{name} differs from vanilla for no pet reason')
+ def test_the_client_entity_asks_for_nothing_that_is_not_defined(self):
+  defined=set()
+  for f in (RP/'render_controllers').glob('*.json'):defined|=set(read(f)['render_controllers'])
+  for row in D['render_controllers']:
+   for name in ([row] if isinstance(row,str) else row):self.assertIn(name,defined)

@@ -110,6 +110,11 @@ def badge(path,label,color,version_text='0.5.2'):
     scale=3 if len(label)>2 else 4;left=(64-(4*len(label)-1)*scale)//2
     pixels(d,label,left,7,scale,(255,255,245));d.line([5,35,58,35],fill=(235,242,237),width=1);pixels(d,version_text,10,43,2,(255,255,245));path.parent.mkdir(parents=True,exist_ok=True);im.save(path)
 
+def inherit_vanilla(root,filename,built):
+    """Every controller the replaced vanilla file defines, with the pack's own version winning where it has one."""
+    vanilla=read(root/'upstream'/filename)['render_controllers']
+    return {name:built.get(name,deepcopy(entry)) for name,entry in vanilla.items()} | built
+
 def zip_dir(root,output):
     output.parent.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
@@ -293,6 +298,10 @@ def build(root=ROOT,output=None):
             'part_visibility':[{'*':True},{'pet_debug_mouth':DEBUG}]}
         # Native renderer remains in its original place and is not gated out.
         d['render_controllers'].append({name:f'variable.pet_tp && variable.pet_model_id == {p["wire_id"]}'})
+    # Both render controller files replace a vanilla file by name, so a controller vanilla defines and this pack
+    # does not stops existing for the player. The client entity still asks for the spectator and map passes, and the
+    # engine's persona path needs map.persona; carry through whatever the pet passes above did not already replace.
+    rc=inherit_vanilla(root,'player.render_controllers.json',rc)
     write(rp/'render_controllers/player.render_controllers.json',{'format_version':'1.8.0','render_controllers':rc})
     persona={}
     for file,gate in [('persona.third_person.extracted.json',tp),('persona.first_person.extracted.json',paws)]:
@@ -300,6 +309,7 @@ def build(root=ROOT,output=None):
             for rule in entry['part_visibility']:
                 for k,val in rule.items():rule[k]=f'({"1.0" if val is True else "0.0" if val is False else val}) && !{gate}'
             persona[name]=entry
+    persona=inherit_vanilla(root,'persona.render_controllers.json',persona)
     write(rp/'render_controllers/persona.render_controllers.json',{'format_version':'1.8.0','render_controllers':persona})
     # The cape is hidden exactly where the pet body replaces the human, so it comes back with the player in the
     # paperdoll instead of leaving a capeless character there.

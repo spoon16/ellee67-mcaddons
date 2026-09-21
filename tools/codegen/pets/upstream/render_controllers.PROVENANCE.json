@@ -1,0 +1,36 @@
+{
+  "why": "The pack replaces both files by name, so every controller vanilla defines in them has to be carried through or it stops existing for the player: the shipped client entity still references first_person_spectator, third_person_spectator and map, and the engine's persona path needs map.persona.",
+  "commit": "736072450c26a7c67f07b1661f29d9a5ebaa14b1",
+  "retrieved": "2026-09-21",
+  "retrieved_using": "raw.githubusercontent.com at the commit the rest of upstream/ is pinned to",
+  "files": {
+    "player.render_controllers.json": {
+      "source_url": "https://raw.githubusercontent.com/Mojang/bedrock-samples/736072450c26a7c67f07b1661f29d9a5ebaa14b1/resource_pack/render_controllers/player.render_controllers.json",
+      "sha256_upstream": "c99928e5f4ba37a4973bbe84d44c6bee9ca1911c841896f323817f39935ef132",
+      "sha256_normalised": "1e7bfea8813fe36c7eeca032c4ef11f751e19431ffc0475f5ae1a1aa064ceec4",
+      "controllers": [
+        "controller.render.player.first_person",
+        "controller.render.player.third_person",
+        "controller.render.player.first_person_spectator",
+        "controller.render.player.third_person_spectator",
+        "controller.render.player.map"
+      ]
+    },
+    "persona.render_controllers.json": {
+      "source_url": "https://raw.githubusercontent.com/Mojang/bedrock-samples/736072450c26a7c67f07b1661f29d9a5ebaa14b1/resource_pack/render_controllers/persona.render_controllers.json",
+      "sha256_upstream": "6200ca2ad8548ff9543d0dafde6c54d4bc57a638e4e45fe43c878cba6c93fa26",
+      "sha256_normalised": "d597878a6d0d9ee3d7491e46132339d3bbd9745d9ada953cab7bc2e3362ff77d",
+      "controllers": [
+        "controller.render.persona_animated_face.first_person",
+        "controller.render.persona_animated_32x32.first_person",
+        "controller.render.persona_animated_128x128.first_person",
+        "controller.render.persona_animated_face.third_person",
+        "controller.render.persona_animated_32x32.third_person",
+        "controller.render.persona_animated_128x128.third_person",
+        "controller.render.player.map.persona",
+        "controller.render.persona_lod.third_person"
+      ]
+    }
+  },
+  "extraction": "Complete files, comments stripped and re-serialised with two-space indent; no other change. persona.first_person.extracted.json and persona.third_person.extracted.json remain the gated inputs, and these supply whatever they leave out."
+}

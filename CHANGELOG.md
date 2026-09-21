@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Pets: the four vanilla render controllers the resource pack was quietly dropping are back. Replacing
+  `player.render_controllers.json` and `persona.render_controllers.json` by name replaces them whole, so the
+  spectator passes, the map face icon pass and the persona map pass had stopped existing for every player while the
+  shipped client entity still referenced three of them. The compiler carries the pinned vanilla files through, the
+  build fails when one goes missing, and the compiler's own test no longer assumes a controller it does not define
+  comes from the engine.
+
 - Pets: the inventory and pause-menu paperdoll shows your character again instead of nothing. The extra render
   controller passes the pack appends do not draw in the paperdoll, so 0.4.0's attempt to put the pet there only
   removed the human as well. Every rule that hides the human for a pet now lets go when `variable.is_paperdoll` is

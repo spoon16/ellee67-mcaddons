@@ -145,7 +145,9 @@ class AssetTests(unittest.TestCase):
    d=read(f)['minecraft:client_entity']['description']
    for r in d.get('render_controllers',[]):
     for name in ([r] if isinstance(r,str) else r):
-     if name not in RENDERS:continue # Native renderer, supplied by the engine.
+     # The pack replaces the vanilla render controller files by name, so a controller it references and does not
+     # define does not exist any more; it cannot be assumed to come from the engine.
+     self.assertIn(name,RENDERS,(f.name,name))
      text=json.dumps(RENDERS[name])
      for kind,alias in re.findall(r'\b(Geometry|Texture|Material)\.([A-Za-z0-9_]+)',text):
       self.assertIn(alias,d[{'Geometry':'geometry','Texture':'textures','Material':'materials'}[kind]],(f.name,name,kind,alias))

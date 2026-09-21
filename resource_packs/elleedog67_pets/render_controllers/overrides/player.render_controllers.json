@@ -1,55 +1,6 @@
 {
   "format_version": "1.8.0",
   "render_controllers": {
-    "controller.render.player.third_person": {
-      "geometry": "Geometry.default",
-      "materials": [
-        {
-          "*": "Material.default"
-        }
-      ],
-      "textures": [
-        "Texture.default"
-      ],
-      "part_visibility": [
-        {
-          "*": "(1.0) && !variable.pet_tp"
-        },
-        {
-          "helmet": "(variable.helmet_layer_visible) && !variable.pet_tp"
-        },
-        {
-          "leftLegging": "(variable.leg_layer_visible) && !variable.pet_tp"
-        },
-        {
-          "rightLegging": "(variable.leg_layer_visible) && !variable.pet_tp"
-        },
-        {
-          "leftBoot": "(variable.boot_layer_visible) && !variable.pet_tp"
-        },
-        {
-          "rightBoot": "(variable.boot_layer_visible) && !variable.pet_tp"
-        },
-        {
-          "leftSock": "(variable.boot_layer_visible && variable.leg_layer_visible) && !variable.pet_tp"
-        },
-        {
-          "rightSock": "(variable.boot_layer_visible && variable.leg_layer_visible) && !variable.pet_tp"
-        },
-        {
-          "bodyArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp"
-        },
-        {
-          "leftArmArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp"
-        },
-        {
-          "rightArmArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp"
-        },
-        {
-          "belt": "(variable.chest_layer_visible && variable.leg_layer_visible) && !variable.pet_tp"
-        }
-      ]
-    },
     "controller.render.player.first_person": {
       "geometry": "Array.pet_models[variable.pet_fp_paws ? variable.pet_index : 0.0]",
       "materials": [
@@ -102,6 +53,127 @@
         }
       },
       "rebuild_animation_matrices": true
+    },
+    "controller.render.player.third_person": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ],
+      "part_visibility": [
+        {
+          "*": "(1.0) && !variable.pet_tp"
+        },
+        {
+          "helmet": "(variable.helmet_layer_visible) && !variable.pet_tp"
+        },
+        {
+          "leftLegging": "(variable.leg_layer_visible) && !variable.pet_tp"
+        },
+        {
+          "rightLegging": "(variable.leg_layer_visible) && !variable.pet_tp"
+        },
+        {
+          "leftBoot": "(variable.boot_layer_visible) && !variable.pet_tp"
+        },
+        {
+          "rightBoot": "(variable.boot_layer_visible) && !variable.pet_tp"
+        },
+        {
+          "leftSock": "(variable.boot_layer_visible && variable.leg_layer_visible) && !variable.pet_tp"
+        },
+        {
+          "rightSock": "(variable.boot_layer_visible && variable.leg_layer_visible) && !variable.pet_tp"
+        },
+        {
+          "bodyArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp"
+        },
+        {
+          "leftArmArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp"
+        },
+        {
+          "rightArmArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp"
+        },
+        {
+          "belt": "(variable.chest_layer_visible && variable.leg_layer_visible) && !variable.pet_tp"
+        }
+      ]
+    },
+    "controller.render.player.first_person_spectator": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ],
+      "part_visibility": [
+        {
+          "*": false
+        }
+      ]
+    },
+    "controller.render.player.third_person_spectator": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.spectator"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ],
+      "part_visibility": [
+        {
+          "*": false
+        },
+        {
+          "head": true
+        },
+        {
+          "hat": true
+        },
+        {
+          "helmet": "variable.helmet_layer_visible"
+        }
+      ],
+      "color": {
+        "r": "1.0f",
+        "g": "1.0f",
+        "b": "1.0f",
+        "a": "0.3f"
+      }
+    },
+    "controller.render.player.map": {
+      "geometry": "Geometry.default",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ],
+      "part_visibility": [
+        {
+          "*": false
+        },
+        {
+          "head": true
+        },
+        {
+          "hat": true
+        },
+        {
+          "helmet": true
+        }
+      ]
     },
     "controller.render.pet.carter.body": {
       "geometry": "Geometry.pet_carter",

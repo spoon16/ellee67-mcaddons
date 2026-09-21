@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Pets: the inventory and pause-menu paperdoll shows your character again instead of nothing. The extra render
+  controller passes the pack appends do not draw in the paperdoll, so 0.4.0's attempt to put the pet there only
+  removed the human as well. Every rule that hides the human for a pet now lets go when `variable.is_paperdoll` is
+  set, the flag vanilla's own cape controller reads, and the cape comes back with it.
+
 - Pets: custom skins, capes and Character Creator looks work again while the packs are active. A resource pack that
   ships `entity/player.entity.json` reverts every player to Steve and drops capes and persona pieces unless that
   client entity declares a `min_engine_version` of at most 1.13.0 (MCPE-74493, resolved as working as intended); the

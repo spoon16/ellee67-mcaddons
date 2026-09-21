@@ -1,4 +1,4 @@
-"""The inventory paperdoll renders the pet: Molang truth tables over the emitted player entity, not a client run."""
+"""The paperdoll and the skin path: Molang truth tables over the emitted player entity, not a client run."""
 from pathlib import Path
 from itertools import product
 import sys,unittest
@@ -13,48 +13,66 @@ def assignment(name):
  line=next(s for s in D['scripts']['pre_animation'] if s.startswith(name+' '))
  return Expression(line.split('=',1)[1].rstrip('; '))
 TP=assignment('variable.pet_tp');PAWS=assignment('variable.pet_fp_paws')
-def env(model,first_person,in_ui):
- return {'variable.is_first_person':first_person,'query.is_in_ui':in_ui,'query.is_spectator':0,'variable.map_face_icon':0},{'pet:model_id':model,'pet:view':'paws'}
+def env(model,first_person,paperdoll):
+ return ({'variable.is_first_person':first_person,'variable.is_paperdoll':paperdoll,'query.is_in_ui':paperdoll,
+          'query.is_spectator':0,'variable.map_face_icon':0},{'pet:model_id':model,'pet:view':'paws'})
 def animate(alias):
  return Expression(next(x[alias] for x in D['scripts']['animate'] if isinstance(x,dict) and alias in x))
 
 class Paperdoll(unittest.TestCase):
- def test_pet_body_counts_the_ui_as_third_person_whatever_the_camera(self):
+ """0.4.0 made variable.pet_tp true in the UI so the pet would draw in the paperdoll; it did not, and the paperdoll
+ went empty, because the native body is hidden wherever the pet replaces it. The paperdoll now keeps the player."""
+ def test_the_paperdoll_is_not_pet_territory_whichever_camera_is_active(self):
   for p in PETS:
    for first_person in [0,1]:
-    self.assertTrue(TP(*env(p['wire_id'],first_person,1)),(p['id'],first_person))
+    self.assertFalse(TP(*env(p['wire_id'],first_person,1)),(p['id'],first_person))
     self.assertFalse(PAWS(*env(p['wire_id'],first_person,1)),(p['id'],first_person))
-   # Outside the UI nothing changed: third person shows the body, first person the paws.
+   # Outside the paperdoll nothing changed: third person shows the pet body, first person the paws.
    self.assertTrue(TP(*env(p['wire_id'],0,0)));self.assertFalse(TP(*env(p['wire_id'],1,0)))
    self.assertTrue(PAWS(*env(p['wire_id'],1,0)));self.assertFalse(PAWS(*env(p['wire_id'],0,0)))
- def test_player_form_never_draws_a_pet_in_the_ui(self):
-  for first_person,in_ui in product([0,1],[0,1]):
-   self.assertFalse(TP(*env(0,first_person,in_ui)));self.assertFalse(PAWS(*env(0,first_person,in_ui)))
- def test_pet_body_pass_is_selected_and_the_native_body_hidden_in_the_ui(self):
+ def test_the_player_body_draws_in_the_paperdoll_and_no_pet_pass_does(self):
   conditions={next(iter(row)):Expression(next(iter(row.values()))) for row in D['render_controllers']}
-  native=RC['controller.render.player.third_person']['part_visibility'][0]['*']
+  native=Expression(RC['controller.render.player.third_person']['part_visibility'][0]['*'])
   for p in PETS:
    for first_person in [0,1]:
     e,props=env(p['wire_id'],first_person,1);e['variable.pet_tp']=TP(e,props);e['variable.pet_model_id']=p['wire_id']
-    self.assertTrue(conditions[f'controller.render.pet.{p["id"]}.body'](e,props),(p['id'],first_person))
-    self.assertFalse(Expression(native)(e,props),(p['id'],first_person))
-    for other in PETS:
-     if other is not p:self.assertFalse(conditions[f'controller.render.pet.{other["id"]}.body'](e,props))
+    self.assertTrue(native(e,props),(p['id'],first_person))
+    for other in PETS:self.assertFalse(conditions[f'controller.render.pet.{other["id"]}.body'](e,props),other['id'])
+ def test_every_rule_that_hides_the_human_lets_go_in_the_paperdoll(self):
+  # Three files hide the player while a pet is active: the native body, the persona passes and the cape. A paperdoll
+  # that misses any one of them shows a half-erased character, which is what "no model preview" looked like.
+  rows=[('player',RC['controller.render.player.third_person']['part_visibility'])]
+  rows+=[(n,c['part_visibility']) for n,c in RC.items() if n.startswith('controller.render.persona') and n.endswith('.third_person')]
+  rows+=[('cape',RC['controller.render.player.cape']['part_visibility'])]
+  for p in PETS:
+   e,props=env(p['wire_id'],0,1);e.update({'variable.pet_tp':TP(e,props),'variable.helmet_layer_visible':1,
+     'variable.leg_layer_visible':1,'variable.boot_layer_visible':1,'variable.chest_layer_visible':1,
+     'query.has_cape':1,'query.armor_texture_slot':lambda *a:0,'variable.is_blinking':0})
+   for name,visibility in rows:
+    self.assertTrue(Expression(visibility[0]['*'])(e,props),(p['id'],name))
+ def test_the_world_still_hides_the_human_for_a_pet(self):
+  native=Expression(RC['controller.render.player.third_person']['part_visibility'][0]['*'])
+  cape=Expression(RC['controller.render.player.cape']['part_visibility'][0]['*'])
+  for p in PETS:
+   e,props=env(p['wire_id'],0,0);e['variable.pet_tp']=TP(e,props)
+   self.assertFalse(native(e,props),p['id']);self.assertFalse(cape(e,props),p['id'])
+  e,props=env(0,0,0);e['variable.pet_tp']=TP(e,props)
+  self.assertTrue(native(e,props));self.assertTrue(cape(e,props))
+ def test_player_form_never_draws_a_pet_anywhere(self):
+  for first_person,paperdoll in product([0,1],[0,1]):
+   self.assertFalse(TP(*env(0,first_person,paperdoll)));self.assertFalse(PAWS(*env(0,first_person,paperdoll)))
  def test_markers_never_render_in_the_ui(self):
   cond=next(next(iter(row.values())) for row in D['render_controllers'] if 'controller.render.pet.marker' in row)
   e,props=env(1,0,1);e['variable.pet_tp']=1;props['pet:debug']=True
   self.assertFalse(Expression(cond)(e,props))
- def test_paperdoll_plays_no_locomotion_or_seat_lift_but_keeps_tail_and_look(self):
+ def test_pet_clips_follow_the_body_rather_than_a_second_ui_rule(self):
+  # Every pet clip is gated on variable.pet_tp, so excluding the paperdoll once excludes it everywhere; 0.4.0 had to
+  # special-case the locomotion controller and the seat lift on top of the gate.
   for p in PETS:
-   e,props=env(p['wire_id'],0,1);e.update({'variable.pet_tp':1,'variable.pet_model_id':p['wire_id'],'query.is_riding':1,'query.is_sleeping':0});props['pet:motion']=True
-   self.assertFalse(animate(f'pet_{p["id"]}_locomotion')(e,props),p['id'])
-   self.assertTrue(animate(f'pet_{p["id"]}_secondary')(e,props),p['id']);self.assertTrue(animate(f'pet_{p["id"]}_look')(e,props),p['id'])
-   e['query.is_in_ui']=0
-   self.assertTrue(animate(f'pet_{p["id"]}_locomotion')(e,props),p['id'])
+   for name in ['locomotion','secondary','look','grip','shield_pose']:
+    self.assertNotIn('is_in_ui',str(animate(f'pet_{p["id"]}_{name}').tokens),(p['id'],name))
   seat=animate('pet_seat_align')
-  self.assertFalse(seat({'variable.pet_tp':1,'query.is_riding':1,'query.is_in_ui':1}));self.assertTrue(seat({'variable.pet_tp':1,'query.is_riding':1,'query.is_in_ui':0}))
-
-if __name__=='__main__':unittest.main()
+  self.assertTrue(seat({'variable.pet_tp':1,'query.is_riding':1}));self.assertFalse(seat({'variable.pet_tp':0,'query.is_riding':1}))
 
 class SkinCompatibility(unittest.TestCase):
  """MCPE-74493: a pack shipping entity/player.entity.json reverts every skin to Steve, hides capes and stops

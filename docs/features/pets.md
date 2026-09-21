@@ -154,18 +154,19 @@ attachables and `hide_held_items` are read as before.
 
 ### The inventory paperdoll
 
-The paperdoll in the inventory screen renders the same player entity as part of the UI
-(`query.is_in_ui`), and the engine leaves `variable.is_first_person` as the camera has it: vanilla's
-own cape rule reads `(!variable.is_first_person || variable.is_paperdoll)` for exactly that reason.
-The pet body pass used to require `!variable.is_first_person`, so a player in first person saw
-their human skin in the paperdoll while everyone else saw the pet. The compiler now counts the UI
-as third person for the pet (`variable.pet_tp`), never draws the first-person paws there, hides
-the native body as it does in the world, and plays no locomotion or seat lift in the paperdoll
-(its ground, water and riding queries are not the world's, and vanilla's paperdoll state plays
-none either); the tail wag and the head look still run. `tools/codegen/pets/tests/test_paperdoll.py`
-holds the truth tables. Whether the paperdoll carries entity properties at all is a client
-question: if it still shows the human after this change, `query.property('pet:model_id')` is not
-evaluated in the UI and the paperdoll needs a channel other than properties.
+The paperdoll in the inventory and pause screens draws the same player entity, and the extra render
+controller passes this pack appends do not draw there. Every rule that hides the human while a pet
+is active (the native body, the persona passes, the cape) is therefore switched off in the
+paperdoll, and the paperdoll shows the player's own character. The flag is `variable.is_paperdoll`,
+which the engine sets for that render and vanilla's own cape controller reads in `part_visibility`;
+because vanilla ORs it with `!variable.is_first_person`, the camera's flag is still set inside the
+paperdoll, so the paperdoll has to be excluded by name rather than inferred from the camera.
+
+0.4.0 tried the opposite: it counted the UI (`query.is_in_ui`) as third person so the pet body pass
+would draw there. It did not draw, and the paperdoll went from showing the skin in first person to
+showing nothing at all in either camera. Rendering the pet in the paperdoll would need a channel
+the pack does not have; the preview showing your character is the behaviour this pack ships.
+`tools/codegen/pets/tests/test_paperdoll.py` holds the truth tables for both sides.
 
 The Morpher menu is one `ActionFormData` per step: Player, Carter, Mochi, Casper, then a biography
 page with "Become X" and "Back". One session per player; a late response after leaving, changing
@@ -305,11 +306,10 @@ per line with a screenshot.
     Player selected, you look like yourself: not Steve, the cape shows, the Character Creator pieces show. A second
     player's skin is right too. This is the `min_engine_version` rule above; if you are Steve again, say so, because
     the next value to try is `1.8.0`.
-16. As Carter, open the inventory in first person and in third person: the paperdoll shows Carter
-    standing (no human skin, no paws, no sitting pose even while mounted), his tail wags and his
-    head follows the cursor. Choose Player: the paperdoll shows the skin again. If the paperdoll
-    shows the human while the world shows Carter, report it: the paperdoll is not reading entity
-    properties and the fix needs another channel.
+16. As Carter, open the inventory and the pause menu in first person and in third person: the
+    paperdoll shows your own character, skin and cape included, rather than nothing. The world still
+    shows Carter behind it. This is the preview the pack can give; the pet itself does not render
+    there.
 
 If a step fails, send one screenshot taken after choosing Player, the `/pet:diagnose` output and the
 active pack list. Do not count re-equipping a piece or relogging as a passing transition.

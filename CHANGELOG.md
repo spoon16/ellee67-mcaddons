@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.2
 
 Nothing from the add-on on the screen when a world opens: the Content Log GUI shows warnings and errors,
 and the packs no longer cause any.

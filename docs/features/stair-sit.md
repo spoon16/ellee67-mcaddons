@@ -5,8 +5,9 @@ Feature id: `stair-sit`. Ported from ElleeDog 67 Stair Sitting v0.2.1.
 Packs: "ElleeDog 67 Stair Sitting" (Behavior Packs; the scripts and the `sit:seat` and `sit:target`
 entities) and "ElleeDog 67 Stair Sitting Resources" (Resource Packs; their client files); activating
 the behavior pack adds the resource pack. The feature is on exactly when the packs are active. Every
-command is registered under `sit:`; `sit:help` and `sit:clear` share their short names with vanilla
-`/help` and `/clear`, so only the full names work (the engine notes this in the Content Log at load).
+command is registered under `sit:`, and no short name is a vanilla command's or another pack's: the
+engine registers the part after the colon as an alias and warns on screen at every world load when
+that name is taken, which is why `/sit:help` and `/sit:clear` became `/sit:controls` and `/sit:sweep`.
 
 ## What it does
 
@@ -41,12 +42,12 @@ Every command is registered with `cheatsRequired: false` and must be run by a pl
 | --- | --- | --- | --- |
 | `/sit:down` | Any | none | Sit on the aimed stair, or move your seat there while already seated. Works with held items. |
 | `/sit:stand` | Any | none | Stand up from your stair seat. |
-| `/sit:help` | Any | none | Show the controls in chat. |
+| `/sit:controls` | Any | none | Show the controls in chat. |
 | `/sit:gesture` | Any | `enabled: Boolean` | Enable or disable crouch-release sitting for yourself. Default on. |
 | `/sit:button` | Any | `enabled: Boolean` | Enable or disable native Sit targets for yourself. Default on. Crouch and command controls are unaffected. |
 | `/sit:height` | Any | `offset: Float` | Seat-height adjustment in blocks, from -0.5 to 0.5; 0 resets. Applies to the next sitting session. |
 | `/sit:status` | Any | none | Diagnostics: version, preferences, loaded targets, carrier id, current chair, moves this session, the last sit attempt and why it was refused, input queue delay, aimed block states. |
-| `/sit:clear` | Admin | none | Stand up every rider and remove all loaded seat and target helpers. Target discovery pauses for two seconds. |
+| `/sit:sweep` | Admin | none | Stand up every rider and remove all loaded seat and target helpers. Target discovery pauses for two seconds. |
 
 ## Entities and identifiers
 
@@ -67,7 +68,7 @@ Per-player dynamic properties: `sit:gesture` (boolean, `false` turns the crouch 
 the source of truth; the tag `ed67_sit_no_button` only mirrors it so the target's `has_tag` filter can hide
 the prompt, and the scripts re-sync the tag on every discovery pass, so a stray `/tag` edit is corrected.
 
-Chat: the feature says nothing on its own. There is no join hint and no action-bar text; `/sit:help` lists
+Chat: the feature says nothing on its own. There is no join hint and no action-bar text; `/sit:controls` lists
 the controls, explicit commands answer in chat, and a refused Sit button press or crouch gesture is silent
 (the reason is in `/sit:status`). Warnings go to the Content Log under `[ElleeDog 67] Stair Sitting:`.
 
@@ -138,7 +139,7 @@ off. The Content Log shows `[ElleeDog 67] stair-sit loaded` and nothing appears 
 12. `/sit:button false` hides your prompt while the gesture, block use and `/sit:down` keep working;
     `/sit:button true` restores it, also after a world reload. `/sit:height 0.125` raises the next session;
     a change made while seated applies only after standing.
-13. `/sit:clear` as an operator stands riders, removes helpers and pauses prompts briefly; a guest cannot run
+13. `/sit:sweep` as an operator stands riders, removes helpers and pauses prompts briefly; a guest cannot run
     it. Ordinary boats keep their normal boarding prompt.
 14. Deactivate "ElleeDog 67 Stair Sitting" in Edit World while a player is seated and reopen: nobody is
     seated, no helper exists and `/sit:down` is an unknown command. Reactivate the pack and reopen: prompts

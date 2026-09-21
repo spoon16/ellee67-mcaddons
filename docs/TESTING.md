@@ -54,10 +54,11 @@ pack's JSON loads. Bedrock Dedicated Server can, and it runs headlessly on Linux
   stops it.
 - `smoke.ts` (the `test:engine` script) builds the packs, runs the server, and checks: every
   behavior pack in the pack stack, a `[ElleeDog 67] <id> loaded` line per script pack, no
-  `[Scripting]` warning or error and a clean Content Log (the vanilla `help`/`clear` alias notices
-  for `sit:help` and `sit:clear` are expected), and one command per namespace (`/pet:forms`,
-  `/sit:help`, `/elleedog:ender_protect list`) answered by the add-on's own "run this as a player"
-  reply rather than "Unknown command". About 25 seconds; a failing run leaves the full output in
+  `[Scripting]` warning or error (the engine's "Custom Command alias [x] already in use" notice
+  counts: a command whose short name vanilla or another pack already uses needs a new name), a clean
+  Content Log, and one command per namespace (`/pet:forms`, `/sit:controls`,
+  `/elleedog:ender_protect list`) answered by the add-on's own "run this as a player" reply rather
+  than "Unknown command". About 25 seconds; a failing run leaves the full output in
   `.bds/last-run.log`.
 
 The server is never committed: the Minecraft EULA lets you run it, not redistribute it. CI
@@ -120,7 +121,7 @@ World, so every step that changes them ends with reopening the world.
    added) and "ElleeDog 67 Creeper Mod". Deactivate every old ElleeDog pack (old Pets before old
    Rbow; see [RELEASING.md](RELEASING.md)). Open the world.
    - The Content Log shows `[ElleeDog 67] stair-sit loaded` and `[ElleeDog 67] creeper-mod loaded`
-     and no script errors. `/sit:help` lists the controls; `/pet:form carter` is an unknown
+     and no script errors. `/sit:controls` lists the controls; `/pet:form carter` is an unknown
      command because the Pets pack is not active.
    - Run the checks on [features/stair-sit.md](features/stair-sit.md) and
      [features/creeper-mod.md](features/creeper-mod.md).

@@ -58,8 +58,19 @@ describe("stair-sit entry point", () => {
   it("entrypoint registers eight commands, personal commands need no cheats", () => {
     const commands = sitCommands();
     expect(commands.length).toBe(8);
+    // Short names become engine aliases shared with vanilla and every other pack; `help` and `clear` once clashed.
+    expect(commands.map(({ definition }) => definition.name).sort()).toEqual([
+      "sit:button",
+      "sit:controls",
+      "sit:down",
+      "sit:gesture",
+      "sit:height",
+      "sit:stand",
+      "sit:status",
+      "sit:sweep",
+    ]);
     for (const { definition } of commands) expect(definition.cheatsRequired).toBe(false);
-    expect(sitCommand("sit:clear").definition.permissionLevel).toBe(CommandPermissionLevel.Admin);
+    expect(sitCommand("sit:sweep").definition.permissionLevel).toBe(CommandPermissionLevel.Admin);
     expect(sitCommand("sit:down").definition.permissionLevel).toBe(CommandPermissionLevel.Any);
   });
 

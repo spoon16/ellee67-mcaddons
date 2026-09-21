@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+Nothing from the add-on on the screen when a world opens: the Content Log GUI shows warnings and errors,
+and the packs no longer cause any.
+
+- Stair Sitting: `/sit:help` is now `/sit:controls` and `/sit:clear` is now `/sit:sweep`. The engine
+  registers every custom command's short name as an alias shared by vanilla and every pack, `help` and
+  `clear` belong to vanilla, and it warned about both on screen at every world load; the API has no way
+  to opt out, so a rename is the fix (not `cleanup`: Pets has that one). A test now checks every short
+  name across the add-on, and the engine tests no longer tolerate the notice.
+
 ## 0.4.1
 
 The first fixes from playing 0.4.0 on a real device: Carter's seated neck, the custom skins the pack

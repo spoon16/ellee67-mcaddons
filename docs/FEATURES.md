@@ -30,7 +30,7 @@ cheats, and each is documented on the feature's page:
 | Namespace | Feature | Examples |
 |---|---|---|
 | `pet:` | Pets | `/pet:book`, `/pet:form carter`, `/pet:menu`, `/pet:armor fitted` |
-| `sit:` | Stair Sitting | `/sit:down`, `/sit:stand`, `/sit:help`, `/sit:clear` (operators) |
+| `sit:` | Stair Sitting | `/sit:down`, `/sit:stand`, `/sit:controls`, `/sit:sweep` (operators) |
 | `elleedog:` | Ender Mod | `/elleedog:ender_protect pos1|pos2|name "…"|list|remove "…"` (operators) |
 | | Rbow Ore | `/scriptevent elleedog:rbow_check`, `/function elleedog/rbow_test_kit` |
 | | Redstone Guide, Creeper Mod | none; the guide is an item, the creeper change is automatic |

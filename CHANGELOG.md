@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Pets: custom skins, capes and Character Creator looks work again while the packs are active. A resource pack that
+  ships `entity/player.entity.json` reverts every player to Steve and drops capes and persona pieces unless that
+  client entity declares a `min_engine_version` of at most 1.13.0 (MCPE-74493, resolved as working as intended); the
+  pack declares 1.13.0. `format_version` is unchanged, so nothing else about the definition is read differently.
+
 - Pets: the seated neck no longer shows. The neck bone keeps the body's pitch and had no channel in
   the ride clip, so once 0.4.0 moved the head clear it stood out behind the skull as a wedge (44% of
   its surface on Carter, 57% on the cats). The clip now parks it inside the body cube and takes the

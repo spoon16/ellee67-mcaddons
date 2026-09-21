@@ -671,7 +671,8 @@
           "controller.render.pet.casper.shield_off_replacement": "variable.pet_replace_hands && variable.pet_model_id == 3 && variable.pet_off_shield"
         }
       ],
-      "enable_attachables": true
+      "enable_attachables": true,
+      "min_engine_version": "1.13.0"
     }
   }
 }

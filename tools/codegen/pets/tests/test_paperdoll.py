@@ -55,3 +55,31 @@ class Paperdoll(unittest.TestCase):
   self.assertFalse(seat({'variable.pet_tp':1,'query.is_riding':1,'query.is_in_ui':1}));self.assertTrue(seat({'variable.pet_tp':1,'query.is_riding':1,'query.is_in_ui':0}))
 
 if __name__=='__main__':unittest.main()
+
+class SkinCompatibility(unittest.TestCase):
+ """MCPE-74493: a pack shipping entity/player.entity.json reverts every skin to Steve, hides capes and stops
+ Character Creator pieces rendering unless the client entity declares min_engine_version <= 1.13.0."""
+ def test_client_entity_declares_a_persona_safe_engine_version(self):
+  from build import PERSONA_SAFE_ENGINE_VERSION
+  declared=read(RP/'entity/player.entity.json')['minecraft:client_entity']['description']['min_engine_version']
+  self.assertEqual(declared,PERSONA_SAFE_ENGINE_VERSION)
+  parts=[int(x) for x in declared.split('.')]
+  self.assertEqual(len(parts),3);self.assertLessEqual(parts,[1,13,0],'persona skins need at most 1.13.0')
+ def test_the_modern_format_version_is_kept(self):
+  # min_engine_version only selects which definition sharing the identifier is parsed; format_version drives parsing,
+  # so the file must stay current or the pet properties, attachables and hide_held_items would not be read.
+  d=read(RP/'entity/player.entity.json')
+  self.assertEqual(d['format_version'],'1.26.0')
+  desc=d['minecraft:client_entity']['description']
+  self.assertEqual(desc['identifier'],'minecraft:player');self.assertTrue(desc['enable_attachables'])
+  self.assertIn('hide_held_items',desc['scripts'])
+ def test_the_skin_slots_the_engine_swaps_are_untouched(self):
+  # A classic or skin-pack skin lands through these two slots; the render controllers must keep selecting them.
+  desc=read(RP/'entity/player.entity.json')['minecraft:client_entity']['description']
+  self.assertEqual(desc['geometry']['default'],'geometry.humanoid.custom')
+  self.assertEqual(desc['textures']['default'],'textures/entity/steve')
+  tp=RC['controller.render.player.third_person']
+  self.assertEqual(tp['geometry'],'Geometry.default');self.assertEqual(tp['textures'],['Texture.default'])
+  fp=RC['controller.render.player.first_person']
+  self.assertEqual(fp['arrays']['geometries']['Array.pet_models'][0],'Geometry.default')
+  self.assertEqual(fp['arrays']['textures']['Array.pet_coats'][0],'Texture.default')

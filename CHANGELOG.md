@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.4.1
+
+The first fixes from playing 0.4.0 on a real device: Carter's seated neck, the custom skins the pack
+was taking away, the empty inventory preview, and four vanilla render controllers it was deleting.
 
 - Pets: the four vanilla render controllers the resource pack was quietly dropping are back. Replacing
   `player.render_controllers.json` and `persona.render_controllers.json` by name replaces them whole, so the

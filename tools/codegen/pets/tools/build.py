@@ -21,6 +21,8 @@ from seat_kinds import SEAT_KINDS
 from equipment import fit_clip as armor_fit_clip
 
 ROOT=Path(__file__).resolve().parents[1]
+# At most 1.13.0, or the engine drops persona skins for every player; see where it is written below.
+PERSONA_SAFE_ENGINE_VERSION='1.13.0'
 OLD_SELECT="(query.has_property('pet:form') ? (query.property('pet:form') == 'carter') : 0.0)"
 DEBUG="(query.has_property('pet:debug') ? query.property('pet:debug') : 0.0)"
 EMPTY="query.get_equipped_item_name(0, 1) == ''"
@@ -213,6 +215,13 @@ def build(root=ROOT,output=None):
     fp=f'({select} && variable.is_first_person && !{ui} && !variable.map_face_icon && !query.is_spectator)'
     paws=f"({fp} && (query.has_property('pet:view') ? query.property('pet:view') == 'paws' : 1.0))"
     native=read(root/'upstream/player.entity.json');d=native['minecraft:client_entity']['description'];s=d['scripts']
+    # A resource pack that ships entity/player.entity.json makes every player render as Steve, hides capes and stops
+    # Character Creator (persona) pieces drawing, unless the client entity declares a min_engine_version of at most
+    # 1.13.0 (MCPE-74493, resolved "Works As Intended"; the rule is in the Bedrock Wiki's "Modifying the Player
+    # Client Entity"). min_engine_version only picks which definition sharing an identifier the engine parses, so
+    # format_version stays current and every modern field in this file is still read. Vanilla declares none; ours is
+    # the highest value the persona rule allows, so it wins the selection against vanilla's.
+    d['min_engine_version']=PERSONA_SAFE_ENGINE_VERSION
     s.setdefault('initialize',[]).extend(['variable.pet_active = 0.0;','variable.pet_model_id = 0.0;','variable.pet_armor_fit = 0.0;','variable.melee_spear_equipped = 0.0;'])
     s['pre_animation'].extend([f'variable.pet_index = {index};',f'variable.pet_model_id = {getter};',f'variable.pet_active = {select};',f'variable.pet_tp = {tp};',f'variable.pet_fp_paws = {paws};',"variable.pet_armor_fit = variable.pet_active && (query.has_property('pet:armor_fit') ? query.property('pet:armor_fit') : 1.0);"])
     s['variables'].update({'variable.pet_active':'public','variable.pet_model_id':'public','variable.pet_armor_fit':'public'})

@@ -140,6 +140,18 @@ All in `behavior_packs/elleedog67_pets/` and `resource_packs/elleedog67_pets/`.
 | `pet:diag_cube`, `pet:diag_model` | | Summonable test props owned by the player who ran `/pet:probe` (dynamic property `pet:probe_owner`). `pet:diag_model` carries `pet:model_id` and is the pack probe. |
 | `cav:diag_cube`, `cav:diag_model` | | Legacy props; only `/pet:cleanup` touches them. |
 
+### Custom skins and the player definition
+
+Shipping `entity/player.entity.json` is what lets the pack render a pet in the player's place, and it costs
+something: a resource pack that contains that file makes every player render as Steve, hides capes and stops
+Character Creator (persona) pieces drawing. Mojang resolved that as working as intended
+([MCPE-74493](https://mojira.dev/MCPE-74493)); the way out, documented under "Modifying the Player Client Entity"
+in the Bedrock Wiki, is for the client entity to declare a `min_engine_version` no greater than `1.13.0`. The pack
+declares `1.13.0` (`PERSONA_SAFE_ENGINE_VERSION` in the compiler's `build.py`), the highest value the rule allows,
+so the engine still prefers this definition over vanilla's, which declares none. `min_engine_version` only picks
+which definition sharing an identifier is parsed; `format_version` stays `1.26.0`, so entity properties,
+attachables and `hide_held_items` are read as before.
+
 ### The inventory paperdoll
 
 The paperdoll in the inventory screen renders the same player entity as part of the UI
@@ -289,7 +301,11 @@ per line with a screenshot.
     Reactivate both packs and reopen: your pet returns on join without a chat line.
 14. Watch the content log for the whole session: only explicit command errors may appear. With Pets
     active and Rbow Ore not, note any missing-texture message from the Rbow slots.
-15. As Carter, open the inventory in first person and in third person: the paperdoll shows Carter
+15. Wear a custom skin and, if you have one, a Character Creator look and a cape. With the Pets packs active and
+    Player selected, you look like yourself: not Steve, the cape shows, the Character Creator pieces show. A second
+    player's skin is right too. This is the `min_engine_version` rule above; if you are Steve again, say so, because
+    the next value to try is `1.8.0`.
+16. As Carter, open the inventory in first person and in third person: the paperdoll shows Carter
     standing (no human skin, no paws, no sitting pose even while mounted), his tail wags and his
     head follows the cursor. Choose Player: the paperdoll shows the skin again. If the paperdoll
     shows the human while the world shows Carter, report it: the paperdoll is not reading entity

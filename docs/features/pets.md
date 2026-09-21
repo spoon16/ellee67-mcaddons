@@ -202,7 +202,11 @@ From the 0.5.2 release notes:
   so the ride clip also moves the head bone forward and up until the muzzle leads the chest by as
   much as when standing and the chest sits no deeper in the skull (`head_clearance` in the
   compiler's `seating.py`; 4.5 pixels forward and 0.9 up for Carter, 3.8 and 0.3 for the cats,
-  whose shorter neck caps the forward move where it would leave the skull).
+  whose shorter neck caps the forward move where it would leave the skull). The neck bone keeps the
+  body's pitch and has no channel of its own, so it used to stand out behind the raised head as a
+  wedge; the clip now parks it in the middle of the body cube (`neck_tuck`) and takes the same
+  offset off the head, which is its child, so the head does not move and the neck cannot show from
+  any angle or head turn.
   Before that the raised chest reached 2.3 pixels ahead of Carter's chin. The seat height per
   mount kind is a measurement plus the baked and live trims above; the baked numbers are Carter's
   only and were read off a client, not proven by the automated suites.
@@ -270,10 +274,10 @@ per line with a screenshot.
    0 again. On the strider Carter also sits one pixel further toward the strider's head than 0.5.2
    did (`forwardPixels` 1); if he moved back instead, the sign in the clip is wrong for this engine
    and `forward` in the catalog wants negating. Dismounting clears the lift. Repeat the pig and the
-   horse as Mochi: no baked trim, no forward offset. On the pig, Carter's head sits above and in
-   front of his chest with the neck hidden behind it, nothing of the chest or neck showing through
-   the skull, and the muzzle over the front paws; his ears hang beside the chest. Mochi and Casper
-   get the same head clearance; check them once too.
+   horse as Mochi: no baked trim, no forward offset. On the pig and in a boat, Carter's head sits
+   above and in front of his chest, the muzzle over the front paws, and no part of the neck shows
+   between the head and the body from any angle, including while he looks around. Mochi and Casper
+   get the same head clearance and neck tuck; check them once too.
 10. `/pet:snapshot`, switch forms with the book only, `/pet:compare` prints PASS.
 11. Leave and rejoin, die and respawn, travel to the Nether and back: the pet form returns each time
     with no chat line. A second player with a different pet sees both forms correctly.

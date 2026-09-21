@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Pets: the seated neck no longer shows. The neck bone keeps the body's pitch and had no channel in
+  the ride clip, so once 0.4.0 moved the head clear it stood out behind the skull as a wedge (44% of
+  its surface on Carter, 57% on the cats). The clip now parks it inside the body cube and takes the
+  same offset off the head, which is its child, so the head's pose is unchanged and the neck is
+  hidden under every head turn the look clip can reach.
+
 ## 0.4.0
 
 Carter's seat tuning, the pet in the paperdoll, pet: commands proven at startup, and creeper blasts

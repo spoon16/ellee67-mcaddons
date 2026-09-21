@@ -299,6 +299,30 @@ describe("validateBuild rejects", () => {
     ]);
   });
 
+  it("a function that gives an item its pack cannot be sure exists", () => {
+    // The engine parses every function when the world opens and warns on screen for each line it cannot parse.
+    const file = "functions/pet/kit.mcfunction";
+    const errors = doctored("pets", (root) => {
+      write(
+        root,
+        file,
+        [
+          "# vanilla, the pack's own item and a dependency's are fine; another pack's and a typo are not",
+          "give @s minecraft:shield 1",
+          "give @s pet:morpher_book",
+          "give @s nether_brick 16",
+          "give @s elleedog:rbow_helmet",
+          "give @s minecraft:not_an_item",
+          "",
+        ].join("\n"),
+      );
+    });
+    expect(errors).toEqual([
+      `pets/${file}:5: gives elleedog:rbow_helmet, which neither pets nor a pack it depends on defines`,
+      `pets/${file}:6: gives minecraft:not_an_item, which vanilla does not define`,
+    ]);
+  });
+
   it("the same identifier defined by two packs unless the pair is documented as shared", () => {
     const errors = doctored("creeper-mod", (root) => {
       write(root, "entities/target.json", {

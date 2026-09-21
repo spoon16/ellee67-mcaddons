@@ -78,6 +78,10 @@ simulated player driving the add-on's own commands:
 | `ed67:sit_down` | an empty-handed player looking at an oak stair who runs `/sit:down` ends up riding a `sit:seat` |
 | `ed67:creeper_blast` | a forced creeper explosion hurts the player next to it, kills the pig two blocks away and leaves the stone floor intact |
 
+Each suite boots with only its own packs active, and the harness fails the suite on any warning or
+error in that boot's Content Log: a combination the all-pack smoke test never sees (Pets alone once
+printed eleven warnings from a function that gave items only Rbow Ore defines).
+
 Why one feature per bundle: a `SimulatedPlayer` exists only in the script module that spawned
 it. Other packs' modules see it as `undefined` in `world.getAllPlayers()` and in events (the first
 run of this rung against the shipped bundles produced 300 `TypeError`s a minute and no passing

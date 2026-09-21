@@ -24,7 +24,7 @@ The full verification ladder before calling work done: `npm run check && npm tes
 The engine tests download Bedrock Dedicated Server once into `.bds/` (git-ignored) from
 `www.minecraft.net`; the cloud session hook and CI both allow that host.
 
-## Two engine rules the mock cannot teach you
+## Three engine rules the mock cannot teach you
 
 1. **One command namespace per script module.** Every custom command and enum a pack registers
    must share the namespace of the first one registered; the engine refuses a second with "Custom
@@ -38,9 +38,18 @@ The engine tests download Bedrock Dedicated Server once into `.bds/` (git-ignore
    a slot). The one documented exception is `setDynamicProperty(key, undefined)`, which is how a
    dynamic property is removed.
 
-Both rules are enforced by `test/mocks/minecraft-server.ts` (subscribe arity for every signal it
+3. **Nothing may warn at world load.** The Content Log GUI puts every warning on the player's screen
+   when a world opens. The engine registers each custom command's short name (after the colon) as
+   an alias shared by vanilla and every pack, and warns when that name is taken, with no API to opt
+   out: `sit:help` and `sit:clear` became `sit:controls` and `sit:sweep` (`cleanup` was Pets').
+   It also parses every `.mcfunction` at load, so a function may only `give` items that vanilla,
+   its own pack or a pack it depends on defines.
+
+The first two rules are enforced by `test/mocks/minecraft-server.ts` (subscribe arity for every signal it
 exposes, checked against the engine typings by `test/core/engine-surface.test.ts`, and `setEquipment`)
-and proven by `npm run test:engine`.
+and proven by `npm run test:engine`; the third by `test/core/command-names.test.ts`, `npm run test:engine`
+and `npm run test:gametest`, which fail on any script warning or dirty Content Log, and by `tools/validate.ts`,
+which checks every function's `give` lines during `npm run build`.
 
 ## Layout and sources of truth
 

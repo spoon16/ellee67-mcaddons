@@ -69,7 +69,7 @@ Your pet comes back when you rejoin. No command needed.
 |---|---|
 | `/sit:down` | Sit on the stair you are looking at. |
 | `/sit:stand` | Stand up. |
-| `/sit:help` | Shows all the sitting controls. |
+| `/sit:controls` | Shows all the sitting controls. |
 
 You can also sit with **empty hands**: look at a stair and press **Sit**.
 Or crouch, then stop crouching, while looking at the stair.

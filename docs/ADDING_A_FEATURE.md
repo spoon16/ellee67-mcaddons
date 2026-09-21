@@ -12,6 +12,10 @@ runtime toggle and no shared core. Two engine rules follow from that and shape t
 
 - All the commands and enums one pack registers share **one namespace** (the engine refuses a
   second one), so pick the namespace once: `myfeature:`.
+- A command's short name (the part after the colon) becomes an engine alias shared by every pack, so
+  it must be unique across the add-on and must not be a vanilla command name such as `help`, `clear`,
+  `give` or `list`: the engine warns on the player's screen at every world load. `npm test` checks
+  the names (`test/core/command-names.test.ts`) and `npm run test:engine` fails on the notice.
 - Subscribe to events only through `FeatureContext.on`; it passes the engine exactly the arguments
   it accepts.
 

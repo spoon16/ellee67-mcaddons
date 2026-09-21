@@ -6,6 +6,7 @@ import path from "node:path";
 import { buildPacks } from "../build.ts";
 import { loadPacks } from "../lib/packs.ts";
 import { REPO_ROOT } from "../lib/paths.ts";
+import { clearContentLogs, contentLog, contentProblems } from "./content-log.ts";
 import { runServer } from "./run.ts";
 import { BDS_VERSION, setup } from "./setup.ts";
 
@@ -16,38 +17,20 @@ import { BDS_VERSION, setup } from "./setup.ts";
  */
 const PROBES: Array<{ pack: string; command: string; reply: RegExp }> = [
   { pack: "pets", command: "pet:forms", reply: /Run directly as a player\./ },
-  { pack: "stair-sit", command: "sit:help", reply: /Run this command as a player in the world\./ },
+  { pack: "stair-sit", command: "sit:controls", reply: /Run this command as a player in the world\./ },
   { pack: "ender-mod", command: "elleedog:ender_protect list", reply: /Run this command as a player with Operator/ },
 ];
 
-const SCRIPT_PROBLEM = /\b(WARN|ERROR)\] \[Scripting\]/;
 /**
- * Script log lines that are expected. `sit:help` and `sit:clear` share their short names with vanilla `/help` and
- * `/clear`, so the engine notes that only the full names work; the full names are what the docs give.
+ * Any script warning fails the run, including the engine's "Custom Command alias [x] already in use" notice: it is
+ * printed on screen at every world load, and the fix is a short name no vanilla command or other pack uses.
  */
-const EXPECTED_NOTICES = [/Custom Command alias \[(help|clear)\] already in use/];
+const SCRIPT_PROBLEM = /\b(WARN|ERROR)\] \[Scripting\]/;
 
 interface Check {
   name: string;
   ok: boolean;
   detail?: string;
-}
-
-const CONTENT_LOG = /^ContentLog.*\.txt$/;
-
-/** Removes every content log from earlier runs, so the one read afterwards can only be this run's. */
-export function clearContentLogs(serverDir: string): void {
-  for (const name of fs.readdirSync(serverDir)) if (CONTENT_LOG.test(name)) fs.rmSync(path.join(serverDir, name));
-}
-
-/** The content log this run wrote, or undefined when the server wrote none (itself a failure). */
-export function contentLog(serverDir: string): string[] | undefined {
-  const files = fs
-    .readdirSync(serverDir)
-    .filter((name) => CONTENT_LOG.test(name))
-    .sort();
-  const latest = files[files.length - 1];
-  return latest ? fs.readFileSync(path.join(serverDir, latest), "utf8").split(/\r?\n/) : undefined;
 }
 
 async function main(): Promise<void> {
@@ -82,11 +65,10 @@ async function main(): Promise<void> {
     const loaded = lines.some((line) => line.includes(`[Scripting] [ElleeDog 67] ${pack.feature} loaded`));
     checks.push({ name: `${pack.id} scripts loaded`, ok: loaded });
   }
-  const expected = (line: string) => EXPECTED_NOTICES.some((notice) => notice.test(line));
-  const problems = lines.filter((line) => SCRIPT_PROBLEM.test(line) && !expected(line));
+  const problems = lines.filter((line) => SCRIPT_PROBLEM.test(line));
   checks.push({ name: "no script warnings or errors", ok: problems.length === 0, detail: problems.join("\n") });
   const content = contentLog(serverDir);
-  const contentErrors = (content ?? []).filter((line) => /\[(error|warning)\]/.test(line) && !expected(line));
+  const contentErrors = contentProblems(content ?? []);
   checks.push({
     name: "content log written and clean",
     ok: content !== undefined && contentErrors.length === 0,

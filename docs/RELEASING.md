@@ -61,7 +61,7 @@ old one otherwise. Add a `CHANGELOG.md` entry before bumping.
    Any other pack that replaces the player or Endermen goes below the ElleeDog packs, or is
    removed: two packs cannot both replace `minecraft:player` or `minecraft:enderman`.
 6. Leave and reopen the world. Each active feature announces itself in the Content Log
-   (`[ElleeDog 67] <id> loaded`) and its commands exist: `/pet:book`, `/sit:help`,
+   (`[ElleeDog 67] <id> loaded`) and its commands exist: `/pet:book`, `/sit:controls`,
    `/elleedog:ender_protect list`.
 
 ## Updating a world to a newer version

@@ -180,6 +180,8 @@ function forgetPlayer(playerId: string): void {
   lastResults.delete(playerId);
 }
 
+// The engine registers each command's short name (after the colon) as an alias and warns on screen at every world
+// load when that name is taken, by vanilla or by another pack: `help`, `clear` and `cleanup` (Pets) all were.
 function registerCommands({ commands }: FeatureRegistries): void {
   function register(
     name: string,
@@ -212,7 +214,7 @@ function registerCommands({ commands }: FeatureRegistries): void {
   register("sit:stand", "Stand up from your stair seat", (player) => {
     if (!manager.release(player.id, true)) manager.message(player, "You are not sitting on one of these stair seats.");
   });
-  register("sit:help", "Show stair sitting controls", (player) => {
+  register("sit:controls", "Show stair sitting controls", (player) => {
     manager.message(
       player,
       [
@@ -225,7 +227,7 @@ function registerCommands({ commands }: FeatureRegistries): void {
         "/sit:button false disables Sit targets for you; true enables them.",
         "/sit:gesture false disables crouch-to-sit; true enables it.",
         "/sit:height 0 resets your seat-height adjustment.",
-        "/sit:status shows diagnostics. /sit:clear is operator-only.",
+        "/sit:status shows diagnostics. /sit:sweep is operator-only.",
       ].join("\n"),
     );
   });
@@ -289,7 +291,7 @@ function registerCommands({ commands }: FeatureRegistries): void {
     );
   });
   register(
-    "sit:clear",
+    "sit:sweep",
     "Stand up all riders and remove loaded stair-seat helpers",
     (player) => {
       const count = manager.sweep(true) + targets.sweep(true);
@@ -393,7 +395,7 @@ function subscribe(ctx: FeatureContext): void {
  * Sit on vanilla stairs with the native Sit button, a crouch-release gesture or `/sit:down`, and move between
  * nearby stairs while seated. Invisible `sit:seat` carriers and `sit:target` interaction helpers are transient and
  * swept while the feature runs. Deactivating the pack removes both entity definitions with it. The feature says
- * nothing in chat on its own: `/sit:help` is the way to learn the controls.
+ * nothing in chat on its own: `/sit:controls` is the way to learn the controls.
  */
 export const stairSit: FeatureDefinition = {
   id: "stair-sit",

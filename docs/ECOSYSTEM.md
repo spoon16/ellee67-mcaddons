@@ -198,7 +198,7 @@ MCP server, which a Claude Code session could use to validate content while edit
 | `tools/manifests.ts` + `packs.json` | keep | Single source of truth for uuids and the dependency graph; no tool offers that for multi-pack add-ons. |
 | `tools/validate.ts` (303 lines) | keep, pair with mct | Encodes rules specific to this add-on (above). |
 | `test/mocks/` (1003 lines) + vitest | keep, harden | Fast, deterministic unit tests are still the right first line. Harden it where the engine is stricter: (a) `subscribe` throws when a signal that takes one argument receives two, with the option-taking signals listed from the typings; (b) `registerCommand`/`registerEnum` throw on a second namespace, like the engine. Both bugs in section 1 then become failing unit tests. No community mock of `@minecraft/server` exists; a search found none. |
-| Pets compiler (Python, 1860 lines, 244 tests) | keep | Hash-locked artwork and a bespoke rig catalog. Blockbench has no CLI (the request is an open issue), and Regolith's `blockbench_convert` filter needs `.bbmodel` sources this project does not have. |
+| Pets compiler (Python, with its own unittest suite) | keep | Hash-locked artwork and a bespoke rig catalog. Blockbench has no CLI (the request is an open issue), and Regolith's `blockbench_convert` filter needs `.bbmodel` sources this project does not have. |
 | Biome | keep | `eslint-plugin-minecraft-linting` carries one rule (`avoid-unnecessary-command`) and would mean adding ESLint alongside Biome. |
 
 ### Add

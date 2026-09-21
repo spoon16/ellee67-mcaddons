@@ -14,6 +14,7 @@ and the packs no longer cause any.
   failed to parse, with eleven warnings on screen at every world load, whenever Rbow Ore was not active.
   Rbow Ore's own `/function elleedog/rbow_test_kit` gives the same kit and more. The build now rejects a
   function that gives an item its pack, a pack it depends on, or vanilla does not define.
+- Docs: the compiler's test count is no longer quoted, since it went stale on every change.
 
 ## 0.4.1
 

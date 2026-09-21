@@ -2,6 +2,7 @@
 // It checks what the content log would complain about, not whether the add-on plays well.
 import fs from "node:fs";
 import path from "node:path";
+import { MinecraftBlockTypes, MinecraftItemTypes } from "@minecraft/vanilla-data";
 import { listFiles, pngSize } from "./lib/files.ts";
 import { JsonFileError, readStrictJson } from "./lib/json.ts";
 import { distDir, loadPacks, type PackSpec, scriptEntry } from "./lib/packs.ts";
@@ -33,6 +34,9 @@ const VANILLA_TEXTURE_DIRS = new Set([
 
 // Folders that only our packs have; references into them must resolve even though they sit under a vanilla folder.
 const OWNED_TEXTURE_DIRS = ["textures/entity/pets", "textures/ui/pets"];
+
+// Every vanilla id `give` accepts: items, and blocks in their item form.
+const VANILLA_ITEMS = new Set<string>([...Object.values(MinecraftItemTypes), ...Object.values(MinecraftBlockTypes)]);
 
 // Identifiers that two packs deliberately both define. The pack higher in the world's stack wins.
 const SHARED_IDENTIFIERS: Record<string, string[]> = {
@@ -322,6 +326,36 @@ export function validateBuild(options: ValidateOptions = {}): ValidationReport {
     const key = typeof icon === "string" ? icon : (icon?.textures?.default ?? icon?.texture);
     if (typeof key === "string" && !atlasKeys.has(key))
       errors.push(`${file}: icon ${key} is not in any item_texture.json`);
+  }
+
+  // The engine parses every function when the world opens and prints each line it cannot parse on the player's
+  // screen, and an item id nothing defines is such a line. So a `give` may only name an item that exists whenever
+  // its pack is active: vanilla's, the pack's own, or one from a pack it depends on. Pets shipped a Rbow test kit
+  // that failed this way, eleven warnings at every world load, whenever Rbow Ore was off.
+  const itemOwner = new Map<string, string>();
+  for (const [key, owner] of seen) {
+    if (key.startsWith("minecraft:item:")) itemOwner.set(key.slice("minecraft:item:".length), owner.pack);
+  }
+  for (const pack of packs) {
+    if (pack.kind !== "behavior") continue;
+    const root = roots.get(pack.id) as string;
+    const active = new Set([pack.id, ...pack.dependsOn]);
+    for (const relative of filesByPack.get(pack.id) ?? []) {
+      if (!relative.startsWith("functions/") || !relative.endsWith(".mcfunction")) continue;
+      const lines = fs.readFileSync(path.join(root, relative), "utf8").split(/\r?\n/);
+      lines.forEach((line, index) => {
+        const words = line.trim().split(/\s+/);
+        const given = words[2];
+        if (words[0] !== "give" || given === undefined) return;
+        const item = given.includes(":") ? given : `minecraft:${given}`;
+        const where = `${pack.id}/${relative}:${index + 1}`;
+        if (item.startsWith("minecraft:")) {
+          if (!VANILLA_ITEMS.has(item)) errors.push(`${where}: gives ${item}, which vanilla does not define`);
+        } else if (!active.has(itemOwner.get(item) ?? "")) {
+          errors.push(`${where}: gives ${item}, which neither ${pack.id} nor a pack it depends on defines`);
+        }
+      });
+    }
   }
 
   for (const pack of packs) {

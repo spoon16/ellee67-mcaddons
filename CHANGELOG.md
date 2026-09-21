@@ -10,6 +10,10 @@ and the packs no longer cause any.
   `clear` belong to vanilla, and it warned about both on screen at every world load; the API has no way
   to opt out, so a rename is the fix (not `cleanup`: Pets has that one). A test now checks every short
   name across the add-on, and the engine tests no longer tolerate the notice.
+- Pets: the pack no longer ships `functions/pet/rbow_test_kit.mcfunction`. It gave Rbow items, so it
+  failed to parse, with eleven warnings on screen at every world load, whenever Rbow Ore was not active.
+  Rbow Ore's own `/function elleedog/rbow_test_kit` gives the same kit and more. The build now rejects a
+  function that gives an item its pack, a pack it depends on, or vanilla does not define.
 
 ## 0.4.1
 

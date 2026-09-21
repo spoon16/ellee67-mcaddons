@@ -134,7 +134,4 @@ def generate(root,out,bp,rp,project):
         'packs':icons,'scope':'Existing Pets and Rbow pack icons preserved; no new icon art.',
         'minecraft_tested':False})
 
-    # Optional, explicit disposable-world grants only.
-    ids=['rbow_'+s for s in ['helmet','chestplate','leggings','boots','sword','pickaxe','axe','shovel','hoe','spear']]
-    (bp/'functions/pet/rbow_test_kit.mcfunction').write_text(''.join('give @s elleedog:'+i+'\n' for i in ids)+'give @s minecraft:shield\ngive @s pet:morpher_book\n')
     return rbp,rrp

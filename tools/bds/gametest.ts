@@ -11,6 +11,7 @@ import { build as esbuild } from "esbuild";
 import { buildPacks } from "../build.ts";
 import { loadPacks } from "../lib/packs.ts";
 import { REPO_ROOT } from "../lib/paths.ts";
+import { clearContentLogs, contentLog, contentProblems } from "./content-log.ts";
 import { buildStructure, byte, compound, int, readLevelDat, type Tag, writeLevelDat } from "./nbt.ts";
 import { runServer } from "./run.ts";
 import {
@@ -178,6 +179,7 @@ async function main(): Promise<void> {
     console.log(
       `\n${suite.feature} (${suite.packIds.join(", ")}): ${suite.tests.map((name) => `${TEST_CLASS}:${name}`).join(", ")}`,
     );
+    clearContentLogs(serverDir);
     const result = await runServer(serverDir, {
       commands: [`gametest runset ${TEST_CLASS}`],
       warmUpMs: 3000,
@@ -199,6 +201,11 @@ async function main(): Promise<void> {
       if (!ok) failures.push(`${TEST_CLASS}:${name}: ${verdict?.detail ?? "no verdict"}`);
       console.log(`  ${ok ? "ok  " : "FAIL"} ${TEST_CLASS}:${name}${verdict?.detail ? `: ${verdict.detail}` : ""}`);
     }
+    // This boot had only the suite's packs active, a combination the all-pack smoke test never sees. Pets alone once
+    // printed eleven warnings here, from a function that gave items only Rbow Ore defines.
+    const problems = contentProblems(contentLog(serverDir) ?? []);
+    if (problems.length) failures.push(`${suite.feature}: content log not clean\n    ${problems.join("\n    ")}`);
+    console.log(`  ${problems.length ? "FAIL" : "ok  "} content log clean`);
   }
 
   if (failures.length) {

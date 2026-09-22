@@ -1,6 +1,6 @@
 {
   "name": "ellee67-mcaddons",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "description": "ElleeDog 67: one Minecraft Bedrock .mcaddon holding six self-contained features, each its own behavior pack (and resource pack where needed).",
   "type": "module",

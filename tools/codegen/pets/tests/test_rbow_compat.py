@@ -24,7 +24,7 @@ class SharedPlayer(unittest.TestCase):
   self.assertEqual(a,b);self.assertEqual((P/'entities/player.json').read_bytes(),(B/'entities/player.json').read_bytes())
   for stack in [[a,b],[b,a]]:
    selected=stack[-1]['minecraft:entity']['description']['properties']
-   self.assertIn('pet:model_id',selected);self.assertIn('elleedog:rbow_armor_count',selected);self.assertEqual(len(selected),20)
+   self.assertIn('pet:model_id',selected);self.assertIn('elleedog:rbow_armor_count',selected);self.assertEqual(len(selected),21)
  def test_model_and_knockback_fields_keep_original_definitions(self):
   now=read(P/'entities/player.json')['minecraft:entity'];old=read(ROOT/'integration/pets_045_player.json')['minecraft:entity'];rb=read(SRC/'behavior_pack/entities/player.json')['minecraft:entity']
   from seat_kinds import SEAT_KINDS

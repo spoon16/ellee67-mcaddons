@@ -48,10 +48,12 @@ import {
   applyGear,
   applyHandHeight,
   applyMotion,
+  applyUiMode,
   applyView,
   defaultHandHeight,
   GEAR_PROPERTY,
   HAND_HEIGHT_PROPERTY,
+  isUiMode,
   MOTION_PROPERTY,
   preferredArmor,
   preferredGear,
@@ -62,8 +64,11 @@ import {
   resetArmorFit,
   resetGear,
   resetHandHeight,
+  resetUiMode,
   setArmorLift,
   setArmorScale,
+  UI_MODES,
+  type UiMode,
   VIEW_PROPERTY,
 } from "./settings.ts";
 import { gearRoute, refreshToolGlint } from "./tool_effects.ts";
@@ -414,6 +419,23 @@ export function petsActive(): boolean {
     return false;
   }
 }
+/** What each `/pet:ui` mode changes inside the inventory preview, and how to read what the preview then shows. */
+const UI_MODE_NOTES: Readonly<Record<UiMode, string>> = Object.freeze({
+  player:
+    "Preview mode player, the shipped behaviour: the inventory and pause-menu preview shows your character and the pet stays in the world.",
+  pet: "Preview mode pet: inside the UI the pet body pass this pack appends is on and your character is hidden, as in 0.4.0. Open the inventory. A pet means the appended pass can draw there. Nothing means the UI skips it. Your character means the UI signal was not read and no mode can change the preview.",
+  pet_static:
+    "Preview mode pet_static: the same appended pass without rebuild_animation_matrices, which would show the pet frozen in its rest pose. A pet here but not in mode pet means the UI cannot rebuild animation matrices.",
+  pet_first:
+    "Preview mode pet_first: the same appended pass moved to the front of the render list. A pet here but not in mode pet means the UI draws only the leading pass.",
+  no_player:
+    "Preview mode no_player: the vanilla body passes are taken out of the render list inside the UI and nothing is added. Your character still showing means the UI ignores the list this pack ships, which would explain every empty result. Nothing showing means the list is honoured.",
+});
+function uiMode(player: Player, choice: string): void {
+  if (!isUiMode(choice)) throw new Error(`Expected one of ${UI_MODES.join(", ")}.`);
+  applyUiMode(player, choice);
+  safeMessage(player, UI_MODE_NOTES[choice]);
+}
 function selfCommand(handler: CommandAction, delay = 1, diagnostic = false): CommandCallback {
   return (origin, ...args) => {
     const player = origin.sourceEntity;
@@ -538,6 +560,12 @@ const COMMANDS: readonly PetCommand[] = [
     params: [en("debug_choice")],
   },
   {
+    name: "ui",
+    description: "Inventory preview experiment: player, pet, pet_static, pet_first or no_player",
+    handler: uiMode,
+    params: [en("ui_choice")],
+  },
+  {
     name: "probe",
     description: "Spawn a temporary stationary version of your selected pet",
     handler: (p) => {
@@ -562,6 +590,7 @@ const COMMANDS: readonly PetCommand[] = [
       p.setDynamicProperty(ARMOR_FIT_TRIMS, undefined);
       select(p, "human");
       p.setProperty(DEBUG_PROPERTY, false);
+      resetUiMode(p);
       p.setDynamicProperty(SNAPSHOT, undefined);
       p.setDynamicProperty(LEGACY_SNAPSHOT, undefined);
       cleanup(p);
@@ -581,6 +610,7 @@ export function registerPetCommands(r: CommandRegistry): void {
     ["pet:debug_choice", ["on", "off"]],
     ["pet:view_choice", ["paws", "native"]],
     ["pet:armor_choice", ["native", "fitted", "auto"]],
+    ["pet:ui_choice", [...UI_MODES]],
   ];
   for (const [name, values] of enums) {
     try {

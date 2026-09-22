@@ -1,5 +1,5 @@
 // GENERATED diagnostic contract, not property registration.
-export const PROPERTY_SCHEMA_SHA256 = "e299f736fb1cf859bca2b7fc4b84da3da846893cc382fcef5d6c0dfdb15e75bf";
+export const PROPERTY_SCHEMA_SHA256 = "558ac2949cacc7fec46c8fc66c6c374570b49f2c18bce12a91c45f9c5ab48975";
 export const PROPERTY_SCHEMA = Object.freeze({
   "pet:debug": {
     "type": "bool",
@@ -134,6 +134,15 @@ export const PROPERTY_SCHEMA = Object.freeze({
       1.5
     ],
     "default": 1.0,
+    "client_sync": true
+  },
+  "pet:ui_mode": {
+    "type": "int",
+    "range": [
+      0,
+      4
+    ],
+    "default": 0,
     "client_sync": true
   }
 });

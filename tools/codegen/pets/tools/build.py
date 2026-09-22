@@ -23,6 +23,10 @@ from equipment import fit_clip as armor_fit_clip
 ROOT=Path(__file__).resolve().parents[1]
 # At most 1.13.0, or the engine drops persona skins for every player; see where it is written below.
 PERSONA_SAFE_ENGINE_VERSION='1.13.0'
+# The inventory-preview experiment (/pet:ui): the values of pet:ui_mode in wire order. 0 is the shipped preview and
+# each other value changes one thing inside the UI render of a pet form (see the gates below). UI_MODES in the
+# scripts' settings.ts lists the same names in the same order; test_paperdoll.py holds both to it.
+UI_MODES=['player','pet','pet_static','pet_first','no_player']
 OLD_SELECT="(query.has_property('pet:form') ? (query.property('pet:form') == 'carter') : 0.0)"
 DEBUG="(query.has_property('pet:debug') ? query.property('pet:debug') : 0.0)"
 EMPTY="query.get_equipped_item_name(0, 1) == ''"
@@ -188,6 +192,8 @@ def build(root=ROOT,output=None):
     # pixels and scaled by pet:armor_scale about the feet, on top of the per-pet pre-scale baked into the geometry.
     desc['properties']['pet:armor_lift']={'type':'float','range':[-16.0,16.0],'default':0.0,'client_sync':True}
     desc['properties']['pet:armor_scale']={'type':'float','range':[0.5,1.5],'default':1.0,'client_sync':True}
+    # Which inventory-preview experiment mode the player asked for with /pet:ui; only the client's Molang reads it.
+    desc['properties']['pet:ui_mode']={'type':'int','range':[0,len(UI_MODES)-1],'default':0,'client_sync':True}
     for name,model in [('pet:become_human',0),('pet:become_carter',1)]:
         pd['minecraft:entity']['events'][name]={'set_property':{
             'pet:model_id':model,'pet:view':'paws' if model else 'native',
@@ -223,6 +229,19 @@ def build(root=ROOT,output=None):
     tp=f'({select} && !variable.is_first_person && !{doll} && !variable.map_face_icon && !query.is_spectator)'
     fp=f'({select} && variable.is_first_person && !{doll} && !variable.map_face_icon && !query.is_spectator)'
     paws=f"({fp} && (query.has_property('pet:view') ? query.property('pet:view') == 'paws' : 1.0))"
+    # The inventory-preview experiment (/pet:ui; docs/features/pets.md, "The inventory-preview experiment"). Inside
+    # the UI render of a pet form each mode changes exactly one thing, so what the preview shows says which part of
+    # the UI path differs from the world: pet turns the appended body pass on there (0.4.0's approach), pet_static
+    # adds the same pass without rebuild_animation_matrices, pet_first the same pass at the head of the render list,
+    # and no_player takes the vanilla body passes out of the render list without touching their part_visibility.
+    # The three pet modes hide the human body through part_visibility (pet_ui_hide_body); every mode hides the
+    # persona pieces, the cape and the first-person arms the same way (pet_ui_hide). Nothing changes outside the UI,
+    # in mode 0, or for the Player form.
+    ui_mode="(query.has_property('pet:ui_mode') ? query.property('pet:ui_mode') : 0.0)"
+    in_ui=f'({select} && {doll} && !variable.map_face_icon && !query.is_spectator)'
+    ui={name:f'({in_ui} && {ui_mode} == {UI_MODES.index(name)}.0)' for name in UI_MODES[1:]}
+    ui_hide=f'({in_ui} && {ui_mode} > 0.0)'
+    ui_hide_body=f'({in_ui} && {ui_mode} > 0.0 && {ui_mode} != {UI_MODES.index("no_player")}.0)'
     native=read(root/'upstream/player.entity.json');d=native['minecraft:client_entity']['description'];s=d['scripts']
     # A resource pack that ships entity/player.entity.json makes every player render as Steve, hides capes and stops
     # Character Creator (persona) pieces drawing, unless the client entity declares a min_engine_version of at most
@@ -233,6 +252,11 @@ def build(root=ROOT,output=None):
     d['min_engine_version']=PERSONA_SAFE_ENGINE_VERSION
     s.setdefault('initialize',[]).extend(['variable.pet_active = 0.0;','variable.pet_model_id = 0.0;','variable.pet_armor_fit = 0.0;','variable.melee_spear_equipped = 0.0;'])
     s['pre_animation'].extend([f'variable.pet_index = {index};',f'variable.pet_model_id = {getter};',f'variable.pet_active = {select};',f'variable.pet_tp = {tp};',f'variable.pet_fp_paws = {paws};',"variable.pet_armor_fit = variable.pet_active && (query.has_property('pet:armor_fit') ? query.property('pet:armor_fit') : 1.0);"])
+    s['pre_animation'].extend([f'variable.pet_ui_{name} = {gate};' for name,gate in ui.items()]+[f'variable.pet_ui_hide = {ui_hide};',f'variable.pet_ui_hide_body = {ui_hide_body};'])
+    # Mode no_player: the vanilla body passes leave the render list inside the UI; their part_visibility is untouched.
+    for row in d['render_controllers']:
+        for name in ['controller.render.player.first_person','controller.render.player.third_person']:
+            if name in row:row[name]=f'({row[name]}) && !variable.pet_ui_no_player'
     s['variables'].update({'variable.pet_active':'public','variable.pet_model_id':'public','variable.pet_armor_fit':'public'})
     s['animate']=[{'root':'1.0'}]
     raw=read(root/'catalog/rigs/quadruped_clips.json')['animations'];common={}
@@ -283,6 +307,8 @@ def build(root=ROOT,output=None):
         idx='variable.pet_fp_paws ? variable.pet_index : 0.0' if first else 'variable.pet_index'
         entry['geometry']=f'Array.pet_models[{idx}]';entry['textures']=[f'Array.pet_coats[{idx}]']
         entry['part_visibility']=mapped(entry['part_visibility'],lambda v:v.replace(OLD_SELECT,select).replace('cav_debug_mouth','pet_debug_mouth'))
+        # The first-person arms are the human too, should the UI keep the camera's flag (pet_ui_hide).
+        if first:entry['part_visibility']=[{k:(v if isinstance(v,bool) else f'({v}) && !variable.pet_ui_hide') for k,v in row.items()} for row in entry['part_visibility']]
         rc[name]=entry
     # Keep a stable native-body pass. It never selects a pet geometry; the
     # per-pet body passes below are separate and contain only pet_* bones.
@@ -290,23 +316,32 @@ def build(root=ROOT,output=None):
     for row in native_tp['part_visibility']:
         for name,value in row.items():
             v='1.0' if value is True else '0.0' if value is False else value
-            row[name]=f'({v}) && !variable.pet_tp'
+            row[name]=f'({v}) && !variable.pet_tp && !variable.pet_ui_hide_body'
     rc['controller.render.player.third_person']=native_tp
+    first=[]
     for p in pets:
-        ident=p['id'];name=f'controller.render.pet.{ident}.body'
+        ident=p['id'];stem=f'controller.render.pet.{ident}';name=stem+'.body';wire=p['wire_id']
         rc[name]={'geometry':f'Geometry.pet_{ident}',
             'materials':[{'*':'Material.default'}],
             'textures':[f'Texture.pet_{ident}'],'rebuild_animation_matrices':True,
             'part_visibility':[{'*':True},{'pet_debug_mouth':DEBUG}]}
-        # Native renderer remains in its original place and is not gated out.
-        d['render_controllers'].append({name:f'variable.pet_tp && variable.pet_model_id == {p["wire_id"]}'})
+        # Native renderer remains in its original place and is not gated out. The body pass is also the pet channel
+        # of the inventory-preview experiment's mode pet.
+        d['render_controllers'].append({name:f'(variable.pet_tp || variable.pet_ui_pet) && variable.pet_model_id == {wire}'})
+        # The experiment's other pet channels: the same pass without rebuilt animation matrices, appended (mode
+        # pet_static), and an identical pass at the head of the render list (mode pet_first).
+        static=deepcopy(rc[name]);del static['rebuild_animation_matrices'];rc[stem+'.ui_static']=static
+        d['render_controllers'].append({stem+'.ui_static':f'variable.pet_ui_pet_static && variable.pet_model_id == {wire}'})
+        rc[stem+'.ui_first']=deepcopy(rc[name])
+        first.append({stem+'.ui_first':f'variable.pet_ui_pet_first && variable.pet_model_id == {wire}'})
+    d['render_controllers'][0:0]=first
     # Both render controller files replace a vanilla file by name, so a controller vanilla defines and this pack
     # does not stops existing for the player. The client entity still asks for the spectator and map passes, and the
     # engine's persona path needs map.persona; carry through whatever the pet passes above did not already replace.
     rc=inherit_vanilla(root,'player.render_controllers.json',rc)
     write(rp/'render_controllers/player.render_controllers.json',{'format_version':'1.8.0','render_controllers':rc})
     persona={}
-    for file,gate in [('persona.third_person.extracted.json',tp),('persona.first_person.extracted.json',paws)]:
+    for file,gate in [('persona.third_person.extracted.json',f'({tp} || {ui_hide})'),('persona.first_person.extracted.json',f'({paws} || {ui_hide})')]:
         for name,entry in read(root/'upstream'/file)['render_controllers'].items():
             for rule in entry['part_visibility']:
                 for k,val in rule.items():rule[k]=f'({"1.0" if val is True else "0.0" if val is False else val}) && !{gate}'
@@ -314,8 +349,8 @@ def build(root=ROOT,output=None):
     persona=inherit_vanilla(root,'persona.render_controllers.json',persona)
     write(rp/'render_controllers/persona.render_controllers.json',{'format_version':'1.8.0','render_controllers':persona})
     # The cape is hidden exactly where the pet body replaces the human, so it comes back with the player in the
-    # paperdoll instead of leaving a capeless character there.
-    cape=read(root/'upstream/cape.render_controllers.json');entry=cape['render_controllers']['controller.render.player.cape'];entry['part_visibility']=[{'*':f'!{tp}'}]+[{k:f'({v}) && !{tp}' for k,v in row.items()} for row in entry['part_visibility']]
+    # paperdoll instead of leaving a capeless character there; an experiment mode hides it in the UI again.
+    cape=read(root/'upstream/cape.render_controllers.json');entry=cape['render_controllers']['controller.render.player.cape'];entry['part_visibility']=[{'*':f'!{tp} && !{ui_hide}'}]+[{k:f'({v}) && !{tp} && !{ui_hide}' for k,v in row.items()} for row in entry['part_visibility']]
     write(rp/'render_controllers/cape.render_controllers.json',cape)
     # Debug markers do not reuse native skeleton names except the explicit hand-grip marker.
     marker=read(base/'resource_pack/models/entity/diag_p2.geo.json');marker=mapped(marker,lambda v:v.replace('geometry.pet.diag_p2','geometry.pet.marker').replace('cav_probe_root','pet_probe_root'))

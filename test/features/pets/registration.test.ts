@@ -45,13 +45,14 @@ const DOCUMENTED = [
   "diagnose",
   "clientcheck",
   "debug",
+  "ui",
   "probe",
   "cleanup",
   "snapshot",
   "compare",
   "reset",
 ].map((name) => `pet:${name}`);
-const ENUMS = ["pet:form_choice", "pet:debug_choice", "pet:view_choice", "pet:armor_choice"];
+const ENUMS = ["pet:form_choice", "pet:debug_choice", "pet:view_choice", "pet:armor_choice", "pet:ui_choice"];
 const NAME = /^pet:[a-z][a-z0-9_]*$/;
 const PARAMETER = /^[a-z][a-z0-9_]*$/;
 const ENUM_VALUE = /^[a-z][a-z0-9_]*$/;

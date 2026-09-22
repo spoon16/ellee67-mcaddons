@@ -1,10 +1,11 @@
 """The paperdoll and the skin path: Molang truth tables over the emitted player entity, not a client run."""
 from pathlib import Path
 from itertools import product
-import json,sys,unittest
+import json,re,sys,unittest
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'tools'))
 from catalog import read,load_catalog
 from molang_subset import Expression
+from build import UI_MODES
 RP=ROOT/'resource_pack';_,PETS,_=load_catalog(ROOT)
 D=read(RP/'entity/player.entity.json')['minecraft:client_entity']['description']
 RC={}
@@ -80,6 +81,92 @@ class Paperdoll(unittest.TestCase):
     self.assertNotIn('is_in_ui',str(animate(f'pet_{p["id"]}_{name}').tokens),(p['id'],name))
   seat=animate('pet_seat_align')
   self.assertTrue(seat({'variable.pet_tp':1,'query.is_riding':1}));self.assertFalse(seat({'variable.pet_tp':0,'query.is_riding':1}))
+
+VANILLA={next(iter(row)):next(iter(row.values())) for row in read(ROOT/'upstream/player.entity.json')['minecraft:client_entity']['description']['render_controllers']}
+CONDITIONS={next(iter(row)):Expression(next(iter(row.values()))) for row in D['render_controllers']}
+UI_VARIABLES=[f'variable.pet_ui_{m}' for m in UI_MODES[1:]]+['variable.pet_ui_hide','variable.pet_ui_hide_body']
+
+class PaperdollExperiment(unittest.TestCase):
+ """/pet:ui: inside the UI render of a pet form each mode changes exactly one thing, and nothing changes anywhere
+ else. Truth tables over the emitted Molang; what a device shows for each mode is the experiment itself."""
+ def world(self,model,first_person,paperdoll,mode):
+  e,props=env(model,first_person,paperdoll);props['pet:ui_mode']=mode
+  for name in ['variable.pet_index','variable.pet_model_id','variable.pet_tp']+UI_VARIABLES:e[name]=assignment(name)(e,props)
+  e.update({'variable.helmet_layer_visible':1,'variable.leg_layer_visible':1,'variable.boot_layer_visible':1,'variable.chest_layer_visible':1,
+            'query.has_cape':1,'query.armor_texture_slot':lambda *a:0,'variable.is_blinking':0,'item_mainhand':''})
+  return e,props
+ def listed(self,name,e,props):return bool(CONDITIONS[name](e,props))
+ def vanilla_listed(self,name,e,props):return bool(Expression(VANILLA[name])(e,props))
+ def visible(self,name,e,props):return bool(Expression(RC[name]['part_visibility'][0]['*'])(e,props))
+ def arms(self,e,props):
+  rule=next(row['rightArm'] for row in RC['controller.render.player.first_person']['part_visibility'] if 'rightArm' in row)
+  return bool(Expression(rule)(e,props))
+ def human(self,e,props):
+  """(native body, persona bodies, cape, first-person arms): what part_visibility lets through of the human."""
+  persona=[n for n in RC if n.startswith('controller.render.persona') and n.endswith('.third_person')]
+  return (self.visible('controller.render.player.third_person',e,props),all(self.visible(n,e,props) for n in persona),
+          self.visible('controller.render.player.cape',e,props),self.arms(e,props))
+ def pet_passes(self,pet,e,props):
+  return tuple(self.listed(f'controller.render.pet.{pet["id"]}.{p}',e,props) for p in ['body','ui_static','ui_first'])
+ def test_the_modes_are_declared_once_and_agree_with_the_scripts(self):
+  self.assertEqual(UI_MODES,['player','pet','pet_static','pet_first','no_player'])
+  prop=read(ROOT/'behavior_pack/entities/player.json')['minecraft:entity']['description']['properties']['pet:ui_mode']
+  self.assertEqual(prop,{'type':'int','range':[0,len(UI_MODES)-1],'default':0,'client_sync':True})
+  scripts=(ROOT/'src/settings.js').read_text()
+  listed=re.search(r'UI_MODES\s*=\s*Object\.freeze\(\[([^\]]*)\]',scripts).group(1)
+  self.assertEqual(re.findall(r'"([a-z_]+)"',listed),UI_MODES)
+ def test_mode_player_is_the_shipped_paperdoll(self):
+  for p in PETS:
+   for first_person in [0,1]:
+    e,props=self.world(p['wire_id'],first_person,1,0)
+    for name in UI_VARIABLES:self.assertFalse(e[name],name)
+    self.assertEqual(self.human(e,props),(True,True,True,True))
+    for name in VANILLA:self.assertEqual(self.listed(name,e,props),self.vanilla_listed(name,e,props),name)
+    for other in PETS:self.assertEqual(self.pet_passes(other,e,props),(False,False,False),other['id'])
+ def test_each_mode_changes_one_thing_inside_the_ui(self):
+  for p in PETS:
+   for first_person in [0,1]:
+    for wire,mode in list(enumerate(UI_MODES))[1:]:
+     e,props=self.world(p['wire_id'],first_person,1,wire)
+     self.assertEqual([m for m in UI_MODES[1:] if e[f'variable.pet_ui_{m}']],[mode])
+     self.assertTrue(e['variable.pet_ui_hide']);self.assertEqual(bool(e['variable.pet_ui_hide_body']),mode!='no_player')
+     # One pet channel at most, and only this pet's.
+     for other in PETS:
+      mine=other is p
+      self.assertEqual(self.pet_passes(other,e,props),(mine and mode=='pet',mine and mode=='pet_static',mine and mode=='pet_first'),(other['id'],mode))
+     # The human: hidden through part_visibility in the pet modes, still visible but unlisted in no_player; the
+     # persona pieces, the cape and the first-person arms hidden in every mode.
+     self.assertEqual(self.human(e,props),(mode=='no_player',False,False,False),(p['id'],first_person,mode))
+     for name in ['controller.render.player.first_person','controller.render.player.third_person']:
+      self.assertEqual(self.listed(name,e,props),mode!='no_player' and self.vanilla_listed(name,e,props),(name,mode))
+     for name in VANILLA:
+      if name.endswith('spectator') or name.endswith('.map'):self.assertEqual(self.listed(name,e,props),self.vanilla_listed(name,e,props),name)
+ def test_no_mode_changes_anything_outside_the_ui(self):
+  for p in PETS:
+   for first_person in [0,1]:
+    for wire in range(len(UI_MODES)):
+     e,props=self.world(p['wire_id'],first_person,0,wire)
+     for name in UI_VARIABLES:self.assertFalse(e[name],name)
+     self.assertEqual(bool(e['variable.pet_tp']),not first_person)
+     self.assertEqual(self.pet_passes(p,e,props),(not first_person,False,False))
+     self.assertEqual(self.human(e,props),(bool(first_person),bool(first_person),bool(first_person),True))
+     for name in VANILLA:self.assertEqual(self.listed(name,e,props),self.vanilla_listed(name,e,props),name)
+ def test_the_player_form_ignores_the_mode(self):
+  for first_person,paperdoll in product([0,1],[0,1]):
+   for wire in range(len(UI_MODES)):
+    e,props=self.world(0,first_person,paperdoll,wire)
+    for name in UI_VARIABLES:self.assertFalse(e[name],name)
+    self.assertEqual(self.human(e,props),(True,True,True,True))
+    for name in VANILLA:self.assertEqual(self.listed(name,e,props),self.vanilla_listed(name,e,props),name)
+    for p in PETS:self.assertEqual(self.pet_passes(p,e,props),(False,False,False))
+ def test_the_pet_channels_differ_only_as_their_modes_say(self):
+  for p in PETS:
+   body=RC[f'controller.render.pet.{p["id"]}.body'];static=RC[f'controller.render.pet.{p["id"]}.ui_static'];first=RC[f'controller.render.pet.{p["id"]}.ui_first']
+   self.assertIs(body['rebuild_animation_matrices'],True);self.assertEqual(first,body)
+   self.assertNotIn('rebuild_animation_matrices',static);self.assertEqual({k:v for k,v in body.items() if k!='rebuild_animation_matrices'},static)
+  names=[next(iter(row)) for row in D['render_controllers']]
+  self.assertEqual(names[:len(PETS)],[f'controller.render.pet.{p["id"]}.ui_first' for p in PETS])
+  self.assertEqual([n for n in names if n in VANILLA],list(VANILLA))
 
 class SkinCompatibility(unittest.TestCase):
  """MCPE-74493: a pack shipping entity/player.entity.json reverts every skin to Steve, hides capes and stops

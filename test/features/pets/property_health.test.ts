@@ -32,7 +32,7 @@ describe("property inspection", () => {
     expect(h.status).toBe("READY");
     expect(h.model).toBe(0);
     expect(h.serverForm).toBe("player");
-    expect(h.validCount).toBe(19);
+    expect(h.validCount).toBe(20);
   });
 
   for (const [id, name] of [
@@ -67,7 +67,7 @@ describe("property inspection", () => {
     const h = inspectProperties(p);
     expect(h.status).toBe("MISSING_DEFINITION");
     expect(h.validCount).toBe(0);
-    expect(h.missing).toHaveLength(19);
+    expect(h.missing).toHaveLength(20);
     expect(h.serverForm).toBeNull();
   });
 
@@ -98,7 +98,7 @@ describe("property inspection", () => {
     };
     const h = inspectProperties(p);
     expect(h.status).toBe("READ_ERROR");
-    expect(h.readErrors).toHaveLength(19);
+    expect(h.readErrors).toHaveLength(20);
     expect(h.missing).toEqual([]);
     expect(h.properties["pet:model_id"]?.error).toBe("entity loading");
   });
@@ -144,7 +144,7 @@ describe("property inspection", () => {
     expect(h.model).toBe(0);
     expect(h.serverForm).toBe("player");
     expect(h.missing).toEqual(["pet:seat_lift"]);
-    expect(h.validCount).toBe(18);
+    expect(h.validCount).toBe(19);
   });
 
   it("Property check reports a missing model even with a present saved preference", () => {
@@ -163,7 +163,7 @@ describe("diagnostic commands", () => {
     const q = petPlayer("check-q");
     command("check", p);
     await ticks(4);
-    expect(p.chat[0]).toMatch(/READY.*19\/19/);
+    expect(p.chat[0]).toMatch(/READY.*20\/20/);
     expect(p.chat[0]).toMatch(/pet:model_id=0/);
     expect(q.messages).toHaveLength(0);
     expect(p.writes).toHaveLength(0);
@@ -183,7 +183,7 @@ describe("diagnostic commands", () => {
     expect(h.armorFit).toBeNull();
     expect(h.serverForm).toBeNull();
     expect(h.modelStatus).toBe("missing");
-    expect(h.propertyHealth.validCount).toBe(17);
+    expect(h.propertyHealth.validCount).toBe(18);
     expect(p.writes).toHaveLength(0);
   });
 

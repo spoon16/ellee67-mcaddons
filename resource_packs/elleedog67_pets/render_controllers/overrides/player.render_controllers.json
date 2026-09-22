@@ -16,22 +16,22 @@
           "*": false
         },
         {
-          "rightArm": "query.get_equipped_item_name(0, 1) == '' || query.get_equipped_item_name(0, 1) == 'filled_map'"
+          "rightArm": "(query.get_equipped_item_name(0, 1) == '' || query.get_equipped_item_name(0, 1) == 'filled_map') && !variable.pet_ui_hide"
         },
         {
-          "rightSleeve": "query.get_equipped_item_name(0, 1) == '' || query.get_equipped_item_name(0, 1) == 'filled_map'"
+          "rightSleeve": "(query.get_equipped_item_name(0, 1) == '' || query.get_equipped_item_name(0, 1) == 'filled_map') && !variable.pet_ui_hide"
         },
         {
-          "leftArm": "(query.get_equipped_item_name(0, 1) == 'filled_map' && query.get_equipped_item_name('off_hand') != 'shield') || (query.get_equipped_item_name('off_hand') == 'filled_map' && !query.item_is_charged) || (!query.item_is_charged && (variable.item_use_normalized > 0 && variable.item_use_normalized < 1.0))"
+          "leftArm": "((query.get_equipped_item_name(0, 1) == 'filled_map' && query.get_equipped_item_name('off_hand') != 'shield') || (query.get_equipped_item_name('off_hand') == 'filled_map' && !query.item_is_charged) || (!query.item_is_charged && (variable.item_use_normalized > 0 && variable.item_use_normalized < 1.0))) && !variable.pet_ui_hide"
         },
         {
-          "leftSleeve": "(query.get_equipped_item_name(0, 1) == 'filled_map' && query.get_equipped_item_name('off_hand') != 'shield') || (query.get_equipped_item_name('off_hand') == 'filled_map' && !query.item_is_charged) || (!query.item_is_charged && (variable.item_use_normalized > 0 && variable.item_use_normalized < 1.0))"
+          "leftSleeve": "((query.get_equipped_item_name(0, 1) == 'filled_map' && query.get_equipped_item_name('off_hand') != 'shield') || (query.get_equipped_item_name('off_hand') == 'filled_map' && !query.item_is_charged) || (!query.item_is_charged && (variable.item_use_normalized > 0 && variable.item_use_normalized < 1.0))) && !variable.pet_ui_hide"
         },
         {
-          "pet_fp_right_paw": "(query.get_equipped_item_name(0, 1) == '' || query.get_equipped_item_name(0, 1) == 'filled_map') && ((((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) > 0.0) && variable.is_first_person && !variable.map_face_icon && !query.is_spectator && (query.has_property('pet:view') ? query.property('pet:view') == 'paws' : 1.0))"
+          "pet_fp_right_paw": "((query.get_equipped_item_name(0, 1) == '' || query.get_equipped_item_name(0, 1) == 'filled_map') && ((((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) > 0.0) && variable.is_first_person && !variable.map_face_icon && !query.is_spectator && (query.has_property('pet:view') ? query.property('pet:view') == 'paws' : 1.0))) && !variable.pet_ui_hide"
         },
         {
-          "pet_fp_left_paw": "((query.get_equipped_item_name(0, 1) == 'filled_map' && query.get_equipped_item_name('off_hand') != 'shield') || (query.get_equipped_item_name('off_hand') == 'filled_map' && !query.item_is_charged) || (!query.item_is_charged && (variable.item_use_normalized > 0 && variable.item_use_normalized < 1.0))) && ((((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) > 0.0) && variable.is_first_person && !variable.map_face_icon && !query.is_spectator && (query.has_property('pet:view') ? query.property('pet:view') == 'paws' : 1.0))"
+          "pet_fp_left_paw": "(((query.get_equipped_item_name(0, 1) == 'filled_map' && query.get_equipped_item_name('off_hand') != 'shield') || (query.get_equipped_item_name('off_hand') == 'filled_map' && !query.item_is_charged) || (!query.item_is_charged && (variable.item_use_normalized > 0 && variable.item_use_normalized < 1.0))) && ((((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) > 0.0) && variable.is_first_person && !variable.map_face_icon && !query.is_spectator && (query.has_property('pet:view') ? query.property('pet:view') == 'paws' : 1.0))) && !variable.pet_ui_hide"
         }
       ],
       "arrays": {
@@ -66,40 +66,40 @@
       ],
       "part_visibility": [
         {
-          "*": "(1.0) && !variable.pet_tp"
+          "*": "(1.0) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "helmet": "(variable.helmet_layer_visible) && !variable.pet_tp"
+          "helmet": "(variable.helmet_layer_visible) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "leftLegging": "(variable.leg_layer_visible) && !variable.pet_tp"
+          "leftLegging": "(variable.leg_layer_visible) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "rightLegging": "(variable.leg_layer_visible) && !variable.pet_tp"
+          "rightLegging": "(variable.leg_layer_visible) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "leftBoot": "(variable.boot_layer_visible) && !variable.pet_tp"
+          "leftBoot": "(variable.boot_layer_visible) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "rightBoot": "(variable.boot_layer_visible) && !variable.pet_tp"
+          "rightBoot": "(variable.boot_layer_visible) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "leftSock": "(variable.boot_layer_visible && variable.leg_layer_visible) && !variable.pet_tp"
+          "leftSock": "(variable.boot_layer_visible && variable.leg_layer_visible) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "rightSock": "(variable.boot_layer_visible && variable.leg_layer_visible) && !variable.pet_tp"
+          "rightSock": "(variable.boot_layer_visible && variable.leg_layer_visible) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "bodyArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp"
+          "bodyArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "leftArmArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp"
+          "leftArmArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "rightArmArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp"
+          "rightArmArmor": "(variable.chest_layer_visible && !query.has_cape) && !variable.pet_tp && !variable.pet_ui_hide_body"
         },
         {
-          "belt": "(variable.chest_layer_visible && variable.leg_layer_visible) && !variable.pet_tp"
+          "belt": "(variable.chest_layer_visible && variable.leg_layer_visible) && !variable.pet_tp && !variable.pet_ui_hide_body"
         }
       ]
     },
@@ -195,6 +195,45 @@
         }
       ]
     },
+    "controller.render.pet.carter.ui_static": {
+      "geometry": "Geometry.pet_carter",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.pet_carter"
+      ],
+      "part_visibility": [
+        {
+          "*": true
+        },
+        {
+          "pet_debug_mouth": "(query.has_property('pet:debug') ? query.property('pet:debug') : 0.0)"
+        }
+      ]
+    },
+    "controller.render.pet.carter.ui_first": {
+      "geometry": "Geometry.pet_carter",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.pet_carter"
+      ],
+      "rebuild_animation_matrices": true,
+      "part_visibility": [
+        {
+          "*": true
+        },
+        {
+          "pet_debug_mouth": "(query.has_property('pet:debug') ? query.property('pet:debug') : 0.0)"
+        }
+      ]
+    },
     "controller.render.pet.mochi.body": {
       "geometry": "Geometry.pet_mochi",
       "materials": [
@@ -215,7 +254,85 @@
         }
       ]
     },
+    "controller.render.pet.mochi.ui_static": {
+      "geometry": "Geometry.pet_mochi",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.pet_mochi"
+      ],
+      "part_visibility": [
+        {
+          "*": true
+        },
+        {
+          "pet_debug_mouth": "(query.has_property('pet:debug') ? query.property('pet:debug') : 0.0)"
+        }
+      ]
+    },
+    "controller.render.pet.mochi.ui_first": {
+      "geometry": "Geometry.pet_mochi",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.pet_mochi"
+      ],
+      "rebuild_animation_matrices": true,
+      "part_visibility": [
+        {
+          "*": true
+        },
+        {
+          "pet_debug_mouth": "(query.has_property('pet:debug') ? query.property('pet:debug') : 0.0)"
+        }
+      ]
+    },
     "controller.render.pet.casper.body": {
+      "geometry": "Geometry.pet_casper",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.pet_casper"
+      ],
+      "rebuild_animation_matrices": true,
+      "part_visibility": [
+        {
+          "*": true
+        },
+        {
+          "pet_debug_mouth": "(query.has_property('pet:debug') ? query.property('pet:debug') : 0.0)"
+        }
+      ]
+    },
+    "controller.render.pet.casper.ui_static": {
+      "geometry": "Geometry.pet_casper",
+      "materials": [
+        {
+          "*": "Material.default"
+        }
+      ],
+      "textures": [
+        "Texture.pet_casper"
+      ],
+      "part_visibility": [
+        {
+          "*": true
+        },
+        {
+          "pet_debug_mouth": "(query.has_property('pet:debug') ? query.property('pet:debug') : 0.0)"
+        }
+      ]
+    },
+    "controller.render.pet.casper.ui_first": {
       "geometry": "Geometry.pet_casper",
       "materials": [
         {

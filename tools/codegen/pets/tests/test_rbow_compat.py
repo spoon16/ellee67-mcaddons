@@ -79,8 +79,10 @@ class PairPackaging(unittest.TestCase):
    self.assertEqual((B/'scripts'/f).read_bytes(),(SRC/'behavior_pack/scripts'/f).read_bytes())
   self.assertFalse((P/'scripts/rules.js').exists())
  def test_all_rbow_gameplay_files_unchanged_except_player_and_manifest(self):
+  # The three block files carry the item visual patch (BlockItemVisuals below); everything else is byte-identical.
+  patched=['manifest.json','entities/player.json']+[f'blocks/{name}.json' for name in ['rbow_ore','deepslate_rbow_ore','rbow_block']]
   for f in (SRC/'behavior_pack').rglob('*'):
-   if f.is_file() and f.relative_to(SRC/'behavior_pack').as_posix() not in ['manifest.json','entities/player.json']:
+   if f.is_file() and f.relative_to(SRC/'behavior_pack').as_posix() not in patched:
     self.assertEqual(f.read_bytes(),(B/f.relative_to(SRC/'behavior_pack')).read_bytes(),str(f))
  def test_all_twenty_rbow_runtime_textures_are_identical(self):
   files=list((SRC/'resource_pack/textures').rglob('*.png'));self.assertEqual(len(files),20)
@@ -202,3 +204,30 @@ class EquipmentIntegration(unittest.TestCase):
    self.assertTrue((R/(item['texture']+'.png')).exists())
   for item in SIDES:
    self.assertTrue((R/(item['texture']+'.png')).exists() or (Q/(item['texture']+'.png')).exists())
+
+class BlockItemVisuals(unittest.TestCase):
+ """The three Rbow blocks drew as a flat top-texture plane in the inventory on a device, carpet style, while their
+ custom items (which carry the sulfur cube item tag) have to stay. A block_placer item without an icon draws the
+ block's own icon, so each block declares an item visual: a plain cube this pack ships, with the block's materials."""
+ def test_every_rbow_block_declares_the_cube_item_visual_and_keeps_the_vanilla_world_block(self):
+  from rbow_compat import RBOW_BLOCKS,CUBE_GEOMETRY
+  self.assertEqual(sorted(RBOW_BLOCKS),sorted(p.stem for p in (B/'blocks').glob('*.json')))
+  for name in RBOW_BLOCKS:
+   c=read(B/f'blocks/{name}.json')['minecraft:block']['components'];src=read(SRC/f'behavior_pack/blocks/{name}.json')['minecraft:block']['components']
+   self.assertEqual(c['minecraft:geometry'],{'identifier':'minecraft:geometry.full_block'})
+   visual=c['minecraft:item_visual'];self.assertEqual(visual['geometry'],{'identifier':CUBE_GEOMETRY})
+   self.assertEqual(visual['material_instances']['*'],src['minecraft:material_instances']['*'])
+   self.assertEqual(visual['material_instances']['up'],src['minecraft:material_instances'].get('up',src['minecraft:material_instances']['*']))
+   self.assertEqual(sorted(visual['material_instances']),['*','up'])
+   self.assertEqual({k:v for k,v in c.items() if k not in ('minecraft:geometry','minecraft:item_visual')},{k:v for k,v in src.items() if k!='minecraft:geometry'})
+   self.assertEqual(read(B/f'items/{name}.json'),read(SRC/f'behavior_pack/items/{name}.json'))
+ def test_the_cube_geometry_is_one_full_block_with_a_named_top_face(self):
+  from rbow_compat import CUBE_GEOMETRY
+  g=read(R/'models/blocks/rbow_cube.geo.json')['minecraft:geometry'][0]
+  self.assertEqual(g['description']['identifier'],CUBE_GEOMETRY)
+  (bone,)=g['bones'];(cube,)=bone['cubes']
+  self.assertEqual(cube['origin'],[-8,0,-8]);self.assertEqual(cube['size'],[16,16,16])
+  self.assertEqual(sorted(cube['uv']),['down','east','north','south','up','west'])
+  self.assertEqual(cube['uv']['up'].get('material_instance'),'up')
+  for face in ['north','south','east','west','down']:
+   self.assertNotIn('material_instance',cube['uv'][face]);self.assertEqual(cube['uv'][face],{'uv':[0,0],'uv_size':[16,16]})

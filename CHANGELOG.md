@@ -13,6 +13,9 @@ icons, a minecart seat height and a recipe for the book.
 - Pets: Mochi's and Casper's armor is no longer pre-scaled by the player render scale. On a device it drew 6% small
   and sank the helmet crown into the head while Carter's unscaled armor fit, so no pet's meshes are pre-scaled now,
   and every helmet crown sits 0.45 pixels clear of the head instead of flush with it.
+- Pets: the inventory and pause-menu preview. `variable.is_paperdoll` alone did not bring the player back in the UI
+  on a device, so the gates now also honour `query.is_in_ui`, the engine's own query for an entity drawn as part of
+  the UI. The preview shows your character; the pet stays in the world.
 - Pets: minecarts are their own mount kind (`minecart`, wire value 9), with Carter's seat trim baked at +4 pixels as
   measured in game. As on every re-bake, the saved live trims of profiled kinds start from zero once.
 

@@ -14,10 +14,10 @@
       ],
       "part_visibility": [
         {
-          "*": "!((((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) > 0.0) && !variable.is_first_person && !variable.is_paperdoll && !variable.map_face_icon && !query.is_spectator)"
+          "*": "!((((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) > 0.0) && !variable.is_first_person && !(variable.is_paperdoll || query.is_in_ui) && !variable.map_face_icon && !query.is_spectator)"
         },
         {
-          "cape": "(query.armor_texture_slot(1) != 5 && (!variable.is_first_person || variable.is_paperdoll) && !variable.map_face_icon && !query.is_spectator) && !((((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) > 0.0) && !variable.is_first_person && !variable.is_paperdoll && !variable.map_face_icon && !query.is_spectator)"
+          "cape": "(query.armor_texture_slot(1) != 5 && (!variable.is_first_person || variable.is_paperdoll) && !variable.map_face_icon && !query.is_spectator) && !((((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 1 ? 1.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 2 ? 2.0 : ((query.has_property('pet:model_id') ? query.property('pet:model_id') : 0.0) == 3 ? 3.0 : 0.0))) > 0.0) && !variable.is_first_person && !(variable.is_paperdoll || query.is_in_ui) && !variable.map_face_icon && !query.is_spectator)"
         }
       ],
       "is_hurt_color": {

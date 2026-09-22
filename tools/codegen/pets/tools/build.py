@@ -214,10 +214,12 @@ def build(root=ROOT,output=None):
     # The inventory and pause-menu paperdoll draws the same player entity, and the extra render controller passes
     # this pack appends do not draw there: 0.4.0 made variable.pet_tp true in the UI and the paperdoll went from
     # showing the skin to showing nothing at all, because the native body is hidden wherever the pet replaces it.
-    # variable.is_paperdoll is the engine's own flag for that render (vanilla's cape controller reads it in
-    # part_visibility, and ORs it with !is_first_person, so the camera's flag stays set there). Excluding the
-    # paperdoll from both gates gives it the native player back: the pet is the world's body, not the menu's.
-    doll='variable.is_paperdoll'
+    # Two signals name that render and both are honoured: query.is_in_ui, the engine's query for an entity drawn as
+    # part of the UI, and variable.is_paperdoll, the flag vanilla's cape controller reads in part_visibility (ORed
+    # with !is_first_person, so the camera's flag stays set there). 0.4.1 relied on the variable alone and the
+    # paperdoll stayed empty on a device. Excluding the UI from both gates gives it the native player back: the
+    # pet is the world's body, not the menu's.
+    doll='(variable.is_paperdoll || query.is_in_ui)'
     tp=f'({select} && !variable.is_first_person && !{doll} && !variable.map_face_icon && !query.is_spectator)'
     fp=f'({select} && variable.is_first_person && !{doll} && !variable.map_face_icon && !query.is_spectator)'
     paws=f"({fp} && (query.has_property('pet:view') ? query.property('pet:view') == 'paws' : 1.0))"

@@ -157,16 +157,19 @@ attachables and `hide_held_items` are read as before.
 
 The paperdoll in the inventory and pause screens draws the same player entity, and the extra render
 controller passes this pack appends do not draw there. Every rule that hides the human while a pet
-is active (the native body, the persona passes, the cape) is therefore switched off in the
-paperdoll, and the paperdoll shows the player's own character. The flag is `variable.is_paperdoll`,
-which the engine sets for that render and vanilla's own cape controller reads in `part_visibility`;
-because vanilla ORs it with `!variable.is_first_person`, the camera's flag is still set inside the
-paperdoll, so the paperdoll has to be excluded by name rather than inferred from the camera.
+is active (the native body, the persona passes, the cape) is therefore switched off in the UI, and
+the paperdoll shows the player's own character. Two signals name that render and both are
+honoured: `query.is_in_ui`, the engine's query for an entity drawn as part of the UI, and
+`variable.is_paperdoll`, the flag vanilla's own cape controller reads in `part_visibility`. 0.4.1
+relied on the variable alone and the paperdoll stayed empty on a device, so the query is the one
+that counts. Because vanilla ORs the variable with `!variable.is_first_person`, the camera's flag is
+still set inside the paperdoll, so the UI has to be excluded by name rather than inferred from the
+camera.
 
-0.4.0 tried the opposite: it counted the UI (`query.is_in_ui`) as third person so the pet body pass
-would draw there. It did not draw, and the paperdoll went from showing the skin in first person to
-showing nothing at all in either camera. Rendering the pet in the paperdoll would need a channel
-the pack does not have; the preview showing your character is the behaviour this pack ships.
+0.4.0 tried the opposite: it counted the UI as third person so the pet body pass would draw there.
+It did not draw, and the paperdoll went from showing the skin in first person to showing nothing at
+all in either camera. Rendering the pet in the paperdoll would need a channel the pack does not
+have; the preview showing your character is the behaviour this pack ships.
 `tools/codegen/pets/tests/test_paperdoll.py` holds the truth tables for both sides.
 
 The Morpher menu is one `ActionFormData` per step: Player, Carter, Mochi, Casper, then a biography

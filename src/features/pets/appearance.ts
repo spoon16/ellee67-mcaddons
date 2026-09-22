@@ -32,7 +32,9 @@ import {
   preferredArmor,
   preferredGear,
   preferredMotion,
+  preferredUiMode,
   preferredView,
+  UI_MODE_PROPERTY,
   VIEW_PREFERENCE,
   VIEW_PROPERTY,
 } from "./settings.ts";
@@ -74,6 +76,7 @@ export function appearanceFor(player: PlayerLike, form: string, defaults = false
     [HAND_HEIGHT_PROPERTY]: pet ? height : 0,
     [ARMOR_LIFT_PROPERTY]: fit.lift,
     [ARMOR_SCALE_PROPERTY]: fit.scale,
+    [UI_MODE_PROPERTY]: preferredUiMode(player),
     "pet:tool_enchanted": false,
     "pet:tool_enchanted_for": 0,
     "pet:seat_lift": 0,

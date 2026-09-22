@@ -16,6 +16,15 @@ export const ARMOR_PREFERENCE = "pet:fitted_armor_preference";
 export const ARMOR_LIFT_PROPERTY = "pet:armor_lift";
 export const ARMOR_SCALE_PROPERTY = "pet:armor_scale";
 export const ARMOR_FIT_TRIMS = "pet:armor_fit_trims";
+export const UI_MODE_PROPERTY = "pet:ui_mode";
+export const UI_MODE_PREFERENCE = "pet:ui_mode_preference";
+/**
+ * The inventory-preview experiment (`/pet:ui`), in wire order: the index is the value of `pet:ui_mode`, which only
+ * the client's Molang reads. `player` is the shipped preview; each other mode changes one thing inside the UI render
+ * of a pet form. The compiler's `build.py` lists the same names in the same order (`UI_MODES`).
+ */
+export const UI_MODES = Object.freeze(["player", "pet", "pet_static", "pet_first", "no_player"] as const);
+export type UiMode = (typeof UI_MODES)[number];
 
 export interface ArmorFit {
   lift: number;
@@ -53,6 +62,14 @@ export function preferredGear(player: PlayerLike): boolean {
 export function preferredArmor(player: PlayerLike): boolean {
   return player.getDynamicProperty(ARMOR_PREFERENCE) !== false;
 }
+/** The wire value of the saved `/pet:ui` mode; 0 (`player`) unless a valid one is saved. */
+export function preferredUiMode(player: PlayerLike): number {
+  const v = player.getDynamicProperty(UI_MODE_PREFERENCE);
+  return typeof v === "number" && Number.isInteger(v) && v >= 0 && v < UI_MODES.length ? v : 0;
+}
+export function isUiMode(value: unknown): value is UiMode {
+  return typeof value === "string" && (UI_MODES as readonly string[]).includes(value);
+}
 function apply(player: PlayerLike, property: string, key: string, value: PropertyValue, persist: boolean): void {
   if (!isPlayer(player)) throw new Error("The player is no longer connected.");
   const before = requireProperties(player, [property])[property];
@@ -82,6 +99,24 @@ export function applyArmor(player: PlayerLike, value: unknown, persist = true): 
   if (typeof value !== "boolean") throw new Error("Armor selection must be a boolean.");
   apply(player, ARMOR_PROPERTY, ARMOR_PREFERENCE, value, persist);
 }
+export function applyUiMode(player: PlayerLike, value: unknown, persist = true): void {
+  if (!isUiMode(value)) throw new Error(`Expected one of ${UI_MODES.join(", ")}.`);
+  apply(player, UI_MODE_PROPERTY, UI_MODE_PREFERENCE, UI_MODES.indexOf(value), persist);
+}
+export function resetUiMode(player: PlayerLike): void {
+  const old = player.getProperty(UI_MODE_PROPERTY);
+  applyUiMode(player, UI_MODES[0], false);
+  try {
+    player.setDynamicProperty(UI_MODE_PREFERENCE, undefined);
+  } catch (error) {
+    try {
+      if (typeof old === "number") player.setProperty(UI_MODE_PROPERTY, old);
+    } catch {
+      /* Original error wins. */
+    }
+    throw error;
+  }
+}
 export function applyHandHeight(player: PlayerLike, value: unknown, persist = true): void {
   apply(player, HAND_HEIGHT_PROPERTY, HAND_HEIGHT_PREFERENCE, validateHandHeight(value), persist);
 }
@@ -105,6 +140,7 @@ export function restoreSettings(player: PlayerLike): void {
   applyHandHeight(player, preferredHandHeight(player), false);
   applyArmor(player, preferredArmor(player), false);
   applyGear(player, preferredGear(player), false);
+  applyUiMode(player, UI_MODES[preferredUiMode(player)], false);
   applyArmorFit(player);
 }
 const armorTrims = (player: PlayerLike): StoredArmorTrims => readJsonObject<StoredArmorTrims>(player, ARMOR_FIT_TRIMS);

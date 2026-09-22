@@ -47,6 +47,6 @@ describe("custom command short names", () => {
       }
     }
     // Pets, Stair Sitting and Ender Mod register commands; the other three packs have none.
-    expect(owners.size).toBe(27 + 8 + 1);
+    expect(owners.size).toBe(28 + 8 + 1);
   });
 });

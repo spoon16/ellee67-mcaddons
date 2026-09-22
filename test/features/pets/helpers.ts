@@ -37,6 +37,7 @@ export const PLAYER_PROPERTY_DEFAULTS: Readonly<Record<string, unknown>> = Objec
   "pet:seat_kind": 0,
   "pet:armor_lift": 0,
   "pet:armor_scale": 1,
+  "pet:ui_mode": 0,
   "elleedog:rbow_armor_count": 0,
 });
 

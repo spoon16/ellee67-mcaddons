@@ -137,9 +137,9 @@ describe("quiet startup", () => {
       await ticks(3);
     });
     expect(p.messages).toEqual([]);
-    // Four enums and one command fail on their own; every other command still registers.
-    expect(logs).toHaveLength(5);
-    expect(logs.filter((line) => /Simulated registration failure/.test(line))).toHaveLength(4);
+    // Five enums and one command fail on their own; every other command still registers.
+    expect(logs).toHaveLength(6);
+    expect(logs.filter((line) => /Simulated registration failure/.test(line))).toHaveLength(5);
     expect(logs.filter((line) => /Simulated command failure/.test(line))).toHaveLength(1);
     expect(registered).not.toContain("pet:form");
     expect(registered.length).toBeGreaterThan(20);

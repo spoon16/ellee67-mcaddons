@@ -142,6 +142,15 @@
           "default": 1.0,
           "client_sync": true
         },
+        "pet:ui_mode": {
+          "type": "int",
+          "range": [
+            0,
+            4
+          ],
+          "default": 0,
+          "client_sync": true
+        },
         "elleedog:rbow_armor_count": {
           "type": "int",
           "range": [

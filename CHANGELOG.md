@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Pets: `/pet:ui <mode>`, an experiment for the inventory and pause-menu preview, which shows the player rather than
+  the pet. Each of the four modes changes one thing inside the UI render of a pet form (the appended pet pass switched
+  on as in 0.4.0, the same pass without rebuilt animation matrices, the same pass first in the render list, or the
+  vanilla body passes taken out of the list) so that what the preview shows says which part of the UI path differs
+  from the world. `player` is the shipped preview and the default; the mode is saved per player and cleared by
+  `/pet:reset`. "The inventory-preview experiment" in `docs/features/pets.md` has the protocol and how to read each
+  result.
+
 ## 0.4.3
 
 Second round from the iPad: the seated neck, the cats' armor, the inventory preview, the Rbow block

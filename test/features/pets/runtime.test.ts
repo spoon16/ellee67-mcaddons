@@ -29,8 +29,8 @@ describe("command registration", () => {
   it("All command choices are generated from catalog and use pet namespace", () => {
     expect(registry.enums.get("pet:form_choice")).toEqual(["player", ...PETS.map((p) => p.id), "human"]);
     const names = [...registry.commands.keys()];
-    expect(names.filter((name) => name.startsWith("pet:"))).toHaveLength(27);
-    expect(registry.commands.size).toBe(27);
+    expect(names.filter((name) => name.startsWith("pet:"))).toHaveLength(28);
+    expect(registry.commands.size).toBe(28);
   });
 
   it("Commands are self-only and do not require cheats", () => {

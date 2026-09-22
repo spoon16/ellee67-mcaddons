@@ -71,11 +71,12 @@ registers at startup with no pack data, no player and no world.
 | `/pet:armorlift <pixels>` | Float -16..16 | Raise (positive) or lower the fitted armor on the selected pet, in model pixels, on top of the baked position. Saved per pet. |
 | `/pet:armorscale <percent>` | Integer 50..150 | Grow or shrink the fitted armor on the selected pet. 100 is the baked size. Saved per pet. |
 | `/pet:armorfitreset` | | Drop the armor lift and scale saved for the selected pet. |
-| `/pet:check` | | Read-only property health summary (READY 19/19 when the override is loaded). |
+| `/pet:check` | | Read-only property health summary (READY 20/20 when the override is loaded). |
 | `/pet:rbowcheck` | | Rbow/Pets compatibility: `elleedog:rbow_armor_count`, Rbow item registrations, gear routing. |
 | `/pet:diagnose` | | Full JSON report to chat and content log, then the client resource check. |
 | `/pet:clientcheck` | | Asks the client to translate `pet.diag.rp_052`; proves the resource pack language file loaded. |
 | `/pet:debug <choice>` | `pet:debug_choice` | Show the version and grip marker overlay (`pet:debug`). |
+| `/pet:ui <choice>` | `pet:ui_choice`: `player`, `pet`, `pet_static`, `pet_first`, `no_player` | The inventory-preview experiment: which one thing changes inside the UI render of a pet form (`pet:ui_mode`). `player` is the shipped preview. Saved per player; see "The inventory-preview experiment". |
 | `/pet:probe` | | Spawn two stationary test props (`pet:diag_cube`, `pet:diag_model`) 3.5 blocks ahead. |
 | `/pet:cleanup` | | Remove your own loaded test props, including legacy `cav:` ones. |
 | `/pet:snapshot` | | Capture a read-only summary of inventory and equipment fields. |
@@ -176,6 +177,72 @@ The Morpher menu is one `ActionFormData` per step: Player, Carter, Mochi, Casper
 page with "Become X" and "Back". One session per player; a late response after leaving, changing
 dimension, respawning or choosing by command is discarded. A busy client is retried three times.
 
+### The inventory-preview experiment
+
+`/pet:ui <mode>` exists to learn why the pet does not draw in the preview, one difference at a
+time. Every mode is one value of the player property `pet:ui_mode`, read only by the client's
+Molang; the scripts set it, save it per player (`pet:ui_mode_preference`), restore it on join
+and clear it on `/pet:reset`. Nothing changes in the world in any mode, the Player form ignores
+the mode, and `player` (the default) is the preview described above. There are four switches so
+that the result stays readable from a handful of screenshots; more can follow what they show.
+
+What is known before the experiment, from the engine's own files, its documentation and the
+devices this pack has run on:
+
+- Two screens, two renderers. The inventory's armor tab draws the player with the JSON UI control
+  `live_player_renderer` (`player_renderer` in vanilla's `ui/inventory_screen.json`, with
+  `#look_at_cursor`): the live player actor, with the same client entity, scripts, animations and
+  render controllers as the world. The pause screen uses `paper_doll_renderer` (`paper_doll` in
+  `ui/pause_screen.json`, `use_selected_skin: false`, turned by the `gesture_x` drag), which the
+  Bedrock Wiki's JSON UI reference describes as a skin-model renderer. The two screens may answer
+  differently; note both.
+- The Molang reference at bedrock.dev documents `query.is_in_ui` as "Returns 1.0 if the entity is
+  rendered as part of the UI" and `variable.is_first_person` as set for a first-person render. It
+  does not mention `variable.is_paperdoll`. That variable exists because vanilla's
+  `controller.animation.player.root` has a `paperdoll` state (playing `humanoid_base_pose`,
+  `look_at_target_ui`, the arm and leg clips and the cape) whose exits are gated on
+  `!variable.is_paperdoll`, and because vanilla's cape controller reads it. Vanilla's player scripts
+  assign none of the three, so the engine sets them.
+- 0.4.0 counted `query.is_in_ui` as third person, so `variable.pet_tp` was true inside the UI: the
+  human was hidden there through `part_visibility` and the appended pet pass drew nothing. Hence
+  the pack's `pre_animation` runs for the UI actor, `query.is_in_ui` and `pet:model_id` are both
+  read there, `part_visibility` is honoured there, and an appended render controller pass is not
+  drawn there, or not where the camera looks. 0.4.1 excluded `variable.is_paperdoll` alone and the
+  preview stayed empty, so that variable is not set, or not yet set, when `pre_animation` runs.
+- Nothing published covers this case. The Bedrock Wiki's render controller page documents geometry
+  arrays indexed by Molang and that one controller draws one geometry; its player geometry page
+  changes the player by editing vanilla's own files and says nothing about the preview; the persona
+  rule (MCPE-74493, above) is the one documented player-render pitfall. This pack's own 0.2.1
+  baseline selected the pet through a geometry array on vanilla's third-person controller rather
+  than an appended pass, without a recorded preview result.
+
+Each mode tests one hypothesis about the missing pass:
+
+| Mode | `pet:ui_mode` | Inside the UI, while a pet is selected | Pet shown | Nothing shown | Your character shown |
+|---|---|---|---|---|---|
+| `player` | 0 | Nothing changes: the shipped preview. | | | Expected. |
+| `pet` | 1 | The appended body pass (`controller.render.pet.<id>.body`, rebuilt animation matrices) is on and the human is hidden, as in 0.4.0. | The appended pass draws after all; the 0.4.0 blank had another cause. | Expected from 0.4.0: the UI skips the appended pass. | `query.is_in_ui` is not read in this UI; no mode can change it. |
+| `pet_static` | 2 | An identical pass without `rebuild_animation_matrices` (`.ui_static`), appended; the human is hidden. | The rebuild is what the UI cannot do; the pet shows frozen in its rest pose. | The rebuild is not the difference. | As above. |
+| `pet_first` | 3 | An identical pass (`.ui_first`) placed first in the render list; the human is hidden. | The UI draws only the leading pass or passes. | Position in the list is not the difference. | As above. |
+| `no_player` | 4 | Vanilla's `first_person` and `third_person` passes leave the render list; their `part_visibility` is untouched and nothing is added. The persona pieces and the cape are hidden as in the other modes. | | The UI honours the pack's render list, so the appended passes are refused for another reason. | The UI draws vanilla's passes whatever the list says, which explains every empty result; the pet would then have to go through vanilla's third-person controller (a geometry array on it, which `test_native_armor_052.py` currently forbids). |
+
+The persona pieces, the cape and the first-person arms are hidden in every mode but `player`, so
+a body without pieces, or pieces without a body, is a real observation rather than a leftover;
+say which.
+
+Protocol, on a device, once with a classic skin and once with a Character Creator look:
+
+1. `/pet:form carter`. For each mode in turn, `/pet:ui <mode>`, then open the inventory and the
+   pause menu, in first person and in third person. Note what the preview shows: the pet, nothing,
+   your character, or part of one. One screenshot per mode and screen is enough.
+2. `/pet:ui player` at the end, or `/pet:reset`.
+3. Report the observations; the table turns them into the next change.
+
+`tools/codegen/pets/tests/test_paperdoll.py` (`PaperdollExperiment`) proves each mode changes
+exactly its one thing inside the UI and nothing outside it, and holds the scripts' mode list to
+the compiler's; `test/features/pets/ui_mode.test.ts` covers the command, the saved preference and
+the reset. The observations are the experiment.
+
 ## Player override and property budget
 
 The resource pack replaces vanilla's `player.render_controllers.json` and
@@ -185,15 +252,16 @@ persona map pass are copied through from the pinned vanilla files unchanged. Up 
 missing while the shipped client entity still asked for three of them.
 
 `behavior_packs/elleedog67_pets/entities/overrides/player.json` replaces `minecraft:player`. It
-declares 20 entity properties, all `client_sync: true` except the last:
+declares 21 entity properties, all `client_sync: true` except the last:
 
 - `pet:model_id` (int 0..4095), `pet:view` (enum paws/native), `pet:motion`, `pet:armor_fit`,
   `pet:gear_fit`, `pet:debug` (bool), `pet:hand_height` (int -8..12)
 - `pet:tool_enchanted`, `pet:tool_enchanted_for`, `pet:carry_main_enchanted`,
   `pet:carry_main_enchanted_for`, `pet:main_shield_enchanted`, `pet:carry_off_enchanted`,
   `pet:carry_off_enchanted_for`, `pet:off_shield_enchanted`
-- `pet:seat_lift` (float -64..64), `pet:seat_kind` (int 0..8, the index in the mount kind list)
+- `pet:seat_lift` (float -64..64), `pet:seat_kind` (int 0..9, the index in the mount kind list)
 - `pet:armor_lift` (float -16..16), `pet:armor_scale` (float 0.5..1.5): live fitted-armor calibration
+- `pet:ui_mode` (int 0..4): the inventory-preview experiment mode, read only by the client's Molang
 - `elleedog:rbow_armor_count` (int 0..4, server only) for the Rbow Ore companion
 
 The Rbow Ore behavior pack ships the byte-identical file (the build asserts it), so Pets alone,
@@ -319,6 +387,12 @@ per line with a screenshot.
     paperdoll shows your own character, skin and cape included, rather than nothing. The world still
     shows Carter behind it. This is the preview the pack can give; the pet itself does not render
     there.
+17. The inventory-preview experiment, once with a classic skin and once with a Character Creator
+    look: as Carter, `/pet:ui pet`, `/pet:ui pet_static`, `/pet:ui pet_first` and `/pet:ui no_player`
+    in turn, opening the inventory and the pause menu in both cameras after each. Note per mode
+    whether the preview shows the pet, nothing, your character or part of one, then `/pet:ui player`.
+    "The inventory-preview experiment" above reads the results; the world must look the same in
+    every mode.
 
 If a step fails, send one screenshot taken after choosing Player, the `/pet:diagnose` output and the
 active pack list. Do not count re-equipping a piece or relogging as a passing transition.

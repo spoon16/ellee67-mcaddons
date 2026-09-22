@@ -51,6 +51,14 @@ class MorpherAssets(unittest.TestCase):
    for flag in [True,False]:
     result=expression({'query.owner_identifier':'minecraft:player','owner.query.has_property':lambda k:True,'owner.query.property':lambda k:{'pet:model_id':ident,'pet:armor_fit':flag}[k],'context.is_first_person':False})
     self.assertEqual(result,ident if ident in [1,2,3] and flag else 0)
+ def test_the_book_is_craftable_from_paper_and_a_stick_in_any_order(self):
+  from load_validation import validate_recipe
+  d=read(BP/'recipes/morpher_book.json');validate_recipe(d,'morpher_book');r=d['minecraft:recipe_shapeless']
+  self.assertEqual(r['description']['identifier'],'pet:morpher_book');self.assertEqual(r['tags'],['crafting_table'])
+  self.assertEqual(sorted(i['item'] for i in r['ingredients']),['minecraft:paper','minecraft:stick'])
+  self.assertEqual(r['result'],{'item':'pet:morpher_book'})
+  self.assertEqual(sorted(u['item'] for u in r['unlock']),['minecraft:paper','minecraft:stick'])
+  self.assertEqual([p.name for p in sorted((BP/'recipes').glob('*.json'))],['morpher_book.json'])
  def test_initial_player_properties_are_native_not_pet_defaults(self):
   p=read(BP/'entities/player.json')['minecraft:entity']['description']['properties']
   expected={'pet:model_id':0,'pet:view':'native','pet:motion':False,'pet:armor_fit':False,'pet:gear_fit':False,'pet:hand_height':0,'pet:armor_lift':0.0,'pet:armor_scale':1.0}

@@ -62,6 +62,7 @@ Type these in chat. Start with `/`.
 | `/pet:view paws` | See paws in first person. `native` shows hands. |
 
 Your pet comes back when you rejoin. No command needed.
+No cheats? Craft the book: **1 paper + 1 stick**, any order.
 
 ### 🪑 Stair Sitting
 

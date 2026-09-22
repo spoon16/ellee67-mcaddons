@@ -6,6 +6,7 @@
   "behavior_packs/elleedog67_pets/entities/overrides/player.json",
   "behavior_packs/elleedog67_pets/functions/pet/test_kit.mcfunction",
   "behavior_packs/elleedog67_pets/items/morpher_book.json",
+  "behavior_packs/elleedog67_pets/recipes/morpher_book.json",
   "behavior_packs/elleedog67_rbow_ore/blocks/deepslate_rbow_ore.json",
   "behavior_packs/elleedog67_rbow_ore/blocks/rbow_block.json",
   "behavior_packs/elleedog67_rbow_ore/blocks/rbow_ore.json",

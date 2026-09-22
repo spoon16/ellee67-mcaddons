@@ -423,6 +423,7 @@
   "resource_packs/elleedog67_rbow_ore/attachables/rbow_spear_native.json",
   "resource_packs/elleedog67_rbow_ore/blocks.json",
   "resource_packs/elleedog67_rbow_ore/entity/rbow_drop.entity.json",
+  "resource_packs/elleedog67_rbow_ore/models/blocks/rbow_cube.geo.json",
   "resource_packs/elleedog67_rbow_ore/models/entity/legacy_drop.geo.json",
   "resource_packs/elleedog67_rbow_ore/render_controllers/legacy_drop.render_controllers.json",
   "resource_packs/elleedog67_rbow_ore/texts/en_GB.lang",

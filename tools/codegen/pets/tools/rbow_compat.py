@@ -62,6 +62,31 @@ def merge_player(pet_document, rbow_document):
     return a
 
 
+RBOW_BLOCKS=['rbow_ore','deepslate_rbow_ore','rbow_block']
+CUBE_GEOMETRY='geometry.elleedog.rbow_cube'
+
+def cube_geometry():
+    """A plain 16-pixel cube whose top face draws the block's `up` material and every other face its `*` one."""
+    face=lambda:{'uv':[0,0],'uv_size':[16,16]}
+    uv={name:face() for name in ['north','south','east','west','down']};uv['up']={**face(),'material_instance':'up'}
+    return {'format_version':'1.12.0','minecraft:geometry':[{'description':{'identifier':CUBE_GEOMETRY,'texture_width':16,'texture_height':16,
+        'visible_bounds_width':2,'visible_bounds_height':2,'visible_bounds_offset':[0,0.5,0]},
+        'bones':[{'name':'cube','pivot':[0,0,0],'cubes':[{'origin':[-8,0,-8],'size':[16,16,16],'uv':uv}]}]}]}
+
+def rbow_block_visuals(rbp,rrp):
+    """The three Rbow blocks drew as a flat top-texture plane in the inventory and hotbar on a device, carpet style.
+    Their custom items stay (the sulfur cube item tag lives on an item), and a block_placer item without an icon draws
+    the block's own icon, so each block declares an item visual: the plain cube this pack ships, with the block's
+    materials. The world block keeps the vanilla full block, written in the object form the block_placer docs use."""
+    write(rrp/'models/blocks/rbow_cube.geo.json',cube_geometry())
+    for name in RBOW_BLOCKS:
+        path=rbp/f'blocks/{name}.json';d=read(path);c=d['minecraft:block']['components']
+        if c['minecraft:geometry']!='minecraft:geometry.full_block':raise ValueError('Rbow block geometry changed: '+name)
+        c['minecraft:geometry']={'identifier':'minecraft:geometry.full_block'}
+        materials=deepcopy(c['minecraft:material_instances']);materials.setdefault('up',deepcopy(materials['*']))
+        c['minecraft:item_visual']={'geometry':{'identifier':CUBE_GEOMETRY},'material_instances':materials}
+        write(path,d)
+
 def generate(root,out,bp,rp,project):
     cfg=project['integration'];src=root/cfg['rbow_source']
     manifest=read(src/'behavior_pack/manifest.json')
@@ -74,6 +99,7 @@ def generate(root,out,bp,rp,project):
     for src_dir,target in [(src/'behavior_pack',rbp),(src/'resource_pack',rrp)]:
         if target.exists():shutil.rmtree(target)
         shutil.copytree(src_dir,target)
+    rbow_block_visuals(rbp,rrp)
     combined=merge_player(read(bp/'entities/player.json'),read(rbp/'entities/player.json'))
     write(bp/'entities/player.json',combined);write(rbp/'entities/player.json',combined)
     # Exactly one player-specific armor adapter: Pets' generated multi-form adapter.

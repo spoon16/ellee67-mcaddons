@@ -20,6 +20,9 @@ icons, a minecart seat height and a recipe for the book.
   measured in game. As on every re-bake, the saved live trims of profiled kinds start from zero once.
 - Pets: the Pet Morpher book is craftable from one paper and one stick in any order, in the 2x2 grid or a crafting
   table.
+- Rbow Ore: the three blocks drew as a flat top-texture plane in the inventory and hotbar, carpet style. Their items
+  must stay custom (the sulfur cube item tag lives on an item), so each block now declares an item visual: a plain
+  cube geometry the resource pack ships, with the block's own materials. The world block keeps the vanilla full block.
 
 ## 0.4.2
 

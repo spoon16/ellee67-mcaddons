@@ -6,7 +6,9 @@
     },
     "components": {
       "minecraft:display_name": "tile.elleedog:deepslate_rbow_ore.name",
-      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:geometry": {
+        "identifier": "minecraft:geometry.full_block"
+      },
       "minecraft:material_instances": {
         "*": {
           "texture": "deepslate_rbow_ore",
@@ -27,7 +29,22 @@
         "minecraft:iron_pick_diggable",
         "minecraft:netherite_pick_diggable",
         "elleedog:rbow"
-      ]
+      ],
+      "minecraft:item_visual": {
+        "geometry": {
+          "identifier": "geometry.elleedog.rbow_cube"
+        },
+        "material_instances": {
+          "*": {
+            "texture": "deepslate_rbow_ore",
+            "render_method": "opaque"
+          },
+          "up": {
+            "texture": "deepslate_rbow_ore",
+            "render_method": "opaque"
+          }
+        }
+      }
     }
   }
 }

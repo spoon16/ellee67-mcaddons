@@ -54,6 +54,13 @@ All of it lives in `behavior_packs/elleedog67_rbow_ore/` and `resource_packs/ell
   persistent entity Rbow 1.1.3 and 1.1.4 used to protect dropped items. It stays defined so old chunks
   can still be read; nothing spawns it any more. It doubles as the pack probe.
 
+The three blocks declare an item visual (`minecraft:item_visual`: the plain cube geometry
+`geometry.elleedog.rbow_cube` this pack ships, with the block's own materials) because on a device
+their items drew as a flat top-texture plane in the inventory and hotbar, carpet style. The items
+themselves stay custom, since the sulfur cube item tag lives on an item, and the world block keeps
+the vanilla full block. The Pets compiler applies this (`rbow_block_visuals` in `rbow_compat.py`)
+on top of the pinned Rbow 1.2.0 inputs.
+
 ## What the scripts do
 
 `src/features/rbow-ore/rules.ts` and `legacy_drop_logic.ts` are TypeScript ports of the original

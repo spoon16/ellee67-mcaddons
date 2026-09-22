@@ -1,7 +1,7 @@
 {
   "reference_release": "0.5.1",
   "raw": {
-    "assets/pets/carter/armor_fit.json": "6e20f075ac38d7949c08603479d3d8fc5e4c4e1e935e7707d5f3c7a2317957a3",
+    "assets/pets/carter/armor_fit.json": "2daf4243e49b71033149e8d247c6f5f9336972b39a720f842be05dd30289dac3",
     "assets/pets/carter/coat.png": "e3e51d7a55ea2edbe48fb5eab4a8036355c33a6376fdbc783090ad39cd11dc86",
     "assets/pets/carter/icon.png": "05d474776fa0fe1af87572221d199a0174109f00528f29ab153c36b7e4053115",
     "assets/pets/carter/model.geo.json": "66b3ac4bbbc3b02cd3ab8aac718214775303629685500bc454e44bc99f2c0a90",
@@ -10,7 +10,7 @@
     "assets/pets/casper/coat.png": "3c7f38fc516ddc1139dade21ce5032145a70c7e97d47599ed40742c645a79ccd",
     "assets/pets/casper/icon.png": "a104d767a57953b05ab3509a9e4ebb61e9e1a8735eae030a0deb6ce5318a197a",
     "assets/pets/casper/paws.png": "3527c406e75aa36d1dfc73c82d46a888ec6e29cbef05e869ae3cf7bc587521fd",
-    "assets/pets/mochi/armor_fit.json": "aad3581775cf0dc7a98aba9e87cd2e54f5df07f0e2b24c5fe36037158ff0558b",
+    "assets/pets/mochi/armor_fit.json": "d506a851f8c446358269fc12702c60dfa30b25afadae8bf3328d0728e7bb3861",
     "assets/pets/mochi/coat.png": "9312fdf81bd3b5cb1697b88457a69b1bfe40c3eac8303156d2c6df9533465957",
     "assets/pets/mochi/icon.png": "487301bce2492bfd37e86644447b6d0c78638b0aa861b191d00ac9a8a8a682ab",
     "assets/pets/mochi/model.geo.json": "2d63cde30f1d45481ad3f9f1c5551a477c8346da8cb087c4b9f18c8b4ce9da1c",
@@ -23,9 +23,9 @@
     "catalog/equipment/armor_materials.json": "0a5cdb0920968cbe4abf89c670070265efb225c22666f826155dd3c40de736d2",
     "catalog/equipment/handhelds.json": "cf159545921a9abfc30f9aa425b21b69ca05ebcc2d8f4a80a1157031527a6114",
     "catalog/equipment/side_carry.json": "c36eebb9c9d61a95d8cf081f0c9147d8dfda928793769c9b5ada04aec14df0a2",
-    "catalog/pets/carter.json": "989716603b0bcd324fe9bedd2852d77ccaee281710f960d69c1d2c3271391964",
-    "catalog/pets/casper.json": "871d22921f00d5f150858fdaec65030b4edb21b8d0a2408f73dc18af33f398df",
-    "catalog/pets/mochi.json": "96d046e79719cef30a041b99d1f59cc9a69996e2da871a73ff6028d90e4bd23d",
+    "catalog/pets/carter.json": "5aade56d6e1587b1332683319b43ae8b7b07717e76a79b90cadf9f6b8f8e2f81",
+    "catalog/pets/casper.json": "60c6084447cb2b382ab0dbb159839b4bf67aca8e6eaa7a61d3e66764ded61668",
+    "catalog/pets/mochi.json": "16d38b26069fe037dbb5708137c4e7a3988bdd6ef6b7adc0d0722c2b817bb191",
     "catalog/rigs/feline_v1.json": "d23cdf267891cb96155813976c4e728f523cee660765ca33bc28d15af374a00a",
     "catalog/rigs/native_v1.json": "f9c0fc7b842264541d51ab5788669eda9bae638b48d4db070d473b61ae12a5ea",
     "catalog/rigs/quadruped_clips.json": "b2b1cc6a879c243d36bbc58b8b3a33da4116cebe7668b2de31ba29b465c7ee74",
@@ -524,7 +524,7 @@
   "projected": {
     "resource_pack/models/entity/pets/carter/armor_boots.geo.json": "7123941fd9830cc8e0bc76217f85452ac4d6c15992ba74088d14575fd8e8d0a7",
     "resource_pack/models/entity/pets/carter/armor_chestplate.geo.json": "675648d40c887757deded5110b3b064cf449f0a08c2d398c35c4b5c97bb7dffb",
-    "resource_pack/models/entity/pets/carter/armor_helmet.geo.json": "198811a622ac9c702a1949aec575abbc374bf5139297cc6170eb7cf836425462",
+    "resource_pack/models/entity/pets/carter/armor_helmet.geo.json": "39c4b241b95f097be03876c8d59e46eac6eaca4c7103e324767208ad74c25a76",
     "resource_pack/models/entity/pets/carter/armor_leggings.geo.json": "a1ac8fde95ee805a789450d06997bb01cd3fc591a0c36476678984383ffd9fd7",
     "resource_pack/models/entity/pets/carter/carry_main_book.geo.json": "87f7e408f1d899b44e3f5675c1f18cef30758cba8f3e76c1b045834f02fe5ab4",
     "resource_pack/models/entity/pets/carter/carry_main_cube.geo.json": "6d0e42ed55e72a297085f896d75d2384fe3bfeee0bebb34fdb2e1797044dfd18",
@@ -553,10 +553,10 @@
     "resource_pack/models/entity/pets/carter/tool_rbow_sword.geo.json": "a75c11133933773106e84c290b6692a5188d239305f6c60d1c188849c5e55890",
     "resource_pack/models/entity/pets/carter/tool_shovel.geo.json": "f70bd87d890c96881393389b69a0eb7e6c282e00e7448ebf433bf0aed12d2eae",
     "resource_pack/models/entity/pets/carter/tool_sword.geo.json": "2635f423795dbdbc4972782b573705bb9cbc5847cf69bdb8d989666df81664ca",
-    "resource_pack/models/entity/pets/casper/armor_boots.geo.json": "3d0fae41c647a1afeda35e220d1742b4928fe362d58ccff575ae998ef15d3a36",
-    "resource_pack/models/entity/pets/casper/armor_chestplate.geo.json": "c3f87ed967a2d0b02533740978908656c9de5f7c372695cf6d057ce5ebdf6951",
-    "resource_pack/models/entity/pets/casper/armor_helmet.geo.json": "af55d1b3c4a190488f6e482aead54d13e2176bd39c429af4f46ebdf50a3a7c25",
-    "resource_pack/models/entity/pets/casper/armor_leggings.geo.json": "8d84e02daddf5deb05d704fbebe75be986a23b779b9ace9914f2f83a4582ea20",
+    "resource_pack/models/entity/pets/casper/armor_boots.geo.json": "f98f41f72c7fc89a2e4ea788348a755a88d9ee09fab19919640d9d5e38ca9e0b",
+    "resource_pack/models/entity/pets/casper/armor_chestplate.geo.json": "db27fbff29c23e861d050a0b5ab0fdd97a032e0790fa0b79fbd09eda764865a4",
+    "resource_pack/models/entity/pets/casper/armor_helmet.geo.json": "e1ca27cdeed98215c8152baafe4d60b6c2637e8b8cecba4bb2e908adef1c24c1",
+    "resource_pack/models/entity/pets/casper/armor_leggings.geo.json": "f7ce6f62515743a444bc0968be5624653663d695736fc04c81fdcb9cfe306a2e",
     "resource_pack/models/entity/pets/casper/carry_main_book.geo.json": "65349ea8ec34c10593cf648b30a4de84aada076daa921549310376f647a91091",
     "resource_pack/models/entity/pets/casper/carry_main_cube.geo.json": "89a1a20b7fb80d84e3c518b9b4416cd1f6f85c068dd5ef3de6f01c918a33749e",
     "resource_pack/models/entity/pets/casper/carry_main_rbow_cube.geo.json": "3c87dc78a2c7d2ae189c130431a39b2b2b57bd70c63a7495648c24ea953ce913",
@@ -584,10 +584,10 @@
     "resource_pack/models/entity/pets/casper/tool_rbow_sword.geo.json": "c159b912f8985fc7752d447b66f7b14f47ecd7be9bcdbb8d64a319684a0a3024",
     "resource_pack/models/entity/pets/casper/tool_shovel.geo.json": "2db7a1661214fab1f87c51579563b554f59f7c6971de760d94adab1d06e4593a",
     "resource_pack/models/entity/pets/casper/tool_sword.geo.json": "5a835e74675f0cc2360424ed53cb4f23ceeb8bc0409c768ed8ae242b3446305c",
-    "resource_pack/models/entity/pets/mochi/armor_boots.geo.json": "c2b75838c322a21a7d850d496755bb4f11d42f9d4caeef24ee745b7146516b31",
-    "resource_pack/models/entity/pets/mochi/armor_chestplate.geo.json": "05210fd7937cb81c6066cde6a688156f531ed86b3de54de0504c66ec491ef3f8",
-    "resource_pack/models/entity/pets/mochi/armor_helmet.geo.json": "0b6550f82e04b7868ddea55e8d112b2280add4ba5181453e29b861bd934e0e23",
-    "resource_pack/models/entity/pets/mochi/armor_leggings.geo.json": "e35eb8e139a06f59d6d07ec655a846e7653c498ea1661b4f1eee925eb83bc8ea",
+    "resource_pack/models/entity/pets/mochi/armor_boots.geo.json": "13664ac73779457fa3134decb2fb4c11f633fa293e78ae188e201701c7950cb5",
+    "resource_pack/models/entity/pets/mochi/armor_chestplate.geo.json": "c70904de52d4d6f180165ea71121fdd22464d71d5ea734e2bc3e21968f077cd6",
+    "resource_pack/models/entity/pets/mochi/armor_helmet.geo.json": "63ed6509eab71821ba5abc14feb8a7c8e7f823f6e0f07cecf0561b8a3d93a5b9",
+    "resource_pack/models/entity/pets/mochi/armor_leggings.geo.json": "6d1a058e60aea6dadb8a75c974b117c49f51182f882225e014a59a2245efcd01",
     "resource_pack/models/entity/pets/mochi/carry_main_book.geo.json": "19b28cbb9988214363ab5bd1b0409fdca9fba3fa3f2daa013729f45fa184be97",
     "resource_pack/models/entity/pets/mochi/carry_main_cube.geo.json": "67406f11ec01db5a04ca54b2711c404de8734013353558e46d3b72b1bf8a0bb3",
     "resource_pack/models/entity/pets/mochi/carry_main_rbow_cube.geo.json": "ae3ba963dd6aa9a14ea3eb8a62be95de1a42a6ed2f45262dc143a3989916542b",
@@ -617,9 +617,9 @@
     "resource_pack/models/entity/pets/mochi/tool_sword.geo.json": "141b329efad181edde1f45d81f299da112bd7ce02fae671be822cd53f39d90f5",
     "resource_pack/animations/pet_seating.animation.json": "e73df6d888dbac4550d23761931e75b7860eb56d1235023aaa88f14329715a5e",
     "resource_pack/animations/pet_shared.animation.json": "f1f15dddd3d2b11c44b36c4ee8b62404260df50f7de895c524722317cdd6fa19",
-    "resource_pack/animations/pets/carter.animation.json": "0c41e7962ecc9d40a791eff0d57df1e0ef6ec70551ca04dc569baae13c5aa207",
-    "resource_pack/animations/pets/casper.animation.json": "c19341177f560ae48a99aa3f82b2b6551a823c4ea367ec02a78902792cfe26a6",
-    "resource_pack/animations/pets/mochi.animation.json": "4ef22020924b3553639c32e9dc7ae00896dc4d8565bc13e225c3e0221e584d3e"
+    "resource_pack/animations/pets/carter.animation.json": "5368dcdd0c59cf1d9a72e19ecad63356897d57161d5216b2f53d9320eed55520",
+    "resource_pack/animations/pets/casper.animation.json": "5e3d67790e28fc7f5f7112176ff516347cc2552ab3d81ab530e3b2cada407425",
+    "resource_pack/animations/pets/mochi.animation.json": "ef529441f637f9ca89e4d987416f4803b9c7b0afe4d0af19c9aa3f03f70cd84c"
   },
   "armor_fields": {
     "resource_pack/attachables/chainmail_helmet.player.json": {
@@ -1301,6 +1301,7 @@
   ],
   "notes": [
     "Armor adapters re-pinned after pre-scaling attachable meshes by the entity render scale; ride clips re-pinned after emitting Bedrock-sign rotations.",
-    "Re-pinned for fitted-armor calibration: per-pet armor_attachable pre-scale in the catalog (Carter 1.0), Carter armor meshes, and the pet_fit animation on every armor adapter."
+    "Re-pinned for fitted-armor calibration: per-pet armor_attachable pre-scale in the catalog (Carter 1.0), Carter armor meshes, and the pet_fit animation on every armor adapter.",
+    "0.4.3: ride clips re-pinned for the seated neck bridge (seating.py); armor meshes for the unscaled cat armor and the 0.45 pixel helmet crown clearance; Carter's catalog for the minecart trim; the cats' catalogs for the armor scale."
   ]
 }

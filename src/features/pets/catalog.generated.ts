@@ -1,7 +1,7 @@
 // GENERATED from catalog/pets; edit the catalog, not this module.
 export const BUILD = "0.5.2-native-armor-isolation";
 export const RELEASE_VERSION = "0.5.2";
-export const CATALOG_HASH = "668a97c3ffa49f852800fce19778ee2879513b7ee4277743b281b67b49ac6799";
+export const CATALOG_HASH = "8cdc7f091f8daec135db641c13091d632a306ed69b67ada17160b8aedcdc893e";
 export const MAX_WIRE_ID = 4095;
 export const DEFAULT_HAND_HEIGHT = 2;
 export const PETS = Object.freeze([
@@ -104,7 +104,7 @@ export const PETS = Object.freeze([
       },
       "armor_attachable": {
         "scale": 1.0,
-        "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
+        "note": "No pre-scale: attachables follow the entity render scale, so the armor meshes are authored in the same space as the pet model. 0.5.2 had the cats at 0.9375 and their armor drew small."
       }
     },
     "seating": {
@@ -140,9 +140,13 @@ export const PETS = Object.freeze([
         "cushion": {
           "trim": 1,
           "forward": 0
+        },
+        "minecart": {
+          "trim": 4,
+          "forward": 0
         }
       },
-      "note": "Model pixels per mount kind: trim is added to the measured seat lift, forward moves the pet toward its nose. Measured in game on 0.5.2, where horse, strider, happy ghast and cushion still sat as unprofiled mounts at the rider anchor; Carter sat slightly too far back on the strider, hence the forward pixel."
+      "note": "Model pixels per mount kind: trim is added to the measured seat lift, forward moves the pet toward its nose. Measured in game on 0.5.2, where horse, strider, happy ghast and cushion still sat as unprofiled mounts at the rider anchor; Carter sat slightly too far back on the strider, hence the forward pixel. Minecart 4 was measured on 0.4.2, where it still sat as an unprofiled mount."
     },
     "validation": {
       "appearance": "user-confirmed-0.3.0",
@@ -255,8 +259,8 @@ export const PETS = Object.freeze([
         "offhand_side": "left"
       },
       "armor_attachable": {
-        "scale": 0.9375,
-        "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
+        "scale": 1.0,
+        "note": "No pre-scale. 0.5.2 used 0.9375 (the player render scale) here; on a device that drew the armor 6% small and sank the helmet crown into the head while Carter's unscaled armor fit, so attachables do follow the entity scale."
       }
     },
     "validation": {
@@ -300,6 +304,10 @@ export const PETS = Object.freeze([
           "forward": 0
         },
         "cushion": {
+          "trim": 0,
+          "forward": 0
+        },
+        "minecart": {
           "trim": 0,
           "forward": 0
         }
@@ -406,8 +414,8 @@ export const PETS = Object.freeze([
         "offhand_side": "left"
       },
       "armor_attachable": {
-        "scale": 0.9375,
-        "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
+        "scale": 1.0,
+        "note": "No pre-scale. 0.5.2 used 0.9375 (the player render scale) here; on a device that drew the armor 6% small and sank the helmet crown into the head while Carter's unscaled armor fit, so attachables do follow the entity scale."
       }
     },
     "validation": {
@@ -459,6 +467,10 @@ export const PETS = Object.freeze([
         "cushion": {
           "trim": 0,
           "forward": 0
+        },
+        "minecart": {
+          "trim": 0,
+          "forward": 0
         }
       }
     },
@@ -470,5 +482,5 @@ export const SIDE_CARRY_INDEX = Object.freeze({"minecraft:oak_boat": 1, "minecra
 export const HANDHELD_INDEX = Object.freeze({"minecraft:wooden_sword": 1, "minecraft:wooden_pickaxe": 2, "minecraft:wooden_axe": 3, "minecraft:wooden_shovel": 4, "minecraft:wooden_hoe": 5, "minecraft:stone_sword": 6, "minecraft:stone_pickaxe": 7, "minecraft:stone_axe": 8, "minecraft:stone_shovel": 9, "minecraft:stone_hoe": 10, "minecraft:iron_sword": 11, "minecraft:iron_pickaxe": 12, "minecraft:iron_axe": 13, "minecraft:iron_shovel": 14, "minecraft:iron_hoe": 15, "minecraft:golden_sword": 16, "minecraft:golden_pickaxe": 17, "minecraft:golden_axe": 18, "minecraft:golden_shovel": 19, "minecraft:golden_hoe": 20, "minecraft:diamond_sword": 21, "minecraft:diamond_pickaxe": 22, "minecraft:diamond_axe": 23, "minecraft:diamond_shovel": 24, "minecraft:diamond_hoe": 25, "minecraft:netherite_sword": 26, "minecraft:netherite_pickaxe": 27, "minecraft:netherite_axe": 28, "minecraft:netherite_shovel": 29, "minecraft:netherite_hoe": 30, "minecraft:copper_sword": 31, "minecraft:copper_pickaxe": 32, "minecraft:copper_axe": 33, "minecraft:copper_shovel": 34, "minecraft:copper_hoe": 35, "elleedog:rbow_sword": 36, "elleedog:rbow_pickaxe": 37, "elleedog:rbow_axe": 38, "elleedog:rbow_shovel": 39, "elleedog:rbow_hoe": 40, "elleedog:rbow_spear": 41});
 export const MODEL_BY_ID = Object.freeze(Object.fromEntries(PETS.map(p => [p.id,p])));
 export const MODEL_BY_WIRE = Object.freeze(Object.fromEntries(PETS.map(p => [p.wire_id,p])));
-export const SEAT_KINDS = Object.freeze(["none", "boat", "pig", "stairs", "other", "horse", "strider", "happy_ghast", "cushion"]);
-export const SEAT_TRIM_BAKE = "69e8e0e42ca459fb";
+export const SEAT_KINDS = Object.freeze(["none", "boat", "pig", "stairs", "other", "horse", "strider", "happy_ghast", "cushion", "minecart"]);
+export const SEAT_TRIM_BAKE = "067b1a0d54dd370d";

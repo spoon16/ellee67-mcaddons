@@ -27,8 +27,8 @@
           "name": "pet_body",
           "pivot": [
             0.0,
-            7.5,
-            0.9375
+            8.0,
+            1.0
           ],
           "parent": "pet_root"
         },
@@ -36,8 +36,8 @@
           "name": "pet_chest",
           "pivot": [
             0.0,
-            8.4375,
-            -3.75
+            9.0,
+            -4.0
           ],
           "parent": "pet_body"
         },
@@ -45,8 +45,8 @@
           "name": "pet_neck",
           "pivot": [
             0.0,
-            9.84375,
-            -3.75
+            10.5,
+            -4.0
           ],
           "parent": "pet_body"
         },
@@ -54,8 +54,8 @@
           "name": "pet_head",
           "pivot": [
             0.0,
-            10.78125,
-            -5.25
+            11.5,
+            -5.6
           ],
           "parent": "pet_neck"
         },
@@ -63,116 +63,116 @@
           "name": "pet_jaw",
           "pivot": [
             0.0,
-            9.46875,
-            -8.25
+            10.1,
+            -8.8
           ],
           "parent": "pet_head"
         },
         {
           "name": "pet_ear_left",
           "pivot": [
-            2.109375,
-            13.59375,
-            -5.8125
+            2.25,
+            14.5,
+            -6.2
           ],
           "parent": "pet_head"
         },
         {
           "name": "pet_ear_left_tip",
           "pivot": [
-            2.109375,
-            15.28125,
-            -6.28125
+            2.25,
+            16.3,
+            -6.7
           ],
           "parent": "pet_ear_left"
         },
         {
           "name": "pet_ear_right",
           "pivot": [
-            -2.109375,
-            13.59375,
-            -5.8125
+            -2.25,
+            14.5,
+            -6.2
           ],
           "parent": "pet_head"
         },
         {
           "name": "pet_ear_right_tip",
           "pivot": [
-            -2.109375,
-            15.28125,
-            -6.28125
+            -2.25,
+            16.3,
+            -6.7
           ],
           "parent": "pet_ear_right"
         },
         {
           "name": "pet_front_left",
           "pivot": [
-            1.734375,
-            5.34375,
-            -3.5625
+            1.85,
+            5.7,
+            -3.8
           ],
           "parent": "pet_body"
         },
         {
           "name": "pet_front_left_paw",
           "pivot": [
-            1.734375,
-            0.9375,
-            -3.5625
+            1.85,
+            1.0,
+            -3.8
           ],
           "parent": "pet_front_left"
         },
         {
           "name": "pet_front_right",
           "pivot": [
-            -1.734375,
-            5.34375,
-            -3.5625
+            -1.85,
+            5.7,
+            -3.8
           ],
           "parent": "pet_body"
         },
         {
           "name": "pet_front_right_paw",
           "pivot": [
-            -1.734375,
-            0.9375,
-            -3.5625
+            -1.85,
+            1.0,
+            -3.8
           ],
           "parent": "pet_front_right"
         },
         {
           "name": "pet_rear_left",
           "pivot": [
-            1.734375,
-            5.34375,
-            4.21875
+            1.85,
+            5.7,
+            4.5
           ],
           "parent": "pet_body"
         },
         {
           "name": "pet_rear_left_paw",
           "pivot": [
-            1.734375,
-            0.9375,
-            4.21875
+            1.85,
+            1.0,
+            4.5
           ],
           "parent": "pet_rear_left"
         },
         {
           "name": "pet_rear_right",
           "pivot": [
-            -1.734375,
-            5.34375,
-            4.21875
+            -1.85,
+            5.7,
+            4.5
           ],
           "parent": "pet_body"
         },
         {
           "name": "pet_rear_right_paw",
           "pivot": [
-            -1.734375,
-            0.9375,
-            4.21875
+            -1.85,
+            1.0,
+            4.5
           ],
           "parent": "pet_rear_right"
         },
@@ -180,8 +180,8 @@
           "name": "pet_tail_base",
           "pivot": [
             0.0,
-            8.0625,
-            5.71875
+            8.6,
+            6.1
           ],
           "parent": "pet_body",
           "rotation": [
@@ -194,8 +194,8 @@
           "name": "pet_tail_mid",
           "pivot": [
             0.0,
-            8.109375,
-            9.1875
+            8.65,
+            9.8
           ],
           "parent": "pet_tail_base",
           "rotation": [
@@ -208,8 +208,8 @@
           "name": "pet_tail_tip",
           "pivot": [
             0.0,
-            8.109375,
-            12.28125
+            8.65,
+            13.1
           ],
           "parent": "pet_tail_mid",
           "rotation": [
@@ -222,8 +222,8 @@
           "name": "pet_debug_mouth",
           "pivot": [
             0.0,
-            9.46875,
-            -9.75
+            10.1,
+            -10.4
           ],
           "parent": "pet_head"
         },
@@ -232,8 +232,8 @@
           "parent": "pet_head",
           "pivot": [
             0.0,
-            9.046875,
-            -9.76875
+            9.65,
+            -10.42
           ],
           "rotation": [
             0,
@@ -245,39 +245,39 @@
           "name": "pet_shield_left",
           "parent": "pet_body",
           "pivot": [
-            3.046875,
-            7.03125,
-            0.46875
+            3.25,
+            7.5,
+            0.5
           ]
         },
         {
           "name": "pet_shield_right",
           "parent": "pet_body",
           "pivot": [
-            -3.046875,
-            7.03125,
-            0.46875
+            -3.25,
+            7.5,
+            0.5
           ]
         },
         {
           "name": "pet_armor_boots_0",
           "parent": "pet_front_left_paw",
           "pivot": [
-            1.734375,
-            0.9375,
-            -3.5625
+            1.85,
+            1.0,
+            -3.8
           ],
           "cubes": [
             {
               "origin": [
-                0.684375,
-                0.028125,
-                -4.846875
+                0.73,
+                0.03,
+                -5.17
               ],
               "size": [
-                2.1,
-                1.5,
-                2.615625
+                2.24,
+                1.6,
+                2.79
               ],
               "uv": {
                 "north": {
@@ -348,21 +348,21 @@
           "name": "pet_armor_boots_1",
           "parent": "pet_front_right_paw",
           "pivot": [
-            -1.734375,
-            0.9375,
-            -3.5625
+            -1.85,
+            1.0,
+            -3.8
           ],
           "cubes": [
             {
               "origin": [
-                -2.784375,
-                0.028125,
-                -4.846875
+                -2.97,
+                0.03,
+                -5.17
               ],
               "size": [
-                2.1,
-                1.5,
-                2.615625
+                2.24,
+                1.6,
+                2.79
               ],
               "uv": {
                 "north": {
@@ -433,21 +433,21 @@
           "name": "pet_armor_boots_2",
           "parent": "pet_rear_left_paw",
           "pivot": [
-            1.734375,
-            0.9375,
-            4.21875
+            1.85,
+            1.0,
+            4.5
           ],
           "cubes": [
             {
               "origin": [
-                0.684375,
-                0.028125,
-                2.934375
+                0.73,
+                0.03,
+                3.13
               ],
               "size": [
-                2.1,
-                1.5,
-                2.615625
+                2.24,
+                1.6,
+                2.79
               ],
               "uv": {
                 "north": {
@@ -518,21 +518,21 @@
           "name": "pet_armor_boots_3",
           "parent": "pet_rear_right_paw",
           "pivot": [
-            -1.734375,
-            0.9375,
-            4.21875
+            -1.85,
+            1.0,
+            4.5
           ],
           "cubes": [
             {
               "origin": [
-                -2.784375,
-                0.028125,
-                2.934375
+                -2.97,
+                0.03,
+                3.13
               ],
               "size": [
-                2.1,
-                1.5,
-                2.615625
+                2.24,
+                1.6,
+                2.79
               ],
               "uv": {
                 "north": {

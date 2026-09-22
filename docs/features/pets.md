@@ -101,10 +101,11 @@ trim that kind alone, and `/pet:seatinfo` names it.
 | `strider` | 6 | `minecraft:strider` | rideable seat anchor |
 | `happy_ghast` | 7 | `minecraft:happy_ghast` | rideable seat anchor |
 | `cushion` | 8 | a non-vanilla seat entity with a block whose id contains `cushion` within 0.85 of it | rideable seat anchor |
+| `minecart` | 9 | `minecraft:minecart` and every `minecraft:*_minecart` | rideable seat anchor |
 
-Horses, striders and happy ghasts sat as `other` before they had kinds of their own, and the
-cushion seat as `other` too, so their surface is the same rider anchor as before: a trim measured
-on the old build keeps its meaning. Vanilla mounts never scan blocks. The kind list lives in the
+Horses, striders, happy ghasts and minecarts sat as `other` before they had kinds of their own,
+and the cushion seat as `other` too, so their surface is the same rider anchor as before: a trim
+measured on the old build keeps its meaning. Vanilla mounts never scan blocks. The kind list lives in the
 compiler (`tools/codegen/pets/tools/seat_kinds.py`), which sets the `pet:seat_kind` range and emits
 the same list into `catalog.generated.ts`; a new kind is appended there, never inserted.
 
@@ -116,12 +117,12 @@ trim for the kind, from its catalog entry (`seating.kinds.<kind>.trim` in
 A kind can also carry `forward`, model pixels toward the pet's nose: the compiler bakes it into the
 seat alignment clip (`animation.pet.seat_align` moves `pet_root` by `-forward` on z for that pet and
 `pet:seat_kind`), there is no live command for it, and `/pet:seatinfo` reports it as
-`forwardPixels`. Carter's numbers are the ones measured in game on 0.5.2:
+`forwardPixels`. Carter's numbers are the ones measured in game on 0.5.2 (the minecart on 0.4.2):
 
-| Kind | boat | stairs | pig | horse | strider | happy_ghast | cushion |
-|---|---|---|---|---|---|---|---|
-| Carter trim | 0 | 0 | -2 | +4 | +1 | +3 | +1 |
-| Carter forward | 0 | 0 | 0 | 0 | +1 | 0 | 0 |
+| Kind | boat | stairs | pig | horse | strider | happy_ghast | cushion | minecart |
+|---|---|---|---|---|---|---|---|---|
+| Carter trim | 0 | 0 | -2 | +4 | +1 | +3 | +1 | +4 |
+| Carter forward | 0 | 0 | 0 | 0 | +1 | 0 | 0 | 0 |
 
 Mochi and Casper bake nothing yet. `other` cannot be baked. The compiler stamps the catalog's
 seating profiles (`SEAT_TRIM_BAKE` in `catalog.generated.ts`) and the saved trims carry the stamp
@@ -217,22 +218,21 @@ From the 0.5.2 release notes:
 - Seated pose: the generated ride clip is emitted in Bedrock's rotation sign (negative X raises the
   chest, as in vanilla `animation.cat.sit`). Pets sit on their rear with the body raised, front legs
   vertical with paws on the seat plane, hind legs folded forward and paws flat, tail resting behind.
-  The head is counter-rotated to stay upright, which swings it up and back with the pitched body,
-  so the ride clip also moves the head bone forward and up until the muzzle leads the chest by as
-  much as when standing and the chest sits no deeper in the skull (`head_clearance` in the
-  compiler's `seating.py`; 4.5 pixels forward and 0.9 up for Carter, 3.8 and 0.3 for the cats,
-  whose shorter neck caps the forward move where it would leave the skull). The neck bone keeps the
-  body's pitch and has no channel of its own, so it used to stand out behind the raised head as a
-  wedge; the clip now parks it in the middle of the body cube (`neck_tuck`) and takes the same
-  offset off the head, which is its child, so the head does not move and the neck cannot show from
-  any angle or head turn.
-  Before that the raised chest reached 2.3 pixels ahead of Carter's chin. The seat height per
+  The neck pitches up from the body (35 degrees on Carter, 25 on the cats) and slides 1.5 pixels
+  forward inside the chest, and the head is counter-rotated level and lifted along the neck by the
+  least that keeps the chest 0.2 pixels out of the skull (`neck_bridge` in the compiler's
+  `seating.py`), so a short neck shows between chest and head, the muzzle sits level with the chest
+  front, and the neck's top stays inside the skull through every turn the look clip allows. 0.4.0
+  moved the head clear instead and 0.4.1 hid the neck in the body, which left the head floating
+  over the chest with nothing between them. The seat height per
   mount kind is a measurement plus the baked and live trims above; the baked numbers are Carter's
   only and were read off a client, not proven by the automated suites.
-- Fitted armor meshes are pre-scaled per pet (`equipment.armor_attachable.scale` in the catalog:
-  Mochi and Casper 0.9375, the player's render scale, and Carter 1.0) because the armor attachables
-  rebuild their bone matrices without the entity scale. At 0.9375 the cat armor rests on the cats,
-  while Carter's armor drew inside his body, so his meshes are left unscaled. `/pet:armorlift` and
+- Fitted armor meshes are not pre-scaled (`equipment.armor_attachable.scale` in the catalog is 1.0
+  for every pet). 0.5.2 scaled the cats' meshes by the player render scale, 0.9375, on the theory
+  that attachables rebuild their bone matrices without the entity scale; on a device that armor
+  drew 6% small and sank the helmet crown into the head while Carter's unscaled armor fit, so the
+  attachables do follow the entity scale. Every helmet crown sits 0.45 pixels clear of the head
+  instead of flush with it, so it cannot z-fight with the skull. `/pet:armorlift` and
   `/pet:armorscale` move and resize the armor live through `pet:armor_lift` and `pet:armor_scale`,
   which drive the `animation.pet.armor_fit` clip on every armor adapter; once the right numbers are
   found in game, bake them into the catalog and set the live values back to zero and 100. The
@@ -286,17 +286,17 @@ per line with a screenshot.
 9. Ride a boat, a pig, a stair seat, a horse, a strider, a happy ghast and a cushion seat (if a
    furniture pack provides one) as Carter. He sits on the surface with the baked trim applied
    (`/pet:seatinfo` shows `bakedPixels` -2 on the pig, 4 on the horse, 1 on the strider, 3 on the
-   happy ghast, 1 on the cushion, 0 on boats and stairs, and `trimPixels` 0), the kind is named
-   (`boat`, `pig`, `stairs`, `horse`, `strider`, `happy_ghast`, `cushion`; a camel or a minecart is
-   `other`), `/pet:seatheight 4` and `/pet:seatreset` move and restore only that kind on top of the
+   happy ghast, 1 on the cushion, 4 in a minecart, 0 on boats and stairs, and `trimPixels` 0), the
+   kind is named (`boat`, `pig`, `stairs`, `horse`, `strider`, `happy_ghast`, `cushion`, `minecart`;
+   a camel is `other`), `/pet:seatheight 4` and `/pet:seatreset` move and restore only that kind on top of the
    baked value. A world that had seat trims saved before this build starts every profiled kind at
    0 again. On the strider Carter also sits one pixel further toward the strider's head than 0.5.2
    did (`forwardPixels` 1); if he moved back instead, the sign in the clip is wrong for this engine
    and `forward` in the catalog wants negating. Dismounting clears the lift. Repeat the pig and the
-   horse as Mochi: no baked trim, no forward offset. On the pig and in a boat, Carter's head sits
-   above and in front of his chest, the muzzle over the front paws, and no part of the neck shows
-   between the head and the body from any angle, including while he looks around. Mochi and Casper
-   get the same head clearance and neck tuck; check them once too.
+   horse as Mochi: no baked trim, no forward offset. On the pig and in a boat, Carter's head sits on
+   a short neck above his chest, the muzzle level with the chest front; the neck shows between the
+   chest and the head and never pokes out of the skull, including while he looks around. Mochi and
+   Casper get the same bridge; check them once too. The helmet crown sits just clear of every head.
 10. `/pet:snapshot`, switch forms with the book only, `/pet:compare` prints PASS.
 11. Leave and rejoin, die and respawn, travel to the Nether and back: the pet form returns each time
     with no chat line. A second player with a different pet sees both forms correctly.

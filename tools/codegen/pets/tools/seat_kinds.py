@@ -5,7 +5,7 @@ mounted), so entries are only ever appended: saved seat trims and the client ani
 by name and index respectively. The runtime reads the same list from catalog.generated.js.
 """
 import math
-SEAT_KINDS=['none','boat','pig','stairs','other','horse','strider','happy_ghast','cushion']
+SEAT_KINDS=['none','boat','pig','stairs','other','horse','strider','happy_ghast','cushion','minecart']
 # Kinds a catalog entry may profile: every kind a ride is classified into except the grab-bag "other".
 BAKEABLE=[k for k in SEAT_KINDS if k not in ('none','other')]
 # Model pixels, the same unit /pet:seatheight uses; a baked trim is added to the measured lift before the live one.

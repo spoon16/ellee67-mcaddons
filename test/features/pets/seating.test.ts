@@ -134,6 +134,9 @@ describe("support profiles", () => {
     ["minecraft:zombie_horse", "horse"],
     ["minecraft:strider", "strider"],
     ["minecraft:happy_ghast", "happy_ghast"],
+    ["minecraft:minecart", "minecart"],
+    ["minecraft:chest_minecart", "minecart"],
+    ["minecraft:hopper_minecart", "minecart"],
   ] as const) {
     it(`${type} is its own kind (${kind}) at the rider anchor, where "other" used to put it`, () => {
       const { p, m } = mounted(type);
@@ -206,6 +209,7 @@ describe("support profiles", () => {
       ["minecraft:horse", "horse"],
       ["minecraft:strider", "strider"],
       ["minecraft:happy_ghast", "happy_ghast"],
+      ["minecraft:minecart", "minecart"],
     ] as const) {
       const { p } = mounted(type);
       refreshSeat(p);
@@ -215,6 +219,7 @@ describe("support profiles", () => {
     expect(values.get("boat")).toBe(1);
     expect(values.get("pig")).toBe(2);
     expect(values.get("other")).toBe(4);
+    expect(values.get("minecart")).toBe(9);
     expect(new Set(values.values()).size).toBe(values.size);
     for (const value of values.values()) expect(value).toBeGreaterThan(0);
   });
@@ -234,6 +239,7 @@ describe("baked seat trims", () => {
       strider: 1,
       happy_ghast: 3,
       cushion: 1,
+      minecart: 4,
       other: 0,
     });
     for (const pet of PETS) {
@@ -241,6 +247,7 @@ describe("baked seat trims", () => {
       if (pet.id !== "carter") for (const kind of Object.values(pet.seating.kinds)) expect(kind.trim).toBe(0);
     }
     expect(bakedTrim(MODEL_BY_ID.carter, "pig")).toBe(-2);
+    expect(bakedTrim(MODEL_BY_ID.carter, "minecart")).toBe(4);
     expect(bakedTrim(MODEL_BY_ID.mochi, "pig")).toBe(0);
     expect(bakedTrim(undefined, "pig")).toBe(0);
   });

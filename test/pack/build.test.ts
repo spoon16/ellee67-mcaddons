@@ -40,7 +40,9 @@ afterAll(() => {
   fs.rmSync(scratch, { recursive: true, force: true });
 });
 
-describe("built packs", () => {
+// Several cases build or validate every pack more than once, at over a second each; the default 5 s is a coin toss
+// under a parallel run.
+describe("built packs", { timeout: 20_000 }, () => {
   it("pass structural validation", () => {
     const report = validateBuild();
     expect(report.errors).toEqual([]);
@@ -201,7 +203,7 @@ const write = (root: string, relative: string, value: unknown) => {
 };
 const readJson = (root: string, relative: string) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
 
-describe("validateBuild rejects", () => {
+describe("validateBuild rejects", { timeout: 20_000 }, () => {
   it("a missing pack folder", () => {
     const roots = distRoots();
     roots.set("creeper-mod", path.join(scratch, "nowhere"));

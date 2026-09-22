@@ -18,6 +18,8 @@ icons, a minecart seat height and a recipe for the book.
   the UI. The preview shows your character; the pet stays in the world.
 - Pets: minecarts are their own mount kind (`minecart`, wire value 9), with Carter's seat trim baked at +4 pixels as
   measured in game. As on every re-bake, the saved live trims of profiled kinds start from zero once.
+- Pets: the Pet Morpher book is craftable from one paper and one stick in any order, in the 2x2 grid or a crafting
+  table.
 
 ## 0.4.2
 

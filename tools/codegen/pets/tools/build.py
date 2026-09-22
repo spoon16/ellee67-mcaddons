@@ -367,6 +367,12 @@ def build(root=ROOT,output=None):
     lang=rp/'texts/en_US.lang';text=lang.read_text() if lang.exists() else ''
 
     text+='\n'.join(f'pet.form.{p["id"]}={p["display_name"]}' for p in pets)+'\n';lang.parent.mkdir(parents=True,exist_ok=True);lang.write_text(text)
+    # The book is craftable: one paper and one stick in any order, in the 2x2 grid or a crafting table. The unlock
+    # entries are what 1.20+ recipes need to appear in the recipe book once either ingredient is held.
+    write(bp/'recipes/morpher_book.json',{'format_version':'1.20.10','minecraft:recipe_shapeless':{
+        'description':{'identifier':'pet:morpher_book'},'tags':['crafting_table'],
+        'ingredients':[{'item':'minecraft:paper'},{'item':'minecraft:stick'}],
+        'unlock':[{'item':'minecraft:paper'},{'item':'minecraft:stick'}],'result':{'item':'pet:morpher_book'}}})
     # Explicit test-only inventory grants. No runtime gear mutations.
     (bp/'functions/pet/test_kit.mcfunction').write_text('give @s minecraft:diamond_pickaxe\ngive @s minecraft:diamond_sword\ngive @s minecraft:shield\ngive @s minecraft:oak_boat\ngive @s minecraft:water_bucket\ngive @s minecraft:nether_brick 16\ngive @s minecraft:iron_helmet\ngive @s minecraft:iron_chestplate\ngive @s minecraft:iron_leggings\ngive @s minecraft:iron_boots\ngive @s pet:morpher_book\n')
     write(out/'BUILD_INFO.json',{'build':project['build'],'version':version,'catalog_sha256':catalog_hash,'pets':[{k:p[k] for k in ['id','wire_id','rig','first_person','validation']} for p in pets],

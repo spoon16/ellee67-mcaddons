@@ -102,7 +102,8 @@ class Seating043(unittest.TestCase):
   # here is the face-down "backwards sit" seen on the client.
   for p in PETS:
    pose=numeric_pose(p);pitch=pose['pet_body']['rotation'][0]
-   self.assertLess(pitch,-44,p['id']);self.assertEqual(pose['pet_head']['rotation'][0],-pitch)
+   # The head is level: it counters the body and the neck, which pitches up from the body since 0.4.3.
+   self.assertLess(pitch,-44,p['id']);self.assertAlmostEqual(pose['pet_head']['rotation'][0],-(pitch+pose['pet_neck']['rotation'][0]),places=6)
    for side in ['left','right']:
     self.assertEqual(pose['pet_front_'+side]['rotation'][0],-pitch)
     self.assertLess(pose['pet_rear_'+side]['rotation'][0],0);self.assertEqual(pose[f'pet_rear_{side}_paw']['rotation'][0],80.0)

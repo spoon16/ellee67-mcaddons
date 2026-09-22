@@ -96,8 +96,8 @@
       "offhand_side": "left"
     },
     "armor_attachable": {
-      "scale": 0.9375,
-      "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
+      "scale": 1.0,
+      "note": "No pre-scale. 0.5.2 used 0.9375 (the player render scale) here; on a device that drew the armor 6% small and sank the helmet crown into the head while Carter's unscaled armor fit, so attachables do follow the entity scale."
     }
   },
   "validation": {

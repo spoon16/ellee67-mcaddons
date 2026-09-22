@@ -1,13 +1,12 @@
-"""Attachable meshes are authored in entity space divided by the player's render scale.
+"""Attachable meshes are authored in entity space, unscaled, like the pet models they dress.
 
 The client entity renders the player (and the pet body pass) at scripts.scale
-(0.9375 in the vanilla definition). Armor and shield attachables use
-rebuild_animation_matrices so their pet_* bones follow the pet skeleton, and
-those rebuilt matrices are not scaled with the entity: the in-game fitted armor
-drew the right shape, animated with the pet, and sat uniformly a little high,
-exactly the 1/0.9375 enlargement about the feet. Pre-scaling every attachable
-pivot and cube by the entity scale cancels that. Meshes drawn by the entity's
-own render controllers (mouth tools, side-carry items) are not scaled.
+(0.9375 in the vanilla definition). 0.5.2 pre-scaled the cats' armor meshes by
+that factor on the theory that attachables rebuild their pet_* bone matrices
+without the entity scale; on a device that armor drew 6% small and sank the
+helmet crown into the head, while Carter's unscaled meshes fit, so the rebuilt
+matrices do follow the entity scale and no mesh is pre-scaled now. The catalog
+can still override the factor per pet (`equipment.armor_attachable.scale`).
 """
 from copy import deepcopy
 from catalog import read
@@ -15,6 +14,8 @@ from catalog import read
 def entity_scale(root):
     scale=read(root/'upstream/player.entity.json')['minecraft:client_entity']['description']['scripts']['scale']
     return float(scale)
+
+NO_PRESCALE=1.0
 
 def scale_bones(bones,factor):
     """Scale pivots, cube origins/sizes and inflate uniformly about the entity origin."""

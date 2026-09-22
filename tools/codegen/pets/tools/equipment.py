@@ -5,7 +5,7 @@ from copy import deepcopy
 from catalog import read,write
 from handhelds import helpers
 from render_isolation import pet_world_bones
-from attachable_space import entity_scale,scale_bones
+from attachable_space import NO_PRESCALE,scale_bones
 # Explicit material records, rather than assumptions in runtime script.
 LAYERS={'helmet':'helmet','chestplate':'chest','leggings':'leg','boots':'boot'}
 
@@ -31,8 +31,8 @@ def uv_region(name):
     return out
 
 def attachable_scale(root,pet):
-    """Pre-scale baked into a pet's armor meshes. Defaults to the player render scale; the catalog overrides per pet."""
-    return float(pet['equipment'].get('armor_attachable',{}).get('scale',entity_scale(root)))
+    """Pre-scale baked into a pet's armor meshes: none unless the catalog says otherwise for a pet."""
+    return float(pet['equipment'].get('armor_attachable',{}).get('scale',NO_PRESCALE))
 
 def fit_clip():
     """Live calibration read from the wearer: lift in model pixels and a scale about the feet."""

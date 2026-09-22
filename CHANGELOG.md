@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+Second round from the iPad: the seated neck, the cats' armor, the inventory preview, the Rbow block
+icons, a minecart seat height and a recipe for the book.
+
+- Pets: seated pets have a neck again. 0.4.1 hid the neck inside the body and lifted the head clear of the chest,
+  which left the head floating over the chest with nothing between them. The ride clip now pitches the neck up from
+  the body, slides it forward inside the chest and lifts the head only as far as the chest needs, so a short neck
+  shows between chest and head, the muzzle sits level with the chest, and the neck stays inside the skull through
+  every head turn the look clip allows (`neck_bridge` in the compiler's `seating.py`, held by `test_seating_tuning.py`).
+- Pets: Mochi's and Casper's armor is no longer pre-scaled by the player render scale. On a device it drew 6% small
+  and sank the helmet crown into the head while Carter's unscaled armor fit, so no pet's meshes are pre-scaled now,
+  and every helmet crown sits 0.45 pixels clear of the head instead of flush with it.
+- Pets: minecarts are their own mount kind (`minecart`, wire value 9), with Carter's seat trim baked at +4 pixels as
+  measured in game. As on every re-bake, the saved live trims of profiled kinds start from zero once.
+
 ## 0.4.2
 
 Nothing from the add-on on the screen when a world opens: the Content Log GUI shows warnings and errors,

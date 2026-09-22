@@ -23,7 +23,16 @@ import {
  * horses), striders, happy ghasts and cushions (a seat entity inside or on a block named cushion) were split out
  * of "other" so each can be trimmed on its own.
  */
-export type SeatKind = "boat" | "pig" | "stairs" | "other" | "horse" | "strider" | "happy_ghast" | "cushion";
+export type SeatKind =
+  | "boat"
+  | "pig"
+  | "stairs"
+  | "other"
+  | "horse"
+  | "strider"
+  | "happy_ghast"
+  | "cushion"
+  | "minecart";
 
 /** The measured support under a mounted pet: which profile applied and where its surface sits. */
 export interface SeatSupport {
@@ -230,6 +239,10 @@ export function supportFor(player: PlayerLike, mount: Entity | undefined): SeatS
   if (HORSES.has(id)) return anchored("horse", "horse profile");
   if (id === "minecraft:strider") return anchored("strider", "strider profile");
   if (id === "minecraft:happy_ghast") return anchored("happy_ghast", "happy ghast profile");
+  // Every minecart, chest and hopper ones included: the rider anchor is the same, and Carter's +4 was measured there.
+  if (id === "minecraft:minecart" || (id.startsWith("minecraft:") && id.endsWith("_minecart"))) {
+    return anchored("minecart", "minecart profile");
+  }
   if (!id.startsWith("minecraft:")) {
     const block = seatBlock(player, mount);
     if (block?.kind === "stairs") {

@@ -97,11 +97,11 @@
     },
     "armor_attachable": {
       "scale": 1.0,
-      "note": "Pre-scale baked into the armor meshes. 0.9375 (the player render scale) rests armor on the cats; Carter needs 1.0, at 0.9375 his armor drew inside his body."
+      "note": "No pre-scale: attachables follow the entity render scale, so the armor meshes are authored in the same space as the pet model. 0.5.2 had the cats at 0.9375 and their armor drew small."
     }
   },
   "seating": {
-    "note": "Model pixels per mount kind: trim is added to the measured seat lift, forward moves the pet toward its nose. Measured in game on 0.5.2, where horse, strider, happy ghast and cushion still sat as unprofiled mounts at the rider anchor; Carter sat slightly too far back on the strider, hence the forward pixel.",
+    "note": "Model pixels per mount kind: trim is added to the measured seat lift, forward moves the pet toward its nose. Measured in game on 0.5.2, where horse, strider, happy ghast and cushion still sat as unprofiled mounts at the rider anchor; Carter sat slightly too far back on the strider, hence the forward pixel. Minecart 4 was measured on 0.4.2, where it still sat as an unprofiled mount.",
     "kinds": {
       "boat": {
         "trim": 0
@@ -124,6 +124,9 @@
       },
       "cushion": {
         "trim": 1
+      },
+      "minecart": {
+        "trim": 4
       }
     }
   },

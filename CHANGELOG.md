@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.3
 
 Second round from the iPad: the seated neck, the cats' armor, the inventory preview, the Rbow block
 icons, a minecart seat height and a recipe for the book.

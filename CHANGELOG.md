@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.4
 
 - Pets: `/pet:ui <mode>`, an experiment for the inventory and pause-menu preview, which shows the player rather than
   the pet. Each of the four modes changes one thing inside the UI render of a pet form (the appended pet pass switched

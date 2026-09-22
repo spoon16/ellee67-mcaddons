@@ -30,6 +30,13 @@ class Paperdoll(unittest.TestCase):
    # Outside the paperdoll nothing changed: third person shows the pet body, first person the paws.
    self.assertTrue(TP(*env(p['wire_id'],0,0)));self.assertFalse(TP(*env(p['wire_id'],1,0)))
    self.assertTrue(PAWS(*env(p['wire_id'],1,0)));self.assertFalse(PAWS(*env(p['wire_id'],0,0)))
+ def test_either_ui_signal_alone_keeps_the_pet_out_of_the_paperdoll(self):
+  # 0.4.1 relied on variable.is_paperdoll alone and the paperdoll stayed empty on a device. query.is_in_ui is the
+  # engine's own query for an entity drawn as part of the UI, and either signal on its own now excludes the pet.
+  for p in PETS:
+   for signal in ['variable.is_paperdoll','query.is_in_ui']:
+    e,props=env(p['wire_id'],0,0);e[signal]=1;self.assertFalse(TP(e,props),(p['id'],signal))
+    e,props=env(p['wire_id'],1,0);e[signal]=1;self.assertFalse(PAWS(e,props),(p['id'],signal))
  def test_the_player_body_draws_in_the_paperdoll_and_no_pet_pass_does(self):
   conditions={next(iter(row)):Expression(next(iter(row.values()))) for row in D['render_controllers']}
   native=Expression(RC['controller.render.player.third_person']['part_visibility'][0]['*'])
